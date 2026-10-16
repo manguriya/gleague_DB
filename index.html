@@ -75,6 +75,31 @@
         .pn-list li.pn-sub::before { content: '–'; left: 17px; }
         .pn-note { font-size: 0.74rem; color: var(--text-muted); margin: 2px 0; }
         .g-new { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 4px; background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.55); color: #4ade80; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.04em; vertical-align: 1px; line-height: 1.5; white-space: nowrap; }
+        /* 📝 패치노트 v2 — 최신 위, 버전별 구분선, 태그·표 */
+        .pn-sep { border: 0; height: 3px; margin: 18px 0; border-radius: 2px; background: linear-gradient(90deg, rgba(56,189,248,0.0), rgba(56,189,248,0.55), rgba(56,189,248,0.0)); }
+        .pn-older-label { text-align: center; font-size: 0.72rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.08em; margin: 6px 0 0; }
+        details.pn-ver { padding: 0; overflow: hidden; border-left: 4px solid #475569; margin-bottom: 0; }
+        details.pn-ver.latest { border-left-color: var(--success); box-shadow: 0 0 0 1px rgba(34,197,94,0.18), 0 6px 22px rgba(34,197,94,0.07); }
+        details.pn-ver > summary { list-style: none; cursor: pointer; padding: 12px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+        details.pn-ver > summary::-webkit-details-marker { display: none; }
+        details.pn-ver > summary::after { content: '▾'; margin-left: auto; color: var(--text-muted); transition: transform .2s; }
+        details.pn-ver:not([open]) > summary::after { transform: rotate(-90deg); }
+        .pn-ver-body { padding: 0 14px 12px; }
+        .pn-ver-name { font-size: 1.1rem; }
+        details.pn-ver:not(.latest) .pn-ver-name { color: #cbd5e1; }
+        .pn-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin: 0 14px 10px; background: rgba(255,255,255,0.06); }
+        .pn-bar span { display: block; height: 100%; }
+        .pn-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+        .pn-tag { display: inline-block; margin-right: 6px; padding: 0 7px; border-radius: 999px; font-size: 0.66rem; font-weight: 800; line-height: 1.6; color: #fff; vertical-align: 1px; white-space: nowrap; }
+        .pn-t-new { background: #16a34a; } .pn-t-imp { background: #0284c7; } .pn-t-fix { background: #ea580c; }
+        .pn-t-chg { background: #7c3aed; } .pn-t-del { background: #dc2626; } .pn-t-up { background: #15803d; } .pn-t-down { background: #b91c1c; } .pn-t-etc { background: #475569; }
+        .pn-tbl { width: 100%; border-collapse: collapse; margin: 6px 0 8px 14px; max-width: min(440px, calc(100% - 14px)); font-size: 0.76rem; }
+        .pn-tbl th, .pn-tbl td { text-align: left !important; }
+        .pn-tbl th { text-align: left; font-weight: 800; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .pn-tbl td { padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .pn-tbl tr:last-child td { border-bottom: 0; }
+        .pn-chg-old { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(148,163,184,0.5); }
+        .pn-up { color: #4ade80; font-weight: 800; } .pn-down { color: #f87171; font-weight: 800; }
         .pn-new { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 4px; background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.55); color: #4ade80; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.04em; vertical-align: 1px; line-height: 1.5; }
         .nav-tabs-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 10px 4px; }
         .tab-btn {
@@ -798,13 +823,13 @@
                 <button class="tab-btn" onclick="openTab('managerdatacenter')" title="감독 데이터센터"><span class="tab-icon">🧑‍💼</span><span class="tab-label">감독 데이터센터</span></button>
                 <button class="tab-btn" onclick="openTab('transferall')" title="이적기록"><span class="tab-icon">🔁</span><span class="tab-label">이적기록</span></button>
                 <button class="tab-btn" onclick="openTab('stats')" title="순위표"><span class="tab-icon">📊</span><span class="tab-label">순위표</span></button>
-                <button class="tab-btn" onclick="openTab('ranking')" title="랭킹"><span class="tab-icon">🏅</span><span class="tab-label">랭킹</span></button>
+                <button class="tab-btn" data-new="1.01" onclick="openTab('ranking')" title="랭킹"><span class="tab-icon">🏅</span><span class="tab-label">랭킹</span></button>
 
                 <button class="tab-btn" onclick="openTab('matchlab')" title="전력분석"><span class="tab-icon">🧠</span><span class="tab-label">전력분석</span></button>
                 <button class="tab-btn" onclick="openTab('awards')" title="시즌 기록"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
                 <button class="tab-btn" onclick="openTab('total')" title="역사관"><span class="tab-icon">🏛️</span><span class="tab-label">역사관</span></button>
                 <button class="tab-btn" onclick="openTab('setup')" title="설정" style="margin-top:22px; border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;"><span class="tab-icon">⚙️</span><span class="tab-label">설정</span></button>
-                <button class="tab-btn" data-new="1.00" onclick="openTab('patchnote')" title="패치노트"><span class="tab-icon">📝</span><span class="tab-label">패치노트</span></button>
+                <button class="tab-btn" data-new="1.01" onclick="openTab('patchnote')" title="패치노트"><span class="tab-icon">📝</span><span class="tab-label">패치노트</span></button>
             </nav>
             <div class="db-date-label" id="gDbDateLabel" title="현재 불러온 DB의 저장 날짜"></div>
             <div class="db-date-label ver-label" id="gHtmlVerLabel" title="현재 HTML 버전"></div>
@@ -1998,7 +2023,7 @@
             </div>
 
             <div class="card">
-                <h3>📈 전체 팀 랭킹</h3>
+                <h3 data-new="1.01">📈 전체 팀 랭킹</h3>
                 <div class="ranking-info" id="teamRankInfo">정렬 기준: 클릭한 열 (동률 시 승점 > Elo점수 > 득실차 > 승자승 순으로 비교)</div>
                 <table class="pattern-table">
                     <thead><tr>
@@ -20394,8 +20419,8 @@
                     const stillValid = Array.from(selEl.options).some(o => o.value === prev);
                     selEl.value = stillValid ? prev : name;
                 } else {
-                    // 기본값: 현재 시즌
-                    selEl.value = name;
+                    // 기본값: 현재 시즌 (단, 🏅 랭킹 탭의 시즌 필터는 '전체'가 기본)
+                    selEl.value = (id === 'rankingSeasonFilter') ? 'all' : name;
                 }
             });
             // 개인 기록 랭킹 제목도 현재 시즌 이름 반영
@@ -22797,7 +22822,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.00';
+        const G_HTML_VERSION = '1.01';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -22806,8 +22831,7 @@
             document.querySelectorAll('[data-new]').forEach(el => {
                 el.querySelectorAll(':scope > .g-new').forEach(b => b.remove());
                 if (el.getAttribute('data-new') !== G_HTML_VERSION) return;
-                const host = el.querySelector(':scope > .tab-label') || el;
-                host.insertAdjacentHTML('beforeend', '<span class="g-new">NEW</span>');
+                el.insertAdjacentHTML('beforeend', '<span class="g-new">NEW</span>');  // (메뉴 버튼은 라벨 밖에 붙여 상단 제목에 NEW가 섞이지 않게 함)
             });
         }
         const G_AUTO_JSON_FILES = ['gleague_DB.json'];
@@ -22932,31 +22956,79 @@
         //  - 파일을 직접 연 경우(file://)는 브라우저가 막으므로 '📂 txt 파일 직접 열기'로 불러올 수 있다.
         //  - txt 작성 규칙 (맨 위가 최신):
         //      # v1.01 | 2026-10-20 | 제목(선택)      ← 버전 머리글 ('#'로 시작, '|'로 구분)
-        //      - 항목                                 ← 항목 ('-', '*', '•'로 시작)
+        //      - [신규] 항목                          ← 항목 ('-'로 시작). [신규][개선][수정][변경][삭제][상승][하락] 태그는 색깔 라벨로 표시
+        //      | 대상 | 항목 | 변경 |  /  | 박주아 | 드리블 | 95 → 96 |   ← 표 (첫 줄이 제목줄, '95 → 96'은 ▲▼ 증감으로 자동 표시)
         //        - 세부 항목                          ← 들여쓰기하면 세부 항목
         //      그 외 일반 줄은 설명 문장으로 표시
-        //      가장 위(최신) 버전의 항목에는 초록색 NEW 표시가 붙는다.
+        //      표시 순서는 버전 숫자 기준으로 자동 정렬(최신이 맨 위). 이전 버전은 접힘/펼침 가능.
         // ======================================================
         const G_PN_FILES = { html: '업데이트.txt', db: 'DB업데이트.txt' };
         const G_PN_LABEL = { html: 'HTML', db: 'DB' };
         const gPn = { html: { text: null, src: '' }, db: { text: null, src: '' } };
         let gPnTab = 'html';
+        const G_PN_TAGS = { '신규': 'new', '추가': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del', '상승': 'up', '하락': 'down' };
+        const G_PN_COLORS = { new: '#22c55e', imp: '#38bdf8', fix: '#fb923c', chg: '#a78bfa', del: '#ef4444', up: '#4ade80', down: '#f87171', etc: '#64748b' };
         function gPnParse(text) {
-            const vers = []; let cur = null;
+            const vers = []; let cur = null, tbl = null;
+            const ensure = () => { if (!cur) { cur = { name: '', date: '', title: '', items: [] }; vers.push(cur); } return cur; };
             String(text || '').replace(/^﻿/, '').split(/\r?\n/).forEach(line => {
-                if (!line.trim()) return;
+                if (!line.trim()) { tbl = null; return; }
                 const h = line.match(/^\s*#{1,3}\s*(.+)$/);
                 if (h) {
                     const parts = h[1].split('|').map(x => x.trim());
                     cur = { name: parts[0] || '', date: parts[1] || '', title: parts.slice(2).join(' | '), items: [] };
-                    vers.push(cur); return;
+                    vers.push(cur); tbl = null; return;
                 }
-                if (!cur) { cur = { name: '', date: '', title: '', items: [] }; vers.push(cur); }
+                if (/^\s*\|/.test(line)) {                      // 표: | 칸 | 칸 |
+                    const cells = line.trim().replace(/^\||\|$/g, '').split('|').map(x => x.trim());
+                    if (cells.every(c => /^:?-{2,}:?$/.test(c))) return;  // |---|---| 구분줄은 무시
+                    if (!tbl) { tbl = { table: true, rows: [] }; ensure().items.push(tbl); }
+                    tbl.rows.push(cells); return;
+                }
+                tbl = null;
                 const b = line.match(/^(\s*)[-*•·]\s+(.*)$/);
-                if (b) cur.items.push({ t: b[2], sub: b[1].length >= 2 });
-                else cur.items.push({ t: line.trim(), note: true });
+                if (b) {
+                    let t = b[2], tag = null;
+                    const m = t.match(/^\[([^\]]+)\]\s*(.*)$/);
+                    if (m) { tag = { label: m[1], key: G_PN_TAGS[m[1]] || 'etc' }; t = m[2]; }
+                    ensure().items.push({ t, sub: b[1].length >= 2, tag });
+                } else ensure().items.push({ t: line.trim(), note: true });
             });
-            return vers;
+            // 최신이 맨 위: 버전 숫자(내림차순) → 날짜(내림차순) → 파일 순서
+            const num = v => { const m = String(v.name).match(/(\d+(?:\.\d+)*)/); return m ? m[1].split('.').map(Number) : null; };
+            const cmpNum = (x, y) => { for (let i = 0; i < Math.max(x.length, y.length); i++) { const d = (y[i] || 0) - (x[i] || 0); if (d) return d; } return 0; };
+            const idx = new Map(vers.map((v, i) => [v, i]));
+            return vers.slice().sort((x, y) => {
+                const nx = num(x), ny = num(y);
+                if (nx && ny) { const c = cmpNum(nx, ny); if (c) return c; }
+                if (x.date && y.date && x.date !== y.date) return x.date < y.date ? 1 : -1;
+                return idx.get(x) - idx.get(y);
+            });
+        }
+        function gPnCell(c) {
+            const m = String(c).match(/^(-?\d+(?:\.\d+)?)\s*(?:→|->)\s*(-?\d+(?:\.\d+)?)$/);
+            if (!m) return gEsc(c);
+            const o = parseFloat(m[1]), n = parseFloat(m[2]), d = Math.round((n - o) * 100) / 100;
+            return `<span class="pn-chg-old">${gEsc(m[1])}</span> → <b>${gEsc(m[2])}</b> ` + (d > 0 ? `<span class="pn-up">▲${d}</span>` : d < 0 ? `<span class="pn-down">▼${Math.abs(d)}</span>` : '');
+        }
+        function gPnRenderVer(v, vi) {
+            const cnt = {};
+            v.items.forEach(it => { if (it.tag && !it.sub) cnt[it.tag.label] = (cnt[it.tag.label] || 0) + 1; });
+            const entries = Object.keys(cnt).map(k => ({ k, n: cnt[k], key: G_PN_TAGS[k] || 'etc' }));
+            const total = entries.reduce((a, e) => a + e.n, 0);
+            const chips = entries.map(e => `<span class="pn-tag pn-t-${e.key}">${gEsc(e.k)} ${e.n}</span>`).join('');
+            const bar = total > 1 ? `<div class="pn-bar">${entries.map(e => `<span style="width:${(e.n / total * 100).toFixed(1)}%; background:${G_PN_COLORS[e.key]};" title="${gEsc(e.k)} ${e.n}"></span>`).join('')}</div>` : '';
+            const body = v.items.map(it => {
+                if (it.table) {
+                    const [head, ...rows] = it.rows;
+                    return `<table class="pn-tbl"><thead><tr>${head.map(c => `<th>${gEsc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${gPnCell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+                }
+                if (it.note) return `<div class="pn-note">${gEsc(it.t)}</div>`;
+                return `<li class="${it.sub ? 'pn-sub' : ''}">${it.tag ? `<span class="pn-tag pn-t-${it.tag.key}">${gEsc(it.tag.label)}</span>` : ''}${gEsc(it.t)}</li>`;
+            }).join('').replace(/(<li[\s\S]*?<\/li>)+/g, m => `<ul class="pn-list">${m}</ul>`);
+            return `<details class="pn-ver${vi === 0 ? ' latest' : ''}" ${vi === 0 ? 'open' : ''}>
+                <summary><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}<span class="pn-chips">${chips}</span></summary>
+                ${bar}<div class="pn-ver-body">${body}</div></details>`;
         }
         function gPnRender() {
             const el = document.getElementById('gPnBody'), st = document.getElementById('gPnStatus'); if (!el) return;
@@ -22968,10 +23040,7 @@
             }
             const vers = gPnParse(d.text);
             if (!vers.length) { el.innerHTML = `<div style="color:var(--text-muted); font-size:0.82rem;">${gEsc(fn)} 에 표시할 내용이 없습니다.</div>`; if (st) st.textContent = ''; return; }
-            el.innerHTML = vers.map((v, vi) => `<div class="pn-ver${vi === 0 ? ' latest' : ''}">
-                <div class="pn-ver-head"><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}</div>
-                <ul class="pn-list">${v.items.map(it => it.note ? `<div class="pn-note">${gEsc(it.t)}</div>` : `<li class="${it.sub ? 'pn-sub' : ''}">${gEsc(it.t)}</li>`).join('')}</ul>
-            </div>`).join('');
+            el.innerHTML = vers.map((v, vi) => (vi === 0 ? '' : (vi === 1 ? '<hr class="pn-sep"><div class="pn-older-label">▼ 이전 버전</div><hr class="pn-sep" style="margin-top:8px;">' : '<hr class="pn-sep">')) + gPnRenderVer(v, vi)).join('');
             let msg = `📄 ${fn}${d.src ? ' (' + d.src + ')' : ''} · 최신 ${vers[0].name || '-'}${vers[0].date ? ' · ' + vers[0].date : ''}`;
             if (gPnTab === 'html' && vers[0].name) {
                 const same = vers[0].name.replace(/^v/i, '') === G_HTML_VERSION;
