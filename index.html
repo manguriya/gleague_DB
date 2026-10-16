@@ -74,6 +74,7 @@
         .pn-list li.pn-sub { padding-left: 28px; font-size: 0.76rem; color: var(--text-muted); }
         .pn-list li.pn-sub::before { content: '–'; left: 17px; }
         .pn-note { font-size: 0.74rem; color: var(--text-muted); margin: 2px 0; }
+        .g-new { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 4px; background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.55); color: #4ade80; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.04em; vertical-align: 1px; line-height: 1.5; white-space: nowrap; }
         .pn-new { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 4px; background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.55); color: #4ade80; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.04em; vertical-align: 1px; line-height: 1.5; }
         .nav-tabs-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 10px 4px; }
         .tab-btn {
@@ -803,6 +804,7 @@
                 <button class="tab-btn" onclick="openTab('awards')" title="시즌 기록"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
                 <button class="tab-btn" onclick="openTab('total')" title="역사관"><span class="tab-icon">🏛️</span><span class="tab-label">역사관</span></button>
                 <button class="tab-btn" onclick="openTab('setup')" title="설정" style="margin-top:22px; border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;"><span class="tab-icon">⚙️</span><span class="tab-label">설정</span></button>
+                <button class="tab-btn" data-new="1.00" onclick="openTab('patchnote')" title="패치노트"><span class="tab-icon">📝</span><span class="tab-label">패치노트</span></button>
             </nav>
             <div class="db-date-label" id="gDbDateLabel" title="현재 불러온 DB의 저장 날짜"></div>
             <div class="db-date-label ver-label" id="gHtmlVerLabel" title="현재 HTML 버전"></div>
@@ -1460,7 +1462,7 @@
                     <div style="font-size:0.68rem; color:var(--text-muted); margin-top:6px;">파일명이 고정되어 저장됩니다(날짜 없음). 두 파일을 같은 폴더에 올리면 사이트가 JSON을 자동으로 불러옵니다.</div>
                 </div>
                 <div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.08);">
-                    <div style="font-weight:800; font-size:0.85rem; margin-bottom:6px;">🌐 공용 저장 JSON 자동 불러오기</div>
+                    <div data-new="1.00" style="font-weight:800; font-size:0.85rem; margin-bottom:6px;">🌐 공용 저장 JSON 자동 불러오기</div>
                     <div id="gAutoJsonStatus" style="font-size:0.74rem; color:var(--text-muted); margin-bottom:8px;"></div>
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
                         <button class="btn btn-auto" onclick="gReloadRemoteJson()">🌐 서버 최신 JSON 다시 불러오기</button>
@@ -1491,7 +1493,10 @@
                 </div>
             </div>
 
-            <!-- 📝 패치노트 -->
+        </div>
+
+        <!-- 📝 패치노트 탭 (좌측 메뉴) -->
+        <div id="patchnote" class="tab-content">
             <div class="card" id="gPatchCard">
                 <h3>📝 패치노트</h3>
                 <div class="pn-tabs">
@@ -1505,7 +1510,7 @@
                     <button class="btn btn-auto" onclick="document.getElementById('gPnFile').click()">📂 txt 파일 직접 열기</button>
                     <input type="file" id="gPnFile" accept=".txt,text/plain" style="display:none" onchange="gPnOpenLocal(event)">
                 </div>
-                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:6px;">접속할 때마다 index.html과 같은 폴더의 <b>업데이트.txt</b>(HTML)와 <b>DB업데이트.txt</b>(DB)를 자동으로 불러옵니다. 가장 최신 버전에 적힌 항목에는 <span class="pn-new">NEW</span> 표시가 붙습니다.</div>
+                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:6px;">접속할 때마다 index.html과 같은 폴더의 <b>업데이트.txt</b>(HTML)와 <b>DB업데이트.txt</b>(DB)를 자동으로 불러옵니다.</div>
             </div>
         </div>
 
@@ -13380,6 +13385,7 @@
             if(id === 'managerdatacenter') { mdcOnOpen(); }
             if(id === 'total') { renderHistoryOverviewStrip(); renderHistoryChampionsTimeline(); }
             if(id === 'dashboard') { renderDashboard(); }
+            if(id === 'patchnote' && typeof gPnRender === 'function') gPnRender();
             updateGlobalBackBtn();
         }
 
@@ -22792,6 +22798,18 @@
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
         const G_HTML_VERSION = '1.00';
+        // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
+        //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
+        //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
+        function gNewTag(ver) { return ver === G_HTML_VERSION ? '<span class="g-new">NEW</span>' : ''; }
+        function gApplyNewBadges() {
+            document.querySelectorAll('[data-new]').forEach(el => {
+                el.querySelectorAll(':scope > .g-new').forEach(b => b.remove());
+                if (el.getAttribute('data-new') !== G_HTML_VERSION) return;
+                const host = el.querySelector(':scope > .tab-label') || el;
+                host.insertAdjacentHTML('beforeend', '<span class="g-new">NEW</span>');
+            });
+        }
         const G_AUTO_JSON_FILES = ['gleague_DB.json'];
         const G_JSON_SIG_KEY = 'gleague_autojson_sig_v1';
         let gAutoJsonInfo = null;
@@ -22801,7 +22819,8 @@
         function gRenderDbDate() {
             const el = document.getElementById('gDbDateLabel'); if (!el) return;
             el.textContent = 'gleague_DB/' + ((state && state.dbSavedDate) || '날짜 없음');
-            const ve = document.getElementById('gHtmlVerLabel'); if (ve) ve.innerHTML = 'G-LEAGUE<br>REBOOT v ' + G_HTML_VERSION;
+            el.insertAdjacentHTML('beforeend', gNewTag('1.00'));
+            const ve = document.getElementById('gHtmlVerLabel'); if (ve) ve.innerHTML = 'G-LEAGUE<br>REBOOT v ' + G_HTML_VERSION + gNewTag('1.00');
         }
         function gHashText(s) { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return s.length + ':' + (h >>> 0).toString(36); }
         async function gFetchRemoteJson() {
@@ -22908,7 +22927,7 @@
         gAutoLoadJson();
 
         // ======================================================
-        // 📝 패치노트 (업데이트.txt / DB업데이트.txt 자동 불러오기)
+        // 📝 패치노트 (좌측 메뉴 › 패치노트 — 업데이트.txt / DB업데이트.txt 자동 불러오기)
         //  - 접속할 때마다 서버(같은 폴더)의 txt를 캐시 없이 불러와 설정 탭 하단에 표시한다.
         //  - 파일을 직접 연 경우(file://)는 브라우저가 막으므로 '📂 txt 파일 직접 열기'로 불러올 수 있다.
         //  - txt 작성 규칙 (맨 위가 최신):
@@ -22951,7 +22970,7 @@
             if (!vers.length) { el.innerHTML = `<div style="color:var(--text-muted); font-size:0.82rem;">${gEsc(fn)} 에 표시할 내용이 없습니다.</div>`; if (st) st.textContent = ''; return; }
             el.innerHTML = vers.map((v, vi) => `<div class="pn-ver${vi === 0 ? ' latest' : ''}">
                 <div class="pn-ver-head"><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}</div>
-                <ul class="pn-list">${v.items.map(it => it.note ? `<div class="pn-note">${gEsc(it.t)}</div>` : `<li class="${it.sub ? 'pn-sub' : ''}">${vi === 0 && !it.sub ? '<span class="pn-new">NEW</span>' : ''}${gEsc(it.t)}</li>`).join('')}</ul>
+                <ul class="pn-list">${v.items.map(it => it.note ? `<div class="pn-note">${gEsc(it.t)}</div>` : `<li class="${it.sub ? 'pn-sub' : ''}">${gEsc(it.t)}</li>`).join('')}</ul>
             </div>`).join('');
             let msg = `📄 ${fn}${d.src ? ' (' + d.src + ')' : ''} · 최신 ${vers[0].name || '-'}${vers[0].date ? ' · ' + vers[0].date : ''}`;
             if (gPnTab === 'html' && vers[0].name) {
@@ -22987,7 +23006,7 @@
             r.onload = () => { gPn[gPnTab] = { text: String(r.result), src: '직접 연 파일: ' + f.name }; gPnRender(); ev.target.value = ''; };
             r.readAsText(f, 'utf-8');
         }
-        try { gRenderDbDate(); } catch (e) { }  // 버전 라벨 (init()보다 뒤에 정의되므로 여기서 한 번 더 표시)
+        try { gRenderDbDate(); gApplyNewBadges(); } catch (e) { }  // 버전 라벨 (init()보다 뒤에 정의되므로 여기서 한 번 더 표시)
         gPnRender();
         gPnLoadAll(false);
     
