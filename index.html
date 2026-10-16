@@ -57,6 +57,24 @@
         }
         .db-date-label { flex-shrink: 0; padding: 10px 14px 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.68rem; color: var(--text-muted); font-weight: 700; text-align: center; word-break: break-all; }
         .sidebar.collapsed .db-date-label { display: none; }
+        .db-date-label.ver-label { border-top: none; padding-top: 0; margin-top: -8px; }
+        /* 📝 패치노트 */
+        .pn-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+        .pn-tab { padding: 7px 14px; border-radius: 8px; border: 1px solid #334155; background: var(--bg-input); color: var(--text-muted); font-weight: 800; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
+        .pn-tab.active { color: var(--accent); border-color: var(--accent); background: rgba(56,189,248,0.1); }
+        .pn-ver { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; }
+        .pn-ver.latest { border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.05); }
+        .pn-ver-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+        .pn-ver-name { font-weight: 900; font-size: 0.95rem; color: var(--gold); }
+        .pn-ver-date { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; }
+        .pn-ver-title { font-size: 0.78rem; color: var(--text); font-weight: 700; }
+        .pn-list { margin: 4px 0 0; padding: 0; list-style: none; }
+        .pn-list li { font-size: 0.8rem; line-height: 1.5; padding: 2px 0 2px 14px; position: relative; }
+        .pn-list li::before { content: '•'; position: absolute; left: 3px; color: var(--text-muted); }
+        .pn-list li.pn-sub { padding-left: 28px; font-size: 0.76rem; color: var(--text-muted); }
+        .pn-list li.pn-sub::before { content: '–'; left: 17px; }
+        .pn-note { font-size: 0.74rem; color: var(--text-muted); margin: 2px 0; }
+        .pn-new { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 4px; background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.55); color: #4ade80; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.04em; vertical-align: 1px; line-height: 1.5; }
         .nav-tabs-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 10px 4px; }
         .tab-btn {
             padding: 11px 14px; border: none; border-left: 3px solid transparent; border-radius: 8px;
@@ -787,6 +805,7 @@
                 <button class="tab-btn" onclick="openTab('setup')" title="설정" style="margin-top:22px; border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;"><span class="tab-icon">⚙️</span><span class="tab-label">설정</span></button>
             </nav>
             <div class="db-date-label" id="gDbDateLabel" title="현재 불러온 DB의 저장 날짜"></div>
+            <div class="db-date-label ver-label" id="gHtmlVerLabel" title="현재 HTML 버전"></div>
         </aside>
 
         <div class="main-content">
@@ -1470,6 +1489,23 @@
                     <button class="btn btn-del" onclick="gInitTeamsSafe()">🔄 팀 데이터 초기화</button>
                     <button class="btn btn-del" onclick="resetData()">🗑️ 전체 데이터 초기화</button>
                 </div>
+            </div>
+
+            <!-- 📝 패치노트 -->
+            <div class="card" id="gPatchCard">
+                <h3>📝 패치노트</h3>
+                <div class="pn-tabs">
+                    <button class="pn-tab active" id="gPnTabHtml" onclick="gPnSwitch('html')">🖥️ HTML 패치노트</button>
+                    <button class="pn-tab" id="gPnTabDb" onclick="gPnSwitch('db')">🗄️ DB 패치노트</button>
+                </div>
+                <div id="gPnStatus" style="font-size:0.72rem; color:var(--text-muted); margin-bottom:8px;"></div>
+                <div id="gPnBody"></div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                    <button class="btn btn-auto" onclick="gPnLoadAll(true)">🔄 패치노트 다시 불러오기</button>
+                    <button class="btn btn-auto" onclick="document.getElementById('gPnFile').click()">📂 txt 파일 직접 열기</button>
+                    <input type="file" id="gPnFile" accept=".txt,text/plain" style="display:none" onchange="gPnOpenLocal(event)">
+                </div>
+                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:6px;">접속할 때마다 index.html과 같은 폴더의 <b>업데이트.txt</b>(HTML)와 <b>DB업데이트.txt</b>(DB)를 자동으로 불러옵니다. 가장 최신 버전에 적힌 항목에는 <span class="pn-new">NEW</span> 표시가 붙습니다.</div>
             </div>
         </div>
 
@@ -22749,6 +22785,13 @@
         //  - 파일을 직접 여는 경우(file://)나 JSON이 없으면 기존처럼 브라우저 저장본으로 동작한다.
         //  - 기존의 '📂 데이터 복원'(파일 선택)은 그대로 사용할 수 있다.
         // ======================================================
+        // ----------------------------------------------------------------
+        // 🔖 HTML 버전 (메뉴바 최하단에 표시) — 업데이트할 때마다 이 값을 직접 올려 주세요.
+        //   소소한 수정 +0.01 / 중규모 업데이트 +0.10 / 버전업급 업데이트 +1.00  (10진 소수 그대로 올림)
+        //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
+        //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
+        // ----------------------------------------------------------------
+        const G_HTML_VERSION = '1.00';
         const G_AUTO_JSON_FILES = ['gleague_DB.json'];
         const G_JSON_SIG_KEY = 'gleague_autojson_sig_v1';
         let gAutoJsonInfo = null;
@@ -22758,6 +22801,7 @@
         function gRenderDbDate() {
             const el = document.getElementById('gDbDateLabel'); if (!el) return;
             el.textContent = 'gleague_DB/' + ((state && state.dbSavedDate) || '날짜 없음');
+            const ve = document.getElementById('gHtmlVerLabel'); if (ve) ve.innerHTML = 'G-LEAGUE<br>REBOOT v ' + G_HTML_VERSION;
         }
         function gHashText(s) { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return s.length + ':' + (h >>> 0).toString(36); }
         async function gFetchRemoteJson() {
@@ -22862,6 +22906,90 @@
         }
 
         gAutoLoadJson();
+
+        // ======================================================
+        // 📝 패치노트 (업데이트.txt / DB업데이트.txt 자동 불러오기)
+        //  - 접속할 때마다 서버(같은 폴더)의 txt를 캐시 없이 불러와 설정 탭 하단에 표시한다.
+        //  - 파일을 직접 연 경우(file://)는 브라우저가 막으므로 '📂 txt 파일 직접 열기'로 불러올 수 있다.
+        //  - txt 작성 규칙 (맨 위가 최신):
+        //      # v1.01 | 2026-10-20 | 제목(선택)      ← 버전 머리글 ('#'로 시작, '|'로 구분)
+        //      - 항목                                 ← 항목 ('-', '*', '•'로 시작)
+        //        - 세부 항목                          ← 들여쓰기하면 세부 항목
+        //      그 외 일반 줄은 설명 문장으로 표시
+        //      가장 위(최신) 버전의 항목에는 초록색 NEW 표시가 붙는다.
+        // ======================================================
+        const G_PN_FILES = { html: '업데이트.txt', db: 'DB업데이트.txt' };
+        const G_PN_LABEL = { html: 'HTML', db: 'DB' };
+        const gPn = { html: { text: null, src: '' }, db: { text: null, src: '' } };
+        let gPnTab = 'html';
+        function gPnParse(text) {
+            const vers = []; let cur = null;
+            String(text || '').replace(/^﻿/, '').split(/\r?\n/).forEach(line => {
+                if (!line.trim()) return;
+                const h = line.match(/^\s*#{1,3}\s*(.+)$/);
+                if (h) {
+                    const parts = h[1].split('|').map(x => x.trim());
+                    cur = { name: parts[0] || '', date: parts[1] || '', title: parts.slice(2).join(' | '), items: [] };
+                    vers.push(cur); return;
+                }
+                if (!cur) { cur = { name: '', date: '', title: '', items: [] }; vers.push(cur); }
+                const b = line.match(/^(\s*)[-*•·]\s+(.*)$/);
+                if (b) cur.items.push({ t: b[2], sub: b[1].length >= 2 });
+                else cur.items.push({ t: line.trim(), note: true });
+            });
+            return vers;
+        }
+        function gPnRender() {
+            const el = document.getElementById('gPnBody'), st = document.getElementById('gPnStatus'); if (!el) return;
+            ['html', 'db'].forEach(k => { const b = document.getElementById(k === 'html' ? 'gPnTabHtml' : 'gPnTabDb'); if (b) b.classList.toggle('active', k === gPnTab); });
+            const d = gPn[gPnTab], fn = G_PN_FILES[gPnTab];
+            if (d.text === null) {
+                el.innerHTML = `<div class="dash-empty" style="color:var(--text-muted); font-size:0.82rem; padding:10px 0;">${gEsc(fn)} 파일을 불러오지 못했습니다.${location.protocol === 'file:' ? ' (파일을 직접 연 상태에서는 자동으로 불러올 수 없습니다. 아래 \'txt 파일 직접 열기\'를 사용해 주세요.)' : ' index.html과 같은 폴더에 파일이 있는지 확인해 주세요.'}</div>`;
+                if (st) st.textContent = ''; return;
+            }
+            const vers = gPnParse(d.text);
+            if (!vers.length) { el.innerHTML = `<div style="color:var(--text-muted); font-size:0.82rem;">${gEsc(fn)} 에 표시할 내용이 없습니다.</div>`; if (st) st.textContent = ''; return; }
+            el.innerHTML = vers.map((v, vi) => `<div class="pn-ver${vi === 0 ? ' latest' : ''}">
+                <div class="pn-ver-head"><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}</div>
+                <ul class="pn-list">${v.items.map(it => it.note ? `<div class="pn-note">${gEsc(it.t)}</div>` : `<li class="${it.sub ? 'pn-sub' : ''}">${vi === 0 && !it.sub ? '<span class="pn-new">NEW</span>' : ''}${gEsc(it.t)}</li>`).join('')}</ul>
+            </div>`).join('');
+            let msg = `📄 ${fn}${d.src ? ' (' + d.src + ')' : ''} · 최신 ${vers[0].name || '-'}${vers[0].date ? ' · ' + vers[0].date : ''}`;
+            if (gPnTab === 'html' && vers[0].name) {
+                const same = vers[0].name.replace(/^v/i, '') === G_HTML_VERSION;
+                msg += same ? ` · 현재 HTML v${G_HTML_VERSION}과 일치` : ` · ⚠️ 현재 HTML은 v${G_HTML_VERSION} (패치노트와 다름 — 캐시이거나 버전 값을 안 올렸을 수 있어요)`;
+            }
+            if (st) st.textContent = msg;
+        }
+        function gPnSwitch(k) { gPnTab = k; gPnRender(); }
+        async function gPnFetch(k) {
+            if (location.protocol === 'file:') return null;
+            try {
+                const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 10000);
+                const res = await fetch(G_PN_FILES[k] + '?v=' + Date.now(), { cache: 'no-store', signal: ctl.signal });
+                clearTimeout(to);
+                if (!res.ok) return null;
+                const t = await res.text();
+                // 서버가 파일이 없을 때 index.html 등을 돌려주는 경우 걸러냄
+                if (/^\s*<(!doctype|html)/i.test(t)) return null;
+                return t;
+            } catch (e) { console.warn('패치노트 불러오기 실패:', G_PN_FILES[k], e); return null; }
+        }
+        async function gPnLoadAll(manual) {
+            const [h, d] = await Promise.all([gPnFetch('html'), gPnFetch('db')]);
+            if (h !== null) gPn.html = { text: h, src: '서버' };
+            if (d !== null) gPn.db = { text: d, src: '서버' };
+            gPnRender();
+            if (manual) gToast(h === null && d === null ? '패치노트 파일을 찾지 못했습니다.' : '📝 패치노트를 다시 불러왔습니다.');
+        }
+        function gPnOpenLocal(ev) {
+            const f = ev.target.files && ev.target.files[0]; if (!f) return;
+            const r = new FileReader();
+            r.onload = () => { gPn[gPnTab] = { text: String(r.result), src: '직접 연 파일: ' + f.name }; gPnRender(); ev.target.value = ''; };
+            r.readAsText(f, 'utf-8');
+        }
+        try { gRenderDbDate(); } catch (e) { }  // 버전 라벨 (init()보다 뒤에 정의되므로 여기서 한 번 더 표시)
+        gPnRender();
+        gPnLoadAll(false);
     
         // ======================================================
         // 📈 선수 성장·하락 분석 (3.12)
