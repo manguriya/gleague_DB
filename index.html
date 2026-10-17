@@ -11843,7 +11843,43 @@
         const TC_GK_FORMULA = { '선방력': 0.30, '반사신경': 0.25, '판단력': 0.15, '위치선정': 0.10, '순발력': 0.10, '배급': 0.05, '체력': 0.05 };
         const TC_OVERALL_W = { atk: 0.22, pas: 0.12, dri: 0.10, def: 0.18, spd: 0.09, sta: 0.09, gk: 0.20 };
         const TC_FIELD_STARTERS = 4;     // 5인제: 필드 4 + GK 1
-        const TC_BENCH_MAX = 3, TC_BENCH_W = 0.35, TC_GK_BUILDUP_W = 0.3;
+        const TC_BENCH_MAX = 3, TC_BENCH_W = 0.20, TC_GK_BUILDUP_W = 0.3;   // 후보(교체) 기본 반영 비중 20% (v1.02: 35% → 20%)
+        // 🎚️ 시뮬레이션 전용 '주전 : 후보' 반영 비중 (v1.02)
+        //  - 주전(필드 4 + GK 1)은 항상 100%, 후보(교체 3명)가 팀 전력에 반영되는 비율만 바꾼다. (주전이 출전 시간이 더 길기 때문)
+        //  - null = 자동(기본 20% + 감독 용병술 보정). 숫자(0~1)면 그 값을 모든 팀에 똑같이 적용하고 용병술 보정은 쓰지 않는다.
+        //  - 시뮬레이션이 전력을 계산하는 순간(tcPowerMapSim)에만 켜지므로 전력 비교·팀 데이터센터 등 다른 화면 값은 그대로다.
+        let TC_SIM_BENCH = null;
+        const SIM_BENCH = { sel: 'auto', custom: 20 };   // sel: 'auto' | '0' | '20' | '50' | '100' | 'custom'
+        function simBenchValue() {
+            if (SIM_BENCH.sel === 'auto') return null;
+            const v = SIM_BENCH.sel === 'custom' ? +SIM_BENCH.custom : +SIM_BENCH.sel;
+            return isFinite(v) ? Math.max(0, Math.min(100, v)) / 100 : null;
+        }
+        function simBenchText() { const v = simBenchValue(); return v === null ? '자동(주전 100 : 후보 약 20, 감독 용병술에 따라 가감)' : `주전 100 : 후보 ${Math.round(v * 100)}`; }
+        function tcPowerMapSim(av) {
+            const prev = TC_SIM_BENCH; TC_SIM_BENCH = simBenchValue();
+            try { return tcPowerMap(av); } finally { TC_SIM_BENCH = prev; }
+        }
+        // 선택한 주전:후보 비중을 적용한 채로 fn을 실행 (매치업 분석 · 예정 경기 예측처럼 tcTeamPower를 직접 부르는 화면용)
+        function tcWithSimBench(fn) {
+            const prev = TC_SIM_BENCH; TC_SIM_BENCH = simBenchValue();
+            try { return fn(); } finally { TC_SIM_BENCH = prev; }
+        }
+        function simBenchControlHtml() {
+            const o = (v, l) => `<option value="${v}" ${SIM_BENCH.sel === v ? 'selected' : ''}>${l}</option>`;
+            return `<span class="sim-bench-wrap" style="display:inline-flex;align-items:center;gap:4px;font-size:0.74rem;" title="주전은 항상 100%로 반영하고, 후보(교체 3명)가 팀 전력에 반영되는 비율만 정합니다. 주전이 출전 시간이 더 길기 때문에 후보 비율을 낮출수록 주전 능력치가 더 크게 작용합니다. 🎲 경기 시뮬레이션 · 🏁 시즌 시뮬레이션 · ⚔️ 매치업 분석 · 대시보드 예정 경기 예측에 같은 값이 적용됩니다. (시뮬레이션은 ⚔️ 전력 반영을 켠 경우에 적용)">🎚️ 주전 : 후보 반영${gNewTag('1.02')} <select onchange="simSetBench(this.value)">${o('auto', '자동 (후보 20% · 감독 용병술 반영)')}${o('0', '주전만 (후보 0%)')}${o('20', '주전 중심 (후보 20%)')}${o('50', '균형 (후보 50%)')}${o('100', '전원 동일 (후보 100%)')}${o('custom', '직접 입력')}</select>${SIM_BENCH.sel === 'custom' ? `<input type="number" min="0" max="100" step="5" value="${SIM_BENCH.custom}" style="width:56px;" onchange="simSetBenchCustom(this.value)">%` : ''}</span>`;
+        }
+        function simBenchRefresh() {
+            document.querySelectorAll('.sim-bench-wrap').forEach(el => { el.outerHTML = simBenchControlHtml(); });
+        }
+        function simBenchApply() {
+            try { ssRun(); } catch (e) { console.error(e); }
+            const so = document.getElementById('simOut');
+            if (so && so.innerHTML.trim()) { try { simUi(); } catch (e) { console.error(e); } }
+            if (document.getElementById('mxResult')) { try { mxRender(); } catch (e) { console.error(e); } }
+        }
+        function simSetBench(v) { SIM_BENCH.sel = String(v); simBenchRefresh(); simBenchApply(); }
+        function simSetBenchCustom(v) { SIM_BENCH.custom = Math.max(0, Math.min(100, Math.round(+v || 0))); simBenchApply(); }
 
         const tcStatVal = (p, k) => (p.stats && p.stats[k] !== undefined ? p.stats[k] : ABILITY_STAT_DEFAULT);
         const tcFormula = (p, f) => Object.entries(f).reduce((n, [k, w]) => n + tcStatVal(p, k) * w, 0);
@@ -11874,7 +11910,7 @@
         const MGR_FX = {
             tactic:   { per: 0.16,  cap: 6.0 },                          // 전술 1점 격차 → 공격·패스·수비 +0.09점 (최대 ±3.5)
             motive:   { per: 0.12,  cap: 5.0 },                          // 동기부여 1점 격차 → 스피드·체력 +0.07점 (최대 ±3)
-            bench:    { base: TC_BENCH_W, per: 0.010, min: 0.15, max: 0.65 }, // 용병술 → 교체 3명 반영 비중
+            bench:    { base: TC_BENCH_W, per: 0.010, min: 0.05, max: 0.50 }, // 용병술 → 교체 3명 반영 비중
             comm:     { availPer: 0.02, availCap: 0.3, chemPer: 0.05, chemCap: 2.0 }, // 소통 → 결장 영향 완화 · 종합 전력 케미
             analysis: { per: 0.10,  cap: 3.5 },                          // 분석력 1점 격차 → 맞대결 시 종합 전력 +0.06점 (최대 ±2)
             crisis:   { per: 0.02, min: -0.2, max: 0.3 }               // 위기대처 1점 격차 → 열세 시 격차 1.2% 완화 (-15%~+20%)
@@ -11994,7 +12030,8 @@
                 startersField = field.slice(0, TC_FIELD_STARTERS);
                 bench = field.slice(TC_FIELD_STARTERS, TC_FIELD_STARTERS + TC_BENCH_MAX);
             }
-            const members = startersField.map(p => ({ p, w: 1 })).concat(bench.map(p => ({ p, w: mg.benchW })));
+            const benchW = (TC_SIM_BENCH === null || TC_SIM_BENCH === undefined) ? mg.benchW : TC_SIM_BENCH;   // 시뮬레이션에서 고른 후보 비중이 있으면 그 값 사용
+            const members = startersField.map(p => ({ p, w: 1 })).concat(bench.map(p => ({ p, w: benchW })));
 
             const cats = {};
             Object.keys(TC_FIELD_FORMULA).forEach(key => {
@@ -12094,6 +12131,7 @@
                 <h3 class="dash-section-title" style="margin-bottom:8px; font-size:1.25rem; font-weight:900; color:var(--gold);">경기 예측 · 팀 전력 비교</h3>
                 <div class="mx-seg">${seg('sched', `📅 예정 경기 (${list.length})`, !list.length)}${seg('teams', '🆚 팀 직접 선택', false)}</div>
                 <div style="margin-top:8px;">${picker}</div>
+                <div style="margin-top:8px;">${simBenchControlHtml()}</div>
                 <div class="dk-hint" style="margin:8px 0 0;">${mxMode === 'sched' ? '예정 경기를 고르면 <b>예상 선발 라인업</b>(직접 지정하지 않으면 능력치·출전 가능성이 높은 선수로 자동 구성)을 반영해 예측합니다.' : '임의의 두 팀을 골라 현재 선수단의 능력치(포지션·출전 가능성 반영)와 역대 맞대결·최근 성적을 함께 비교합니다.'} 새로 입력할 데이터는 없습니다.</div>
             </div><div id="mxResult"></div>`;
         }
@@ -12119,7 +12157,7 @@
         }
         function mxRender() {
             const box = document.getElementById('mxResult'); if (!box) return;
-            try { box.innerHTML = mxBuildHtml(); } catch (e) { console.error('매치업 분석 오류', e); box.innerHTML = '<div class="card dash-empty">결과를 만드는 중 오류가 발생했습니다.</div>'; }
+            try { box.innerHTML = tcWithSimBench(mxBuildHtml); } catch (e) { console.error('매치업 분석 오류', e); box.innerHTML = '<div class="card dash-empty">결과를 만드는 중 오류가 발생했습니다.</div>'; }
         }
         function tcRender() { mxRender(); }   // (기존 호출부 호환)
         // 다른 화면에서 두 팀을 지정해 바로 열기: openTeamCompare(팀A id, 팀B id) — 🆚 팀 직접 선택 모드로 열린다
@@ -12213,7 +12251,7 @@
                     ${simM ? `<span class="tc-pill">1골 차 접전 가능성 <b>${Math.round(simM.one * 100)}%</b></span>` : ''}
                     ${winPill(powExp, '능력치 우세도')}${winPill(eloExp, 'Elo 기대 승률')}${simM ? winPill(simM.pA, '시뮬레이션 승률') : ''}${h2hPill}
                 </div>
-                <div class="dk-hint" style="text-align:center; margin:8px 0 0;">종합 예측은 능력치(감독 효과 포함)·Elo·득실 시뮬레이션·맞대결·통산·최근 폼을 합친 참고치이며, 지표별 근거는 아래 🧮 예측 근거와 💡 종합 해석에서 확인할 수 있습니다. 홈/원정은 대진 표기 기준이며 홈 이점은 반영하지 않고, 정규시간 무승부는 선수 능력치 기반 승부차기 승률(🥅 PK 승률)로 계산합니다. 실제 결과를 보장하지 않습니다.</div>
+                <div class="dk-hint" style="text-align:center; margin:8px 0 0;">종합 예측은 능력치(감독 효과 포함)·Elo·득실 시뮬레이션·맞대결·통산·최근 폼을 합친 참고치이며, 지표별 근거는 아래 🧮 예측 근거와 💡 종합 해석에서 확인할 수 있습니다. 홈/원정은 대진 표기 기준이며 홈 이점은 반영하지 않고, 정규시간 무승부는 선수 능력치 기반 승부차기 승률(🥅 PK 승률)로 계산합니다. 팀 전력의 주전·후보 반영 비중은 <b>${simBenchText()}</b>입니다. 실제 결과를 보장하지 않습니다.</div>
                 <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
                     <button class="btn btn-auto" style="padding:6px 12px; font-size:0.75rem;" onclick="openMatchLab('${tA.id}','${tB.id}')">🎲 이 매치업 시뮬레이션 5,000회</button>
                     ${schedBtn}
@@ -12357,9 +12395,9 @@
                 <div style="font-size:0.74rem; line-height:1.55; color:var(--text-muted); margin-top:8px;">
                     · <b>필드와 GK는 분리</b>: GK의 선방력과 필드 선수의 결정력은 같은 항목으로 합치지 않습니다. 골키퍼 항목은 GK 전용 능력치(선방력 30%·반사신경 25%·판단력 15%·위치선정 10%·순발력 10%·배급 5%·체력 5%)로만 계산합니다.<br>
                     · <b>공격력</b> = 결정력 55% + 위치선정 25% + 드리블 20% (FW 1.0 · MF 0.7 · DF 0.35 반영) / <b>패스·빌드업</b> = 패스 (MF 1.0 · DF 0.7 · FW 0.6, GK 배급 0.3 추가) / <b>드리블</b> (FW 1.0 · MF 0.8 · DF 0.4) / <b>수비력</b> = 수비 75% + 위치선정 25% (DF 1.0 · MF 0.6 · FW 0.25) / <b>스피드·체력</b>은 필드 선수 전원 동일 반영.<br>
-                    · <b>주전·교체</b>: OVR × 출전 가능성 순으로 필드 4명 + GK 1명이 주전, 다음 3명이 교체(35% 반영)입니다. 출전 가능성은 전 시즌 출전·결장 기록으로 계산하며 기록이 적으면 100%에 가깝게 보정됩니다. 📅 예정 경기에서 선발을 직접 지정하면 지정한 선수가 우선 주전이 되고 빈자리는 같은 방식으로 자동 보충합니다.<br>
+                    · <b>주전·교체</b>: OVR × 출전 가능성 순으로 필드 4명 + GK 1명이 주전, 다음 3명이 교체(기본 20% 반영)입니다. 출전 가능성은 전 시즌 출전·결장 기록으로 계산하며 기록이 적으면 100%에 가깝게 보정됩니다. 📅 예정 경기에서 선발을 직접 지정하면 지정한 선수가 우선 주전이 되고 빈자리는 같은 방식으로 자동 보충합니다.<br>
                     · <b>종합 전력</b> = 공격 22% + 패스 12% + 드리블 10% + 수비 18% + 스피드 9% + 체력 9% + 골키퍼 20% (+ 감독 소통 케미 ±1.0 이내).<br>
-                    · <b>감독 효과</b>(리그 감독 평균 대비 격차 기준): 전술 → 공격·패스·수비 (격차 1점당 0.16점, 최대 ±6) / 동기부여 → 스피드·체력 (0.12점, ±5) / 용병술 → 교체 3명 반영 비중 (기본 35%, 15~65%) / 소통 → 선수 결장 영향 완화(±30%p)와 케미(±2.0) / 분석력 → 맞대결에서 상대 약점 공략(종합 전력 ±3.5) / 위기대처 → 열세 쪽 감독이 격차를 -20%~+30% 완화. 감독이 없거나 능력치가 없는 팀은 보정 0입니다.<br>
+                    · <b>감독 효과</b>(리그 감독 평균 대비 격차 기준): 전술 → 공격·패스·수비 (격차 1점당 0.16점, 최대 ±6) / 동기부여 → 스피드·체력 (0.12점, ±5) / 용병술 → 교체 3명 반영 비중 (기본 20%, 5~50%) / 소통 → 선수 결장 영향 완화(±30%p)와 케미(±2.0) / 분석력 → 맞대결에서 상대 약점 공략(종합 전력 ±3.5) / 위기대처 → 열세 쪽 감독이 격차를 -20%~+30% 완화. 감독이 없거나 능력치가 없는 팀은 보정 0입니다.<br>
                     · <b>PK 승부</b>: 정규시간 무승부 시 주전 5명(필드 4 + GK)의 키커 능력(결정력 38%·위치선정 18%·패스 14%·드리블 12%·체력 10%·스피드 5%·수비 3%)과 상대 GK 능력(선방력 32%·반사신경 24%·판단력 18%·순발력 14%·위치선정 8%·체력 4%)으로 5번씩 차는 확률을 계산하고, 동점이면 서든데스로 이어집니다. 감독 위기대처·동기부여·분석력도 소폭 반영합니다.<br>
                     · <b>종합 예측</b> = 여섯 지표의 가중 평균 — 능력치 우세도(비중 1.0) · Elo 기대 승률(1.0) · 득실 시뮬레이션(1.0, 전력분석 탭과 같은 포아송 모델에 이 화면의 주전·출전 가능성 반영 능력치를 넣어 확률로 계산) · 역대 맞대결(최대 0.9, 6경기 이상이면 최대, 소표본은 50% 쪽으로 보정) · 통산 전적(최대 0.6, 10경기 이상이면 최대, log5 방식) · 최근 5경기(최대 0.5). 지표들이 같은 방향이면 신뢰도 '높음', 엇갈리거나 표본이 적으면 낮아집니다.<br>
                     · <b>해석 항목</b>은 기록실(연승·무실점·득점/실점 시간대·시즌별 기록)과 팀 데이터센터(감독 능력치·감독별 기록·선수 기록·상대팀별 기록)의 저장된 데이터만 사용합니다. 시간대 분석은 해석용이며 승률 계산에는 넣지 않습니다. 감독 능력치는 위 <b>🧑‍💼 감독 효과</b> 기준대로 전력과 예측에 반영됩니다(스위치로 끌 수 있음).<br>
@@ -12529,8 +12567,16 @@
                 out[id] = Object.assign({}, M[id]);
                 const pw = powerMap[id], c = pw ? pw.cats : null;
                 if (!c) return;
-                ['atk', 'def', 'gk'].forEach(k => { if (c[k] !== null && c[k] !== undefined) out[id][k] = c[k]; });
+                ['atk', 'def', 'gk', 'dri', 'pas', 'spd', 'sta'].forEach(k => { if (c[k] !== null && c[k] !== undefined) out[id][k] = c[k]; });   // v1.02: 매치업 계산용 드리블·패스·스피드·체력 추가
                 if (extraAtk && extraAtk[id] && out[id].atk !== null && out[id].atk !== undefined) out[id].atk += extraAtk[id];   // 분석력: 상대 약점 공략
+                // v1.02: 주전 필드 선수 중 최고 결정력(에이스)·최고 수비(수비 리더), 감독 효과(위기대처 등)를 매치업 계산에 넘긴다
+                try {
+                    const tm = (state.teams || []).find(t => String(t.id) === String(id)), st = {};
+                    ((tm && tm.players) || []).forEach(q => { st[q.name] = q; });
+                    const fl = (pw.lineup || []).filter(l => l.starter && l.pos !== 'GK').map(l => st[l.name]).filter(q => q && q.stats);
+                    if (fl.length) { out[id].ace = Math.max(...fl.map(q => tcStatVal(q, '결정력'))); out[id].wall = Math.max(...fl.map(q => tcStatVal(q, '수비'))); }
+                    out[id].mgr = pw.mgr || null;
+                } catch (e) { }
             });
             return out;
         }
@@ -16641,7 +16687,8 @@
         const MP_VERDICT = ['박빙', '근소 우세', '우세', '크게 우세'];
         const MP_POS_ORDER = { GK: 0, DF: 1, MF: 2, FW: 3 };
 
-        function mpPredict(x) {
+        function mpPredict(x) { return tcWithSimBench(() => mpPredict0(x)); }   // 매치업 분석·대시보드 예정 경기 예측도 선택한 주전:후보 비중 적용
+        function mpPredict0(x) {
             const hT = schedTeam(x.hId), aT = schedTeam(x.aId);
             if (!hT || !aT || hT === aT) return null;
             const avail = tcAvailMap();
@@ -23444,6 +23491,47 @@
 
         // ---------- 5-3 시뮬레이션 ----------
         // 두 팀의 기대 득점(람다) 계산 — 시뮬레이션 탭과 ⚔️ 전력 비교(종합 해석)가 함께 쓴다.
+        // ⚔️ 능력치 매치업 (v1.02)
+        //  득점을 두 단계의 '공격 vs 수비' 맞대결로 계산한다. 리그 평균 매치업이면 배율 1.0, 한쪽이 앞서면 그만큼 득점이 늘거나 줄어든다.
+        //   ① 기회 창출: 공격 팀의 패스 40%·드리블 30%·스피드 30%  ↔  상대 수비 75%·체력 25%
+        //   ② 마무리   : 공격 팀의 결정력(공격력)  ↔  상대 골키퍼(선방력·반사신경 등)  ← 결정력이 낮은데 상대 GK가 강하면 득점이 크게 줄어든다
+        //  격차가 클수록 영향이 가파르게 커지도록(×(1+0.012×|격차|)) 하고, 최종 배율은 0.45~1.9배로 제한한다.
+        const SIM_MX = { cre: { pas: 0.4, dri: 0.3, spd: 0.3 }, res: { def: 0.75, sta: 0.25 }, wCre: 0.6, wFin: 1.0, amp: 0.012, lo: 0.45, hi: 1.9, ace: 0.2, wall: 0.15 };
+        const simMxOk = x => !!x && ['atk', 'gk', 'def', 'pas', 'dri', 'spd', 'sta'].every(k => x[k] !== null && x[k] !== undefined && isFinite(x[k]));
+        const simAtkEff = x => (x.ace !== null && x.ace !== undefined) ? (1 - SIM_MX.ace) * x.atk + SIM_MX.ace * x.ace : x.atk;   // 팀 공격력 80% + 에이스 결정력 20%
+        const simDefEff = x => (x.wall !== null && x.wall !== undefined) ? (1 - SIM_MX.wall) * x.def + SIM_MX.wall * x.wall : x.def;   // 팀 수비력 85% + 수비 리더 15%
+        const simMxCre = x => Object.entries(SIM_MX.cre).reduce((n, [k, w]) => n + x[k] * w, 0);
+        const simMxRes = x => Object.entries(SIM_MX.res).reduce((n, [k, w]) => n + (k === 'def' ? simDefEff(x) : x[k]) * w, 0);
+        function simMxCtx(M) {
+            const vs = Object.values(M).filter(simMxOk); if (vs.length < 2) return null;
+            const mean = f => vs.reduce((n, x) => n + f(x), 0) / vs.length;
+            return { mCre: mean(simMxCre), mRes: mean(simMxRes), mAtk: mean(simAtkEff), mGk: mean(x => x.gk) };
+        }
+        function simMxFactor(X, Y, ctx, sens) {
+            const amp = v => v * (1 + SIM_MX.amp * Math.abs(v));
+            const ce = (simMxCre(X) - simMxRes(Y)) - (ctx.mCre - ctx.mRes);   // 기회 창출 우위(리그 평균 매치업 대비)
+            const fe = (simAtkEff(X) - Y.gk) - (ctx.mAtk - ctx.mGk);                  // 마무리 우위: 결정력 − 상대 GK (리그 평균 대비)
+            const fCre = Math.exp(sens * SIM_MX.wCre * amp(ce)), fFin = Math.exp(sens * SIM_MX.wFin * amp(fe));
+            const mult = Math.max(SIM_MX.lo, Math.min(SIM_MX.hi, fCre * fFin));
+            return { ce, fe, fCre, fFin, mult, cre: simMxCre(X), res: simMxRes(Y), atk: simAtkEff(X), gk: Y.gk };
+        }
+        // 🎯 현실성 보정 (v1.02): 득점 기대값이 지나치게 커져 10:0 같은 스코어가 자주 나오지 않도록 한다.
+        //  - 리그 평균 대비 비율을 80%만 반영(기록 × 능력치 효과가 겹쳐 커지는 것을 완화)하고, 1.2배를 넘으면 증가폭을 줄여 최대 1.65배에 수렴시킨다.
+        //  - 근거가 충분히 큰 경기(큰 전력 차)는 여전히 대량 득점이 나올 수 있다.
+        const SIM_REAL = { damp: 0.8, knee: 1.2, top: 1.65, floor: 0.3 };
+        function simSoftCap(lam, L) {
+            let r = Math.exp(SIM_REAL.damp * Math.log(Math.max(lam / L, 1e-6)));
+            if (r > SIM_REAL.knee) r = SIM_REAL.knee + (SIM_REAL.top - SIM_REAL.knee) * (1 - Math.exp(-(r - SIM_REAL.knee) / (SIM_REAL.top - SIM_REAL.knee)));
+            return L * Math.max(r, SIM_REAL.floor);
+        }
+        // 🧑‍💼 위기대처: 열세인 쪽 감독의 위기대처 능력치에 따라 득점 기대값 격차가 줄어든다(낮으면 오히려 벌어진다)
+        function simCrisis(la, lb, A, B) {
+            const d = Math.log(la / lb); if (!isFinite(d) || Math.abs(d) < 1e-6) return [la, lb];
+            const under = d < 0 ? A : B, f = (under && under.mgr && under.mgr.on) ? under.mgr.crisisFrac : 0;
+            if (!f) return [la, lb];
+            const sh = f * Math.abs(d) / 2, sg = d < 0 ? 1 : -1;
+            return [la * Math.exp(sg * sh), lb * Math.exp(-sg * sh)];
+        }
         function simLambdas(A, B, M, sens) {
             const ids = Object.keys(M), vs = ids.map(i => M[i]), mean = a => a.reduce((x, y) => x + y, 0) / a.length;
             const rated = vs.filter(x => x.g > 0), totG = rated.reduce((s2, x) => s2 + x.g, 0);
@@ -23451,9 +23539,33 @@
             const lAtk = mean(vs.filter(x => x.atk != null).map(x => x.atk));
             const k = 4, rec = (v, g) => ((v + k * L) / (g + k)) / L, dAb = x => mean([x.def, x.gk].filter(v => v != null));
             const lDefAb = mean(vs.map(dAb));
+            // 매치업 항목(패스·드리블·스피드·체력)이 모두 있으면 새 매치업 모델, 없으면(전 로스터 평균 기준) 기존 방식
+            const ctx = (simMxOk(A) && simMxOk(B)) ? simMxCtx(M) : null;
+            if (ctx) {
+                const fa = simMxFactor(A, B, ctx, sens), fb = simMxFactor(B, A, ctx, sens);
+                const hist = (X, Y) => L * rec(X.gf, X.g) * rec(Y.ga, Y.g);
+                const c2 = simCrisis(hist(A, B) * fa.mult, hist(B, A) * fb.mult, A, B);
+                return { la: simSoftCap(c2[0], L), lb: simSoftCap(c2[1], L), L, mx: { a: fa, b: fb } };
+            }
             const lam = (X, Y) => L * rec(X.gf, X.g) * rec(Y.ga, Y.g) * Math.exp(sens * (X.atk - lAtk)) * Math.exp(-sens * (dAb(Y) - lDefAb));
-            const la = lam(A, B), lb = lam(B, A);
-            return { la, lb, L };
+            return { la: simSoftCap(lam(A, B), L), lb: simSoftCap(lam(B, A), L), L };
+        }
+        // 🔍 능력치 매치업 설명 패널 (🎲 경기 시뮬레이션 결과 아래)
+        function simMxHtml(A, B, mx) {
+            if (!mx) return `<div style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">🔍 능력치 매치업: ⚔️ 전력 반영을 끄면(전 로스터 평균 사용) 공격·수비 단순 비교로 계산되어 세부 매치업을 표시하지 않습니다.</div>`;
+            const pct = f => { const d = (f - 1) * 100; return `<b style="color:${d > 3 ? '#22c55e' : d < -3 ? '#f87171' : 'var(--text-muted)'};">×${f.toFixed(2)}</b>`; };
+            const row = (X, Y, f) => {
+                const fin = f.fFin < 0.85 ? '🧤 상대 GK에 막힘' : f.fFin > 1.15 ? '🎯 GK를 뚫을 결정력' : '';
+                const cre = f.fCre < 0.85 ? '🛡️ 상대 수비에 봉쇄' : f.fCre > 1.15 ? '⚡ 기회 다수 창출' : '';
+                return `<tr><td style="text-align:left;"><b style="color:${X.t.color}">${gEsc(X.t.name)}</b> → ${gEsc(Y.t.name)}</td>
+                    <td>${f.atk.toFixed(1)} <span style="color:var(--text-muted)">vs GK</span> ${f.gk.toFixed(1)} ${pct(f.fFin)}<div style="font-size:0.64rem;color:var(--text-muted);">${fin}</div></td>
+                    <td>${f.cre.toFixed(1)} <span style="color:var(--text-muted)">vs 수비</span> ${f.res.toFixed(1)} ${pct(f.fCre)}<div style="font-size:0.64rem;color:var(--text-muted);">${cre}</div></td>
+                    <td><b>${pct(f.mult)}</b></td></tr>`;
+            };
+            return `<div style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.3);">
+                <div style="font-size:0.8rem;font-weight:900;margin-bottom:4px;">🔍 능력치 매치업 ${gNewTag('1.02')}</div>
+                <div style="overflow-x:auto;"><table class="pattern-table" style="font-size:0.72rem;"><thead><tr><th>공격 → 수비</th><th>② 마무리<br>결정력 vs 상대 GK</th><th>① 기회 창출<br>패스·드리블·스피드 vs 상대 수비·체력</th><th>득점 배율</th></tr></thead><tbody>${row(A, B, mx.a)}${row(B, A, mx.b)}</tbody></table></div>
+                <div style="font-size:0.66rem;color:var(--text-muted);margin-top:4px;line-height:1.5;">배율은 리그 평균 매치업을 ×1.00으로 본 값입니다. 결정력이 낮은 팀이 선방이 강한 GK를 만나면 마무리 배율이 크게 떨어지고, 격차가 클수록 영향이 가파르게 커집니다. 공격력에는 팀 최고 결정력(에이스) 20%, 수비력에는 수비 리더 15%가 반영되고, 득점 기대값은 현실적인 범위(리그 평균의 약 0.3~1.65배)로 보정됩니다. 열세 팀 감독의 위기대처는 득점 격차를 줄입니다.</div></div>`;
         }
 
         function simRun(A, B, M, sens, n, pkA) {
@@ -23549,6 +23661,7 @@
                 <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;"><select id="simA">${opt}</select><b>vs</b><select id="simB">${opt}</select>
                 <label style="font-size:0.74rem;">능력치 1점당 기대 득점 변화 <input id="simSens" type="number" min="0" max="10" step="0.5" value="3" style="width:56px;">%</label>
                 <label style="font-size:0.74rem;cursor:pointer;" title="끄면 전 로스터 평균 능력치로 계산합니다."><input id="simUseTc" type="checkbox" checked> ⚔️ 전력 반영(주전·출전 가능성·감독)</label>
+                ${simBenchControlHtml()}
                 <button class="btn-edit" onclick="simUi()">시뮬레이션 5,000회</button></div><div id="simOut"></div></div>`;
             const b = document.getElementById('simB'); if (b && b.options.length > 1) b.selectedIndex = 1;
             try { ssRender(); } catch (e) { console.error('시즌 시뮬레이션 오류', e); }
@@ -23931,9 +24044,10 @@
             const chk = document.getElementById('simUseTc'), useTc = !chk || chk.checked;
             const sens = (+document.getElementById('simSens').value || 0) / 100;
             let avail = null, PM = {}, M2 = M;
-            try { avail = tcAvailMap(); PM = tcPowerMap(avail); if (useTc) M2 = tcBlendMetrics(M, PM, tcMgrExtraAtk(PM, a, b)); } catch (e) { console.error('전력 비교 연동 오류', e); M2 = M; }
+            try { avail = tcAvailMap(); PM = tcPowerMapSim(avail); if (useTc) M2 = tcBlendMetrics(M, PM, tcMgrExtraAtk(PM, a, b)); } catch (e) { console.error('전력 비교 연동 오류', e); M2 = M; }
             const A = M2[a], B = M2[b];
             const pkM = tcPkModel(A.t, B.t, PM[a], PM[b]), r = simRun(A, B, M2, sens, 5000, pkM ? pkM.pA : null);
+            let mxPanel = ''; try { mxPanel = simMxHtml(A, B, useTc ? simLambdas(A, B, M2, sens).mx : null); } catch (e) { console.error('매치업 패널 오류', e); }
             const seg = (v, c, lab, op) => `<div style="flex:${Math.max(v, 0.3)};background:${c};opacity:${op};text-align:center;font-size:0.72rem;font-weight:800;color:#000;padding:5px 0;overflow:hidden;" title="${lab}">${v >= 4 ? v.toFixed(1) + '%' : ''}</div>`;
             const aT = r.aReg + r.aPk, bT = r.bReg + r.bPk, warn = [A, B].filter(x => x.g < 3).map(x => `${gEsc(x.t.name)}(${x.g}경기)`).join(', ');
             // 두 능력치 기준의 비교 (확률 계산이라 값이 흔들리지 않음)
@@ -23959,8 +24073,8 @@
                 <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin:3px 0 8px;"><span>진한 색 = 정규시간 승 ${r.aReg.toFixed(1)}% · 연한 색 = PK 승 ${r.aPk.toFixed(1)}%</span><span>PK 승 ${r.bPk.toFixed(1)}% · 정규시간 승 ${r.bReg.toFixed(1)}%</span></div>
                 <div style="font-size:0.84rem;">정규시간 평균 득점 <b>${r.ga.toFixed(2)}</b> : <b>${r.gb.toFixed(2)}</b> <span style="color:var(--text-muted);">(기대 득점 ${r.la.toFixed(2)} / ${r.lb.toFixed(2)})</span> · 정규시간 무승부(PK행) <b>${(r.aPk + r.bPk).toFixed(1)}%</b></div>
                 <div style="font-size:0.78rem;margin-top:4px;">많이 나온 스코어: ${r.top.map(([k, v]) => `${k} (${v.toFixed(1)}%)`).join(' · ')}</div>
-                ${tcPkHtml(pkM, A.t.name, A.t.color, B.t.name, B.t.color)}${cmp}${ens}
-                <div style="font-size:0.68rem;color:var(--text-muted);margin-top:8px;">모델: 리그 평균 득점(${r.L.toFixed(2)})에 각 팀의 득점·실점 기록(소표본은 평균 쪽으로 보정)과 능력치 차이를 곱해 득점을 포아송 분포로 추첨했습니다. ${useTc ? '공격·수비·GK 능력치는 <b>⚔️ 전력 비교 값(주전 라인업·출전 가능성·포지션 비중 반영)</b>을 사용했습니다. ' : '공격·수비·GK 능력치는 전 로스터 평균을 사용했습니다. '}정규시간 무승부는 <b>PK 승부로 결정되며, PK는 양 팀 주전 키커·GK의 여러 능력치(결정력·위치선정·패스·드리블·체력 / 선방력·반사신경·판단력·순발력 등)를 가중 반영</b>해 계산했습니다. 홈 이점·부상·전술은 반영하지 않습니다.${warn ? `<br><span style="color:#fbbf24;">표본 부족: ${warn} — 기록 신뢰도가 낮아 능력치 비중이 큽니다.</span>` : ''}</div>`;
+                ${mxPanel}${tcPkHtml(pkM, A.t.name, A.t.color, B.t.name, B.t.color)}${cmp}${ens}
+                <div style="font-size:0.68rem;color:var(--text-muted);margin-top:8px;">모델: 리그 평균 득점(${r.L.toFixed(2)})에 각 팀의 득점·실점 기록(소표본은 평균 쪽으로 보정)과 능력치 차이를 곱해 득점을 포아송 분포로 추첨했습니다. ${useTc ? `공격·수비·GK 능력치는 <b>⚔️ 전력 비교 값(주전 라인업·출전 가능성·포지션 비중 반영)</b>을 사용했고, 주전·후보 반영 비중은 <b>${simBenchText()}</b>입니다. 득점은 <b>① 기회 창출(패스·드리블·스피드 ↔ 상대 수비·체력)</b>과 <b>② 마무리(결정력 ↔ 상대 GK)</b> 두 단계의 능력치 매치업으로 계산합니다. `  : '공격·수비·GK 능력치는 전 로스터 평균을 사용했습니다. '}정규시간 무승부는 <b>PK 승부로 결정되며, PK는 양 팀 주전 키커·GK의 여러 능력치(결정력·위치선정·패스·드리블·체력 / 선방력·반사신경·판단력·순발력 등)를 가중 반영</b>해 계산했습니다. 홈 이점·부상·전술은 반영하지 않습니다.${warn ? `<br><span style="color:#fbbf24;">표본 부족: ${warn} — 기록 신뢰도가 낮아 능력치 비중이 큽니다.</span>` : ''}</div>`;
         }
 
         // ======================================================
@@ -23970,7 +24084,7 @@
         //  - 시즌 방식에 맞춤: 토너먼트(대진표 진행) · 조별리그(A/B조 + 인터리그 순위표)
         //  - 읽기 전용 계산: state(실제 기록)는 수정하지 않는다. 입력한 가정은 이 화면(메모리)에서만 유지된다.
         // ======================================================
-        const SS = { mode: 'ability', runs: 5000, sens: 3, useTc: true, lambda: '', draw: 'pk', pins: {}, pred: {}, pinSeason: null };
+        const SS = { mode: 'ability', runs: 5000, sens: 3, useTc: true, lambda: '', draw: 'pk', predMode: 'prob', pins: {}, pred: {}, pinSeason: null };
 
         function ssTeam(id) { return (state.teams || []).find(t => String(t.id) === String(id)); }
         function ssName(id) { const t = ssTeam(id); return t ? t.name : '(알 수 없음)'; }
@@ -24096,14 +24210,14 @@
             const sens = (+SS.sens || 0) / 100;
             if (SS.mode === 'ability') {
                 M = tsMetrics(); M2 = M;
-                try { if (SS.useTc) { PM2 = tcPowerMap(tcAvailMap()); M2 = tcBlendMetrics(M, PM2); } } catch (e) { console.error('전력 비교 연동 오류', e); M2 = M; PM2 = null; }
+                try { if (SS.useTc) { PM2 = tcPowerMapSim(tcAvailMap()); M2 = tcBlendMetrics(M, PM2); } } catch (e) { console.error('전력 비교 연동 오류', e); M2 = M; PM2 = null; }
                 const vs = Object.values(M2), rated = vs.filter(x => x.g > 0), totG = rated.reduce((s, x) => s + x.g, 0);
                 if (totG) L = rated.reduce((s, x) => s + x.gf, 0) / totG;
                 const noStat = (state.teams || []).filter(t => !M2[t.id]).map(t => t.name);
                 const few = Object.values(M2).filter(x => x.g < 3).map(x => `${x.t.name}(${x.g}경기)`);
                 if (noStat.length) ctx.warn.push(`능력치가 없는 팀은 리그 평균으로 계산했습니다: ${noStat.join(', ')}`);
                 if (few.length) ctx.warn.push(`기록이 3경기 미만인 팀은 득점·실점 보정이 평균 쪽으로 크게 쏠립니다: ${few.join(', ')}`);
-                ctx.desc = `각 팀의 득점·실점 기록과 ${SS.useTc ? '⚔️ 전력 비교(주전·출전 가능성·감독 효과 반영)' : '전 로스터 평균'} 공격·수비·GK 능력치로 기대 득점을 구해 포아송 분포로 추첨 (능력치 1점당 ${SS.sens}%)`;
+                ctx.desc = `각 팀의 득점·실점 기록과 ${SS.useTc ? '⚔️ 전력 비교(주전·출전 가능성·감독 효과 반영, ' + simBenchText() + ')' : '전 로스터 평균'} 공격·수비·GK 능력치로 기대 득점을 구해 포아송 분포로 추첨 (능력치 1점당 ${SS.sens}%)`;
             } else {
                 const v = parseFloat(SS.lambda);
                 if (isFinite(v) && v > 0) L = v;
@@ -24128,7 +24242,7 @@
                 const k = h + '|' + a; if (pkCache[k] !== undefined) return pkCache[k];
                 let v = 0.5;
                 try {
-                    if (!PMpk) PMpk = tcPowerMap(tcAvailMap());
+                    if (!PMpk) PMpk = tcPowerMapSim(tcAvailMap());
                     const m = tcPkP(ssTeam(h), ssTeam(a), PMpk[String(h)], PMpk[String(a)]);
                     if (m !== null && isFinite(m)) v = m;
                 } catch (e) { console.error('PK 승률 계산 오류', e); }
@@ -24187,7 +24301,14 @@
         // ---------- 🔮 예측 결과로 미정 경기 채우기 ----------
         // 능력치 기반 모델의 기대 득점(λ)을 반올림한 스코어를 '예측 결과'로 사용한다 (가장 그럴듯한 한 가지 시나리오).
         // 반올림 결과가 동점이면 전력 차이가 분명할 때 우세 팀이 1골 앞서고, 비슷하면 PK 승률(능력치 반영)이 높은 쪽이 승자가 된다. 이미 사용자가 입력한 경기는 덮어쓰지 않는다.
-        function ssPredictOne(ctx, h, a) {
+        function ssPredictOne(ctx, h, a, ko) {
+            // 🎲 확률 추첨(기본): 몬테카를로와 같은 경기 모델로 한 경기를 뽑는다 → 우세 팀이 '항상' 이기지 않고, 승률만큼만 이긴다.
+            if (SS.predMode !== 'likely') {
+                const g = ctx.game(h, a, !!ko);
+                const pin = { h: String(g.gh), a: String(g.ga), pk: '', w: '' };
+                if (g.gh === g.ga) pin.pk = g.win === 0 ? 'h' : 'a';
+                return pin;
+            }
             const { la, lb } = ctx.lam(h, a);
             let gh = Math.max(0, Math.round(la)), ga = Math.max(0, Math.round(lb));
             // 반올림하면 동점이 되지만 전력 차이가 분명하면(기대 득점 차 0.25 이상) 우세한 팀이 1골 앞서 이기는 것으로 본다.
@@ -24209,7 +24330,7 @@
                     sc0.matches.forEach(m => {
                         if (onlyKey && m.key !== onlyKey) return;
                         if (ssPinResult(m.key)) return;
-                        SS.pins[m.key] = ssPredictOne(ctx, m.h, m.a); SS.pred[m.key] = true; filled++;
+                        SS.pins[m.key] = ssPredictOne(ctx, m.h, m.a, false); SS.pred[m.key] = true; filled++;
                     });
                 } else {
                     // 토너먼트: 앞 라운드 승자가 정해져야 다음 대진을 알 수 있으므로 하나씩 채우고 대진을 다시 계산한다.
@@ -24218,13 +24339,13 @@
                         const slot = sc.slots.find(s => !s.rec && !ssPinResult(s.key) && sc.det[s.key][0] && sc.det[s.key][1] && (!onlyKey || s.key === onlyKey));
                         if (!slot) break;
                         const d = sc.det[slot.key];
-                        SS.pins[slot.key] = ssPredictOne(ctx, d[0], d[1]); SS.pred[slot.key] = true; filled++;
+                        SS.pins[slot.key] = ssPredictOne(ctx, d[0], d[1], true); SS.pred[slot.key] = true; filled++;
                         if (onlyKey) break;
                     }
                 }
             } catch (e) { console.error('예측 채우기 오류', e); }
             finally { SS.mode = prevMode; }
-            if (!onlyKey && filled) SS.mode = 'manual';   // 전체 채우기: 예측 결과를 반영한 최종 순위/대진을 바로 보여준다
+            if (!onlyKey && filled) { SS.mode = 'manual'; SS.autoManual = true; }   // 전체 채우기: 예측 결과를 반영한 최종 순위/대진을 바로 보여준다
             ssRenderControls(); ssRenderPending(); ssRun();
         }
 
@@ -24232,6 +24353,7 @@
         function ssSet(key, val) {
             if (key === 'runs') val = +val; if (key === 'sens') val = +val;
             if (key === 'useTc') val = !!val;
+            if (key === 'mode') SS.autoManual = false;   // 사용자가 직접 고른 모드는 유지
             SS[key] = val; ssRenderControls(); ssRun();
         }
         function ssPinSet(key, field, val) {
@@ -24255,6 +24377,7 @@
 
         function ssRender() {
             const host = document.getElementById('mlPane_sim') || document.getElementById('matchLabBody'); if (!host) return;
+            if (SS.autoManual) { SS.mode = 'ability'; SS.autoManual = false; }   // 🔮 채우기로 자동 전환된 '직접 입력'은 다시 열 때 기본값(능력치 기반)으로 복귀
             const old = document.getElementById('seasonSimBox'); if (old) old.remove();
             const box = document.createElement('div'); box.id = 'seasonSimBox'; box.style.marginTop = '26px';
             box.innerHTML = `<h3 style="color:#22c55e;margin:0 0 4px;">🏁 시즌 시뮬레이션 · 최종 순위 예측</h3>
@@ -24274,11 +24397,13 @@
                 <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:0.76rem;">
                   ${SS.mode !== 'manual' ? `<label>시뮬레이션 횟수 <select onchange="ssSet('runs',this.value)">${[1000, 5000, 10000].map(v => `<option value="${v}" ${SS.runs === v ? 'selected' : ''}>${v.toLocaleString()}회</option>`).join('')}</select></label>` : ''}
                   ${SS.mode === 'ability' ? `<label>능력치 1점당 득점 변화 <input type="number" min="0" max="10" step="0.5" value="${SS.sens}" style="width:56px;" onchange="ssSet('sens',this.value)">%</label>
-                  <label style="cursor:pointer;"><input type="checkbox" ${SS.useTc ? 'checked' : ''} onchange="ssSet('useTc',this.checked)"> ⚔️ 전력 반영(주전·출전 가능성·감독)</label>` : ''}
+                  <label style="cursor:pointer;"><input type="checkbox" ${SS.useTc ? 'checked' : ''} onchange="ssSet('useTc',this.checked)"> ⚔️ 전력 반영(주전·출전 가능성·감독)</label>
+                  ${SS.useTc ? simBenchControlHtml() : ''}` : ''}
                   ${SS.mode === 'random' ? `<label>팀당 경기 평균 득점 <input type="number" min="0.5" max="10" step="0.1" placeholder="${ssAvgGoals().toFixed(2)}" value="${gEsc(SS.lambda)}" style="width:70px;" onchange="ssSet('lambda',this.value)"> <span style="color:var(--text-muted);">(비우면 기록 평균)</span></label>` : ''}
                   ${isT && SS.mode !== 'manual' ? `<label>정규시간 무승부 처리 <select onchange="ssSet('draw',this.value)"><option value="pk" ${SS.draw === 'pk' ? 'selected' : ''}>PK 승부 (선수 능력치 반영)</option><option value="et" ${SS.draw === 'et' ? 'selected' : ''}>연장전(득점 1/3) 후 PK</option></select></label>` : ''}
                   <button class="btn-edit" onclick="ssRun()">▶ 다시 계산</button>
-                  <button class="btn-edit" style="background:rgba(167,139,250,0.22);color:#c4b5fd;" onclick="ssPredictFill()" title="아직 결과가 없는 경기를 능력치 기반 예상 스코어로 채우고 최종 순위를 계산합니다. 직접 입력한 경기는 유지됩니다.">🔮 미정 경기 예측 결과로 시뮬</button>
+                  <button class="btn-edit" style="background:rgba(167,139,250,0.22);color:#c4b5fd;" onclick="ssPredictFill()" title="아직 결과가 없는 경기를 선택한 예측 방식으로 채우고 최종 순위를 계산합니다. 직접 입력한 경기는 유지됩니다.">🔮 미정 경기 예측 결과로 시뮬</button>
+                  <label title="🎲 확률 추첨: 각 경기를 능력치 모델의 승률대로 뽑습니다(약팀의 이변도 확률만큼 발생, 누를 때마다 다른 시나리오). 📌 가장 유력한 결과: 항상 우세한 팀이 이기는 한 가지 시나리오입니다.">🔮 예측 방식${gNewTag('1.02')} <select onchange="ssSet('predMode',this.value)"><option value="prob" ${SS.predMode === 'prob' ? 'selected' : ''}>🎲 확률 추첨 (이변 포함)</option><option value="likely" ${SS.predMode === 'likely' ? 'selected' : ''}>📌 가장 유력한 결과</option></select></label>
                   <button class="btn-edit" style="background:rgba(255,255,255,0.08);" onclick="ssResetPins()">↺ 입력 초기화</button>
                 </div>`;
         }
@@ -24289,11 +24414,22 @@
             const modeLabel = sc.mode === 'tournament' ? `🏆 토너먼트 컵 (${sc.teamIds.length}팀)` : '🅰️ 조별리그';
             if (info) info.innerHTML = `<b>${gEsc(state.seasonName || '현재 시즌')}</b> · ${modeLabel} · 남은 경기 <b>${sc.pending}</b>${sc.mode === 'tournament' ? ` / 전체 ${sc.slots.length}` : ''}경기`;
             if (!sc.pending) { el.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);">남은 경기가 없습니다. 시즌 결과가 확정되었습니다.</div>'; return; }
+            // 📊 경기별 승률(능력치 모델 · 정규시간 무승부는 PK 승률 반영) — 예측이 '확률'이라는 것을 눈으로 확인할 수 있게 표시
+            const probMap = {};
+            try {
+                const prevMode = SS.mode; SS.mode = 'ability';   // ctx가 SS.mode를 참조하므로 계산하는 동안만 능력치 모델로 둔다
+                try {
+                    const ctx = ssMakeCtx();
+                    const pairs = sc.mode === 'tournament' ? sc.slots.filter(s2 => !s2.rec && sc.det[s2.key][0] && sc.det[s2.key][1]).map(s2 => [s2.key, sc.det[s2.key][0], sc.det[s2.key][1]]) : sc.matches.map(m => [m.key, m.h, m.a]);
+                    pairs.forEach(([k, h, a]) => { const l = ctx.lam(h, a), pr = tcPoissonGrid(l.la, l.lb, ctx.pkP(h, a)).pA; if (isFinite(pr)) probMap[k] = pr; });
+                } finally { SS.mode = prevMode; }
+            } catch (e) { console.error('경기별 승률 계산 오류', e); }
             const pinRow = (key, label, h, a) => {
                 const p = SS.pins[key] || { h: '', a: '', pk: '', w: '' }, tie = p.h !== '' && p.a !== '' && +p.h === +p.a;
                 const inp = f => `<input type="number" min="0" step="1" value="${gEsc(p[f])}" style="width:46px;" onchange="ssPinSet('${key}','${f}',this.value)">`;
                 return `<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 10px;margin-top:5px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);font-size:0.8rem;">
                     <span style="min-width:74px;color:var(--text-muted);font-weight:800;">${gEsc(label)}</span>${ssTag(h)} <span style="color:var(--text-muted);">vs</span> ${ssTag(a)}
+                    ${probMap[key] !== undefined ? `<span style="font-size:0.7rem;color:var(--text-muted);" title="능력치 모델 기준 승률 (정규시간 무승부는 PK 승률 반영)">📊 <b style="color:${ssColor(h)};">${(probMap[key] * 100).toFixed(0)}%</b> : <b style="color:${ssColor(a)};">${((1 - probMap[key]) * 100).toFixed(0)}%</b></span>` : ''}
                     <select onchange="ssPinSet('${key}','w',this.value)"><option value="">결과 미정</option><option value="h" ${p.w === 'h' ? 'selected' : ''}>${gEsc(ssName(h))} 승</option><option value="a" ${p.w === 'a' ? 'selected' : ''}>${gEsc(ssName(a))} 승</option></select>
                     <span style="color:var(--text-muted);font-size:0.72rem;">또는 점수</span>${inp('h')} : ${inp('a')}
                     ${tie ? `<select onchange="ssPinSet('${key}','pk',this.value)"><option value="">PK 승자 선택</option><option value="h" ${p.pk === 'h' ? 'selected' : ''}>${gEsc(ssName(h))}</option><option value="a" ${p.pk === 'a' ? 'selected' : ''}>${gEsc(ssName(a))}</option></select>` : ''}
@@ -24327,7 +24463,22 @@
             try {
                 const sc = ssBuild(); if (!sc.ok) { out.innerHTML = ''; return; }
                 if (!sc.pending) { out.innerHTML = sc.mode === 'tournament' ? ssRenderTournamentManual(sc, '시즌이 종료되었습니다.') : ssRenderLeagueManual(sc, '시즌이 종료되었습니다.'); return; }
-                if (SS.mode === 'manual') { out.innerHTML = sc.mode === 'tournament' ? ssRenderTournamentManual(sc) : ssRenderLeagueManual(sc); return; }
+                if (SS.mode === 'manual') {
+                    // 직접 입력 모드에서도 🏆 우승·진출 가능성 그래프를 보여준다: 입력한 결과는 고정하고 나머지 경기만 능력치 모델로 시뮬레이션
+                    const manualHtml = sc.mode === 'tournament' ? ssRenderTournamentManual(sc) : ssRenderLeagueManual(sc);
+                    let mcHtml = '';
+                    const prevMode = SS.mode; SS.mode = 'ability';   // ctx가 SS.mode를 참조하므로 계산하는 동안만 능력치 모델로 둔다
+                    try {
+                        const ctx2 = ssMakeCtx(), t1 = performance.now();
+                        const res2 = sc.mode === 'tournament' ? ssSimTournament(sc, ctx2, SS.runs) : ssSimLeague(sc, ctx2, SS.runs);
+                        const ms2 = Math.round(performance.now() - t1);
+                        mcHtml = `<div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;">입력한 결과는 그대로 고정하고, 아직 결과가 없는 경기만 ③ 능력치 기반 모델로 ${SS.runs.toLocaleString()}회 시뮬레이션한 값입니다.</div>`
+                            + (sc.mode === 'tournament' ? ssRenderTournamentMC(sc, res2) : ssRenderLeagueMC(sc, res2)) + ssFooter(ctx2, res2.n, ms2);
+                    } catch (e2) { console.error('가능성 계산 오류', e2); }
+                    finally { SS.mode = prevMode; }
+                    out.innerHTML = mcHtml + (mcHtml ? '<div style="margin-top:16px;border-top:1px dashed rgba(255,255,255,0.15);padding-top:10px;"></div>' : '') + manualHtml;
+                    return;
+                }
                 const ctx = ssMakeCtx();
                 const t0 = performance.now();
                 const res = sc.mode === 'tournament' ? ssSimTournament(sc, ctx, SS.runs) : ssSimLeague(sc, ctx, SS.runs);
