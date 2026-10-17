@@ -661,6 +661,34 @@
         .pm-col > :last-child { margin-bottom: 0 !important; }
         /* 리그 비교 접기/펴기 */
         .lg-fold { margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.07); }
+        /* 🧬 팀 능력치 비교 v1.02 — 섹션별 색·막대형 행 */
+        .tc2-sec { margin-top: 12px; padding: 10px 12px 8px; border-radius: 10px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-left: 4px solid var(--c, #38bdf8); }
+        .tc2-sec-h { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+        .tc2-sec-ico { font-size: 1.1rem; line-height: 1.2; }
+        .tc2-sec-t { font-weight: 900; font-size: 0.86rem; color: var(--c, #38bdf8); }
+        .tc2-sec-d { font-size: 0.66rem; color: var(--text-muted); margin-top: 1px; line-height: 1.4; }
+        .tc2-cols, .tc2-row { display: grid; grid-template-columns: 74px minmax(60px, 1fr) 38px 50px 62px; align-items: center; gap: 8px; }
+        .tc2-cols { font-size: 0.6rem; color: var(--text-muted); font-weight: 800; padding: 2px 0 4px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .tc2-cols span:nth-child(n+3), .tc2-row > div:nth-child(n+3) { text-align: right; }
+        .tc2-row { padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: 0.76rem; }
+        .tc2-row:last-child { border-bottom: none; }
+        .tc2-row.top { background: rgba(255,255,255,0.04); border-radius: 6px; padding: 6px 4px; }
+        .tc2-lab { font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tc2-bar { position: relative; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.08); }
+        .tc2-bar i { position: absolute; left: 0; top: 0; height: 8px; border-radius: 4px; }
+        .tc2-bar b { position: absolute; top: -3px; width: 2px; height: 14px; background: #e2e8f0; border-radius: 1px; }
+        .tc2-val { font-weight: 900; font-size: 0.82rem; }
+        .tc2-diff { font-weight: 800; font-size: 0.7rem; white-space: nowrap; }
+        .tc2-rank { font-weight: 900; font-size: 0.72rem; white-space: nowrap; }
+        .tc2-rank small { color: var(--text-muted); font-weight: 700; font-size: 0.85em; }
+        .tc2-hero { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+        .tc2-hero-main { flex: 1 1 190px; padding: 10px 14px; border-radius: 10px; background: linear-gradient(135deg, rgba(56,189,248,0.14), rgba(56,189,248,0.04)); border: 1px solid rgba(56,189,248,0.35); }
+        .tc2-hero-sub { flex: 1 1 100px; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+        .tc2-k { font-size: 0.66rem; color: var(--text-muted); font-weight: 800; }
+        .tc2-big { font-size: 1.7rem; font-weight: 900; line-height: 1.1; }
+        .tc2-prow { display: grid; grid-template-columns: minmax(70px, 1fr) 38px 36px auto; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: 0.76rem; }
+        .tc2-prow:last-child { border-bottom: none; }
+        @media (max-width: 480px) { .tc2-cols, .tc2-row { grid-template-columns: 62px minmax(40px, 1fr) 34px 44px 56px; gap: 5px; } }
         .lg-fold-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; cursor: pointer; user-select: none; }
         .lg-fold-arrow { display: inline-block; transition: transform .2s; font-size: 0.7rem; color: var(--text-muted); margin-right: 4px; }
         .lg-fold.open .lg-fold-arrow { transform: rotate(90deg); }
@@ -2330,16 +2358,14 @@
                                 <th onclick="sortTotalRanking('team', 'gapg')" style="cursor:pointer;" title="경기당 실점">실점/경기 ↕️</th>
                                 <th onclick="sortTotalRanking('team', 'pts')" style="cursor:pointer;">승점 ↕️</th>
                                 <th onclick="sortTotalRanking('team', 'wr')" style="cursor:pointer;">승률 ↕️</th>
-                                <th onclick="sortTotalRanking('team', 'coef')" style="cursor:pointer;" title="시즌계수: 이번시즌 Elo×1.0 + 지난시즌 최종Elo×0.5 + 2시즌전×0.25 ...">시즌계수 ⚡ ↕️</th>
-                                <th onclick="sortTotalRanking('team', 'final')" style="cursor:pointer;" title="종합점수 = 시즌계수 누적">종합점수 🌎 ↕️</th>
+                                <th data-new="1.02" onclick="sortTotalRanking('team', 'coef')" style="cursor:pointer;" title="시즌계수(종합점수): 이번시즌 Elo×1.0 + 지난시즌 최종Elo×0.5 + 2시즌전×0.25 ...">시즌계수 ⚡ ↕️</th>
                             </tr>
                         </thead>
                         <tbody id="teamTotalTbody"></tbody>
                     </table>
                     <div class="rp-legend">
-                        🌎 <b>종합점수 산정</b> &nbsp;|&nbsp;
-                        종합점수 = 시즌계수 누적 &nbsp;|&nbsp;
-                        ⚡ 시즌계수 = 이번 시즌 Elo × <b>1.0</b> + 직전 시즌 최종 Elo × <b>0.5</b> + 2시즌전 × <b>0.25</b> + ... (시즌이 오래될수록 가중치 절반씩 감소)
+                        ⚡ <b>시즌계수</b> (= 팀 종합 순위 기준) &nbsp;|&nbsp;
+                        시즌계수 = 이번 시즌 Elo × <b>1.0</b> + 직전 시즌 최종 Elo × <b>0.5</b> + 2시즌전 × <b>0.25</b> + ... (시즌이 오래될수록 가중치 절반씩 감소)
                     </div>
                 </div>
 
@@ -19641,7 +19667,7 @@
                 return (b.final - a.final || b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || b.wr - a.wr) * (sd === -1 ? 1 : -1);
             });
             data.forEach((r, i) => {
-                tbody.innerHTML += `<tr><td>${i+1}</td><td class="clickable-team" onclick="showTeamDetail(${r.id})" style="color:${r.color}; font-weight:800;">${r.name}</td><td>${r.gms}</td><td>${r.w}</td><td>${r.l}</td><td>${r.gf}</td><td>${r.ga}</td><td class="${r.gd>0?'gd-plus':(r.gd<0?'gd-minus':'')}">${r.gd>0?'+'+r.gd:r.gd}</td><td>${r.gfpg.toFixed(2)}</td><td>${r.gapg.toFixed(2)}</td><td><b>${r.pts}</b></td><td class="wr-text">${r.wr}%</td><td style="color:var(--accent); font-weight:800;">${r.coef}</td><td style="color:#a78bfa; font-weight:800;">${r.final}</td></tr>`;
+                tbody.innerHTML += `<tr><td>${i+1}</td><td class="clickable-team" onclick="showTeamDetail(${r.id})" style="color:${r.color}; font-weight:800;">${r.name}</td><td>${r.gms}</td><td>${r.w}</td><td>${r.l}</td><td>${r.gf}</td><td>${r.ga}</td><td class="${r.gd>0?'gd-plus':(r.gd<0?'gd-minus':'')}">${r.gd>0?'+'+r.gd:r.gd}</td><td>${r.gfpg.toFixed(2)}</td><td>${r.gapg.toFixed(2)}</td><td><b>${r.pts}</b></td><td class="wr-text">${r.wr}%</td><td style="color:var(--accent); font-weight:800;">${r.coef}</td></tr>`;
             });
         }
 
@@ -22739,7 +22765,34 @@
             const h = f.querySelector('.lg-fold-hint'); if (h) h.textContent = _lgFoldOpen[elId] ? '접기' : '표 펼치기';
         }
 
-        // 팀 모달 › 🧬 능력치 비교 탭 — 전 팀 대비 종합 전력 · 7개 항목 · 선수단 평균 · 소속 선수의 리그 순위
+        // 팀 모달 › 🧬 능력치 비교 탭 (v1.02 개편)
+        //  - 맨 위 요약(종합 전력·주전/선수단 OVR·강점/약점) → ⚔️팀 전력 7항목 → 📐필드 선수 평균 능력치 → 🧑‍💼감독 → 👥소속 선수 순위
+        //  - 섹션마다 색·제목·설명을 달리하고, 각 항목은 '막대(흰 눈금=리그 평균) · 수치 · 평균 대비 ▲▼ · 순위' 한 줄로 표시
+        function tc2Row(label, v, avg, ri, opts) {
+            opts = opts || {};
+            const col = ovrColor(Math.round(v));
+            const frac = x => Math.max(0, Math.min(100, (x - ABILITY_STAT_MIN) / (ABILITY_STAT_MAX - ABILITY_STAT_MIN) * 100));
+            const d = (v !== null && avg !== null) ? v - avg : null;
+            const flat = d === null || Math.abs(d) < 0.05;
+            const dc = flat ? '#94a3b8' : (d > 0 ? '#22c55e' : '#f87171');
+            const dTxt = flat ? '＝' : (d > 0 ? '▲' : '▼') + Math.abs(d).toFixed(1);
+            const medal = ri.rank <= 3 ? ['🥇', '🥈', '🥉'][ri.rank - 1] : '';
+            const vTxt = (Math.abs(v - Math.round(v)) < 0.05) ? String(Math.round(v)) : v.toFixed(1);
+            return `<div class="tc2-row${opts.top ? ' top' : ''}" title="${gEsc((opts.title ? opts.title + ' · ' : '') + '리그 평균 ' + lgF1(avg) + ' · ' + lgPctText(ri))}">
+                <div class="tc2-lab">${label}</div>
+                <div class="tc2-bar"><i style="width:${frac(v).toFixed(0)}%; background:${col};"></i><b style="left:${avg === null ? 0 : frac(avg).toFixed(0)}%;"></b></div>
+                <div class="tc2-val" style="color:${col};">${vTxt}</div>
+                <div class="tc2-diff" style="color:${dc};">${dTxt}</div>
+                <div class="tc2-rank" style="color:${lgRankColor(ri)};">${medal}${ri.ties ? '공동' : ''}${ri.rank}위<small>/${ri.total}</small></div>
+            </div>`;
+        }
+        function tc2Section(color, icon, title, desc, colLabel, rowsHtml) {
+            return `<div class="tc2-sec" style="--c:${color};">
+                <div class="tc2-sec-h"><span class="tc2-sec-ico">${icon}</span><div><div class="tc2-sec-t">${title}</div><div class="tc2-sec-d">${desc}</div></div></div>
+                <div class="tc2-cols"><span>${colLabel}</span><span>막대 (┃ = 리그 평균)</span><span>수치</span><span>평균 대비</span><span>순위</span></div>
+                ${rowsHtml}
+            </div>`;
+        }
         function lgRenderTeamCompare(teamId, elId) {
             const el = document.getElementById(elId || 'teamAbilityCompare'); if (!el) return;
             const team = (state.teams || []).find(t => String(t.id) === String(teamId));
@@ -22749,32 +22802,58 @@
             const ids = Object.keys(PM).filter(j => PM[j] && PM[j].squadSize);
             const pw = PM[String(team.id)];
             if (!pw || !pw.squadSize) { el.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem; padding:12px 0;">능력치가 설정된 선수가 없어 비교할 수 없습니다.</div>'; return; }
-            const rowFrom = (label, getter, opts) => {
-                const vals = ids.map(j => getter(PM[j], (state.teams || []).find(t => String(t.id) === j))).filter(nz);
-                const v = getter(pw, team);
-                if (!nz(v) || vals.length < 2) return '';
-                return lgRowHtml(label, v, lgMean(vals), lgRankInfo(vals, v), opts);
+            const teamOf = j => (state.teams || []).find(t => String(t.id) === j);
+            const rowInfo = (getter) => {
+                const vals = ids.map(j => getter(PM[j], teamOf(j))).filter(nz), v = getter(pw, team);
+                if (!nz(v) || vals.length < 2) return null;
+                return { v, avg: lgMean(vals), ri: lgRankInfo(vals, v) };
             };
-            const catRows = TC_CATS.map(c => rowFrom(c.label, p => p.cats[c.key])).join('');
-            const topRows = rowFrom('⚔️ 종합 전력', p => p.overall, { bold: true }) + rowFrom('⭐ 주전 평균 OVR', p => p.startersPower) + rowFrom('👥 선수단 평균 OVR', p => p.squadPower);
-            // 선수단 필드 능력치(팀 평균) vs 리그 팀 평균
+
+            // ── 요약(종합 전력 · 주전/선수단 OVR · 강점/약점) ──
+            const oi = rowInfo(p => p.overall);
+            const si = rowInfo(p => p.startersPower), qi = rowInfo(p => p.squadPower);
+            const rankTxt = ri => `${ri.ties ? '공동 ' : ''}${ri.rank}위 / ${ri.total}팀`;
+            const diffChip = (v, avg) => { const d = v - avg; const c = Math.abs(d) < 0.05 ? '#94a3b8' : (d > 0 ? '#22c55e' : '#f87171'); return `<span style="color:${c}; font-weight:800; font-size:0.7rem;">리그 평균 ${lgF1(avg)} 대비 ${Math.abs(d) < 0.05 ? '＝' : (d > 0 ? '▲' : '▼') + Math.abs(d).toFixed(1)}</span>`; };
+            const sub = (k, info, v) => info ? `<div class="tc2-hero-sub"><div class="tc2-k">${k}</div><div style="font-size:1.15rem; font-weight:900; color:${ovrColor(Math.round(info.v))}; line-height:1.3;">${lgF1(info.v)}</div><div style="font-size:0.68rem; font-weight:800; color:${lgRankColor(info.ri)};">${rankTxt(info.ri)}</div></div>` : '';
+            const catInfo = TC_CATS.map(c => ({ c, i: rowInfo(p => p.cats[c.key]) })).filter(x => x.i);
+            const strong = catInfo.filter(x => x.i.v - x.i.avg > 0.5).sort((a, b) => a.i.ri.rank - b.i.ri.rank || (b.i.v - b.i.avg) - (a.i.v - a.i.avg)).slice(0, 2);
+            const weak = catInfo.filter(x => x.i.v - x.i.avg < -0.5).sort((a, b) => b.i.ri.rank - a.i.ri.rank || (a.i.v - a.i.avg) - (b.i.v - b.i.avg)).slice(0, 2);
+            const chips = [];
+            if (strong.length) chips.push(lgChip(`💪 강점 ${strong.map(x => `${x.c.label} ${x.i.ri.rank}위`).join(' · ')}`, '#22c55e'));
+            if (weak.length) chips.push(lgChip(`⚠️ 약점 ${weak.map(x => `${x.c.label} ${x.i.ri.rank}위`).join(' · ')}`, '#f87171'));
+            const hero = oi ? `<div class="tc2-hero">
+                    <div class="tc2-hero-main">
+                        <div class="tc2-k">⚔️ 종합 전력 ${gNewTag('1.02')}</div>
+                        <div style="display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;"><span class="tc2-big" style="color:${ovrColor(Math.round(oi.v))};">${lgF1(oi.v)}</span><span style="font-size:0.85rem; font-weight:900; color:${lgRankColor(oi.ri)};">${rankTxt(oi.ri)}</span></div>
+                        <div style="margin-top:2px;">${diffChip(oi.v, oi.avg)}</div>
+                    </div>
+                    ${sub('⭐ 주전 평균 OVR', si)}${sub('👥 선수단 평균 OVR', qi)}
+                </div>
+                ${chips.length ? `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">${chips.join('')}</div>` : ''}` : '';
+
+            // ── ⚔️ 팀 전력 7항목 ──
+            const catRows = catInfo.map(x => tc2Row(x.c.label, x.i.v, x.i.avg, x.i.ri, { title: x.c.desc })).join('');
+
+            // ── 📐 필드 선수 평균 능력치 ──
             const fieldAvg = (t, k) => { const ps = (t.players || []).filter(p => p.stats && p.pos !== 'GK'); return ps.length ? lgMean(ps.map(p => p.stats[k] !== undefined ? p.stats[k] : ABILITY_STAT_DEFAULT)) : null; };
             const statRows = FIELD_ABILITY_STATS.map(k => {
                 const vals = (state.teams || []).map(t => fieldAvg(t, k)).filter(nz), v = fieldAvg(team, k);
                 if (!nz(v) || vals.length < 2) return '';
-                return lgRowHtml(k, v, lgMean(vals), lgRankInfo(vals, v));
+                return tc2Row(k, v, lgMean(vals), lgRankInfo(vals, v));
             }).join('');
-            // 감독
+
+            // ── 🧑‍💼 감독 ──
             let mgrHtml = '';
             if (team.manager) {
                 const mref = findManagerRef(team.manager);
                 if (mref && mref.stats) {
                     const mc = lgManagerCompare(team.manager, mref.stats);
-                    const mrows = lgRowHtml('🧬 감독 OVR', mc.ovr.v, mc.ovr.avg, mc.ovr, { bold: true }) + mc.rows.map(r => lgRowHtml(r.k, r.v, r.avg, mc.rankMap[r.k])).join('');
-                    mgrHtml = `<div style="font-weight:800; font-size:0.8rem; margin:14px 0 6px;">🧑‍💼 감독 <span class="clickable-manager" onclick="showManagerDetail('${team.manager.replace(/'/g, "\\'")}')" style="color:var(--gold); cursor:pointer;">${gEsc(team.manager)}</span> <span style="color:var(--text-muted); font-weight:700;">· ${mc.scopeLabel}</span></div>${lgTableHtml(mrows, '능력치', '리그평균')}`;
+                    const mrows = tc2Row('🧬 감독 OVR', mc.ovr.v, mc.ovr.avg, mc.ovr, { top: true }) + mc.rows.map(r => tc2Row(r.k, r.v, r.avg, mc.rankMap[r.k])).join('');
+                    mgrHtml = tc2Section('#fbbf24', '🧑‍💼', `감독 <span class="clickable-manager" onclick="showManagerDetail('${team.manager.replace(/'/g, "\\'")}')" style="color:#fff; cursor:pointer; text-decoration:underline dotted;">${gEsc(team.manager)}</span>`, `감독 개인 능력치 · ${mc.scopeLabel} 기준 비교`, '능력치', mrows);
                 }
             }
-            // 소속 선수의 리그 순위 요약
+
+            // ── 👥 소속 선수 순위 ──
             const roster = (team.players || []).filter(p => p.stats).map(p => {
                 const isGK = p.pos === 'GK';
                 const pool = []; (state.teams || []).forEach(t => (t.players || []).forEach(q => { if (q.stats && (q.pos === 'GK') === isGK) pool.push(calcPlayerOVR(q)); }));
@@ -22782,27 +22861,23 @@
                 return { p, o, ri: lgRankInfo(pool, o), grp: isGK ? 'GK' : '필드' };
             }).sort((a, b) => a.ri.rank - b.ri.rank);
             const posColor = { FW: '#f97316', MF: '#84cc16', DF: '#0ea5e9', GK: '#eab308' };
-            const rosterRows = roster.map(z => `<tr>
-                <td style="text-align:left; white-space:nowrap;"><a style="cursor:pointer; color:#38bdf8;" onclick="${tcPlayerClick(z.p.name)}">${gEsc(z.p.name)}</a></td>
-                <td><span style="background:${posColor[z.p.pos] || '#94a3b8'}; color:${(z.p.pos === 'GK' || z.p.pos === 'MF') ? '#000' : '#fff'}; padding:1px 6px; border-radius:4px; font-size:0.68rem; font-weight:800;">${z.p.pos}</span></td>
-                <td><b style="color:${ovrColor(z.o)};">${z.o}</b></td>
-                <td style="white-space:nowrap;"><b style="color:${lgRankColor(z.ri)};">${z.ri.rank <= 3 ? ['🥇', '🥈', '🥉'][z.ri.rank - 1] : ''}${z.ri.ties ? '공동 ' : ''}${z.ri.rank}위</b><span style="color:var(--text-muted);"> / ${z.ri.total} (${z.grp})</span></td>
-            </tr>`).join('');
-            const orank = lgRankInfo(ids.map(j => PM[j].overall), pw.overall);
-            const sub = (t) => `<div style="font-weight:800; font-size:0.8rem; margin:14px 0 6px;">${t}</div>`;
+            const rosterRows = roster.map(z => `<div class="tc2-prow">
+                <a style="cursor:pointer; color:#38bdf8; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onclick="${tcPlayerClick(z.p.name)}">${gEsc(z.p.name)}</a>
+                <span style="background:${posColor[z.p.pos] || '#94a3b8'}; color:${(z.p.pos === 'GK' || z.p.pos === 'MF') ? '#000' : '#fff'}; padding:1px 0; border-radius:4px; font-size:0.66rem; font-weight:800; text-align:center;">${z.p.pos}</span>
+                <b style="color:${ovrColor(z.o)}; text-align:right;">${z.o}</b>
+                <span style="white-space:nowrap; text-align:right;"><b style="color:${lgRankColor(z.ri)};">${z.ri.rank <= 3 ? ['🥇', '🥈', '🥉'][z.ri.rank - 1] : ''}${z.ri.ties ? '공동 ' : ''}${z.ri.rank}위</b><span style="color:var(--text-muted); font-size:0.9em;"> / ${z.ri.total}명 (${z.grp})</span></span>
+            </div>`).join('');
+
             el.innerHTML = `
-                <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
-                    ${lgChip(`⚔️ 종합 전력 ${pw.overall.toFixed(1)} · ${orank.ties ? '공동 ' : ''}${orank.rank}위 / ${orank.total}팀`, lgRankColor(orank))}
-                    ${lgChip(`리그 팀 평균 ${lgF1(lgMean(ids.map(j => PM[j].overall)))} 대비 ${lgSg(pw.overall - lgMean(ids.map(j => PM[j].overall)))}`, pw.overall >= lgMean(ids.map(j => PM[j].overall)) ? '#22c55e' : '#f87171')}
-                </div>
-                <div style="font-weight:800; font-size:0.8rem; margin:0 0 6px;">📈 팀 전력 · 7개 항목 <span style="color:var(--text-muted); font-weight:700;">· 전 ${ids.length}팀 기준</span></div>
-                ${lgTableHtml(topRows + catRows, '항목', '리그평균')}
-                ${sub('📐 필드 선수단 평균 능력치 <span style="color:var(--text-muted); font-weight:700;">· 전 팀 기준</span>')}
-                ${lgTableHtml(statRows, '능력치', '리그평균')}
+                ${hero}
+                ${tc2Section('#38bdf8', '⚔️', '팀 전력 · 7개 항목', `주전·출전 가능성·감독 효과를 반영한 <b>팀 단위 환산값</b> · 전 ${ids.length}팀 비교`, '항목', catRows)}
+                ${tc2Section('#22c55e', '📐', '필드 선수 평균 능력치', '선수 <b>원본 능력치</b>(결정력·패스 등)의 팀 평균 · GK 제외 · 위 7개 항목과는 별개 지표', '능력치', statRows)}
                 ${mgrHtml}
-                ${sub('👥 소속 선수의 리그 순위 <span style="color:var(--text-muted); font-weight:700;">· OVR 기준, 필드/GK 각각</span>')}
-                <div class="scrollable-table"><table class="pattern-table" style="width:100%; font-size:0.74rem;"><thead><tr><th style="text-align:left;">선수</th><th>포지션</th><th>OVR</th><th>리그 순위</th></tr></thead><tbody>${rosterRows}</tbody></table></div>
-                <div style="font-size:0.64rem; color:var(--text-muted); margin-top:6px;">팀 전력·항목은 주전·출전 가능성·감독 효과가 반영된 값입니다. 막대의 흰 눈금 = 리그 평균.</div>`;
+                <div class="tc2-sec" style="--c:#a78bfa;">
+                    <div class="tc2-sec-h"><span class="tc2-sec-ico">👥</span><div><div class="tc2-sec-t">소속 선수의 리그 순위</div><div class="tc2-sec-d">OVR 기준 · 필드 선수끼리 / GK끼리 각각 순위</div></div></div>
+                    ${rosterRows}
+                </div>
+                <div style="font-size:0.64rem; color:var(--text-muted); margin-top:8px; line-height:1.5;">막대의 흰 눈금 = 리그 평균 · ▲▼ = 리그 평균과의 차이 · 순위 색: 금 TOP3 / 초록 상위 10% / 빨강 하위 25% · 수치 색은 OVR 등급(90↑ 빨강 · 80↑ 주황 · 70↑ 노랑)</div>`;
         }
 
         load(); init();
@@ -22822,7 +22897,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.01';
+        const G_HTML_VERSION = '1.02';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
