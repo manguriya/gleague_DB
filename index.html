@@ -101,6 +101,21 @@
         .pn-chg-old { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(148,163,184,0.5); }
         .pn-up { color: #4ade80; font-weight: 800; } .pn-down { color: #f87171; font-weight: 800; }
         .pn-new { display: inline-block; margin-right: 5px; padding: 0 5px; border-radius: 4px; background: rgba(34,197,94,0.18); border: 1px solid rgba(34,197,94,0.55); color: #4ade80; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.04em; vertical-align: 1px; line-height: 1.5; }
+        /* 📝 패치노트 — 상승 / 하락 / 변경 3열 */
+        .pn-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 8px 0 4px; align-items: start; }
+        @media (max-width: 900px) { .pn-cols { grid-template-columns: 1fr; } }
+        .pn-col { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-top: 3px solid #475569; border-radius: 8px; padding: 8px; min-width: 0; }
+        .pn-col-up { border-top-color: #4ade80; } .pn-col-down { border-top-color: #f87171; } .pn-col-chg { border-top-color: #a78bfa; }
+        .pn-col-head { font-weight: 900; font-size: 0.82rem; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .pn-col-up .pn-col-head { color: #4ade80; } .pn-col-down .pn-col-head { color: #f87171; } .pn-col-chg .pn-col-head { color: #a78bfa; }
+        .pn-col-head .pn-cnt { font-size: 0.68rem; padding: 0 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--text); }
+        .pn-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 7px 9px; margin-bottom: 7px; }
+        .pn-card:last-child { margin-bottom: 0; }
+        .pn-card-t { font-size: 0.78rem; font-weight: 800; line-height: 1.4; margin-bottom: 4px; word-break: keep-all; }
+        .pn-card .pn-tbl { margin: 0; max-width: none; }
+        .pn-card .pn-tbl th, .pn-card .pn-tbl td { padding: 3px 6px; }
+        .pn-card .pn-note, .pn-card .pn-card-sub { font-size: 0.72rem; color: var(--text-muted); }
+        .pn-col-empty { font-size: 0.74rem; color: var(--text-muted); padding: 4px 2px; }
         .nav-tabs-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 10px 4px; }
         .tab-btn {
             padding: 11px 14px; border: none; border-left: 3px solid transparent; border-radius: 8px;
@@ -23140,14 +23155,33 @@
             const total = entries.reduce((a, e) => a + e.n, 0);
             const chips = entries.map(e => `<span class="pn-tag pn-t-${e.key}">${gEsc(e.k)} ${e.n}</span>`).join('');
             const bar = total > 1 ? `<div class="pn-bar">${entries.map(e => `<span style="width:${(e.n / total * 100).toFixed(1)}%; background:${G_PN_COLORS[e.key]};" title="${gEsc(e.k)} ${e.n}"></span>`).join('')}</div>` : '';
-            const body = v.items.map(it => {
-                if (it.table) {
-                    const [head, ...rows] = it.rows;
-                    return `<table class="pn-tbl"><thead><tr>${head.map(c => `<th>${gEsc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${gPnCell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-                }
+            const tblHtml = it => {
+                const [head, ...rows] = it.rows;
+                return `<table class="pn-tbl"><thead><tr>${head.map(c => `<th>${gEsc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${gPnCell(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+            };
+            const itemsHtml = items => items.map(it => {
+                if (it.table) return tblHtml(it);
                 if (it.note) return `<div class="pn-note">${gEsc(it.t)}</div>`;
                 return `<li class="${it.sub ? 'pn-sub' : ''}">${it.tag ? `<span class="pn-tag pn-t-${it.tag.key}">${gEsc(it.tag.label)}</span>` : ''}${gEsc(it.t)}</li>`;
             }).join('').replace(/(<li[\s\S]*?<\/li>)+/g, m => `<ul class="pn-list">${m}</ul>`);
+            // 상승/하락/변경 항목(+바로 아래 표)은 3열로 나눠서 표시 — 표가 있는 항목이 하나라도 있을 때만 (DB 패치노트용)
+            const cols = { up: [], down: [], chg: [] }, rest = []; let card = null;
+            v.items.forEach(it => {
+                if (!it.table && !it.note && it.tag && !it.sub && cols[it.tag.key]) { card = { it, tbl: null, subs: [] }; cols[it.tag.key].push(card); return; }
+                if (card && it.table && !card.tbl) { card.tbl = it; return; }
+                if (card && it.sub && !it.table && !it.note) { card.subs.push(it); return; }
+                card = null; rest.push(it);
+            });
+            const allCards = cols.up.concat(cols.down, cols.chg);
+            let body;
+            if (allCards.some(c => c.tbl)) {
+                const COLS = [['up', '▲ 상승'], ['down', '▼ 하락'], ['chg', '● 변경']];
+                const cardHtml = c => {
+                    const t = gEsc(c.it.t).replace(/OVR\s*(\d+)\s*(?:→|-&gt;)\s*(\d+)/, (m, a, b) => { const d = b - a; return `OVR <span class="pn-chg-old">${a}</span> → <b>${b}</b>` + (d > 0 ? ` <span class="pn-up">▲${d}</span>` : d < 0 ? ` <span class="pn-down">▼${-d}</span>` : ''); });
+                    return `<div class="pn-card"><div class="pn-card-t">${t}</div>${c.subs.map(s => `<div class="pn-card-sub">– ${gEsc(s.t)}</div>`).join('')}${c.tbl ? tblHtml(c.tbl) : ''}</div>`;
+                };
+                body = itemsHtml(rest) + `<div class="pn-cols">${COLS.map(([k, label]) => `<div class="pn-col pn-col-${k}"><div class="pn-col-head">${label}<span class="pn-cnt">${cols[k].length}</span></div>${cols[k].length ? cols[k].map(cardHtml).join('') : '<div class="pn-col-empty">없음</div>'}</div>`).join('')}</div>`;
+            } else body = itemsHtml(v.items);
             return `<details class="pn-ver${vi === 0 ? ' latest' : ''}" ${vi === 0 ? 'open' : ''}>
                 <summary><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}<span class="pn-chips">${chips}</span></summary>
                 ${bar}<div class="pn-ver-body">${body}</div></details>`;
