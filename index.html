@@ -115,6 +115,9 @@
         .pn-card .pn-tbl { margin: 0; max-width: none; }
         .pn-card .pn-tbl th, .pn-card .pn-tbl td { padding: 3px 6px; }
         .pn-card .pn-note, .pn-card .pn-card-sub { font-size: 0.72rem; color: var(--text-muted); }
+        .pn-team-h { font-weight: 900; font-size: 0.8rem; margin: 10px 0 6px; padding-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; gap: 6px; }
+        .pn-team-h:first-of-type { margin-top: 0; }
+        .pn-team-h .pn-cnt { font-size: 0.64rem; padding: 0 6px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--text); }
         .pn-col-empty { font-size: 0.74rem; color: var(--text-muted); padding: 4px 2px; }
         .nav-tabs-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 10px 4px; }
         .tab-btn {
@@ -23176,11 +23179,29 @@
             let body;
             if (allCards.some(c => c.tbl)) {
                 const COLS = [['up', '▲ 상승'], ['down', '▼ 하락'], ['chg', '● 변경']];
+                // 팀 정의(현재 DB의 팀 순서·색상) + 자유계약 + 감독
+                const tl = (typeof state !== 'undefined' && state && Array.isArray(state.teams)) ? state.teams : [];
+                const defs = tl.map(t => ({ name: String(t.name), color: t.color || '#94a3b8' })).concat([{ name: '자유계약', color: '#94a3b8' }, { name: '감독', color: '#facc15' }]);
+                const defOf = c => defs.filter(d => c.it.t.startsWith(d.name + ' ')).sort((x, y) => y.name.length - x.name.length)[0] || null;
                 const cardHtml = c => {
-                    const t = gEsc(c.it.t).replace(/OVR\s*(\d+)\s*(?:→|-&gt;)\s*(\d+)/, (m, a, b) => { const d = b - a; return `OVR <span class="pn-chg-old">${a}</span> → <b>${b}</b>` + (d > 0 ? ` <span class="pn-up">▲${d}</span>` : d < 0 ? ` <span class="pn-down">▼${-d}</span>` : ''); });
-                    return `<div class="pn-card"><div class="pn-card-t">${t}</div>${c.subs.map(s => `<div class="pn-card-sub">– ${gEsc(s.t)}</div>`).join('')}${c.tbl ? tblHtml(c.tbl) : ''}</div>`;
+                    const df = c.def, label = df ? c.it.t.slice(df.name.length + 1) : c.it.t;
+                    const t = gEsc(label).replace(/OVR\s*(\d+)\s*(?:→|-&gt;)\s*(\d+)/, (m, a, b) => { const d = b - a; return `OVR <span class="pn-chg-old">${a}</span> → <b>${b}</b>` + (d > 0 ? ` <span class="pn-up">▲${d}</span>` : d < 0 ? ` <span class="pn-down">▼${-d}</span>` : ''); });
+                    return `<div class="pn-card"${df ? ` style="border-left:3px solid ${df.color};"` : ''}><div class="pn-card-t">${t}</div>${c.subs.map(s => `<div class="pn-card-sub">– ${gEsc(s.t)}</div>`).join('')}${c.tbl ? tblHtml(c.tbl) : ''}</div>`;
                 };
-                body = itemsHtml(rest) + `<div class="pn-cols">${COLS.map(([k, label]) => `<div class="pn-col pn-col-${k}"><div class="pn-col-head">${label}<span class="pn-cnt">${cols[k].length}</span></div>${cols[k].length ? cols[k].map(cardHtml).join('') : '<div class="pn-col-empty">없음</div>'}</div>`).join('')}</div>`;
+                // 열 안에서 팀별로 묶어서(팀 순서대로) 팀 이름을 팀 색상으로 표시
+                const colHtml = list => {
+                    list.forEach(c => { c.def = defOf(c); });
+                    const order = defs.concat([null]);
+                    return order.map(df => {
+                        const g = list.filter(c => c.def === df);
+                        if (!g.length) return '';
+                        const head = df
+                            ? `<div class="pn-team-h" style="color:${df.color}; border-bottom-color:${df.color}55;">${gEsc(df.name)}<span class="pn-cnt">${g.length}</span></div>`
+                            : `<div class="pn-team-h" style="color:var(--text-muted);">기타<span class="pn-cnt">${g.length}</span></div>`;
+                        return head + g.map(cardHtml).join('');
+                    }).join('');
+                };
+                body = itemsHtml(rest) + `<div class="pn-cols">${COLS.map(([k, label]) => `<div class="pn-col pn-col-${k}"><div class="pn-col-head">${label}<span class="pn-cnt">${cols[k].length}</span></div>${cols[k].length ? colHtml(cols[k]) : '<div class="pn-col-empty">없음</div>'}</div>`).join('')}</div>`;
             } else body = itemsHtml(v.items);
             return `<details class="pn-ver${vi === 0 ? ' latest' : ''}" ${vi === 0 ? 'open' : ''}>
                 <summary><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}<span class="pn-chips">${chips}</span></summary>
