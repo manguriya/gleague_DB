@@ -838,6 +838,14 @@
         .rs-forms { display: inline-flex; gap: 3px; }
         .rs-form { width: 20px; height: 20px; border-radius: 4px; font-size: 0.66rem; font-weight: 900; line-height: 20px; text-align: center; color: #000; }
         .rs-form.w { background: #22c55e; } .rs-form.l { background: #f87171; } .rs-form.d { background: #94a3b8; }
+    
+        /* 🎛️ 랭킹 시즌 필터: 구간·종류 지정 (v1.03) */
+        .rk-custom { margin-top:10px; padding:10px 12px; border-radius:10px; background:rgba(56,189,248,0.06); border:1px solid rgba(56,189,248,0.28); display:flex; flex-direction:column; gap:8px; }
+        .rk-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:0.78rem; font-weight:800; color:var(--text-muted); }
+        .rk-row .archive-select { margin-bottom:0; min-width:150px; width:auto; }
+        .rk-sum { font-size:0.74rem; color:var(--text-muted); line-height:1.5; }
+        .rk-sum b { color:var(--gold); }
+        .rk-warn { color:#fbbf24; font-weight:800; }
     </style>
 </head>
 <body>
@@ -2060,12 +2068,13 @@
         <div id="ranking" class="tab-content">
             <div class="card" style="padding:10px 15px; margin-bottom:10px;">
                 <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <span style="font-size:0.85rem; font-weight:800; color:var(--text-muted);">🔍 시즌 필터:</span>
-                    <select id="rankingSeasonFilter" class="archive-select" style="margin-bottom:0; min-width:150px;" onchange="this.dataset.touched='1'; renderTeamRank(); renderPlayerRank();">
+                    <span data-new="1.03" style="font-size:0.85rem; font-weight:800; color:var(--text-muted);">🔍 시즌 필터:</span>
+                    <select id="rankingSeasonFilter" class="archive-select" style="margin-bottom:0; min-width:150px;" onchange="onRankingSeasonFilterChange(this)">
                         <option value="all">전체</option>
                         <option value="시즌 1">시즌 1</option>
                     </select>
                 </div>
+                <div id="rankingCustomPanel" class="rk-custom" style="display:none;"></div>
             </div>
 
             <div class="card">
@@ -2099,7 +2108,7 @@
 
                 <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08);">
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-                        <h4 style="margin:0; font-size:0.85rem; color:var(--text-muted);">🧩 전체 팀 순위 변동 (통합 그래프, <span id="allTeamsTrendScopeLabel">전체</span>)</h4>
+                        <h4 data-new="1.03" style="margin:0; font-size:0.85rem; color:var(--text-muted);">🧩 전체 팀 순위 변동 (통합 그래프, <span id="allTeamsTrendScopeLabel">전체</span>)</h4>
                         <div id="allTeamsTrendSelectedLabel"></div>
                     </div>
                     <div class="ranking-info" style="margin-bottom:8px;">모든 팀의 순위 변동을 한 그래프에 겹쳐서 보여줍니다. 위쪽 🔍 시즌 필터와 동기화되어 있어요. 각 선 끝의 팀명을 클릭하면 그 팀만 하이라이트되고(Elo 증감도 함께 표시), 나머지는 흐리게 표시돼요. 점 위에 마우스를 올리면 그 시점 순위/Elo를 확인할 수 있습니다.</div>
@@ -8206,7 +8215,9 @@
                 add(sa.yashin, 'yashin', a.name);
                 add(sa.ballon, 'ballon', a.name);
             };
-            if (scope === 'cumulative') {
+            if (scope && typeof scope === 'object' && Array.isArray(scope.archives)) {
+                scope.archives.forEach(addFromArchive);   // v1.03: 구간·종류로 고른 시즌들만 집계
+            } else if (scope === 'cumulative') {
                 (state.archives || []).forEach(addFromArchive);
             } else if (scope === 'current') {
                 if ((state.matches || []).length > 0) {
@@ -8235,6 +8246,13 @@
         // 'all'(전체 누적 합산)은 확정된 과거 시즌 전체(cumulative)와 진행중인 현재 시즌의 선두 후보(current)를
         // 함께 보여주되, 서로 섞지 않고 구분해서 돌려준다 (미확정 수상은 화면에서 괄호로 구분 표시하기 위함).
         function computeAwardCountsForSeasonFilter(sf) {
+            if (sf === 'custom') {
+                const es = getCustomSeasonEntries();
+                return {
+                    confirmed: computeLeagueAwardCounts({ archives: es.filter(e => e.arc).map(e => e.arc) }),
+                    pending: es.some(e => !e.arc) ? computeLeagueAwardCounts('current') : {}
+                };
+            }
             if (sf === 'all') {
                 return { confirmed: computeLeagueAwardCounts('cumulative'), pending: computeLeagueAwardCounts('current') };
             }
@@ -17676,6 +17694,7 @@
         // 시즌 필터 값에 맞는 경기 목록을 반환
         // 'all'이면 아카이브된 모든 과거 시즌 + 현재 시즌 경기를 시간순으로 합쳐서 반환 (누적 합산용)
         function getSeasonMatchPool(sf) {
+            if(sf === 'custom') return getCustomMatchPool();
             if(sf === 'all') {
                 let pool = [];
                 (state.archives || []).forEach(a => { pool = pool.concat(a.matches || []); });
@@ -17684,6 +17703,101 @@
             }
             const arc = getArchiveBySeasonFilter(sf);
             return arc ? (arc.matches || []) : state.matches;
+        }
+
+        // ======= 🎛️ 랭킹 시즌 필터: 구간 · 종류 지정 (v1.03) =======
+        // 시즌 필터 값 'custom' = 시작~끝 시즌 구간 + 시즌 방식(전체/리그만/컵만)으로 고른 시즌들만 누적 합산.
+        // 'all'과 같은 누적(cumulative) 방식으로 계산하되 대상 시즌만 다르다.
+        const rankCustom = { from: '', to: '', mode: 'all' };
+        function isCumulativeSF(sf) { return sf === 'all' || sf === 'custom'; }
+        // 오래된 시즌 → 현재 시즌 순서의 전체 시즌 목록 (mode: 'league' | 'tournament')
+        function getAllSeasonEntries() {
+            const list = (state.archives || []).map(a => ({ name: a.name, mode: a.seasonMode === 'tournament' ? 'tournament' : 'league', arc: a }));
+            list.push({ name: state.seasonName || '현재 시즌', mode: state.seasonMode === 'tournament' ? 'tournament' : 'league', arc: null });
+            return list;
+        }
+        function getCustomRangeEntries() {
+            const all = getAllSeasonEntries();
+            let i = all.findIndex(e => e.name === rankCustom.from), j = all.findIndex(e => e.name === rankCustom.to);
+            if(i < 0) i = 0;
+            if(j < 0) j = all.length - 1;
+            if(i > j) { const t = i; i = j; j = t; }
+            return all.slice(i, j + 1);
+        }
+        function getCustomSeasonEntries() {
+            return getCustomRangeEntries().filter(e => rankCustom.mode === 'all' || e.mode === rankCustom.mode);
+        }
+        function getCustomMatchPool() {
+            let pool = [];
+            getCustomSeasonEntries().forEach(e => { pool = pool.concat(e.arc ? (e.arc.matches || []) : (state.matches || [])); });
+            return pool;
+        }
+        // 구간만 지정했을 때(리그+컵 모두 포함)는 첫 시즌 직전 시즌의 최종 Elo에서 이어받고,
+        // 방식 필터를 쓰면 시즌이 건너뛰어지므로 선택한 경기만으로 1000점부터 다시 계산한다.
+        function getCustomEloBaseline() {
+            if(rankCustom.mode !== 'all') return null;
+            const es = getCustomSeasonEntries();
+            if(!es.length) return null;
+            const all = getAllSeasonEntries();
+            const idx = all.findIndex(e => e.name === es[0].name);
+            if(idx <= 0) return null;
+            const prev = all[idx - 1];
+            return (prev.arc && prev.arc.finalElo && Object.keys(prev.arc.finalElo).length > 0) ? prev.arc.finalElo : null;
+        }
+        function getCustomScopeLabel() {
+            const es = getCustomSeasonEntries();
+            const modeTxt = rankCustom.mode === 'league' ? ' · ⭐ 리그만' : (rankCustom.mode === 'tournament' ? ' · 🏆 컵만' : '');
+            if(!es.length) return '해당 시즌 없음' + modeTxt;
+            const names = es.map(e => e.name);
+            const body = names.length <= 3 ? names.join(' + ') : `${names[0]} ~ ${names[names.length - 1]} (${names.length}개 시즌)`;
+            return body + modeTxt;
+        }
+        function onRankingSeasonFilterChange(el) {
+            el.dataset.touched = '1';
+            renderRankingCustomPanel();
+            renderTeamRank(); renderPlayerRank();
+        }
+        function rankCustomSet(key, val) {
+            rankCustom[key] = val;
+            renderRankingCustomPanel();
+            renderTeamRank(); renderPlayerRank();
+        }
+        function rankCustomReset() {
+            rankCustom.from = ''; rankCustom.to = ''; rankCustom.mode = 'all';
+            renderRankingCustomPanel();
+            renderTeamRank(); renderPlayerRank();
+        }
+        function renderRankingCustomPanel() {
+            const box = document.getElementById('rankingCustomPanel');
+            const selEl = document.getElementById('rankingSeasonFilter');
+            if(!box) return;
+            if(!selEl || selEl.value !== 'custom') { box.style.display = 'none'; box.innerHTML = ''; return; }
+            const all = getAllSeasonEntries();
+            // 저장된 시작/끝 시즌이 목록에 없으면(시즌 이름 변경 등) 전체 구간으로 되돌린다
+            if(!all.some(e => e.name === rankCustom.from)) rankCustom.from = all[0].name;
+            if(!all.some(e => e.name === rankCustom.to)) rankCustom.to = all[all.length - 1].name;
+            const range = getCustomRangeEntries();
+            const picked = getCustomSeasonEntries();
+            const nLeague = range.filter(e => e.mode === 'league').length, nCup = range.filter(e => e.mode === 'tournament').length;
+            const opt = (sel) => all.map((e, i) => `<option value="${gEsc(e.name)}" ${e.name === sel ? 'selected' : ''}>${gEsc(e.name)}${e.arc ? '' : ' (진행 중)'}</option>`).join('');
+            const seg = (id, t) => `<button class="rs-chipbtn ${rankCustom.mode === id ? 'on' : ''}" onclick="rankCustomSet('mode','${id}')">${t}</button>`;
+            const matchCnt = getCustomMatchPool().length;
+            let sum;
+            if(!picked.length) sum = `<span class="rk-warn">⚠️ 선택한 구간에 ${rankCustom.mode === 'league' ? '리그' : '컵대회'} 시즌이 없어요. 구간을 넓히거나 방식을 바꿔 주세요.</span>`;
+            else sum = `집계 대상 <b>${picked.length}개 시즌 · ${matchCnt}경기</b> — ${picked.map(e => gEsc(e.name)).join(' → ')}`;
+            const note = rankCustom.mode !== 'all'
+                ? '※ 리그만/컵만으로 거르면 시즌이 건너뛰어지므로, Elo는 선택한 경기만으로 1000점부터 다시 계산해요.'
+                : '※ 구간의 첫 시즌 직전 시즌의 최종 Elo에서 이어받아 계산해요 (첫 시즌부터면 1000점 출발).';
+            box.style.display = '';
+            box.innerHTML = `<div class="rk-row"><span>📐 구간</span>
+                    <select class="archive-select" onchange="rankCustomSet('from', this.value)">${opt(rankCustom.from)}</select>
+                    <span>~</span>
+                    <select class="archive-select" onchange="rankCustomSet('to', this.value)">${opt(rankCustom.to)}</select>
+                    <span style="margin-left:8px;">🎮 방식</span>
+                    ${seg('all', `전체 (${range.length})`)}${seg('league', `⭐ 리그만 (${nLeague})`)}${seg('tournament', `🏆 컵만 (${nCup})`)}
+                    <button class="rs-chipbtn" onclick="rankCustomReset()">↺ 초기화</button></div>
+                <div class="rk-sum">${sum}</div>
+                <div class="rk-sum" style="opacity:0.75;">${note}</div>`;
         }
 
         function updateTable(tid, ids, types) {
@@ -18708,6 +18822,14 @@
         // 'all' = 전체 누적 합산, 현재 시즌 이름 = 진행 중인 시즌만, 그 외 = 특정 과거(아카이브) 시즌만.
         function getChronoMatchesForSeasonFilter(sf) {
             const curName = state.seasonName || '현재 시즌';
+            if(sf === 'custom') {
+                let pool = [];
+                getCustomSeasonEntries().forEach(e => {
+                    pool = pool.concat((e.arc ? (e.arc.matches || []) : (state.matches || [])).map(m => ({ ...m, __season: e.name })));
+                });
+                pool.sort((a, b) => a.id - b.id);
+                return pool;
+            }
             if(sf === 'all') {
                 let pool = [];
                 (state.archives || []).forEach(a => {
@@ -18729,6 +18851,8 @@
             let eloBaseline;
             if(sf === 'all') {
                 eloBaseline = null;
+            } else if(sf === 'custom') {
+                eloBaseline = getCustomEloBaseline();
             } else {
                 const arc = getArchiveBySeasonFilter(sf);
                 if(arc) {
@@ -18789,41 +18913,67 @@
             const MIN_SPACING = 22;
             const NAME_FONT_SIZE = 9.5;
             const maxNameLen = Math.max(4, ...activeTeams.map(t => t.name.length));
-            const padL = 34, padR = Math.max(70, maxNameLen * (NAME_FONT_SIZE + 1) + 24), padT = 26, padB = 26;
+            const padL = 34, padR = Math.max(70, maxNameLen * (NAME_FONT_SIZE + 1) + 24), padB = 26;
+            let padT = 26; // 시즌 라벨 줄 수에 따라 아래에서 늘어난다
             const PLOT_H = Math.max(195, 45 + maxRankOverall * 22); // 순위표 자체의 세로 스케일(고정) — 이름표 겹침 방지로 인해 이 배율이 바뀌지 않도록 분리
             const neededW = padL + padR + maxRound * MIN_SPACING;
             // 가로 스크롤 없이 컨테이너 폭에 맞춰 축소 표시 (경기 수가 많아도 viewBox 비율만 유지)
             const w = 780;
             const scrollable = false;
             const xFor = (x) => padL + (maxRound > 0 ? (x / maxRound) * (w - padL - padR) : 0);
+
+            // 🚩 시즌 구간 라벨 배치 (v1.03): 시즌이 짧아 라벨끼리 가로로 겹치면 위 줄 → 아래 줄로 자동으로 쌓는다.
+            // 라벨은 글자 폭을 추정해 배경 박스로 그리고, 오른쪽 끝을 넘으면 안쪽으로 당겨 잘리지 않게 한다.
+            const LABEL_FS = 9, LANE_H = 15, LABEL_GAP = 8;
+            const estLabelW = (str) => Array.from(String(str)).reduce((sum, ch) => {
+                const c = ch.codePointAt(0);
+                if(ch === ' ') return sum + 3.4;
+                if(c < 128) return sum + (/[A-Z0-9]/.test(ch) ? 6.2 : 5.2);
+                if(c >= 0x1F000 || c === 0x2B50) return sum + 12.5; // 이모지
+                return sum + 9.8; // 한글 등 전각 문자
+            }, 0) * 1.05 + 12;
+            const seasonLabels = [];
+            if(isCumulativeSF(sf)) {
+                const roundSeason = {}, roundsOfSeason = {};
+                activeTeams.forEach(t => series[String(t.id)].forEach(p => { if(!roundSeason[p.x]) roundSeason[p.x] = p.season; }));
+                let prevSeason = null;
+                for(let x = 1; x <= maxRound; x++) {
+                    const sName = roundSeason[x];
+                    if(!sName) continue;
+                    roundsOfSeason[sName] = (roundsOfSeason[sName] || 0) + 1;
+                    if(prevSeason === null || sName !== prevSeason) seasonLabels.push({ x, name: sName });
+                    prevSeason = sName;
+                }
+                const laneEnd = [];
+                seasonLabels.forEach(L => {
+                    L.w = estLabelW('🚩 ' + L.name);
+                    L.rounds = roundsOfSeason[L.name] || 0;
+                    let bx = xFor(L.x) + 3;
+                    if(bx + L.w > w - 4) bx = Math.max(2, w - 4 - L.w);
+                    let lane = 0;
+                    while(laneEnd[lane] !== undefined && laneEnd[lane] + LABEL_GAP > bx) lane++;
+                    laneEnd[lane] = bx + L.w;
+                    L.bx = bx; L.lane = lane;
+                });
+            }
+            const laneCount = seasonLabels.length ? Math.max(...seasonLabels.map(L => L.lane)) + 1 : 0;
+            if(laneCount > 0) padT = 14 + laneCount * LANE_H + 8;
+
             const yFor = (rank) => padT + ((rank - 1) / Math.max(1, maxRankOverall - 1)) * PLOT_H;
             const escXml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const escTip = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
             const contentBottom = padT + PLOT_H;
 
-            // 시즌 경계 - 라운드별로 대표 시즌을 하나 뽑아 비교. 첫 시즌도 시작 지점에 라벨을 표시한다.
-            // 라벨은 항상 절취선의 오른쪽에 붙여서, 왼쪽(이전 구간)으로 넘어가 겹치지 않도록 한다.
+            // 시즌 경계 절취선 + 라벨(위에서 줄 배치한 결과를 그린다). 라벨 줄이 아래일수록 절취선이 그 줄에서 시작한다.
             let seasonLines = '';
-            if(sf === 'all') {
-                const roundSeason = {};
-                activeTeams.forEach(t => series[String(t.id)].forEach(p => { if(!roundSeason[p.x]) roundSeason[p.x] = p.season; }));
-                let prevSeason = null;
-                for(let x = 1; x <= maxRound; x++) {
-                    const s = roundSeason[x];
-                    if(!s) continue;
-                    if(prevSeason === null || s !== prevSeason) {
-                        // 시즌명 라벨이 오른쪽 끝을 넘어가 잘려 보이지 않도록, 남은 공간이 부족하면 절취선 왼쪽에 붙인다.
-                        const labelText = `🚩 ${escXml(s)}`;
-                        const estWidth = labelText.length * 6.5;
-                        const fitsRight = xFor(x) + 4 + estWidth <= w - padR;
-                        const lx = fitsRight ? xFor(x) + 4 : Math.max(padL + 2, xFor(x) - 4);
-                        const lAnchor = fitsRight ? 'start' : 'end';
-                        seasonLines += `<line x1="${xFor(x)}" y1="${padT}" x2="${xFor(x)}" y2="${contentBottom}" stroke="rgba(251,191,36,0.4)" stroke-width="1.2" stroke-dasharray="3,3"/>
-                        <text x="${lx}" y="${padT - 8}" font-size="9" font-weight="800" fill="var(--gold)" text-anchor="${lAnchor}">${labelText}</text>`;
-                    }
-                    prevSeason = s;
-                }
-            }
+            seasonLabels.forEach(L => {
+                const ly = 6 + L.lane * LANE_H;          // 라벨 박스 윗변
+                const lineTop = ly + LANE_H - 3;          // 절취선은 라벨 박스 아래에서 시작
+                seasonLines += `<line x1="${xFor(L.x)}" y1="${lineTop}" x2="${xFor(L.x)}" y2="${contentBottom}" stroke="rgba(251,191,36,0.4)" stroke-width="1.2" stroke-dasharray="3,3"/>
+                    <g><title>${escXml(L.name)} · ${L.rounds}라운드</title>
+                    <rect x="${L.bx}" y="${ly}" width="${L.w}" height="${LANE_H - 3}" rx="3" fill="rgba(2,6,23,0.92)" stroke="rgba(251,191,36,0.55)" stroke-width="1"/>
+                    <text x="${L.bx + 6}" y="${ly + (LANE_H - 3) / 2 + 3}" font-size="${LABEL_FS}" font-weight="800" fill="var(--gold)" text-anchor="start">🚩 ${escXml(L.name)}</text></g>`;
+            });
 
             // 팀명 태그가 서로 겹치지 않도록 마지막 지점 y좌표 기준으로 정렬 후 최소 간격을 확보해 아래로 밀어낸다.
             const TAG_H = NAME_FONT_SIZE + 7;
@@ -18916,7 +19066,7 @@
             const label = document.getElementById('allTeamsTrendScopeLabel');
             if(label) {
                 const selectedOption = selEl && selEl.options[selEl.selectedIndex];
-                label.textContent = selectedOption ? selectedOption.textContent : '전체';
+                label.textContent = (sf === 'custom') ? getCustomScopeLabel() : (selectedOption ? selectedOption.textContent : '전체');
             }
             const selLabelEl = document.getElementById('allTeamsTrendSelectedLabel');
             if(selLabelEl) {
@@ -19164,7 +19314,7 @@
                 data = calcTeamRP(filteredMatches, state.teams, state.groupA || [], state.groupB || []);
 
                 // Elo 레이팅 계산: '전체'는 1000점부터 전체 시즌 경기를 시간순으로 재계산, 특정(현재) 시즌은 직전 시즌 최종 Elo에서 이어받음
-                eloBaseline = (sf === 'all') ? null : getPrevSeasonElo();
+                eloBaseline = (sf === 'custom') ? getCustomEloBaseline() : ((isCumulativeSF(sf)) ? null : getPrevSeasonElo());
                 const eloResult = calcEloRatings(filteredMatches, state.teams, eloBaseline);
                 data.forEach(t => {
                     t.elo = eloResult.elo[String(t.id)];
@@ -19176,7 +19326,7 @@
             // 리그 참여 기록(경기 수)이 없는 팀은 기본적으로 순위표에서 제외하되,
             // 지금 진행 중인 시즌(아카이브 아님, '전체'도 아님)에서는 이번 시즌에 참가하는 팀이면
             // 아직 한 경기도 안 뛰었어도 순위표에 표시한다 (예: 토너먼트 컵에서 아직 대진 순서가 안 온 팀).
-            if(archivedSeason || sf === 'all') {
+            if(archivedSeason || isCumulativeSF(sf)) {
                 data = data.filter(t => t.gms > 0);
             } else {
                 const rosterIds = (state.seasonMode === 'tournament' && (state.tournamentTeams || []).length > 0)
@@ -19192,10 +19342,10 @@
             // 순위 변동 계산 (스냅샷은 여기서 덮어쓰지 않고 읽기만 함 — 실제 갱신은 snapshotCurrentTeamRanks()에서 처리)
             // '전체'는 전체 시즌 누적 기준이라 시즌별 스냅샷과 성격이 달라 별도 키를 사용 (예전 버전에서 '전체'가
             // 현재 시즌만 의미했을 때 저장된 스냅샷과 뒤섞여 순위 변동이 엉뚱하게 나오는 문제를 방지)
-            const snapshotKey = 'teamRank_' + (sf === 'all' ? 'cumulative_all' : sf);
+            const snapshotKey = 'teamRank_' + (isCumulativeSF(sf) ? 'cumulative_all' : sf);
             let prevRanks;
-            const isNewSeasonStart = !archivedSeason && sf !== 'all' && (state.matches || []).length <= 1;
-            if(sf === 'all') {
+            const isNewSeasonStart = !archivedSeason && !isCumulativeSF(sf) && (state.matches || []).length <= 1;
+            if(isCumulativeSF(sf)) {
                 // '전체(누적 합산)' 보기는 시즌이 바뀌는 경계에서 저장된 스냅샷이 어긋나 있을 수 있으므로
                 // (예: 새 시즌 시작 직후 등) 신뢰하지 않고, 항상 '마지막 경기 직전' 상태를 그 자리에서 새로 계산한다.
                 // → 시즌이 바뀌어도 직전 시즌의 마지막 순위와 정확히 이어져서 순위 변동이 표시됨.
@@ -19211,7 +19361,7 @@
                 if(!prevRanks || Object.keys(prevRanks).length === 0) {
                     prevRanks = computeTeamRanksBeforeLast(filteredMatches, eloBaseline);
                 }
-                if((!prevRanks || Object.keys(prevRanks).length === 0) && !archivedSeason && sf !== 'all') {
+                if((!prevRanks || Object.keys(prevRanks).length === 0) && !archivedSeason && !isCumulativeSF(sf)) {
                     prevRanks = getPrevSeasonFinalTeamRanks();
                 }
             }
@@ -19219,27 +19369,27 @@
             // Elo 증감 계산 기준: prevRanks와 동일한 방식으로 '바로 직전 집계 시점의 Elo'를 찾는다.
             // (임의의 시즌 시작 기준이 아니라, 실제 마지막 변경 직전 대비 변동폭을 보여주기 위함 — 경기 로그와 일치)
             let prevElo;
-            if(sf === 'all') {
+            if(isCumulativeSF(sf)) {
                 // 순위와 마찬가지로 '전체' 보기는 항상 새로 계산해 시즌 경계와 무관하게 정확한 기준을 사용
                 prevElo = computeTeamEloBeforeLast(filteredMatches, eloBaseline);
             } else if(isNewSeasonStart) {
                 // 새 시즌 시작 직후에는 '직전 시즌 최종 Elo'가 곧 비교 기준
                 prevElo = eloBaseline || {};
             } else {
-                prevElo = state.rankSnapshot['teamElo_' + (sf === 'all' ? 'cumulative_all' : sf)];
+                prevElo = state.rankSnapshot['teamElo_' + (isCumulativeSF(sf) ? 'cumulative_all' : sf)];
                 if(!prevElo || Object.keys(prevElo).length === 0) {
                     prevElo = computeTeamEloBeforeLast(filteredMatches, eloBaseline);
                 }
-                if((!prevElo || Object.keys(prevElo).length === 0) && !archivedSeason && sf !== 'all') {
+                if((!prevElo || Object.keys(prevElo).length === 0) && !archivedSeason && !isCumulativeSF(sf)) {
                     prevElo = getPrevSeasonElo() || {};
                 }
             }
 
             // 컬럼별(경기/승/패/득/실/차/승점/Elo) 순위 변동 계산 — 개인 기록 랭킹과 동일한 방식으로
             // 컬럼마다 그 컬럼 값 기준의 순위를 따로 구해두고, 이전 스냅샷과 비교해 컬럼별 변동을 표시한다.
-            const catSnapshotKey = 'teamRankCat_' + (sf === 'all' ? 'cumulative_all' : sf);
+            const catSnapshotKey = 'teamRankCat_' + (isCumulativeSF(sf) ? 'cumulative_all' : sf);
             let prevCatRanks;
-            if(sf === 'all') {
+            if(isCumulativeSF(sf)) {
                 prevCatRanks = computeTeamCatRanksBeforeLast(filteredMatches, eloBaseline);
             } else if(isNewSeasonStart) {
                 prevCatRanks = getPrevSeasonFinalTeamCatRanks();
@@ -19248,7 +19398,7 @@
                 if(!prevCatRanks || Object.keys(prevCatRanks).length === 0) {
                     prevCatRanks = computeTeamCatRanksBeforeLast(filteredMatches, eloBaseline);
                 }
-                if((!prevCatRanks || Object.keys(prevCatRanks).length === 0) && !archivedSeason && sf !== 'all') {
+                if((!prevCatRanks || Object.keys(prevCatRanks).length === 0) && !archivedSeason && !isCumulativeSF(sf)) {
                     prevCatRanks = getPrevSeasonFinalTeamCatRanks();
                 }
             }
@@ -20500,7 +20650,7 @@
                 if(!selEl) return;
                 const prev = selEl.value;
                 const touched = selEl.dataset.touched === '1';
-                let opts = `<option value="all">전체 (누적 합산)</option><option value="${name}">${name}</option>`;
+                let opts = `<option value="all">전체 (누적 합산)</option>` + (id === 'rankingSeasonFilter' ? `<option value="custom">🎛️ 구간·종류 지정</option>` : '') + `<option value="${name}">${name}</option>`;
                 [...(state.archives || [])].reverse().forEach(a => {
                     opts += `<option value="${a.name}">${a.name}</option>`;
                 });
@@ -20514,6 +20664,7 @@
                     selEl.value = (id === 'rankingSeasonFilter') ? 'all' : name;
                 }
             });
+            try { renderRankingCustomPanel(); } catch (e) { }
             // 개인 기록 랭킹 제목도 현재 시즌 이름 반영
             const rankTitleEl = document.getElementById('playerRankTitle');
             if(rankTitleEl) rankTitleEl.textContent = `🎯 개인 기록 랭킹 (${name})`;
@@ -21224,7 +21375,7 @@
             // 제목을 실제 선택된 필터 값으로 갱신 (필터를 바꿔도 제목이 안 바뀌던 문제 수정)
             const rankTitleEl = document.getElementById('playerRankTitle');
             if(rankTitleEl) {
-                const label = sf === 'all' ? '전체 (누적 합산)' : sf;
+                const label = sf === 'custom' ? getCustomScopeLabel() : (isCumulativeSF(sf) ? '전체 (누적 합산)' : sf);
                 rankTitleEl.textContent = `🎯 개인 기록 랭킹 (${label})`;
             }
             // 전체(모든 시즌 누적) 또는 특정 시즌 경기만으로 스탯 재계산
@@ -21393,9 +21544,9 @@
             // 순위 변동 계산(전체 종합 순위, 기본 정렬 기준): 실제 정렬 기준(포인트>평균평점>MOM>경기수)의
             // 랭킹으로 비교한다. 이쪽은 시즌 시작 시 "직전 시즌 최종 순위"와 비교하는 특수 케이스가 있어
             // 기존 스냅샷 방식을 그대로 유지한다 (사용자가 표에서 다른 열로 정렬해도 이 기준으로 판단).
-            const snapshotKey = 'playerRank_' + (sf === 'all' ? 'cumulative_all' : sf);
+            const snapshotKey = 'playerRank_' + (isCumulativeSF(sf) ? 'cumulative_all' : sf);
             let prevRanks;
-            const isNewSeasonStartPlayer = sf !== 'all' && !getArchiveBySeasonFilter(sf) && (state.matches || []).length <= 1;
+            const isNewSeasonStartPlayer = !isCumulativeSF(sf) && !getArchiveBySeasonFilter(sf) && (state.matches || []).length <= 1;
             if(isNewSeasonStartPlayer) {
                 prevRanks = getPrevSeasonFinalPlayerRanks();
             } else {
@@ -21404,7 +21555,7 @@
                     prevRanks = computePlayerRanksBeforeLast(matchPool).canonicalRank;
                 }
                 // 새 시즌 첫 경기처럼 이번 시즌 자체에는 비교할 이전 기록이 없으면 직전 시즌 최종 순위를 기준으로 사용
-                if((!prevRanks || Object.keys(prevRanks).length === 0) && sf !== 'all' && !getArchiveBySeasonFilter(sf)) {
+                if((!prevRanks || Object.keys(prevRanks).length === 0) && !isCumulativeSF(sf) && !getArchiveBySeasonFilter(sf)) {
                     prevRanks = getPrevSeasonFinalPlayerRanks();
                 }
             }
@@ -22962,7 +23113,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.02';
+        const G_HTML_VERSION = '1.03';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
