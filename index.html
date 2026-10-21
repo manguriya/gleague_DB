@@ -1184,6 +1184,30 @@
         .rk-sum b { color:var(--gold); }
         .rk-warn { color:#fbbf24; font-weight:800; }
     </style>
+<style id="pmSimplifyCss">
+/* 선수·감독 모달 간소화 */
+.pm-abrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pm-abradar{flex:1 1 250px;min-width:0}
+.pm-abtrait{flex:1 1 150px;min-width:0;padding:8px 10px;border:1px dashed rgba(255,255,255,0.14);border-radius:10px;background:rgba(255,255,255,0.02)}
+.pm-abtrait .pt-t{margin-bottom:8px}
+.pm-chip{cursor:default}
+.pm-empty{font-size:.74rem;color:var(--text-muted);line-height:1.5}
+.pm-subbar{text-align:center;margin:8px 0 4px}
+.pm-subbtn{padding:5px 14px;border-radius:8px;border:1px solid rgba(139,92,246,0.5);background:rgba(139,92,246,0.15);color:#c4b5fd;font-weight:800;font-size:.76rem;cursor:pointer}
+.pm-subbtn:hover{background:rgba(139,92,246,0.28)}
+.pm-subbox{margin-top:6px}
+#mgrTacDet{margin:0}
+#mgrTacDet>summary{cursor:pointer;font-weight:800;font-size:.86rem;padding:2px 0;list-style:none}
+#mgrTacDet>summary::-webkit-details-marker{display:none}
+#mgrTacDet>summary::before{content:"▸ ";color:var(--text-muted)}
+#mgrTacDet[open]>summary::before{content:"▾ "}
+#mgrTacDet .mt-body{margin-top:8px}
+#mgrTacDet .mt-body>.mt-title:first-child{display:none}
+.tl-simple td,.tl-simple th{white-space:normal}
+.tl-simple td small{display:block;color:var(--text-muted);font-size:.68rem}
+.tl-more{margin-top:8px}
+.tl-more>summary{cursor:pointer;font-size:.78rem;color:#38bdf8;font-weight:800}
+</style>
 </head>
 <body>
     <div class="app-shell">
@@ -1448,13 +1472,16 @@
                             <button id="modalAbilityEditBtn" onclick="startPlayerAbilityEdit()" style="padding:3px 10px; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer; background:rgba(139,92,246,0.25); color:#c4b5fd; border:1px solid rgba(139,92,246,0.5);">✏️ 편집</button>
                         </div>
                     </div>
-                    <div id="modalPlayerRadar"></div>
+                    <div class="pm-abrow"><div id="modalPlayerRadar" class="pm-abradar"></div><div id="playerTraitView" class="pm-abtrait"></div></div>
+                    <div id="pmSubBar" class="pm-subbar"></div>
+                    <div id="playerExtSection" class="pm-subbox" style="display:none;"></div>
                     <div id="modalPlayerLgCmp"></div>
                     <div id="modalPlayerStatDeltas"></div>
                     <div id="modalStatTrend"></div>
                     <!-- 능력치 인라인 편집 영역 (편집 버튼을 누르면 레이더 대신 표시) -->
                     <div id="modalAbilityEditArea" style="display:none; margin-top:6px;">
                         <div id="modalAbilityEditGrid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(78px,1fr)); gap:8px;"></div>
+                        <div id="pmEditTraits" class="pt-sec" style="margin-top:10px;"></div>
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:10px;">
                             <div id="modalAbilityEditPreview" style="font-size:0.8rem; color:var(--text-muted);"></div>
                             <div style="display:flex; gap:6px;">
@@ -28681,6 +28708,115 @@ all();
             window.toggleRankAdvancedView = function(){ var r = orig.apply(this, arguments); schedule(); return r; };
         }
     });
+})();
+</script>
+<script id="pmSimplifyJs">
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  window._pmSubsOpen = false; window._pmSubsFor = null; window._pmEditing = false;
+  window._mgrSubsOpen = false; window._mgrSubsFor = null; window._mgrTacOpen = false;
+
+  // ---------- 선수 모달 ----------
+  function pmApplyViewState(){
+    var ed = window._pmEditing, show = function(id,v){ var e=$(id); if(e) e.style.display=v; };
+    show('playerTraitView', ed ? 'none' : '');
+    show('pmSubBar', ed ? 'none' : '');
+    var ref = null; try { ref = findPlayerRefByName(_playerModalName); } catch(e){}
+    show('playerExtSection', (!ed && window._pmSubsOpen && ref && ref.stats) ? '' : 'none');
+  }
+  var _setEdit = window.setAbilityEditMode;
+  window.setAbilityEditMode = function(on){ var r = _setEdit.apply(this, arguments); window._pmEditing = !!on; pmApplyViewState(); return r; };
+
+  window.pmTraitRender = function(name){
+    var view = $('playerTraitView'), ed = $('pmEditTraits'); if(!view) return;
+    var ref = null; try { ref = findPlayerRefByName(name); } catch(e){}
+    if(!ref){ view.innerHTML=''; if(ed) ed.innerHTML=''; return; }
+    var cur = fmTraits(ref);
+    // 보기: 선택된 특성만 표시
+    view.innerHTML = '<div class="pt-t">🧬 선수 특성 <span class="mut" style="font-size:.7rem;font-weight:600;">' + cur.length + '/' + FM_TRAIT_MAX + '</span></div>'
+      + (cur.length ? '<div class="pt-row">' + cur.map(function(k){ var f = FM_TRAITS[k]; return f ? '<span class="pt-b on pm-chip" title="'+gEsc(f.d)+'">'+f.ic+' '+f.n+'</span>' : ''; }).join('') + '</div>'
+                    : '<div class="pm-empty">선택된 특성이 없습니다.<br>✏️ 편집에서 고를 수 있어요.</div>');
+    // 편집: 선택 버튼
+    if(ed){
+      var sug = fmTraitSuggest(ref).filter(function(k){ return cur.indexOf(k) < 0; });
+      var groups = {}; Object.keys(FM_TRAITS).filter(function(k){ return FM_TRAITS[k].pos.indexOf(ref.pos) >= 0; }).forEach(function(k){ (groups[FM_TRAITS[k].g] = groups[FM_TRAITS[k].g] || []).push(k); });
+      var btns = Object.keys(groups).map(function(g){ return '<div class="pt-g">'+g+'</div><div class="pt-row">' + groups[g].map(function(k){ var on = cur.indexOf(k) >= 0, dis = !on && cur.length >= FM_TRAIT_MAX; return '<button class="pt-b'+(on?' on':'')+(dis?' dis':'')+'" title="'+gEsc(FM_TRAITS[k].d)+'" onclick="pmTraitToggle(\''+k+'\')">'+FM_TRAITS[k].ic+' '+FM_TRAITS[k].n+'</button>'; }).join('') + '</div>'; }).join('');
+      ed.innerHTML = '<div class="pt-t">🧬 선수 특성 <span class="mut" style="font-size:.7rem;font-weight:600;">최대 '+FM_TRAIT_MAX+'개 · 누르면 바로 저장 · 전술판 전력·시너지·조언에 반영</span></div>' + btns
+        + '<div class="pt-note">' + (sug.length ? '능력치로 본 추천: ' + sug.map(function(k){ return FM_TRAITS[k].ic+' '+FM_TRAITS[k].n; }).join(', ') + ' <a style="cursor:pointer;color:#38bdf8;font-weight:800;" onclick="pmTraitApplySuggest()">추천 적용</a>' : '버튼에 마우스를 올리면 설명이 보입니다.') + '</div>';
+    }
+  };
+
+  window.pmExtRender = function(name){
+    var bar = $('pmSubBar'), box = $('playerExtSection'); if(!bar || !box) return;
+    var ref = null; try { ref = findPlayerRefByName(name); } catch(e){}
+    if(!ref || !ref.stats){ bar.innerHTML=''; box.innerHTML=''; box.style.display='none'; return; }
+    if(window._pmSubsFor !== name){ window._pmSubsFor = name; window._pmSubsOpen = false; }
+    bar.innerHTML = '<button class="pm-subbtn" onclick="pmToggleSubs()">🔬 세부능력치 ' + (window._pmSubsOpen ? '접기 ▴' : '보기 ▾') + '</button>';
+    box.innerHTML = abBreakdownHtml(abPlayerGroups(ref)) + '<div class="pt-note">대분류 = 소분류 3개 평균 · \'자동\'은 기존 능력치에서 계산된 값 · 값 입력은 ✏️ 편집에서</div>';
+    pmApplyViewState();
+  };
+  window.pmToggleSubs = function(){ window._pmSubsOpen = !window._pmSubsOpen; pmExtRender(_playerModalName); };
+
+  var _sp = window.showPlayerDetail;
+  window.showPlayerDetail = function(){ window._pmSubsFor = null; window._pmSubsOpen = false; window._pmEditing = false; return _sp.apply(this, arguments); };
+
+  // ---------- 감독 모달 ----------
+  window.abRenderMgrSubs = function(m){
+    var radarEl = $('modalManagerRadar'); if(!radarEl) return;
+    var bar = $('modalManagerSubBar'), box = $('modalManagerSubs');
+    if(!bar){ bar = document.createElement('div'); bar.id = 'modalManagerSubBar'; bar.className = 'pm-subbar'; radarEl.insertAdjacentElement('afterend', bar); }
+    if(!box){ box = document.createElement('div'); box.id = 'modalManagerSubs'; box.className = 'pm-subbox'; bar.insertAdjacentElement('afterend', box); }
+    if(!m || !m.stats){ bar.innerHTML=''; box.innerHTML=''; box.style.display='none'; return; }
+    if(window._mgrSubsFor !== m.name){ window._mgrSubsFor = m.name; window._mgrSubsOpen = false; }
+    var groups = AB_MGR.map(function(g){ return { ic: g.ic, k: g.k, v: m.stats[g.k] !== undefined ? m.stats[g.k] : ABILITY_STAT_DEFAULT, subs: g.subs.map(function(s){ return { n: s.n, v: abMgrSub(m, g, s), auto: !(m.sub && typeof m.sub[s.k] === 'number'), d: s.d }; }) }; });
+    bar.innerHTML = '<button class="pm-subbtn" onclick="mgrToggleSubs()">🔬 세부능력치 ' + (window._mgrSubsOpen ? '접기 ▴' : '보기 ▾') + '</button>';
+    box.innerHTML = abBreakdownHtml(groups) + '<div class="pt-note">대분류 = 소분류 3개 평균 · \'자동\'은 대분류 값에서 계산된 값</div>';
+    box.style.display = window._mgrSubsOpen ? '' : 'none';
+  };
+  window.mgrToggleSubs = function(){ window._mgrSubsOpen = !window._mgrSubsOpen; var m = findManagerRef(_mgrModalName); if(m) abRenderMgrSubs(m); };
+
+  var _mtb = window.mgrRenderTacticBlock;
+  window.mgrRenderTacticBlock = function(name){
+    _mtb.apply(this, arguments);
+    var sec = $('managerTacticSection'); if(!sec || sec.style.display === 'none' || !sec.innerHTML || sec.querySelector('#mgrTacDet')) return;
+    var sum = '';
+    try {
+      var m = findManagerRef(name), pref = fmMgrPref(m);
+      var d = pref.defs[0] ? FM_DEF_PRESETS[pref.defs[0]].n : '', a = pref.atks[0] ? FM_ATK_PRESETS[pref.atks[0]].n : '', f = pref.forms[0] && FM_FORMATIONS[pref.forms[0]] ? FM_FORMATIONS[pref.forms[0]].label : '';
+      sum = (f || d || a) ? [f ? '📐 ' + f : '', d ? '🛡️ ' + d : '', a ? '⚔️ ' + a : ''].filter(Boolean).join(' · ') : '선호 미설정';
+    } catch(e){}
+    sec.innerHTML = '<details id="mgrTacDet"' + (window._mgrTacOpen ? ' open' : '') + ' ontoggle="window._mgrTacOpen=this.open"><summary>🧠 전술 성향 <span class="mut" style="font-size:.72rem;font-weight:600;">' + sum + '</span></summary><div class="mt-body">' + sec.innerHTML + '</div></details>';
+  };
+
+  var _sm = window.showManagerDetail;
+  window.showManagerDetail = function(){ window._mgrSubsFor = null; window._mgrSubsOpen = false; window._mgrTacOpen = false; return _sm.apply(this, arguments); };
+
+  // 감독 모달 › 전술별 성적 (간단 요약, 무승부 제외)
+  window.tacRenderMgr = function(name){
+    var box = $('modalManagerTac'); if(!box) return;
+    try {
+      var list = tacRecs().filter(function(x){ return x.mgr === name; });
+      var head = '<h4 style="margin:0 0 6px;color:var(--accent);">🧭 전술별 성적</h4>';
+      if(!list.length){ box.innerHTML = '<div class="tl-mgr">' + head + tacEmptyHtml() + '</div>'; return; }
+      var t = tacTally(list);
+      var cell = function(r){ return gEsc(r.name) + '<small>' + r.g + '경기 · ' + r.w + '승 ' + r.l + '패 · ' + tacPct(r.rate) + '</small>'; };
+      var dims = TAC_ALL_DIMS.map(function(d){ var rows = tacBreakdown(list, d); if(d === 'fgk' && !rows.some(function(r){ return r.k === '1'; })) rows = []; return { d: d, rows: rows }; }).filter(function(x){ return x.rows.length; });
+      var tbody = dims.map(function(x){
+        var most = x.rows[0];
+        var best = x.rows.filter(function(r){ return r.g >= 2; }).sort(function(a,b){ return (b.rate - a.rate) || (b.g - a.g); })[0];
+        return '<tr><td>' + tacDimLabel(x.d) + '</td><td>' + cell(most) + '</td><td>' + (!best ? '<span class="mut">-</span>' : (best.k === most.k ? '<span class="mut">같음</span>' : cell(best))) + '</td></tr>';
+      }).join('');
+      var full = dims.map(function(x){
+        return '<div class="tl-blk" style="margin-top:6px;"><div class="tt">' + tacDimLabel(x.d) + '</div><div class="tl-scroll"><table class="tl-t"><thead><tr><th>선택</th><th>경기</th><th>승-패</th><th>승률</th></tr></thead><tbody>'
+          + x.rows.map(function(r){ return '<tr><td>' + gEsc(r.name) + '</td><td>' + r.g + '</td><td>' + r.w + '-' + r.l + '</td><td class="barc"><div class="tl-rate">' + tacBar(r.rate) + '<span>' + tacPct(r.rate) + '</span></div></td></tr>'; }).join('')
+          + '</tbody></table></div></div>';
+      }).join('');
+      box.innerHTML = '<div class="tl-mgr">' + head
+        + '<div class="tl-sum"><b>' + t.g + '</b>경기 기록 · ' + t.w + '승 ' + t.l + '패 (승률 ' + tacPct(t.rate) + ') · 경기당 ' + (t.gf / t.g).toFixed(1) + '득 ' + (t.ga / t.g).toFixed(1) + '실</div>'
+        + '<div class="tl-scroll"><table class="tl-t tl-simple"><thead><tr><th>항목</th><th>가장 많이 쓴 전술</th><th>승률 최고 <span class="mut">(2경기+)</span></th></tr></thead><tbody>' + tbody + '</tbody></table></div>'
+        + '<details class="tl-more"><summary>전체 표 보기</summary>' + full + '</details></div>';
+    } catch(e){ console.error('감독 전술 성적 오류', e); box.innerHTML = ''; }
+  };
 })();
 </script>
 </body>
