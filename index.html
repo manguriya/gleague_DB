@@ -26589,7 +26589,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.23';
+        const G_HTML_VERSION = '1.24';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -26842,7 +26842,7 @@
             ['html', 'db'].forEach(k => { const b = document.getElementById(k === 'html' ? 'gPnTabHtml' : 'gPnTabDb'); if (b) b.classList.toggle('active', k === gPnTab); });
             const d = gPn[gPnTab], fn = G_PN_FILES[gPnTab];
             if (d.text === null) {
-                el.innerHTML = `<div class="dash-empty" style="color:var(--text-muted); font-size:0.82rem; padding:10px 0;">${gEsc(fn)} 파일을 불러오지 못했습니다.${location.protocol === 'file:' ? ' (파일을 직접 연 상태에서는 자동으로 불러올 수 없습니다. 아래 \'txt 파일 직접 열기\'를 사용해 주세요.)' : ' index.html과 같은 폴더에 파일이 있는지 확인해 주세요.'}</div>`;
+                el.innerHTML = `<div class="dash-empty" style="color:var(--text-muted); font-size:0.82rem; padding:10px 0;">${gEsc(fn)} 파일을 불러오지 못했습니다.${location.protocol === 'file:' ? ' (파일을 직접 연 상태에서는 자동으로 불러올 수 없습니다. 아래 \'txt 파일 직접 열기\'를 사용해 주세요.)' : ' index.html과 같은 폴더에 파일 이름이 정확히 같은지 확인해 주세요.'}${gPnErr[gPnTab] ? ` <span style="opacity:.7;">(원인: ${gEsc(gPnErr[gPnTab])})</span>` : ''}</div>`;
                 if (st) st.textContent = ''; return;
             }
             const vers = gPnParse(d.text);
@@ -26856,18 +26856,26 @@
             if (st) st.textContent = msg;
         }
         function gPnSwitch(k) { gPnTab = k; gPnRender(); }
+        const gPnErr = { html: '', db: '' };
         async function gPnFetch(k) {
             if (location.protocol === 'file:') return null;
-            try {
-                const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 10000);
-                const res = await fetch(G_PN_FILES[k] + '?v=' + Date.now(), { cache: 'no-store', signal: ctl.signal });
-                clearTimeout(to);
-                if (!res.ok) return null;
-                const t = await res.text();
-                // 서버가 파일이 없을 때 index.html 등을 돌려주는 경우 걸러냄
-                if (/^\s*<(!doctype|html)/i.test(t)) return null;
-                return t;
-            } catch (e) { console.warn('패치노트 불러오기 실패:', G_PN_FILES[k], e); return null; }
+            // 맥에서 올린 파일명은 자모가 분리된(NFD) 형태일 수 있어 두 가지 이름을 모두 시도
+            const base = G_PN_FILES[k], names = [base];
+            try { const nfd = base.normalize('NFD'); if (nfd !== base) names.push(nfd); } catch (e) { }
+            gPnErr[k] = '';
+            for (const nm of names) {
+                try {
+                    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 10000);
+                    const res = await fetch(encodeURI(nm) + '?v=' + Date.now(), { cache: 'no-store', signal: ctl.signal });
+                    clearTimeout(to);
+                    if (!res.ok) { gPnErr[k] = 'HTTP ' + res.status; continue; }
+                    const t = await res.text();
+                    // 서버가 파일이 없을 때 index.html 등을 돌려주는 경우 걸러냄
+                    if (/^\s*<(!doctype|html)/i.test(t)) { gPnErr[k] = '파일 대신 HTML 페이지가 응답됨'; continue; }
+                    return t;
+                } catch (e) { gPnErr[k] = String(e && e.name || e); console.warn('패치노트 불러오기 실패:', nm, e); }
+            }
+            return null;
         }
         async function gPnLoadAll(manual) {
             const [h, d] = await Promise.all([gPnFetch('html'), gPnFetch('db')]);
