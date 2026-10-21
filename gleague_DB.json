@@ -1414,7 +1414,57 @@
           "ogTimes": [],
           "teamId": "4"
         }
-      ]
+      ],
+      "tac": {
+        "h": {
+          "fm": "2-2",
+          "st": {
+            "build": "drib",
+            "defense": "mid",
+            "attack": "wing",
+            "tempo": "fast",
+            "width": "wide",
+            "line": "normal",
+            "trans": "normal",
+            "finish": "shot",
+            "fgk": false
+          },
+          "mgr": "최진철",
+          "est": 1,
+          "lu": {
+            "GK": "안혜경",
+            "p0": "주명",
+            "p1": "박지안",
+            "p2": "권이수",
+            "p3": "정혜인"
+          },
+          "luEst": 1
+        },
+        "a": {
+          "fm": "2-2",
+          "st": {
+            "build": "pass",
+            "defense": "mid",
+            "attack": "center",
+            "tempo": "normal",
+            "width": "narrow",
+            "line": "normal",
+            "trans": "normal",
+            "finish": "box",
+            "fgk": false
+          },
+          "mgr": "조원희",
+          "est": 1,
+          "lu": {
+            "GK": "이유안",
+            "p0": "허경희",
+            "p1": "이혜정",
+            "p2": "이현이",
+            "p3": "송해나"
+          },
+          "luEst": 1
+        }
+      }
     },
     {
       "id": 1792051941474,
@@ -1635,7 +1685,57 @@
           "ogTimes": [],
           "teamId": "2"
         }
-      ]
+      ],
+      "tac": {
+        "h": {
+          "fm": "1-2-1",
+          "st": {
+            "build": "pass",
+            "defense": "mid",
+            "attack": "center",
+            "tempo": "normal",
+            "width": "narrow",
+            "line": "normal",
+            "trans": "normal",
+            "finish": "box",
+            "fgk": false
+          },
+          "mgr": "백지훈",
+          "est": 1,
+          "lu": {
+            "GK": "이채연",
+            "p0": "채리나",
+            "p1": "이유정",
+            "p2": "이승연",
+            "p3": "강보람"
+          },
+          "luEst": 1
+        },
+        "a": {
+          "fm": "2-2",
+          "st": {
+            "build": "long",
+            "defense": "low",
+            "attack": "center",
+            "tempo": "fast",
+            "width": "narrow",
+            "line": "deep",
+            "trans": "retreat",
+            "finish": "box",
+            "fgk": false
+          },
+          "mgr": "김영광",
+          "est": 1,
+          "lu": {
+            "GK": "케시",
+            "p0": "나티",
+            "p1": "카라인",
+            "p2": "사오리",
+            "p3": "엘로디"
+          },
+          "luEst": 1
+        }
+      }
     }
   ],
   "archives": [
@@ -1859,7 +1959,57 @@
               "ogTimes": [],
               "teamId": "7"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "백지훈",
+              "est": 1,
+              "lu": {
+                "GK": "이채연",
+                "p0": "강보람",
+                "p1": "채리나",
+                "p2": "이유정",
+                "p3": "이승연"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "wing",
+                "tempo": "normal",
+                "width": "wide",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "cross",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "민서",
+                "p1": "경서",
+                "p2": "서기",
+                "p3": "벤"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1769019383945,
@@ -2052,7 +2202,57 @@
               "ogTimes": [],
               "teamId": "3"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "counter",
+                "tempo": "fast",
+                "width": "normal",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "최진철",
+              "est": 1,
+              "lu": {
+                "GK": "시은미",
+                "p0": "박하얀",
+                "p1": "박승희",
+                "p2": "김민지",
+                "p3": "황희정"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "마시마유",
+                "p1": "소유미",
+                "p2": "우희준",
+                "p3": "김소희"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1769621837244,
@@ -2269,7 +2469,57 @@
               ],
               "teamId": "6"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "drib",
+                "defense": "low",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이영표",
+              "est": 1,
+              "lu": {
+                "GK": "케시",
+                "p0": "나티",
+                "p1": "제이",
+                "p2": "엘로디",
+                "p3": "사오리"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "박주호",
+              "est": 1,
+              "lu": {
+                "GK": "안혜경",
+                "p0": "권이수",
+                "p1": "정혜인",
+                "p2": "주명",
+                "p3": "박지안"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1772087799437,
@@ -2470,7 +2720,57 @@
               "ogTimes": [],
               "teamId": "5"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김영광",
+              "est": 1,
+              "lu": {
+                "GK": "정다은",
+                "p0": "허경희",
+                "p1": "정의영",
+                "p2": "김설희",
+                "p3": "이현이"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "조재진",
+              "est": 1,
+              "lu": {
+                "GK": "장은실",
+                "p0": "심으뜸",
+                "p1": "깡미",
+                "p2": "윤태진",
+                "p3": "박주아"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1772088790224,
@@ -2682,7 +2982,57 @@
               "ogTimes": [],
               "teamId": "6"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김영광",
+              "est": 1,
+              "lu": {
+                "GK": "정다은",
+                "p0": "허경희",
+                "p1": "정의영",
+                "p2": "김설희",
+                "p3": "이현이"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "박주호",
+              "est": 1,
+              "lu": {
+                "GK": "안혜경",
+                "p0": "권이수",
+                "p1": "정혜인",
+                "p2": "주명",
+                "p3": "이영아"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1772089408229,
@@ -2879,7 +3229,57 @@
               "ogTimes": [],
               "teamId": "4"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이영표",
+              "est": 1,
+              "lu": {
+                "GK": "케시",
+                "p0": "카라인",
+                "p1": "아야카",
+                "p2": "엘로디",
+                "p3": "사오리"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "0-4",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김영광",
+              "est": 1,
+              "lu": {
+                "GK": "정다은",
+                "p0": "정의영",
+                "p1": "김설희",
+                "p2": "이현이",
+                "p3": "이혜정"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1772094873371,
@@ -3095,7 +3495,56 @@
               "ogTimes": [],
               "teamId": "5"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "박주호",
+              "est": 1,
+              "lu": {
+                "GK": "안혜경",
+                "p0": "권이수",
+                "p1": "정혜인",
+                "p2": "주명",
+                "p3": "박지안"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "조재진",
+              "est": 1,
+              "lu": {
+                "p0": "심으뜸",
+                "p1": "히밥",
+                "p2": "윤태진",
+                "p3": "박주아"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1773295107129,
@@ -3297,7 +3746,57 @@
               "ogTimes": [],
               "teamId": "7"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "counter",
+                "tempo": "fast",
+                "width": "normal",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "최진철",
+              "est": 1,
+              "lu": {
+                "GK": "시은미",
+                "p0": "박하얀",
+                "p1": "박승희",
+                "p2": "나미해",
+                "p3": "황희정"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "민서",
+                "p1": "경서",
+                "p2": "벤",
+                "p3": "서기"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1773295306106,
@@ -3485,7 +3984,57 @@
               "ogTimes": [],
               "teamId": "8"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "counter",
+                "tempo": "fast",
+                "width": "normal",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "최진철",
+              "est": 1,
+              "lu": {
+                "GK": "시은미",
+                "p0": "박하얀",
+                "p1": "박승희",
+                "p2": "김민지",
+                "p3": "황희정"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "백지훈",
+              "est": 1,
+              "lu": {
+                "GK": "이채연",
+                "p0": "강보람",
+                "p1": "채리나",
+                "p2": "이유정",
+                "p3": "유빈"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1773908848823,
@@ -3727,7 +4276,57 @@
               "ogTimes": [],
               "teamId": "7"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "마시마유",
+                "p1": "우희준",
+                "p2": "현진",
+                "p3": "목나경"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "민서",
+                "p1": "경서",
+                "p2": "정예원",
+                "p3": "서기"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1774461568414,
@@ -3947,7 +4546,57 @@
               "ogTimes": [],
               "teamId": "8"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "마시마유",
+                "p1": "소유미",
+                "p2": "우희준",
+                "p3": "김소희"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "백지훈",
+              "est": 1,
+              "lu": {
+                "GK": "이채연",
+                "p0": "강보람",
+                "p1": "채리나",
+                "p2": "이유정",
+                "p3": "이승연"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1775105868943,
@@ -4173,7 +4822,57 @@
               "ogTimes": [],
               "teamId": "5"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "low",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이영표",
+              "est": 1,
+              "lu": {
+                "GK": "케시",
+                "p0": "제이",
+                "p1": "나티",
+                "p2": "엘로디",
+                "p3": "사오리"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "조재진",
+              "est": 1,
+              "lu": {
+                "GK": "깡미",
+                "p0": "박주아",
+                "p1": "히밥",
+                "p2": "윤태진",
+                "p3": "심으뜸"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1775669229141,
@@ -4370,7 +5069,57 @@
               "ogTimes": [],
               "teamId": "5"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-0-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "민서",
+                "p1": "경서",
+                "p2": "김보경",
+                "p3": "서기"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "조재진",
+              "est": 1,
+              "lu": {
+                "GK": "깡미",
+                "p0": "박주아",
+                "p1": "윤태진",
+                "p2": "쉐리",
+                "p3": "심으뜸"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1776275421284,
@@ -4592,7 +5341,57 @@
               "ogTimes": [],
               "teamId": "2"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "백지훈",
+              "est": 1,
+              "lu": {
+                "GK": "이채연",
+                "p0": "강보람",
+                "p1": "채리나",
+                "p2": "이유정",
+                "p3": "이승연"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "low",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이영표",
+              "est": 1,
+              "lu": {
+                "GK": "케시",
+                "p0": "제이",
+                "p1": "나티",
+                "p2": "엘로디",
+                "p3": "사오리"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1777017913732,
@@ -4798,7 +5597,57 @@
               "ogTimes": [],
               "teamId": "4"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "counter",
+                "tempo": "fast",
+                "width": "normal",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "최진철",
+              "est": 1,
+              "lu": {
+                "GK": "시은미",
+                "p0": "나미해",
+                "p1": "박승희",
+                "p2": "정재은",
+                "p3": "박하얀"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김영광",
+              "est": 1,
+              "lu": {
+                "GK": "정다은",
+                "p0": "정의영",
+                "p1": "김설희",
+                "p2": "이현이",
+                "p3": "이혜정"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1777487602830,
@@ -5008,7 +5857,57 @@
               "ogTimes": [],
               "teamId": "6"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "마시마유",
+                "p1": "소유미",
+                "p2": "우희준",
+                "p3": "김소희"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "박주호",
+              "est": 1,
+              "lu": {
+                "GK": "안혜경",
+                "p0": "주명",
+                "p1": "박지안",
+                "p2": "권이수",
+                "p3": "정혜인"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1778138430863,
@@ -5206,7 +6105,57 @@
               "ogTimes": [],
               "teamId": "6"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "counter",
+                "tempo": "fast",
+                "width": "normal",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "최진철",
+              "est": 1,
+              "lu": {
+                "GK": "시은미",
+                "p0": "박승희",
+                "p1": "박하얀",
+                "p2": "나미해",
+                "p3": "황희정"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "박주호",
+              "est": 1,
+              "lu": {
+                "GK": "안혜경",
+                "p0": "정혜인",
+                "p1": "주명",
+                "p2": "권이수",
+                "p3": "이영아"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1778694562725,
@@ -5427,7 +6376,57 @@
               ],
               "teamId": "7"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "low",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이영표",
+              "est": 1,
+              "lu": {
+                "GK": "케시",
+                "p0": "제이",
+                "p1": "나티",
+                "p2": "엘로디",
+                "p3": "사오리"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-0-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "김보경",
+                "p1": "민서",
+                "p2": "경서",
+                "p3": "서기"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1779380157940,
@@ -5657,7 +6656,57 @@
               "ogTimes": [],
               "teamId": "4"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "마시마유",
+                "p1": "소유미",
+                "p2": "우희준",
+                "p3": "김소희"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김영광",
+              "est": 1,
+              "lu": {
+                "GK": "허경희",
+                "p0": "이혜정",
+                "p1": "김설희",
+                "p2": "정의영",
+                "p3": "이현이"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1781111153621,
@@ -5855,7 +6904,57 @@
               "ogTimes": [],
               "teamId": "2"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "counter",
+                "tempo": "fast",
+                "width": "normal",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "최진철",
+              "est": 1,
+              "lu": {
+                "GK": "시은미",
+                "p0": "박하얀",
+                "p1": "나미해",
+                "p2": "황희정",
+                "p3": "박승희"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "low",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이영표",
+              "est": 1,
+              "lu": {
+                "GK": "케시",
+                "p0": "제이",
+                "p1": "나티",
+                "p2": "엘로디",
+                "p3": "사오리"
+              },
+              "luEst": 1
+            }
+          }
         }
       ],
       "playerStats": {
@@ -8820,7 +9919,57 @@
               "ogTimes": [],
               "teamId": "2"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "마시마유",
+                "p1": "소유미",
+                "p2": "목나경",
+                "p3": "우희준"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김영광",
+              "est": 1,
+              "lu": {
+                "GK": "케시",
+                "p0": "나티",
+                "p1": "카라인",
+                "p2": "사오리",
+                "p3": "엘로디"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1784136933026,
@@ -9039,7 +10188,57 @@
               "ogTimes": [],
               "teamId": "6"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "low",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "조재진",
+              "est": 1,
+              "lu": {
+                "GK": "일주어터",
+                "p0": "박주아",
+                "p1": "히밥",
+                "p2": "장은실",
+                "p3": "윤태진"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "drib",
+                "defense": "press",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "high",
+                "trans": "press",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "박주호",
+              "est": 1,
+              "lu": {
+                "GK": "안혜경",
+                "p0": "주명",
+                "p1": "권이수",
+                "p2": "정혜인",
+                "p3": "이영아"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1784737437217,
@@ -9261,7 +10460,57 @@
               "ogTimes": [],
               "teamId": "7"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "조원희",
+              "est": 1,
+              "lu": {
+                "GK": "허경희",
+                "p0": "김설희",
+                "p1": "이혜정",
+                "p2": "정의영",
+                "p3": "이현이"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "1-2-1",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "경서",
+                "p1": "정예원",
+                "p2": "김보경",
+                "p3": "서기"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1785345426335,
@@ -9487,7 +10736,57 @@
               "ogTimes": [],
               "teamId": "1"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "백지훈",
+              "est": 1,
+              "lu": {
+                "GK": "이채연",
+                "p0": "강보람",
+                "p1": "채리나",
+                "p2": "이유정",
+                "p3": "이승연"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "press",
+                "attack": "counter",
+                "tempo": "fast",
+                "width": "normal",
+                "line": "high",
+                "trans": "press",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "최진철",
+              "est": 1,
+              "lu": {
+                "GK": "천송이",
+                "p0": "박하얀",
+                "p1": "박승희",
+                "p2": "정재은",
+                "p3": "황희정"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1786604929433,
@@ -9707,7 +11006,57 @@
               "ogTimes": [],
               "teamId": "5"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-1-1",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "우희준",
+                "p1": "소유미",
+                "p2": "마시마유",
+                "p3": "현진"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "drib",
+                "defense": "low",
+                "attack": "wing",
+                "tempo": "fast",
+                "width": "wide",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "shot",
+                "fgk": false
+              },
+              "mgr": "조재진",
+              "est": 1,
+              "lu": {
+                "GK": "일주어터",
+                "p0": "박주아",
+                "p1": "히밥",
+                "p2": "장은실",
+                "p3": "윤태진"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1787158520941,
@@ -9928,7 +11277,57 @@
               "ogTimes": [],
               "teamId": "8"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-0-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "민서",
+                "p1": "김보경",
+                "p2": "경서",
+                "p3": "서기"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "백지훈",
+              "est": 1,
+              "lu": {
+                "GK": "이채연",
+                "p0": "강보람",
+                "p1": "채리나",
+                "p2": "이유정",
+                "p3": "이승연"
+              },
+              "luEst": 1
+            }
+          }
         },
         {
           "id": 1787764506217,
@@ -10144,7 +11543,57 @@
               "ogTimes": [],
               "teamId": "7"
             }
-          ]
+          ],
+          "tac": {
+            "h": {
+              "fm": "2-2",
+              "st": {
+                "build": "long",
+                "defense": "low",
+                "attack": "center",
+                "tempo": "fast",
+                "width": "narrow",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "김병지",
+              "est": 1,
+              "lu": {
+                "GK": "키썸",
+                "p0": "마시마유",
+                "p1": "소유미",
+                "p2": "우희준",
+                "p3": "현진"
+              },
+              "luEst": 1
+            },
+            "a": {
+              "fm": "2-0-2",
+              "st": {
+                "build": "pass",
+                "defense": "mid",
+                "attack": "center",
+                "tempo": "normal",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "normal",
+                "finish": "box",
+                "fgk": false
+              },
+              "mgr": "이근호",
+              "est": 1,
+              "lu": {
+                "GK": "리사",
+                "p0": "민서",
+                "p1": "김보경",
+                "p2": "경서",
+                "p3": "서기"
+              },
+              "luEst": 1
+            }
+          }
         }
       ],
       "playerStats": {
