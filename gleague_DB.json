@@ -98,7 +98,35 @@
         }
       ],
       "manager": "",
-      "captain": "박승희"
+      "captain": "박승희",
+      "tactic": {
+        "formation": "2-2",
+        "slots": {
+          "GK": "천송이",
+          "s0": "정재은",
+          "s1": "기보배",
+          "p0": "박하얀",
+          "p1": "박승희",
+          "p2": "김민지",
+          "p3": "황희정"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "drib",
+          "defense": "man",
+          "attack": "counter",
+          "tempo": "fast",
+          "width": "normal",
+          "line": "high",
+          "trans": "press",
+          "finish": "shot",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "2",
@@ -198,7 +226,35 @@
         }
       ],
       "manager": "김영광",
-      "captain": "사오리"
+      "captain": "사오리",
+      "tactic": {
+        "formation": "2-2",
+        "slots": {
+          "GK": "케시",
+          "s0": "아야카",
+          "s1": "미초바",
+          "p0": "나티",
+          "p1": "카라인",
+          "p2": "사오리",
+          "p3": "엘로디"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "back",
+          "defense": "low",
+          "attack": "counter",
+          "tempo": "normal",
+          "width": "narrow",
+          "line": "deep",
+          "trans": "retreat",
+          "finish": "shot",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "3",
@@ -298,7 +354,35 @@
         }
       ],
       "manager": "김병지",
-      "captain": "키썸"
+      "captain": "키썸",
+      "tactic": {
+        "formation": "2-2",
+        "slots": {
+          "GK": "키썸",
+          "s0": "목나경",
+          "s1": "트루디",
+          "p0": "소유미",
+          "p1": "마시마유",
+          "p2": "김소희",
+          "p3": "현진"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "drib",
+          "defense": "low",
+          "attack": "possess",
+          "tempo": "slow",
+          "width": "narrow",
+          "line": "deep",
+          "trans": "retreat",
+          "finish": "shot",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "4",
@@ -398,7 +482,35 @@
         }
       ],
       "manager": "조원희",
-      "captain": "이현이"
+      "captain": "이현이",
+      "tactic": {
+        "formation": "1-2-1",
+        "slots": {
+          "GK": "이유안",
+          "p0": "이혜정",
+          "p1": "허경희",
+          "p2": "정의영",
+          "p3": "이현이",
+          "s0": "김설희",
+          "s1": "송해나"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "drib",
+          "defense": "press",
+          "attack": "center",
+          "tempo": "fast",
+          "width": "wide",
+          "line": "normal",
+          "trans": "retreat",
+          "finish": "box",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "5",
@@ -498,7 +610,35 @@
         }
       ],
       "manager": "조재진",
-      "captain": "일주어터"
+      "captain": "일주어터",
+      "tactic": {
+        "formation": "2-2",
+        "slots": {
+          "GK": "일주어터",
+          "p0": "박주아",
+          "p1": "깡미",
+          "p2": "우덕배",
+          "p3": "장은실",
+          "s0": "먹스나",
+          "s1": "유히로"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "drib",
+          "defense": "low",
+          "attack": "counter",
+          "tempo": "fast",
+          "width": "normal",
+          "line": "deep",
+          "trans": "retreat",
+          "finish": "shot",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "6",
@@ -598,7 +738,35 @@
         }
       ],
       "manager": "최진철",
-      "captain": "권이수"
+      "captain": "권이수",
+      "tactic": {
+        "formation": "1-2-1",
+        "slots": {
+          "GK": "안혜경",
+          "s0": "이영아",
+          "s1": "김환희",
+          "p0": "주명",
+          "p1": "박지안",
+          "p2": "정혜인",
+          "p3": "권이수"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "drib",
+          "defense": "press",
+          "attack": "center",
+          "tempo": "fast",
+          "width": "wide",
+          "line": "high",
+          "trans": "retreat",
+          "finish": "shot",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "7",
@@ -698,7 +866,35 @@
         }
       ],
       "manager": "이근호",
-      "captain": ""
+      "captain": "",
+      "tactic": {
+        "formation": "3-1",
+        "slots": {
+          "GK": "리사",
+          "p0": "벤",
+          "p1": "민서",
+          "p2": "조하",
+          "p3": "서기",
+          "s0": "이예지",
+          "s1": "이보람"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "drib",
+          "defense": "low",
+          "attack": "center",
+          "tempo": "normal",
+          "width": "wide",
+          "line": "deep",
+          "trans": "retreat",
+          "finish": "box",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "8",
@@ -798,7 +994,35 @@
         }
       ],
       "manager": "백지훈",
-      "captain": "채리나"
+      "captain": "채리나",
+      "tactic": {
+        "formation": "2-2",
+        "slots": {
+          "GK": "이채연",
+          "s0": "유빈",
+          "s1": "루나",
+          "p0": "강보람",
+          "p1": "채리나",
+          "p2": "이유정",
+          "p3": "이승연"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {},
+        "opt": {},
+        "style": {
+          "build": "drib",
+          "defense": "mid",
+          "attack": "wing",
+          "tempo": "slow",
+          "width": "wide",
+          "line": "deep",
+          "trans": "retreat",
+          "finish": "box",
+          "fgk": false
+        },
+        "set": true
+      }
     },
     {
       "id": "9",
@@ -898,7 +1122,64 @@
         }
       ],
       "manager": "이영표",
-      "captain": "박지혜"
+      "captain": "박지혜",
+      "tactic": {
+        "formation": "2-2",
+        "slots": {
+          "GK": "시은미",
+          "s0": "금채림",
+          "s1": "육소정",
+          "p0": "노윤주",
+          "p1": "박지혜",
+          "p2": "배혜지",
+          "p3": "최지희"
+        },
+        "roleStyle": {},
+        "pos": {},
+        "mv": {
+          "p0": {
+            "atk": {
+              "dx": 14.5,
+              "dy": -24.7,
+              "curve": 0
+            }
+          },
+          "p2": {
+            "def": {
+              "dx": 4.7,
+              "dy": 18.5,
+              "curve": 0
+            }
+          },
+          "p3": {
+            "def": {
+              "dx": -9.8,
+              "dy": 19,
+              "curve": 0
+            }
+          },
+          "p1": {
+            "atk": {
+              "dx": 1.2,
+              "dy": -11.5,
+              "curve": 0
+            }
+          }
+        },
+        "opt": {},
+        "style": {
+          "build": "back",
+          "defense": "low",
+          "attack": "counter",
+          "tempo": "normal",
+          "width": "narrow",
+          "line": "deep",
+          "trans": "press",
+          "finish": "shot",
+          "fgk": false
+        },
+        "set": true
+      }
     }
   ],
   "groupA": [],
@@ -17783,5 +18064,5 @@
     "season": "current",
     "recent": "all"
   },
-  "dbSavedDate": "2026-10-17"
+  "dbSavedDate": "2026-10-21"
 }
