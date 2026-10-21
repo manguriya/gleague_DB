@@ -20277,12 +20277,13 @@
                     <button type="button" class="tac-btn" onclick="tacReset('${side}')" title="이 팀의 현재 전술판 값으로 다시 채웁니다">↻ 전술판 값 불러오기</button> <button type="button" class="tac-btn" onclick="tacSmart('${side}')" title="감독·선수단·누적 기록·상대 전술을 고려해 다시 추천합니다">🎯 추천 전술</button></div>
                 <div class="tac-meta">${init.note || ''}</div>
                 <div class="tac-body">
+                    <div class="tac-bd-l"><div class="tac-boardbox"><div class="tac-board" id="tacBoard_${side}"></div></div></div>
+                    <div class="tac-bd-r">
                     <label class="tac-f tac-wide">📐 포메이션<select id="tacFm_${side}" onchange="tacBoardRefresh('${side}')">${fmOpts}</select></label>
-                    <div class="tac-wide tac-boardbox"><div class="tac-board" id="tacBoard_${side}"></div></div>
                     <div class="tac-wide" id="tacLu_${side}"></div>
                     ${FM_DIMS.map(d => tacSelHtml(side, d, st[d])).join('')}
                     <label class="tac-f tac-wide" style="flex-direction:row; align-items:center; gap:6px;"><input type="checkbox" id="tacFgk_${side}" ${st.fgk ? 'checked' : ''} onchange="tacBoardRefresh('${side}')"> 🧤 플라잉 GK(골키퍼 공격 가담) 사용</label>
-                </div></div>`;
+                    </div></div></div>`;
         }
         // 팀 전술판 → 입력 초기값 (전술판이 설정된 팀만 켜짐)
         function tacInitFromTeam(teamId) {
@@ -20345,13 +20346,16 @@
         function tacShort(t) { return `${(FM_FORMATIONS[t.fm] || {}).label || t.fm}${t.est ? ' (추정)' : ''}`; }
         function tacDimName(d, k) { const o = FM_TACTICS[d] && FM_TACTICS[d].opts[k]; return o ? o.n : k; }
         // 히스토리 카드: 접힘 상태 한 줄 + 펼침 상태 전체 8항목
-        function tacHistoryHtml(m, ht, at) {
+        function tacHistoryHtml(m, ht, at, part) {
             if (!m.tac || (!m.tac.h && !m.tac.a)) return '';
             const one = (t, team) => t ? `<b style="color:${team.color};">${gEsc(team.name)}</b> ${gEsc(tacShort(t))}${t.st && t.st.fgk ? ' 🧤' : ''}${t.lu ? ' 👥' : ''}` : `<b style="color:${team.color};">${gEsc(team.name)}</b> <span style="opacity:.6;">미기록</span>`;
             const line = `<div class="history-tac-line">🧭 ${one(m.tac.h, ht)} <span style="opacity:.5;"> vs </span> ${one(m.tac.a, at)}</div>`;
             const full = (t, team) => !t ? `<div><div class="tt" style="color:${team.color};">🧭 ${gEsc(team.name)}</div><div style="color:var(--text-muted);">전술 미기록</div></div>`
                 : `<div><div class="tt" style="color:${team.color};">🧭 ${gEsc(team.name)} · ${gEsc(tacShort(t))}${t.mgr ? ` <span style="font-weight:600; color:var(--text-muted);">감독 ${gEsc(t.mgr)}</span>` : ''}</div><div class="tac-board">${tacBoardHtml(team, t.fm, t.st, t.lu, { pos: t.pos, mv: t.mv, mgr: t.mgr, cands: tacMbCandsOf(m, team) })}</div>${FM_DIMS.map(d => `<div class="ti"><span>${FM_TACTICS[d].label}</span><b>${gEsc(tacDimName(d, (t.st || {})[d]))}</b></div>`).join('')}${t.st && t.st.fgk ? '<div class="ti"><span>🧤 플라잉 GK</span><b>사용</b></div>' : ''}</div>`;
-            return line + `<div class="history-tac-full">${full(m.tac.h, ht)}${full(m.tac.a, at)}</div>`;
+            const fullHtml = `<div class="history-tac-full">${full(m.tac.h, ht)}${full(m.tac.a, at)}</div>`;
+            if (part === 'line') return line;
+            if (part === 'full') return fullHtml;
+            return line + fullHtml;
         }
 
         function saveMatch() {
@@ -20931,10 +20935,30 @@
                                 </div>
                             </div>
                             <div class="history-summary-line history-mom-line">👑 MOM: ${m.mom || '미지정'}</div>
-                            ${tacHistoryHtml(m, ht, at)}
-                            <div class="player-list-container">
-                                <div class="player-list-side" style="text-align:left;">${getPlayersHTML(ht)}</div>
-                                <div class="player-list-side" style="text-align:right;">${getPlayersHTML(at)}</div>
+                            ${tacHistoryHtml(m, ht, at, 'line')}
+                            <div class="hi-panes">
+                                <section class="hi-pane hi-tac">
+                                    <div class="hi-pane-t">🧭 경기 전술 · 포메이션</div>
+                                    ${tacHistoryHtml(m, ht, at, 'full') || '<div class="hi-pane-empty">이 경기에는 전술이 기록되지 않았습니다.</div>'}
+                                </section>
+                                <section class="hi-pane hi-rec">
+                                    <div class="hi-pane-t">⚽ 경기 기록 · 결과</div>
+                                    <div class="hi-result">
+                                        <span style="color:${ht.color}; font-weight:800;">${ht.name}</span>
+                                        <b class="hi-result-sc">${m.hScore} : ${m.aScore}</b>
+                                        <span style="color:${at.color}; font-weight:800;">${at.name}</span>
+                                        ${(m.hScore===m.aScore && (m.hPk>0||m.aPk>0))?`<span class="hi-result-pk">PK ${m.hPk}:${m.aPk}</span>`:''}
+                                        <span class="hi-result-mom">👑 ${m.mom || '미지정'}</span>
+                                    </div>
+                                    <div class="player-list-container">
+                                        <div class="player-list-side" style="text-align:left;"><div class="hi-side-t" style="color:${ht.color};">${ht.name}</div>${getPlayersHTML(ht)}</div>
+                                        <div class="player-list-side" style="text-align:left;"><div class="hi-side-t" style="color:${at.color};">${at.name}</div>${getPlayersHTML(at)}</div>
+                                    </div>
+                                </section>
+                                <section class="hi-pane hi-ana">
+                                    <div class="hi-pane-t">🧠 경기 분석</div>
+                                    <div class="hi-ana-empty">분석을 아직 열지 않았어요.<br><button type="button" class="history-toggle-btn" onclick="maToggle(${m.id})">🧠 경기 분석 보기</button></div>
+                                </section>
                             </div>
                             <div class="history-footer">
                                 <button class="history-toggle-btn" onclick="toggleHistoryCard(this)">🔽 상세보기</button>
@@ -26589,7 +26613,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.24';
+        const G_HTML_VERSION = '1.25';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -27109,9 +27133,9 @@
             const f = maPool().find(x => x.m.id === id); if (!f) return;
             card.classList.remove('collapsed');
             box = document.createElement('div'); box.id = 'maBox_' + id;
-            box.style.cssText = 'margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(167,139,250,0.35);text-align:left;';
+            box.style.cssText = 'margin-top:0;padding:10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(167,139,250,0.35);text-align:left;';
             box.innerHTML = maBuild(f.m);
-            card.appendChild(box);
+            (card.querySelector('.hi-ana') || card).appendChild(box);
         }
 
         function maBuild(m) {
@@ -28396,7 +28420,6 @@
    2칸이 안 들어가는 좁은 폭에서는 카드 아래에 이어서 표시 */
 #matchHistory{container-type:inline-size}
 .history-item.ma-open{min-width:0}.history-item.ma-open [id^="maBox_"]{min-width:0;max-width:100%}
-@container (min-width:760px){.history-item.ma-open{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:18px;align-items:start}.history-item.ma-open>*{grid-column:1}.history-item.ma-open>[id^="maBox_"]{grid-column:2;grid-row:1/span 30;margin-top:0!important}}
 #gvDcT4 .rs-cols{overflow-x:visible;gap:3px}#gvDcT4 .rs-col{flex:1 1 0;min-width:0;max-width:none}#gvDcT4 .rs-cv{font-size:.62rem}#gvDcT4 .rs-cl{font-size:.56rem}#gvDcT4 .rs-grid{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}#gvDcT4 .card{overflow-x:hidden}
 #gvModal{display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.82);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:14px}
 #gvModal.on{display:flex}
@@ -28718,6 +28741,80 @@ all();
     });
 })();
 </script>
+
+<style id="mrLayoutCss">
+/* ===== v1.25 — 경기 기록 · 히스토리 반응형 레이아웃 ===== */
+/* 1) 경기 전술 보드(.tac-mb): 필드 폭에 맞춰 선수 카드·글씨가 함께 줄어들어 필드 밖으로 나가거나 겹치지 않음 */
+.tac-mb .fm-pitch { container-type: inline-size; container-name: pitch; }
+.tac-mb-main { flex: 1 1 230px; min-width: min(100%, 200px); max-width: 420px; }
+.tac-mb-side { flex: 1 1 150px; min-width: min(100%, 130px); }
+.tac-mb .fm-chip { width: clamp(36px, 21cqw, 70px); padding: 2px 2px 3px; }
+.tac-mb .fm-nm { font-size: clamp(0.5rem, 3.4cqw, 0.74rem); margin-top: clamp(3px, 1.6cqw, 6px); }
+.tac-mb .fm-rt { font-size: clamp(0.44rem, 2.3cqw, 0.58rem); }
+.tac-mb .fm-ovr { min-width: clamp(15px, 6.5cqw, 22px); height: clamp(15px, 6.5cqw, 22px); font-size: clamp(0.5rem, 3cqw, 0.72rem); left: -6px; top: -8px; }
+.tac-mb .fm-empty { width: clamp(30px, 14cqw, 48px); height: clamp(30px, 14cqw, 48px); font-size: clamp(0.9rem, 5cqw, 1.2rem); }
+.tac-mb .tac-dot { width: clamp(22px, 9cqw, 30px); height: clamp(22px, 9cqw, 30px); font-size: clamp(0.58rem, 3cqw, 0.74rem); }
+.tac-mb .fm-slot .fm-role, .tac-mb .tac-board .fm-role { font-size: clamp(0.44rem, 2.4cqw, 0.58rem); white-space: nowrap; }
+.tac-mb .fm-dir { font-size: clamp(0.46rem, 2.4cqw, 0.62rem); }
+@container pitch (max-width: 235px) { .fm-rt, .fm-role.has { display: none; } }
+.tac-mb .fm-mini { min-width: 0; }
+.tac-mb .fm-mini .fm-mnm { min-width: 0; }
+.tac-mb-mgr { max-width: 100%; box-sizing: border-box; }
+.tac-board { max-width: 100%; }
+.tac-bd-cap { overflow-wrap: anywhere; }
+
+/* 2) ⚽ 경기 기록 입력: 전술 패널 폭에 맞춰 [보드 | 설정]이 나란히 → 좁으면 위아래 */
+.tac-form { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+.tac-panel { min-width: 0; }
+.tac-body { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-start; }
+.tac-bd-l { flex: 1 1 300px; min-width: 0; }
+.tac-bd-r { flex: 1 1 260px; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 10px; align-content: start; }
+.tac-bd-r .tac-wide { grid-column: 1 / -1; }
+.tac-bd-r select { min-width: 0; }
+.tac-panel { container-type: inline-size; }
+@container (max-width: 330px) { .tac-bd-r { grid-template-columns: 1fr; } .tac-lu-grid { grid-template-columns: 1fr; } }
+#playerStatsForm { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)) !important; }
+#playerStatsForm > * { min-width: 0; }
+.tac-mb-ctl .fm-tgrp { min-width: 0; }
+.tac-mb-ctl .fm-tl { min-width: 0 !important; flex: 0 0 auto; }
+
+/* 3) 📜 히스토리: 1경기 = 1칸(가로 전체). 가로에 여유가 있으면 2경기까지. 펼치면 [전술·포메이션 | 기록·결과 | 분석] 가로 배치 */
+#matchHistory { grid-template-columns: repeat(auto-fill, minmax(min(100%, 960px), 1fr)); gap: 18px; container-type: inline-size; }
+#matchHistory > * { min-width: 0; }
+.history-item { container-type: inline-size; container-name: hi; min-width: 0; padding: 20px clamp(10px, 1.6vw, 20px); }
+.history-item .history-main { gap: 8px; }
+.history-item .team-box { width: auto; flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
+.history-item .score-box { min-width: 0; flex: 0 0 auto; }
+.history-item.collapsed .hi-panes { display: none; }
+.hi-panes { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; align-items: start; }
+.hi-pane { min-width: 0; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; background: rgba(255,255,255,0.02); padding: 8px 10px; container-type: inline-size; }
+.hi-pane-t { font-weight: 900; font-size: 0.82rem; color: var(--accent); margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid rgba(56,189,248,0.2); }
+.hi-pane-empty, .hi-ana-empty { font-size: 0.76rem; color: var(--text-muted); padding: 10px 4px; text-align: center; line-height: 1.8; }
+.history-item.ma-open .hi-ana-empty { display: none; }
+.hi-ana > [id^="maBox_"] { min-width: 0; max-width: 100%; overflow-x: auto; margin-top: 0 !important; }
+.hi-result { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 10px; font-size: 0.8rem; padding: 4px 2px 8px; }
+.hi-result-sc { font-family: 'Orbitron'; font-size: 1.1rem; color: #fff; }
+.hi-result-pk { font-size: 0.72rem; color: var(--gold); font-weight: 800; }
+.hi-result-mom { font-size: 0.72rem; font-weight: 800; color: var(--gold); width: 100%; text-align: center; }
+.hi-side-t { font-weight: 900; font-size: 0.78rem; margin: 2px 0 2px; }
+.hi-rec .player-list-container { margin-top: 0; border-top: none; padding-top: 0; gap: 10px; }
+.hi-rec .player-list-side { width: auto; flex: 1 1 0; min-width: 0; }
+.hi-rec .player-item { min-width: 0; }
+.hi-rec .player-name-pos { min-width: 0; }
+.hi-rec .player-name-text { overflow: hidden; text-overflow: ellipsis; max-width: 9em; }
+@container hi (min-width: 640px) { .hi-panes { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } .hi-ana { grid-column: 1 / -1; } }
+@container hi (min-width: 940px) { .hi-panes { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 0.95fr); } .hi-ana { grid-column: auto; } }
+/* 전술 pane: 칸이 넓으면 홈/원정 나란히, 좁으면 위아래 */
+.hi-tac .history-tac-full { display: grid !important; grid-template-columns: 1fr; gap: 10px; margin: 0; }
+.hi-tac .history-tac-full > div { min-width: 0; }
+.hi-tac .tac-board { max-width: 100%; }
+@container (min-width: 700px) { .hi-tac .history-tac-full { grid-template-columns: 1fr 1fr; } }
+/* 기록 pane: 칸이 좁으면 홈/원정 위아래 */
+@container (max-width: 400px) { .hi-rec .player-list-container { flex-direction: column; } .hi-rec .player-list-side { width: 100%; flex: none; } }
+/* 접힌 카드의 한 줄 전술 요약 */
+.history-item .history-tac-line { overflow-wrap: anywhere; }
+@media (max-width: 600px) { .history-item { padding: 18px 8px 12px; } .hi-pane { padding: 6px 6px; } }
+</style>
 <script id="pmSimplifyJs">
 (function(){
   var $ = function(id){ return document.getElementById(id); };
