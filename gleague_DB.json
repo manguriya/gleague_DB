@@ -3037,7 +3037,7 @@
         {
           "id": 1772089408229,
           "type": "B조",
-          "season": "⭐ 2026 G리그",
+          "season": "🏆 2026 제3회 GIFA컵",
           "num": "4",
           "hId": "2",
           "aId": "4",
@@ -3055,6 +3055,7 @@
               "r": 9.5,
               "status": "starter",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [
                 {
                   "half": "전반",
@@ -3076,6 +3077,7 @@
               "r": 6.5,
               "status": "starter",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "2"
@@ -3088,6 +3090,7 @@
               "r": 8.5,
               "status": "starter",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [
                 {
                   "half": "후반",
@@ -3105,6 +3108,7 @@
               "r": 6,
               "status": "injured",
               "pos": "MF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "2"
@@ -3117,6 +3121,7 @@
               "r": 8.2,
               "status": "substitute",
               "pos": "DF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "2"
@@ -3129,6 +3134,7 @@
               "r": 7.5,
               "status": "starter",
               "pos": "DF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "2"
@@ -3141,6 +3147,7 @@
               "r": 8.8,
               "status": "starter",
               "pos": "GK",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "2"
@@ -3153,6 +3160,7 @@
               "r": 7,
               "status": "starter",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "4"
@@ -3165,30 +3173,7 @@
               "r": 6.5,
               "status": "starter",
               "pos": "FW",
-              "goalTimes": [],
-              "ogTimes": [],
-              "teamId": "4"
-            },
-            {
-              "name": "정의영",
-              "g": 0,
-              "og": 0,
-              "a": 0,
-              "r": 6.3,
-              "status": "starter",
-              "pos": "MF",
-              "goalTimes": [],
-              "ogTimes": [],
-              "teamId": "4"
-            },
-            {
-              "name": "김설희",
-              "g": 0,
-              "og": 0,
-              "a": 0,
-              "r": 6.2,
-              "status": "starter",
-              "pos": "MF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "4"
@@ -3201,6 +3186,33 @@
               "r": 6,
               "status": "substitute",
               "pos": "MF",
+              "pos2": "",
+              "goalTimes": [],
+              "ogTimes": [],
+              "teamId": "4"
+            },
+            {
+              "name": "정의영",
+              "g": 0,
+              "og": 0,
+              "a": 0,
+              "r": 6.3,
+              "status": "starter",
+              "pos": "MF",
+              "pos2": "",
+              "goalTimes": [],
+              "ogTimes": [],
+              "teamId": "4"
+            },
+            {
+              "name": "김설희",
+              "g": 0,
+              "og": 0,
+              "a": 0,
+              "r": 6.2,
+              "status": "starter",
+              "pos": "MF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "4"
@@ -3213,6 +3225,7 @@
               "r": 6,
               "status": "injured",
               "pos": "DF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "4"
@@ -3225,6 +3238,7 @@
               "r": 6.2,
               "status": "starter",
               "pos": "GK",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "4"
@@ -3245,18 +3259,16 @@
                 "fgk": false
               },
               "mgr": "이영표",
-              "est": 1,
               "lu": {
                 "GK": "케시",
                 "p0": "카라인",
                 "p1": "아야카",
                 "p2": "엘로디",
                 "p3": "사오리"
-              },
-              "luEst": 1
+              }
             },
             "a": {
-              "fm": "0-4",
+              "fm": "2-2",
               "st": {
                 "build": "pass",
                 "defense": "mid",
@@ -3269,15 +3281,23 @@
                 "fgk": false
               },
               "mgr": "김영광",
-              "est": 1,
               "lu": {
                 "GK": "정다은",
-                "p0": "정의영",
+                "p3": "이현이",
+                "p0": "이혜정",
                 "p1": "김설희",
-                "p2": "이현이",
-                "p3": "이혜정"
+                "p2": "정의영"
               },
-              "luEst": 1
+              "pos": {
+                "p2": {
+                  "x": 78,
+                  "y": 32.7
+                },
+                "p3": {
+                  "x": 30.3,
+                  "y": 33
+                }
+              }
             }
           }
         },
@@ -4877,7 +4897,7 @@
         {
           "id": 1775669229141,
           "type": "인터리그",
-          "season": "⭐ 2026 G리그",
+          "season": "🏆 2026 제3회 GIFA컵",
           "num": "1",
           "hId": "7",
           "aId": "5",
@@ -4888,13 +4908,14 @@
           "mom": "김보경",
           "pStats": [
             {
-              "name": "정예원",
+              "name": "서기",
               "g": 0,
               "og": 0,
-              "a": 0,
-              "r": 6.8,
+              "a": 1,
+              "r": 7.8,
               "status": "starter",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "7"
@@ -4907,6 +4928,7 @@
               "r": 8.2,
               "status": "starter",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [
                 {
                   "half": "전반",
@@ -4921,30 +4943,6 @@
               "teamId": "7"
             },
             {
-              "name": "벤",
-              "g": 0,
-              "og": 0,
-              "a": 0,
-              "r": 6.5,
-              "status": "starter",
-              "pos": "FW",
-              "goalTimes": [],
-              "ogTimes": [],
-              "teamId": "7"
-            },
-            {
-              "name": "서기",
-              "g": 0,
-              "og": 0,
-              "a": 1,
-              "r": 7.8,
-              "status": "starter",
-              "pos": "FW",
-              "goalTimes": [],
-              "ogTimes": [],
-              "teamId": "7"
-            },
-            {
               "name": "민서",
               "g": 0,
               "og": 0,
@@ -4952,6 +4950,7 @@
               "r": 6.8,
               "status": "starter",
               "pos": "DF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "7"
@@ -4964,6 +4963,7 @@
               "r": 7,
               "status": "starter",
               "pos": "DF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "7"
@@ -4976,21 +4976,36 @@
               "r": 6.9,
               "status": "starter",
               "pos": "GK",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "7"
             },
             {
-              "name": "윤태진",
+              "name": "정예원",
               "g": 0,
               "og": 0,
               "a": 0,
-              "r": 6.3,
-              "status": "starter",
+              "r": 6.8,
+              "status": "substitute",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
-              "teamId": "5"
+              "teamId": "7"
+            },
+            {
+              "name": "벤",
+              "g": 0,
+              "og": 0,
+              "a": 0,
+              "r": 6.5,
+              "status": "substitute",
+              "pos": "FW",
+              "pos2": "",
+              "goalTimes": [],
+              "ogTimes": [],
+              "teamId": "7"
             },
             {
               "name": "심으뜸",
@@ -5000,18 +5015,7 @@
               "r": 7,
               "status": "starter",
               "pos": "FW",
-              "goalTimes": [],
-              "ogTimes": [],
-              "teamId": "5"
-            },
-            {
-              "name": "장은실",
-              "g": 0,
-              "og": 0,
-              "a": 0,
-              "r": 6.3,
-              "status": "starter",
-              "pos": "FW",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "5"
@@ -5024,6 +5028,7 @@
               "r": 6.5,
               "status": "starter",
               "pos": "FW",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "5"
@@ -5036,6 +5041,7 @@
               "r": 8,
               "status": "starter",
               "pos": "DF",
+              "pos2": "",
               "goalTimes": [
                 {
                   "half": "전반",
@@ -5053,6 +5059,7 @@
               "r": 6.9,
               "status": "starter",
               "pos": "DF",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "5"
@@ -5065,6 +5072,33 @@
               "r": 6.8,
               "status": "starter",
               "pos": "GK",
+              "pos2": "",
+              "goalTimes": [],
+              "ogTimes": [],
+              "teamId": "5"
+            },
+            {
+              "name": "윤태진",
+              "g": 0,
+              "og": 0,
+              "a": 0,
+              "r": 6.3,
+              "status": "substitute",
+              "pos": "FW",
+              "pos2": "",
+              "goalTimes": [],
+              "ogTimes": [],
+              "teamId": "5"
+            },
+            {
+              "name": "장은실",
+              "g": 0,
+              "og": 0,
+              "a": 0,
+              "r": 6.3,
+              "status": "substitute",
+              "pos": "FW",
+              "pos2": "",
               "goalTimes": [],
               "ogTimes": [],
               "teamId": "5"
@@ -5085,18 +5119,16 @@
                 "fgk": false
               },
               "mgr": "이근호",
-              "est": 1,
               "lu": {
                 "GK": "리사",
                 "p0": "민서",
                 "p1": "경서",
                 "p2": "김보경",
                 "p3": "서기"
-              },
-              "luEst": 1
+              }
             },
             "a": {
-              "fm": "1-2-1",
+              "fm": "2-2",
               "st": {
                 "build": "drib",
                 "defense": "press",
@@ -5109,15 +5141,13 @@
                 "fgk": false
               },
               "mgr": "조재진",
-              "est": 1,
               "lu": {
                 "GK": "깡미",
-                "p0": "박주아",
-                "p1": "윤태진",
+                "p3": "심으뜸",
                 "p2": "쉐리",
-                "p3": "심으뜸"
-              },
-              "luEst": 1
+                "p0": "박주아",
+                "p1": "히밥"
+              }
             }
           }
         },
@@ -7062,8 +7092,8 @@
           "mom": 0,
           "teamId": "7",
           "pos": "FW",
-          "starter": 2,
-          "substitute": 2,
+          "starter": 1,
+          "substitute": 3,
           "absent": 1
         },
         "김보경": {
@@ -7086,8 +7116,8 @@
           "mom": 0,
           "teamId": "7",
           "pos": "FW",
-          "starter": 3,
-          "substitute": 2,
+          "starter": 2,
+          "substitute": 3,
           "absent": 0
         },
         "민서": {
@@ -7554,8 +7584,8 @@
           "mom": 0,
           "teamId": "5",
           "pos": "FW",
-          "starter": 4,
-          "substitute": 0,
+          "starter": 3,
+          "substitute": 1,
           "absent": 0
         },
         "심으뜸": {
@@ -7578,8 +7608,8 @@
           "mom": 0,
           "teamId": "5",
           "pos": "FW",
-          "starter": 2,
-          "substitute": 2,
+          "starter": 1,
+          "substitute": 3,
           "absent": 0
         },
         "쉐리": {
@@ -8646,8 +8676,8 @@
           "rating": 28.8,
           "avgRating": 7.2,
           "games": 4,
-          "starter": 2,
-          "substitute": 2,
+          "starter": 1,
+          "substitute": 3,
           "absent": 1,
           "impactPts": 2.41,
           "impactPerGame": 0.6025,
@@ -9132,8 +9162,8 @@
           "rating": 34,
           "avgRating": 6.8,
           "games": 5,
-          "starter": 3,
-          "substitute": 2,
+          "starter": 2,
+          "substitute": 3,
           "absent": 0,
           "impactPts": 0.63,
           "impactPerGame": 0.126,
@@ -9267,8 +9297,8 @@
           "rating": 26.3,
           "avgRating": 6.575,
           "games": 4,
-          "starter": 4,
-          "substitute": 0,
+          "starter": 3,
+          "substitute": 1,
           "absent": 0,
           "impactPts": 1.61,
           "impactPerGame": 0.4025,
@@ -9456,8 +9486,8 @@
           "rating": 26.2,
           "avgRating": 6.55,
           "games": 4,
-          "starter": 2,
-          "substitute": 2,
+          "starter": 1,
+          "substitute": 3,
           "absent": 0,
           "impactPts": 0,
           "impactPerGame": 0,
