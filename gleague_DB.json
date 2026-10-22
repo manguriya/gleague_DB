@@ -1397,29 +1397,92 @@
       "manager": "이근호",
       "captain": "",
       "tactic": {
-        "formation": "3-1",
+        "formation": "2-1-1",
         "slots": {
           "GK": "리사",
-          "p0": "벤",
-          "p1": "민서",
-          "p2": "이예지",
-          "p3": "서기",
           "s0": "조하",
-          "s1": "이보람"
+          "s1": "이보람",
+          "p0": "민서",
+          "p1": "벤",
+          "p2": "서기",
+          "p3": "이예지"
         },
-        "roleStyle": {},
-        "pos": {},
-        "mv": {},
-        "opt": {},
+        "roleStyle": {
+          "p0": "libero",
+          "p1": "marker",
+          "GK": "safe",
+          "p3": "presser",
+          "p2": "playmaker"
+        },
+        "pos": {
+          "p0": {
+            "x": 29.3,
+            "y": 69.3
+          }
+        },
+        "mv": {
+          "p3": {
+            "atk": {
+              "dx": 9.5,
+              "dy": -13.5,
+              "curve": 0
+            },
+            "def": {
+              "dx": 20.2,
+              "dy": 21.2,
+              "curve": 0
+            }
+          },
+          "p2": {
+            "atk": {
+              "dx": -25.3,
+              "dy": -27.9,
+              "curve": 0
+            },
+            "def": {
+              "dx": -3,
+              "dy": 16.6,
+              "curve": 0
+            }
+          },
+          "p0": {
+            "atk": {
+              "dx": 2,
+              "dy": -28.1,
+              "curve": 0
+            }
+          },
+          "p1": {
+            "atk": {
+              "dx": 1.6,
+              "dy": -14.4,
+              "curve": 0
+            }
+          }
+        },
+        "opt": {
+          "p2": {
+            "roam": "high"
+          },
+          "p3": {
+            "help": "high"
+          },
+          "p0": {
+            "roam": "high"
+          },
+          "p1": {
+            "help": "high"
+          }
+        },
         "style": {
           "build": "drib",
           "defense": "low",
           "attack": "center",
           "tempo": "slow",
-          "width": "wide",
+          "width": "narrow",
           "line": "deep",
           "trans": "retreat",
-          "finish": "box",
+          "finish": "shot",
           "fgk": false
         },
         "set": true
@@ -1886,7 +1949,13 @@
           "p2": "배혜지",
           "p3": "최지희"
         },
-        "roleStyle": {},
+        "roleStyle": {
+          "p2": "insider",
+          "p3": "twoway",
+          "p0": "overlap",
+          "p1": "stopper",
+          "GK": "safe"
+        },
         "pos": {},
         "mv": {
           "p0": {
@@ -1918,15 +1987,22 @@
             }
           }
         },
-        "opt": {},
+        "opt": {
+          "p0": {
+            "roam": "high"
+          },
+          "p3": {
+            "help": "high"
+          }
+        },
         "style": {
-          "build": "back",
-          "defense": "low",
+          "build": "long",
+          "defense": "man",
           "attack": "counter",
-          "tempo": "fast",
+          "tempo": "normal",
           "width": "narrow",
-          "line": "deep",
-          "trans": "press",
+          "line": "normal",
+          "trans": "normal",
           "finish": "shot",
           "fgk": false
         },
@@ -23830,5 +23906,147 @@
     "season": "current",
     "recent": "all"
   },
-  "dbSavedDate": "2026-10-22"
+  "dbSavedDate": "2026-10-22",
+  "eloStartAdj": {
+    "season": "🏆 2026 제3회 GIFA컵",
+    "locked": true,
+    "detail": {
+      "1": {
+        "delta": 0,
+        "skipped": "이번 시즌 불참 (보정 보류)"
+      },
+      "2": {
+        "delta": -1,
+        "skipped": "",
+        "base": 1048.1,
+        "Pprev": 79.03703703703704,
+        "Pnow": 79.51851851851852,
+        "dPower": 0.48148148148148096,
+        "powerAdj": 3.9,
+        "regress": -4.8,
+        "retention": 1,
+        "keptN": 7,
+        "prevN": 7,
+        "mPrevName": "김영광",
+        "mNowName": "김영광",
+        "mPrev": 76,
+        "mNow": 76,
+        "prevSeason": "🏆 2026 제2회 GIFA컵"
+      },
+      "3": {
+        "delta": -7.8,
+        "skipped": "",
+        "base": 1014.3,
+        "Pprev": 82.7037037037037,
+        "Pnow": 81.96296296296295,
+        "dPower": -0.7407407407407476,
+        "powerAdj": -5.9,
+        "regress": -1.8,
+        "retention": 0.8571428571428571,
+        "keptN": 6,
+        "prevN": 7,
+        "mPrevName": "김병지",
+        "mNowName": "김병지",
+        "mPrev": 58,
+        "mNow": 58,
+        "prevSeason": "🏆 2026 제2회 GIFA컵"
+      },
+      "4": {
+        "delta": 0.3,
+        "skipped": "",
+        "base": 947.1,
+        "Pprev": 78.44444444444444,
+        "Pnow": 77.62962962962962,
+        "dPower": -0.8148148148148238,
+        "powerAdj": -6.5,
+        "regress": 6.8,
+        "retention": 0.8571428571428571,
+        "keptN": 6,
+        "prevN": 7,
+        "mPrevName": "조원희",
+        "mNowName": "조원희",
+        "mPrev": 78,
+        "mNow": 78,
+        "prevSeason": "🏆 2026 제2회 GIFA컵"
+      },
+      "5": {
+        "delta": -4,
+        "skipped": "",
+        "base": 982.9,
+        "Pprev": 75.8,
+        "Pnow": 75,
+        "dPower": -0.7999999999999972,
+        "powerAdj": -6.4,
+        "regress": 2.4,
+        "retention": 0.8,
+        "keptN": 4,
+        "prevN": 5,
+        "mPrevName": "조재진",
+        "mNowName": "조재진",
+        "mPrev": 80,
+        "mNow": 80,
+        "prevSeason": "🏆 2026 제2회 GIFA컵"
+      },
+      "6": {
+        "delta": 18,
+        "skipped": "",
+        "base": 965.8,
+        "Pprev": 79.22222222222221,
+        "Pnow": 80.14814814814814,
+        "dPower": 1.8259259259259237,
+        "powerAdj": 14.6,
+        "regress": 3.4,
+        "retention": 1,
+        "keptN": 7,
+        "prevN": 7,
+        "mPrevName": "박주호",
+        "mNowName": "최진철",
+        "mPrev": 82,
+        "mNow": 85,
+        "prevSeason": "🏆 2026 제2회 GIFA컵"
+      },
+      "7": {
+        "delta": -46.7,
+        "skipped": "",
+        "base": 1036,
+        "Pprev": 84.18518518518518,
+        "Pnow": 76.85185185185185,
+        "dPower": -7.333333333333329,
+        "powerAdj": -40,
+        "regress": -6.7,
+        "retention": 0.5714285714285714,
+        "keptN": 4,
+        "prevN": 7,
+        "mPrevName": "이근호",
+        "mNowName": "이근호",
+        "mPrev": 88,
+        "mNow": 88,
+        "prevSeason": "🏆 2026 제2회 GIFA컵"
+      },
+      "8": {
+        "delta": 0.9,
+        "skipped": "",
+        "base": 991.5,
+        "Pprev": 81.59259259259258,
+        "Pnow": 81.59259259259258,
+        "dPower": 0,
+        "powerAdj": 0,
+        "regress": 0.9,
+        "retention": 1,
+        "keptN": 7,
+        "prevN": 7,
+        "mPrevName": "백지훈",
+        "mNowName": "백지훈",
+        "mPrev": 89,
+        "mNow": 89,
+        "prevSeason": "🏆 2026 제2회 GIFA컵"
+      },
+      "9": {
+        "delta": 0,
+        "skipped": "직전 시즌 기록 없음"
+      }
+    },
+    "manual": {},
+    "at": 1792655502077
+  }
 }
