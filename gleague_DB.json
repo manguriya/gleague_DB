@@ -2599,6 +2599,19 @@
           "teamId": "5"
         },
         {
+          "name": "먹스나",
+          "g": 0,
+          "og": 0,
+          "a": 0,
+          "r": 6,
+          "status": "substitute",
+          "pos": "FW",
+          "pos2": "",
+          "goalTimes": [],
+          "ogTimes": [],
+          "teamId": "5"
+        },
+        {
           "name": "우덕배",
           "g": 3,
           "og": 0,
@@ -2623,6 +2636,19 @@
               "min": 11
             }
           ],
+          "ogTimes": [],
+          "teamId": "5"
+        },
+        {
+          "name": "유히로",
+          "g": 0,
+          "og": 0,
+          "a": 0,
+          "r": 6,
+          "status": "substitute",
+          "pos": "FW",
+          "pos2": "",
+          "goalTimes": [],
           "ogTimes": [],
           "teamId": "5"
         },
@@ -2673,30 +2699,17 @@
           "teamId": "5"
         },
         {
-          "name": "먹스나",
+          "name": "목나경",
           "g": 0,
           "og": 0,
           "a": 0,
-          "r": 6,
+          "r": 6.5,
           "status": "substitute",
           "pos": "FW",
           "pos2": "",
           "goalTimes": [],
           "ogTimes": [],
-          "teamId": "5"
-        },
-        {
-          "name": "유히로",
-          "g": 0,
-          "og": 0,
-          "a": 0,
-          "r": 6,
-          "status": "substitute",
-          "pos": "FW",
-          "pos2": "",
-          "goalTimes": [],
-          "ogTimes": [],
-          "teamId": "5"
+          "teamId": "3"
         },
         {
           "name": "김소희",
@@ -2735,6 +2748,19 @@
               "min": 4
             }
           ],
+          "ogTimes": [],
+          "teamId": "3"
+        },
+        {
+          "name": "트루디",
+          "g": 0,
+          "og": 0,
+          "a": 0,
+          "r": 6.5,
+          "status": "substitute",
+          "pos": "FW",
+          "pos2": "",
+          "goalTimes": [],
           "ogTimes": [],
           "teamId": "3"
         },
@@ -2789,32 +2815,6 @@
           "goalTimes": [],
           "ogTimes": [],
           "teamId": "3"
-        },
-        {
-          "name": "목나경",
-          "g": 0,
-          "og": 0,
-          "a": 0,
-          "r": 6.5,
-          "status": "substitute",
-          "pos": "FW",
-          "pos2": "",
-          "goalTimes": [],
-          "ogTimes": [],
-          "teamId": "3"
-        },
-        {
-          "name": "트루디",
-          "g": 0,
-          "og": 0,
-          "a": 0,
-          "r": 6.5,
-          "status": "substitute",
-          "pos": "FW",
-          "pos2": "",
-          "goalTimes": [],
-          "ogTimes": [],
-          "teamId": "3"
         }
       ],
       "tac": {
@@ -2822,7 +2822,7 @@
           "fm": "2-2",
           "st": {
             "build": "drib",
-            "defense": "man",
+            "defense": "press",
             "attack": "center",
             "tempo": "fast",
             "width": "normal",
@@ -2838,13 +2838,83 @@
             "p0": "박주아",
             "p1": "깡미",
             "GK": "일주어터"
+          },
+          "pos": {
+            "p3": {
+              "x": 67.6,
+              "y": 26
+            },
+            "p0": {
+              "x": 30.4,
+              "y": 62.2
+            },
+            "p2": {
+              "x": 23.1,
+              "y": 33
+            },
+            "p1": {
+              "x": 68.4,
+              "y": 68
+            }
+          },
+          "mv": {
+            "p3": {
+              "atk": {
+                "dx": -6.1,
+                "dy": -25.5,
+                "curve": 0
+              },
+              "def": {
+                "dx": -14.9,
+                "dy": -11.4,
+                "curve": 0
+              }
+            },
+            "p2": {
+              "atk": {
+                "dx": 8.1,
+                "dy": -22.7,
+                "curve": 0
+              },
+              "def": {
+                "dx": 12.9,
+                "dy": -14.8,
+                "curve": 0
+              }
+            },
+            "p0": {
+              "atk": {
+                "dx": 17.8,
+                "dy": -30.2,
+                "curve": 0
+              }
+            },
+            "p1": {
+              "atk": {
+                "dx": 1.6,
+                "dy": -11.6,
+                "curve": 0
+              },
+              "def": {
+                "dx": -10.1,
+                "dy": 9.1,
+                "curve": 0
+              }
+            },
+            "GK": {
+              "def": {
+                "dx": -13.5,
+                "dy": -7.1,
+                "curve": 0
+              }
+            }
           }
         },
         "a": {
           "fm": "2-2",
           "st": {
             "build": "back",
-            "defense": "press",
+            "defense": "mid",
             "attack": "possess",
             "tempo": "normal",
             "width": "normal",
@@ -2860,6 +2930,77 @@
             "p2": "김소희",
             "p3": "현진",
             "p0": "소유미"
+          },
+          "pos": {
+            "p1": {
+              "x": 69.6,
+              "y": 57
+            },
+            "p0": {
+              "x": 31.6,
+              "y": 69.8
+            },
+            "p3": {
+              "x": 69.2,
+              "y": 22.9
+            }
+          },
+          "mv": {
+            "p3": {
+              "atk": {
+                "dx": -13.7,
+                "dy": -27.6,
+                "curve": 0
+              },
+              "def": {
+                "dx": -2.5,
+                "dy": 12.5,
+                "curve": 0
+              }
+            },
+            "p2": {
+              "atk": {
+                "dx": -4.8,
+                "dy": -19,
+                "curve": 0
+              },
+              "def": {
+                "dx": 15.8,
+                "dy": 11.5,
+                "curve": 0
+              }
+            },
+            "p1": {
+              "atk": {
+                "dx": -15,
+                "dy": -25,
+                "curve": 0
+              },
+              "def": {
+                "dx": -1.7,
+                "dy": 18.7,
+                "curve": 0
+              }
+            },
+            "p0": {
+              "atk": {
+                "dx": -1.5,
+                "dy": -19.2,
+                "curve": 0
+              },
+              "def": {
+                "dx": 6.9,
+                "dy": 10.4,
+                "curve": 0
+              }
+            },
+            "GK": {
+              "atk": {
+                "dx": 10.7,
+                "dy": -21.7,
+                "curve": 0
+              }
+            }
           }
         }
       }
@@ -24207,6 +24348,6 @@
       }
     },
     "manual": {},
-    "at": 1792659929867
+    "at": 1792660415497
   }
 }
