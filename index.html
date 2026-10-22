@@ -1778,6 +1778,14 @@
                 </div>
             </div>
 
+            <!-- 🔄 시즌 시작 Elo 보정 (v1.27) -->
+            <div class="card" id="eloStartAdjCard">
+                <details>
+                    <summary style="cursor:pointer; font-weight:800; font-size:1rem;" data-new="1.27">🔄 시즌 시작 Elo 보정</summary>
+                    <div id="eloStartAdjBody" style="margin-top:10px;"></div>
+                </details>
+            </div>
+
             <!-- 👥 참가팀 / 선수 관리 -->
             <div class="card">
                 <h3>👥 참가팀 / 선수 관리</h3>
@@ -14089,7 +14097,7 @@
             const arc = state.archives[idx];
             const prev = idx > 0 ? state.archives[idx - 1] : null;
             return { current: false, arc, label: arc.name, mode: arc.seasonMode,
-                     matches: arc.matches || [], baseline: prev && prev.finalElo && Object.keys(prev.finalElo).length ? prev.finalElo : null };
+                     matches: arc.matches || [], baseline: prev && prev.finalElo && Object.keys(prev.finalElo).length ? eloSeasonBaseline(idx) : null };
         }
 
         const dkWon = m => m.hScore > m.aScore || (m.hScore === m.aScore && (m.hPk || 0) > (m.aPk || 0));
@@ -20537,7 +20545,7 @@
             }
 
             // 4) Elo 재계산 — 직전 시즌(있다면)의 최종 Elo에서 이어받는다.
-            const prevElo = (archiveIdx > 0) ? (state.archives[archiveIdx - 1].finalElo || null) : null;
+            const prevElo = (archiveIdx > 0) ? eloSeasonBaseline(archiveIdx) : null;
             arc.finalElo = calcEloRatings(matches, state.teams, prevElo).elo;
 
             // 5) 팀 랭킹(teamRank) 재계산 — 승/패/득실/승점 + 위에서 갱신한 Elo
@@ -21206,7 +21214,9 @@
             const idx = all.findIndex(e => e.name === es[0].name);
             if(idx <= 0) return null;
             const prev = all[idx - 1];
-            return (prev.arc && prev.arc.finalElo && Object.keys(prev.arc.finalElo).length > 0) ? prev.arc.finalElo : null;
+            if(!(prev.arc && prev.arc.finalElo && Object.keys(prev.arc.finalElo).length > 0)) return null;
+            const firstArc = es[0].arc;
+            return eloSeasonBaseline(firstArc ? state.archives.indexOf(firstArc) : state.archives.length);
         }
         function getCustomScopeLabel() {
             const es = getCustomSeasonEntries();
@@ -21472,11 +21482,250 @@
             return 1 + ELO_UPSET_BONUS * eloUpsetGap(elo, ids, loserId, winnerId);
         }
 
+
+        // ======================================================
+        // 🔄 시즌 시작 Elo 보정 (v1.27)
+        //  새 시즌은 직전 시즌 최종 Elo를 이어받되, 선수단·감독·능력치 변화로 달라진 전력만큼 시작 Elo를 보정한다.
+        //   ① 전력 변화 보정 = (이번 시즌 시작 전력 − 직전 시즌 종료 시점 전력) × ELO_PER_POWER  (상한 ±ELO_START_CAP)
+        //   ② 연속성 회귀   = 직전 시즌에 뛴 선수가 많이 바뀔수록 지난 Elo를 1000 쪽으로 조금 당김
+        //  보정값은 시즌 첫 경기가 기록되면 잠겨(state.eloStartAdj) 이후 능력치를 고쳐도 그 시즌 Elo가 바뀌지 않고,
+        //  시즌이 아카이브될 때 archive.startAdj 로 함께 보관된다. 과거(보정 없음) 시즌은 기존 값 그대로.
+        // ======================================================
+        const ELO_PER_POWER = 8;        // 선발 전력 1점당 Elo
+        const ELO_MGR_WEIGHT = 0.3;     // 감독 OVR 1점 = 선수단 전력 0.3점
+        const ELO_START_CAP = 40;       // 전력 변화 보정 상한(±)
+        const ELO_REG_BASE = 0.10, ELO_REG_TURNOVER = 0.20;   // 회귀율 r = 0.10 + 0.20 × (1 − 잔류율)
+
+        // 시즌 키: 아카이브 인덱스(0..n-1), 현재 시즌은 archives.length. 경기 id → 시즌 키 (시즌명 라벨이 어긋난 과거 기록 대비)
+        let _eloSeasonIdxCache = null, _eloSeasonIdxSig = '';
+        function eloSeasonIndexMap() {
+            const arcs = state.archives || [], cur = state.matches || [];
+            const sig = arcs.length + ':' + arcs.map(a => (a.matches || []).length).join(',') + ':' + cur.length + ':' + (cur.length ? cur[cur.length - 1].id : '');
+            if(_eloSeasonIdxCache && _eloSeasonIdxSig === sig) return _eloSeasonIdxCache;
+            const map = new Map();
+            arcs.forEach((a, i) => (a.matches || []).forEach(m => map.set(m.id, i)));
+            cur.forEach(m => map.set(m.id, arcs.length));
+            _eloSeasonIdxCache = map; _eloSeasonIdxSig = sig;
+            return map;
+        }
+        // 해당 시즌 키의 시작 보정 맵 {teamId: delta}
+        function eloStartAdjOfSeason(sk) {
+            const arcs = state.archives || [];
+            if(sk < arcs.length) return arcs[sk].startAdj || null;
+            return getCurrentEloStartAdj().map;
+        }
+        // 시즌 키 sk 단독 보기의 시작 Elo 맵: 직전 아카이브 finalElo + 그 시즌 시작 보정 (첫 시즌/기록 없음은 null)
+        function eloSeasonBaseline(sk) {
+            const arcs = state.archives || [];
+            if(sk <= 0) return null;
+            const prev = arcs[sk - 1];
+            if(!prev || !prev.finalElo || Object.keys(prev.finalElo).length === 0) return null;
+            const adj = eloStartAdjOfSeason(sk) || {};
+            const out = {};
+            Object.keys(prev.finalElo).forEach(id => { out[id] = parseFloat((prev.finalElo[id] + (adj[id] || 0)).toFixed(1)); });
+            return out;
+        }
+
+        // 특정 시점 t의 선수 능력치 (statLog 기준, 없으면 fallback)
+        function eloStatsAt(name, t, fallback) {
+            const log = (state.statLog && state.statLog[name]) || [];
+            if(!log.length || t === Infinity) return { stats: fallback ? fallback.stats : (log.length ? log[log.length - 1].stats : null), pos: fallback ? fallback.pos : null };
+            let cur = null;
+            log.forEach(e => { if(e && e.stats && (e.at === null || e.at === undefined || e.at <= t)) cur = e; });
+            if(!cur) cur = log.find(e => e && e.stats) || null;
+            return cur ? { stats: cur.stats, pos: cur.pos || (fallback && fallback.pos) || null } : { stats: fallback ? fallback.stats : null, pos: fallback ? fallback.pos : null };
+        }
+        function eloMgrOvrAt(name, t) {
+            if(!name) return null;
+            const ref = findManagerRef(name);
+            let stats = ref ? ref.stats : null;
+            const log = (state.mgrStatLog && state.mgrStatLog[name]) || [];
+            if(log.length && t !== Infinity) {
+                let cur = null;
+                log.forEach(e => { if(e && e.stats && (e.at === null || e.at === undefined || e.at <= t)) cur = e; });
+                if(!cur) cur = log.find(e => e && e.stats) || null;
+                if(cur) stats = cur.stats;
+            }
+            return stats ? calcManagerOVR({ stats }) : null;
+        }
+        // 선수단 전력: GK 1명 + 필드 상위 4명(가중 1) + 다음 3명(후보 가중) 의 OVR 가중평균
+        function eloRosterPower(list) {
+            const ovrOf = x => x.ovr;
+            const gks = list.filter(x => x.pos === 'GK').sort((a, b) => ovrOf(b) - ovrOf(a));
+            const fld = list.filter(x => x.pos !== 'GK').sort((a, b) => ovrOf(b) - ovrOf(a));
+            let sw = 0, sv = 0;
+            const add = (x, w) => { sw += w; sv += w * ovrOf(x); };
+            if(gks[0]) add(gks[0], 1); else { sw += 1; sv += ABILITY_STAT_DEFAULT; }
+            fld.slice(0, TC_FIELD_STARTERS).forEach(x => add(x, 1));
+            fld.slice(TC_FIELD_STARTERS, TC_FIELD_STARTERS + TC_BENCH_MAX).forEach(x => add(x, TC_BENCH_W));
+            return sw ? sv / sw : null;
+        }
+        // 팀이 마지막으로 경기를 치른 아카이브
+        function eloLastPlayedArchive(teamId) {
+            const arcs = state.archives || [];
+            for(let i = arcs.length - 1; i >= 0; i--) {
+                if((arcs[i].matches || []).some(m => String(m.hId) === String(teamId) || String(m.aId) === String(teamId))) return arcs[i];
+            }
+            return null;
+        }
+        // 현재 시즌에 참가하는 팀인지 (설정 전이면 모두 참가로 본다)
+        function eloTeamInCurrentSeason(teamId) {
+            const id = String(teamId);
+            if(state.seasonMode === 'tournament' && (state.tournamentTeams || []).length) return (state.tournamentTeams || []).map(String).includes(id);
+            const g = (state.groupA || []).concat(state.groupB || []).map(String);
+            if(g.length) return g.includes(id);
+            return true;
+        }
+        // 시즌 시작 보정 계산. tNow: 현재 전력 기준 시점(Infinity = 지금 능력치, 숫자 = 그 시점 능력치)
+        function calcEloStartAdj(tNow) {
+            const arcs = state.archives || [];
+            const out = {};
+            if(!arcs.length) return out;
+            const last = arcs[arcs.length - 1];
+            (state.teams || []).forEach(team => {
+                const id = String(team.id);
+                const d = { delta: 0, skipped: '' };
+                out[id] = d;
+                const baseElo = last.finalElo ? last.finalElo[id] : undefined;
+                const pa = eloLastPlayedArchive(id);
+                if(baseElo === undefined || !pa) { d.skipped = '직전 시즌 기록 없음'; return; }
+                if(!eloTeamInCurrentSeason(id)) { d.skipped = '이번 시즌 불참 (보정 보류)'; return; }
+                const matchIds = (pa.matches || []).map(m => m.id).filter(x => typeof x === 'number');
+                const tEnd = matchIds.length ? Math.max.apply(null, matchIds) : Infinity;
+                // 직전(마지막 참가) 시즌에 실제로 뛴 선수 + 그 시점 능력치
+                const prevList = []; const prevW = {};
+                Object.entries(pa.playerStats || {}).forEach(([name, ps]) => {
+                    if(String(ps.teamId) !== id) return;
+                    const g = (ps.starter || 0) + (ps.substitute || 0);
+                    if(g <= 0) return;
+                    const cp = (team.players || []).find(p => p.name === name);
+                    const info = eloStatsAt(name, tEnd, cp || null);
+                    const pos = info.pos || ps.pos || (cp && cp.pos) || 'FW';
+                    if(!info.stats) return;
+                    prevList.push({ name, pos, ovr: calcPlayerOVR({ pos, stats: info.stats }) || 0 });
+                    prevW[name] = g;
+                });
+                // 지금(또는 잠금 시점) 선수단
+                const nowList = (team.players || []).filter(p => p.stats).map(p => {
+                    const info = eloStatsAt(p.name, tNow, p);
+                    const stats = info.stats || p.stats;
+                    return { name: p.name, pos: p.pos, ovr: calcPlayerOVR({ pos: p.pos, stats }) || 0 };
+                });
+                if(!prevList.length || !nowList.length) { d.skipped = '선수단 정보 부족'; return; }
+                const Pprev = eloRosterPower(prevList), Pnow = eloRosterPower(nowList);
+                const mPrevName = (pa.teamManagers || {})[id] || '', mNowName = team.manager || '';
+                const mPrev = eloMgrOvrAt(mPrevName, tEnd), mNow = eloMgrOvrAt(mNowName, tNow);
+                const mDiff = (mPrev !== null && mNow !== null) ? (mNow - mPrev) : 0;
+                const dPower = (Pnow - Pprev) + ELO_MGR_WEIGHT * mDiff;
+                const powerAdj = Math.max(-ELO_START_CAP, Math.min(ELO_START_CAP, dPower * ELO_PER_POWER));
+                // 연속성(직전 출전 비중 기준 잔류율) → 평균 회귀
+                const nowNames = new Set(nowList.map(x => x.name));
+                let totW = 0, keptW = 0, keptN = 0;
+                prevList.forEach(x => { const w = prevW[x.name] || 1; totW += w; if(nowNames.has(x.name)) { keptW += w; keptN++; } });
+                const retention = totW ? keptW / totW : 1;
+                const r = ELO_REG_BASE + ELO_REG_TURNOVER * (1 - retention);
+                const regress = -r * (baseElo - ELO_INITIAL);
+                d.delta = parseFloat((powerAdj + regress).toFixed(1));
+                Object.assign(d, { base: baseElo, Pprev, Pnow, dPower, powerAdj: parseFloat(powerAdj.toFixed(1)), regress: parseFloat(regress.toFixed(1)), retention, keptN, prevN: prevList.length, mPrevName, mNowName, mPrev, mNow, prevSeason: pa.name });
+            });
+            return out;
+        }
+        // 현재 시즌 시작 보정 {map, detail, locked, manual}. 첫 경기가 기록되면 그 시점으로 잠그고 state.eloStartAdj에 저장한다.
+        function getCurrentEloStartAdj() {
+            const empty = { map: {}, detail: {}, locked: false, manual: {} };
+            if(!state.archives || !state.archives.length) return empty;
+            const S = state.eloStartAdj;
+            const same = S && S.season === state.seasonName;
+            const manual = (same && S.manual) || {};
+            const fin = (detail) => { const map = {}; Object.keys(detail).forEach(id => { const d = detail[id]; const v = manual[id] !== undefined ? manual[id] : d.delta; if(v) map[id] = v; }); return map; };
+            if(same && S.locked && S.detail) return { map: fin(S.detail), detail: S.detail, locked: true, manual };
+            const cur = state.matches || [];
+            if(cur.length > 0) {
+                // 이미 경기가 진행 중인데 잠긴 값이 없으면(기존 DB) 첫 경기 시점의 능력치 기준으로 계산해 잠근다
+                const ids = cur.map(m => m.id).filter(x => typeof x === 'number');
+                const tFirst = ids.length ? Math.min.apply(null, ids) : Infinity;
+                const detail = calcEloStartAdj(tFirst);
+                state.eloStartAdj = { season: state.seasonName, locked: true, detail, manual, at: Date.now() };
+                return { map: fin(detail), detail, locked: true, manual };
+            }
+            const detail = calcEloStartAdj(Infinity);   // 시즌 시작 전: 로스터 변경이 바로 반영되는 미리보기
+            return { map: fin(detail), detail, locked: false, manual };
+        }
+        // 시즌 설정 화면용 조작
+        function eloStartAdjSetManual(teamId, val) {
+            const cur = getCurrentEloStartAdj();
+            if(!state.eloStartAdj || state.eloStartAdj.season !== state.seasonName) state.eloStartAdj = { season: state.seasonName, locked: false, detail: null, manual: {}, at: Date.now() };
+            state.eloStartAdj.manual = state.eloStartAdj.manual || {};
+            const num = parseFloat(val);
+            if(val === '' || isNaN(num)) delete state.eloStartAdj.manual[String(teamId)]; else state.eloStartAdj.manual[String(teamId)] = num;
+            if(!cur.locked) state.eloStartAdj.detail = null;
+            save(); renderEloStartAdjCard(); try { renderTeamRank(); } catch(e) {}
+        }
+        function eloStartAdjRecalc() {
+            if(!confirm('이번 시즌 시작 보정을 현재 선수단 · 감독 · 능력치 기준으로 다시 계산할까요?\\n(수동으로 입력한 값은 유지됩니다. 이미 진행된 경기의 Elo도 새 보정값으로 다시 계산됩니다.)')) return;
+            const manual = (state.eloStartAdj && state.eloStartAdj.manual) || {};
+            const hasMatches = (state.matches || []).length > 0;
+            if(hasMatches) { state.eloStartAdj = { season: state.seasonName, locked: true, detail: calcEloStartAdj(Infinity), manual, at: Date.now() }; }
+            else state.eloStartAdj = { season: state.seasonName, locked: false, detail: null, manual, at: Date.now() };
+            save(); renderEloStartAdjCard(); try { renderTeamRank(); } catch(e) {}
+        }
+        function eloStartAdjClearManual() {
+            if(state.eloStartAdj) state.eloStartAdj.manual = {};
+            save(); renderEloStartAdjCard(); try { renderTeamRank(); } catch(e) {}
+        }
+        function renderEloStartAdjCard() {
+            const box = document.getElementById('eloStartAdjBody');
+            if(!box) return;
+            if(!state.archives || !state.archives.length) { box.innerHTML = '<div style="color:var(--text-muted); font-size:0.78rem;">첫 시즌은 모든 팀이 1000점에서 시작하므로 보정이 없습니다. 시즌을 아카이브한 뒤 다음 시즌부터 적용됩니다.</div>'; return; }
+            const C = getCurrentEloStartAdj();
+            const last = state.archives[state.archives.length - 1];
+            const sg = v => (v >= 0 ? '+' : '') + v.toFixed(1);
+            const col = v => v > 0 ? 'var(--success)' : (v < 0 ? 'var(--danger)' : 'var(--text-muted)');
+            const rows = (state.teams || []).map(t => {
+                const id = String(t.id), d = C.detail[id] || { delta: 0, skipped: '' };
+                const man = C.manual[id];
+                const fin = man !== undefined ? man : d.delta;
+                const baseElo = last.finalElo ? last.finalElo[id] : undefined;
+                const startElo = baseElo !== undefined ? (baseElo + fin) : null;
+                let detail;
+                if(d.skipped) detail = `<span style="color:var(--text-muted);">${d.skipped}</span>`;
+                else {
+                    const mg = (d.mPrevName !== d.mNowName) ? ` · 🧑‍💼 ${d.mPrevName || '없음'}→${d.mNowName || '없음'}` : '';
+                    detail = `전력 ${d.Pprev.toFixed(1)}→${d.Pnow.toFixed(1)} · 잔류 ${d.keptN}/${d.prevN}명${mg}<br><span style="color:var(--text-muted); font-size:0.66rem;">전력보정 ${sg(d.powerAdj)} · 회귀 ${sg(d.regress)}</span>`;
+                }
+                return `<tr>
+                    <td style="font-weight:800; color:${t.color || '#fff'}; white-space:nowrap;">${t.name}</td>
+                    <td style="font-size:0.72rem;">${detail}</td>
+                    <td style="white-space:nowrap; color:${col(d.delta)}; font-weight:700;">${d.skipped ? '-' : sg(d.delta)}</td>
+                    <td><input type="number" step="0.1" value="${man !== undefined ? man : ''}" placeholder="자동" ${d.skipped ? 'disabled' : ''} onchange="eloStartAdjSetManual('${id}', this.value)" style="width:68px; padding:3px 5px; border-radius:6px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.25); color:#fff; font-size:0.74rem;"></td>
+                    <td style="white-space:nowrap; font-weight:800;">${startElo === null ? '-' : startElo.toFixed(1)}</td>
+                </tr>`;
+            }).join('');
+            box.innerHTML = `
+                <div style="font-size:0.74rem; color:var(--text-muted); margin-bottom:8px; line-height:1.5;">
+                    직전 시즌(<b>${last.name}</b>) 최종 Elo에서 이어받되, 선수단 · 감독 · 능력치 변화로 달라진 전력만큼 시작 Elo를 보정합니다.
+                    ${C.locked ? '🔒 <b>시즌 첫 경기가 기록되어 보정값이 고정</b>되었습니다 (이후 능력치를 고쳐도 바뀌지 않음).' : '🔓 아직 경기가 없어 <b>선수단 · 감독을 바꾸면 보정값이 바로 갱신</b>됩니다. 첫 경기가 기록되면 고정됩니다.'}
+                </div>
+                <div class="scrollable-table" style="max-height:none; overflow-x:auto;">
+                    <table class="pattern-table" style="font-size:0.76rem;">
+                        <thead><tr><th>팀</th><th>전력 변화</th><th>자동 보정</th><th>수동 입력</th><th>시작 Elo</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+                    <button class="btn btn-auto" onclick="eloStartAdjRecalc()">🔄 현재 기준으로 다시 계산</button>
+                    <button class="btn btn-auto" onclick="eloStartAdjClearManual()">↩️ 수동 입력 모두 지우기</button>
+                </div>
+                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:8px; line-height:1.5;">
+                    계산식: 선발(GK 1 + 필드 4)과 후보 3명의 OVR 가중평균 + 감독 OVR × ${ELO_MGR_WEIGHT} 의 변화량 × ${ELO_PER_POWER} (상한 ±${ELO_START_CAP}) + 연속성 회귀(직전 출전 비중 기준 잔류율이 낮을수록 1000점 쪽으로 ${Math.round(ELO_REG_BASE * 100)}~${Math.round((ELO_REG_BASE + ELO_REG_TURNOVER) * 100)}% 당김).
+                    이번 시즌 불참 팀은 보정을 보류하고, 다음에 참가할 때 마지막 참가 시즌 대비로 계산합니다.
+                </div>`;
+        }
+
         // 직전 시즌 최종 Elo를 가져옴 (없으면 null)
         function getPrevSeasonElo() {
             if(!state.archives || state.archives.length === 0) return null;
-            const last = state.archives[state.archives.length - 1];
-            return (last.finalElo && Object.keys(last.finalElo).length > 0) ? last.finalElo : null;
+            return eloSeasonBaseline(state.archives.length);   // v1.27: 직전 시즌 최종 Elo + 이번 시즌 시작 보정
         }
 
         // 직전 시즌 '최종' 팀 순위를 가져옴 (새 시즌 첫 경기처럼 이번 시즌 자체 스냅샷/기록이 아직 없을 때,
@@ -21517,7 +21766,20 @@
             });
 
             const partIds = eloParticipantIds(matchList, elo);
+            const seasonIdx = (state.archives && state.archives.length) ? eloSeasonIndexMap() : null;
+            let curSk = null; const pendAdj = {};
             matchList.forEach(m => {
+                // 🔄 v1.27: 목록 안에서 시즌이 바뀌는 지점(첫 시즌 제외)에서 그 시즌의 시작 보정을 적용
+                if(seasonIdx) {
+                    const sk = seasonIdx.get(m.id);
+                    if(sk !== undefined) {
+                        if(curSk !== null && sk > curSk) {
+                            const adj = eloStartAdjOfSeason(sk);
+                            if(adj) Object.keys(adj).forEach(id => { if(elo[id] !== undefined && adj[id]) { elo[id] = parseFloat((elo[id] + adj[id]).toFixed(1)); pendAdj[id] = (pendAdj[id] || 0) + adj[id]; } });
+                        }
+                        if(curSk === null || sk > curSk) curSk = sk;
+                    }
+                }
                 const hId = String(m.hId), aId = String(m.aId);
                 if(elo[hId] === undefined || elo[aId] === undefined) return;
                 const hWin = m.hScore > m.aScore || (m.hScore === m.aScore && m.hPk > m.aPk);
@@ -21548,8 +21810,9 @@
                 elo[hId] = newRh; elo[aId] = newRa;
                 if(hWin) { stat[hId].w++; stat[aId].l++; } else { stat[aId].w++; stat[hId].l++; }
                 stat[hId].gain += deltaH; stat[aId].gain += deltaA;
-                stat[hId].history.push({ before: Rh, after: newRh, delta: deltaH, opp: aId, type: m.type });
-                stat[aId].history.push({ before: Ra, after: newRa, delta: deltaA, opp: hId, type: m.type });
+                stat[hId].history.push({ before: Rh, after: newRh, delta: deltaH, opp: aId, type: m.type, adj: pendAdj[hId] || 0 });
+                stat[aId].history.push({ before: Ra, after: newRa, delta: deltaA, opp: hId, type: m.type, adj: pendAdj[aId] || 0 });
+                pendAdj[hId] = 0; pendAdj[aId] = 0;
             });
 
             return { elo, stat };
@@ -21737,7 +22000,16 @@
             const elo = {};
             state.teams.forEach(t => { elo[String(t.id)] = ELO_INITIAL; });
             const partIds = eloParticipantIds(sorted, elo);
+            const seasonIdx2 = (state.archives && state.archives.length) ? eloSeasonIndexMap() : null;
+            let curSk2 = null;
             return sorted.map(m => {
+                if(seasonIdx2) {
+                    const sk = seasonIdx2.get(m.id);
+                    if(sk !== undefined) {
+                        if(curSk2 !== null && sk > curSk2) { const adj = eloStartAdjOfSeason(sk); if(adj) Object.keys(adj).forEach(id => { if(elo[id] !== undefined) elo[id] += adj[id]; }); }
+                        if(curSk2 === null || sk > curSk2) curSk2 = sk;
+                    }
+                }
                 const hId = String(m.hId), aId = String(m.aId);
                 if(elo[hId] === undefined) elo[hId] = ELO_INITIAL;
                 if(elo[aId] === undefined) elo[aId] = ELO_INITIAL;
@@ -22052,14 +22324,45 @@
             // 그 라벨이 들어갈 위쪽 여백을 더 확보해준다.
             const seasonSet = new Set(points.map(p => p.season).filter(Boolean));
             const hasSeasonLabels = seasonSet.size > 1;
-            const h = 220, padL = 34, padR = 18, padT = hasSeasonLabels ? 42 : 26, padB = 26;
+            const padL = 34, padR = 18, padB = 26;
+            let padT = hasSeasonLabels ? 42 : 26;
             const neededW = padL + padR + (points.length - 1) * MIN_POINT_SPACING;
             const w = Math.max(760, neededW);
             const scrollable = w > 760;
             const maxRankOverall = Math.max(...points.map(p => p.maxRank));
             const xStep = points.length > 1 ? (w - padL - padR) / (points.length - 1) : 0;
-            const yFor = (rank) => padT + ((rank - 1) / Math.max(1, maxRankOverall - 1)) * (h - padT - padB);
             const xFor = (i) => padL + i * xStep;
+
+            // 🚩 시즌 구간 라벨 배치 (v1.28): 시즌이 짧아 라벨끼리 가로로 겹치면 위 줄 → 아래 줄로 자동으로 쌓는다.
+            //  (🧩 전체 팀 순위 변동 통합 그래프와 같은 방식 — 글자 폭을 추정해 배경 박스로 그리고, 오른쪽 끝을 넘으면 안쪽으로 당겨 잘리지 않게 함)
+            const LABEL_FS = 9, LANE_H = 15, LABEL_GAP = 8;
+            const estLabelW = (str) => Array.from(String(str)).reduce((sum, ch) => {
+                const c = ch.codePointAt(0);
+                if(ch === ' ') return sum + 3.4;
+                if(c < 128) return sum + (/[A-Z0-9]/.test(ch) ? 6.2 : 5.2);
+                if(c >= 0x1F000 || c === 0x2B50) return sum + 12.5; // 이모지
+                return sum + 9.8; // 한글 등 전각 문자
+            }, 0) * 1.05 + 12;
+            const seasonLabels = [];
+            if(hasSeasonLabels) {
+                const laneEnd = [];
+                points.forEach((p, i) => {
+                    if(!(p.season && (i === 0 || points[i - 1].season !== p.season))) return;
+                    const L = { i, name: p.season, w: estLabelW('🚩 ' + p.season) };
+                    let bx = xFor(i) + 3;
+                    if(bx + L.w > w - 4) bx = Math.max(2, w - 4 - L.w);
+                    let lane = 0;
+                    while(laneEnd[lane] !== undefined && laneEnd[lane] + LABEL_GAP > bx) lane++;
+                    laneEnd[lane] = bx + L.w;
+                    L.bx = bx; L.lane = lane;
+                    seasonLabels.push(L);
+                });
+                const laneCount = seasonLabels.length ? Math.max(...seasonLabels.map(L => L.lane)) + 1 : 1;
+                padT = Math.max(42, 14 + laneCount * LANE_H + 8);
+            }
+            const plotH = hasSeasonLabels ? 152 : 168;   // 라벨 줄이 늘어도 순위표 자체 높이는 그대로
+            const h = padT + plotH + padB;
+            const yFor = (rank) => padT + ((rank - 1) / Math.max(1, maxRankOverall - 1)) * plotH;
 
             const tipFor = (p, i) => {
                 let tip = `${p.label}: ${fmtRank(p.rank)}위`;
@@ -22104,17 +22407,7 @@
             // isLastPoint면 이미 더 크게 그려지는 마지막 점 아래쪽에 배치될 수 있도록 y좌표를 살짝 더 내린다.
             const extraMarksFor = (p, i, isLastPoint) => {
                 let extra = '';
-                if(isSeasonStart(i)) {
-                    // 시즌명 라벨이 오른쪽 끝을 넘어가 잘려 보이지 않도록, 남은 공간이 부족하면
-                    // 절취선 왼쪽(text-anchor:end)에 붙여서 항상 그래프 폭 안에 들어오게 한다.
-                    const labelText = `🚩 ${escXml(p.season)}`;
-                    const estWidth = labelText.length * 6.5;
-                    const fitsRight = xFor(i) + 4 + estWidth <= w - padR;
-                    const lx = fitsRight ? xFor(i) + 4 : Math.max(padL + 2, xFor(i) - 4);
-                    const lAnchor = fitsRight ? 'start' : 'end';
-                    extra += `<line x1="${xFor(i)}" y1="${padT}" x2="${xFor(i)}" y2="${h - padB}" stroke="rgba(251,191,36,0.35)" stroke-width="1" stroke-dasharray="3,3" style="pointer-events:none;"/>
-                    <text x="${lx}" y="${padT - 14}" font-size="9" font-weight="800" fill="var(--gold)" text-anchor="${lAnchor}" style="pointer-events:none;">${labelText}</text>`;
-                }
+                // (시즌 경계 절취선 · 라벨은 아래 seasonLines에서 줄을 나눠 한 번에 그린다)
                 const d = deltaFor(i);
                 if(d !== null) {
                     const dy = yFor(p.rank) + (isLastPoint ? 24 : 17);
@@ -22159,8 +22452,19 @@
             const lastTip = escTip(tipFor(last, points.length - 1));
             const lastExtra = extraMarksFor(last, points.length - 1, true);
 
-            const svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:${scrollable ? w + 'px' : '100%'}; aspect-ratio:${w} / 220; height:auto; display:block;">
+            let seasonLines = '';
+            seasonLabels.forEach(L => {
+                const ly = 6 + L.lane * LANE_H;          // 라벨 박스 윗변
+                const lineTop = ly + LANE_H - 3;          // 절취선은 라벨 박스 아래에서 시작
+                seasonLines += `<line x1="${xFor(L.i)}" y1="${lineTop}" x2="${xFor(L.i)}" y2="${padT + plotH}" stroke="rgba(251,191,36,0.4)" stroke-width="1.2" stroke-dasharray="3,3" style="pointer-events:none;"/>
+                    <g><title>${escXml(L.name)}</title>
+                    <rect x="${L.bx}" y="${ly}" width="${L.w}" height="${LANE_H - 3}" rx="3" fill="rgba(2,6,23,0.92)" stroke="rgba(251,191,36,0.55)" stroke-width="1"/>
+                    <text x="${L.bx + 6}" y="${ly + (LANE_H - 3) / 2 + 3}" font-size="${LABEL_FS}" font-weight="800" fill="var(--gold)" text-anchor="start" style="pointer-events:none;">🚩 ${escXml(L.name)}</text></g>`;
+            });
+
+            const svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:${scrollable ? w + 'px' : '100%'}; aspect-ratio:${w} / ${h}; height:auto; display:block;">
                 ${yTickEls}
+                ${seasonLines}
                 <polyline points="${linePoints}" fill="none" stroke="${color}" stroke-width="2"/>
                 ${circles}
                 ${lastExtra}
@@ -22322,7 +22626,7 @@
                 if(arc) {
                     // 특정 과거 시즌만 볼 때는 그 시즌이 시작하던 시점의 Elo(=바로 이전 아카이브의 최종 Elo)에서 이어받는다.
                     const archIdx = state.archives.indexOf(arc);
-                    eloBaseline = (archIdx > 0) ? (state.archives[archIdx - 1].finalElo || null) : null;
+                    eloBaseline = (archIdx > 0) ? eloSeasonBaseline(archIdx) : null;
                 } else {
                     eloBaseline = getPrevSeasonElo();
                 }
@@ -22553,6 +22857,7 @@
             const teamMatches = chronological.filter(m => String(m.hId) === String(teamId) || String(m.aId) === String(teamId));
             return teamMatches.map((m, i) => {
                 const h = hist[i] || {};
+                if(scope !== 'all' && i === 0) { const a0 = getCurrentEloStartAdj().map[String(teamId)]; if(a0) h.adj = a0; }
                 const isHome = String(m.hId) === String(teamId);
                 const oppId = isHome ? String(m.aId) : String(m.hId);
                 const opp = state.teams.find(t => String(t.id) === oppId);
@@ -22562,7 +22867,7 @@
                 const before = h.before !== undefined ? h.before : ELO_INITIAL;
                 const after = h.after !== undefined ? h.after : before;
                 const delta = h.delta !== undefined ? h.delta : parseFloat((after - before).toFixed(1));
-                return { season: m.__season, type: m.type, num: m.num, oppName: opp ? opp.name : '???', oppColor: opp ? opp.color : 'var(--text-muted)', myScore, oppScore, win, before, after, delta };
+                return { season: m.__season, type: m.type, num: m.num, oppName: opp ? opp.name : '???', oppColor: opp ? opp.color : 'var(--text-muted)', myScore, oppScore, win, before, after, delta, adj: h.adj || 0 };
             });
         }
 
@@ -22649,7 +22954,14 @@
                     <td style="color:${resultColor}; font-weight:800;">${r.win ? '승' : '패'}</td>
                     <td style="white-space:nowrap;">${r.myScore}-${r.oppScore}</td>
                     <td style="white-space:nowrap; font-weight:800;">${r.before.toFixed(1)} → ${r.after.toFixed(1)} <span style="color:${deltaColor};">(${r.delta >= 0 ? '+' : ''}${r.delta.toFixed(1)})</span></td>
-                </tr>`;
+                </tr>`
+                + (r.adj ? `<tr><td colspan="5" style="padding:3px 0; border:none;">
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <div style="flex:1; border-top:1px dashed rgba(56,189,248,0.5);"></div>
+                            <span style="font-size:0.66rem; font-weight:800; color:#38bdf8; white-space:nowrap;" title="선수단 · 감독 · 능력치 변화에 따른 시즌 시작 Elo 보정">🔄 시즌 시작 보정 ${r.adj >= 0 ? '+' : ''}${r.adj.toFixed(1)} (${(r.before - r.adj).toFixed(1)} → ${r.before.toFixed(1)})</span>
+                            <div style="flex:1; border-top:1px dashed rgba(56,189,248,0.5);"></div>
+                        </div>
+                    </td></tr>` : '');
             }).join('');
             container.innerHTML = `<div class="scrollable-table" style="max-height:220px; overflow-y:auto;">
                 <table class="pattern-table" style="font-size:0.76rem;">
@@ -22772,7 +23084,7 @@
                 data = (archivedSeason.teamRank || []).map(t => ({ ...t }));
                 // 해당 아카이브가 시작할 때의 Elo(=바로 이전 아카이브의 최종 Elo, 없으면 1000)를 baseline으로 사용
                 const archIdx = state.archives.indexOf(archivedSeason);
-                eloBaseline = (archIdx > 0) ? (state.archives[archIdx - 1].finalElo || null) : null;
+                eloBaseline = (archIdx > 0) ? eloSeasonBaseline(archIdx) : null;
             } else {
                 filteredMatches = getSeasonMatchPool(sf);
                 data = calcTeamRP(filteredMatches, state.teams, state.groupA || [], state.groupB || []);
@@ -24049,6 +24361,7 @@
             const playerRank = computeArchivePlayerRank(state.matches);
             const awards = renderSeasonSummary();
             const bracketHTML = renderBracket();
+            const startAdjForArchive = Object.assign({}, getCurrentEloStartAdj().map);
             const finalElo = calcEloRatings(state.matches, state.teams, getPrevSeasonElo()).elo;
             const interMatches = state.matches.filter(m => m.type === '인터리그').map(m => {
                 const ht = state.teams.find(t => String(t.id) === String(m.hId));
@@ -24065,8 +24378,10 @@
                 interSettings: [...(state.interMatches || [])],
                 teamManagers: Object.fromEntries(state.teams.map(t => [String(t.id), t.manager || ''])),
                 teamCaptains: Object.fromEntries(state.teams.map(t => [String(t.id), t.captain || ''])),
-                finalElo
+                finalElo,
+                startAdj: startAdjForArchive   // v1.27: 이 시즌이 시작될 때 적용된 Elo 보정
             });
+            state.eloStartAdj = null;   // 다음 시즌은 새로 계산
             state.matches = []; state.playerStats = {}; state.interMatches = [];
             state.scheduledMatches = []; // 시즌이 끝나면 남아있던 예정 경기도 함께 정리
             state.specialAwards = { rookie: '', yashin: '', ballon: '' };
@@ -24151,6 +24466,7 @@
             try { if (typeof renderSchedAutoButtons === 'function') renderSchedAutoButtons(); } catch (e) { console.error(e); }
 
             renderSeasonBadge();
+            try { renderEloStartAdjCard(); } catch (e) { console.error(e); }
         }
 
         function openSeasonSetupModal() {
@@ -26631,7 +26947,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.26';
+        const G_HTML_VERSION = '1.27';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -28897,7 +29213,7 @@ all();
 .hi-rec .player-list-side > div[style*="font-weight:800"] { margin: 4px 0 2px !important; padding-bottom: 1px !important; font-size: 0.64rem !important; }
 .hi-rec .player-name-text { max-width: 7em; font-size: 0.7rem; }
 
-/* ===== v1.28 — 🧠 경기 분석을 ⚽ 경기 기록 · 결과 아래(같은 열)로 배치 ===== */
+/* ===== v1.27 — 🧠 경기 분석을 ⚽ 경기 기록 · 결과 아래(같은 열)로 배치 ===== */
 .hi-panes { grid-template-columns: 1fr; }
 .hi-ana { grid-column: 1; }
 @container hi (min-width: 640px) {
