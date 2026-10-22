@@ -8388,6 +8388,22 @@
         };
         const FM_FGK = { n: '🧤 GK 공격 가담 (플라잉 GK)', d: '골키퍼가 공격에 올라가 5:4 수적 우위를 만드는 승부수 — 빈 골문 역습에 주의', parts: [['gk', '배급', .30], ['gk', '판단력', .30], ['gk', '순발력', .20], ['gk', '체력', .20]] };
         const FM_POS_COLOR = { GK: '#eab308', DF: '#0ea5e9', MF: '#84cc16', FW: '#f97316' };
+        // 👕 전술판 선수 카드 = 팀 유니폼 색. 배경은 팀 컬러 그라데이션, 글씨는 밝기에 따라 흰색/검정 자동 선택
+        function fmJersey(col) {
+            let h = String(col || '').trim(), m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(h);
+            if (!m) return { style: '' };
+            h = m[1].length === 3 ? m[1].split('').map(c => c + c).join('') : m[1];
+            const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+            const dk = k => '#' + [r, g, b].map(v => Math.round(v * k).toString(16).padStart(2, '0')).join('');
+            const light = (0.299 * r + 0.587 * g + 0.114 * b) > 150;
+            return { style: `background:linear-gradient(165deg, #${h} 0%, #${h} 55%, ${dk(0.62)} 100%); color:${light ? '#0f172a' : '#fff'}; --sh:${light ? '0 1px 1px rgba(255,255,255,0.35)' : '0 1px 2px rgba(0,0,0,0.65)'};` };
+        }
+        // OVR 대비 자리·전술 적합도 변화 (▲ 올라감 / ▼ 내려감)
+        function fmDeltaInfo(ovr, rt) {
+            if (ovr === null || ovr === undefined || rt === null || rt === undefined || isNaN(rt)) return { d: null, html: '', txt: '' };
+            const d = Math.round(rt) - ovr;
+            return { d, html: ` <span class="fm-dl ${d > 0 ? 'up' : d < 0 ? 'dn' : 'eq'}">${d > 0 ? '▲' + d : d < 0 ? '▼' + Math.abs(d) : '±0'}</span>`, txt: ` (OVR ${ovr} → 적합 ${Math.round(rt)}, ${d > 0 ? '+' + d : d}: 포지션 · 전술에 따른 변화)` };
+        }
         let fmSelName = null, fmSelTeam = null, fmUid = 0;
         let fmArrowMode = 'both';   // 이동 화살표: atk(공격 시) / def(수비 시) / both(둘 다) / off
         let fmLastTap = { name: null, t: 0 };   // v1.17: 선수 카드 더블클릭(두 번 누름) 판정
@@ -9819,17 +9835,18 @@
             const ovr = calcPlayerOVR(p), pc = FM_POS_COLOR[p.pos] || '#94a3b8';
             const rt = role ? (opts.fit !== undefined ? opts.fit : fmRoleRating(p, role)) : null, nat = role ? FM_ROLES[role].nat.includes(p.pos) : true;
             const sel = fmSelName === p.name && !opts.ro ? ' sel' : '';
-            const tip = `${p.name} · ${p.pos} · OVR ${ovr === null ? '미설정' : ovr}` + (rt !== null ? ` · ${FM_ROLES[role].label} 자리 적합 ${fmRound(rt)}${nat ? '' : ' (비주포지션)'}` : '') + (opts.ro ? '' : ' — 드래그: 위치 이동 / 클릭 후 다른 자리 클릭: 선수 교환 / 더블클릭: 선수 상세');
+            const dl = rt !== null ? fmDeltaInfo(ovr, rt) : { html: '', txt: '' }, jy = fmJersey(opts.tc);
+            const tip = `${p.name} · ${p.pos} · OVR ${ovr === null ? '미설정' : ovr}` + (rt !== null ? ` · ${FM_ROLES[role].label} 자리 적합 ${fmRound(rt)}${nat ? '' : ' (비주포지션)'}${dl.txt}` : '') + (opts.ro ? '' : ' — 드래그: 위치 이동 / 클릭 후 다른 자리 클릭: 선수 교환 / 더블클릭: 선수 상세');
             if (opts.mini) {
-                return `<div class="fm-mini${sel}" draggable="true" data-name="${gEsc(p.name)}" title="${gEsc(tip)}" style="--pc:${pc}"><span class="fm-mpos">${p.pos}</span><span class="fm-mnm">${gEsc(p.name)}</span><b style="color:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</b></div>`;
+                return `<div class="fm-mini${jy.style ? ' jersey' : ''}${sel}" draggable="true" data-name="${gEsc(p.name)}" title="${gEsc(tip)}" style="--pc:${pc};${jy.style}"><span class="fm-mpos">${p.pos}</span><span class="fm-mnm">${gEsc(p.name)}</span><b style="color:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</b></div>`;
             }
             const dnd = opts.ro ? '' : ` data-name="${gEsc(p.name)}"`;
-            return `<div class="fm-chip${sel}${nat ? '' : ' off'}"${dnd} title="${gEsc(tip)}" style="--pc:${pc}">
+            return `<div class="fm-chip${jy.style ? ' jersey' : ''}${sel}${nat ? '' : ' off'}"${dnd} title="${gEsc(tip)}" style="--pc:${pc};${jy.style}"><span class="fm-pos" title="현재 포지션">${p.pos}</span>
                 ${opts.ro ? '' : `<span class="fm-x" data-act="rm" data-n="${gEsc(p.name)}" title="선발에서 빼기">✕</span>`}
                 <div class="fm-ovr" style="background:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</div>
                 <div class="fm-nm">${gEsc(p.name)}</div>
                 <div class="fm-tr">${fmTraitIcons(p)}</div>
-                <div class="fm-rt">${nat ? '' : '↔ '}적합 <b style="color:${ovrColor(Math.round(rt))}">${fmRound(rt)}</b></div></div>`;
+                <div class="fm-rt">${nat ? '' : '↔ '}적합 <b style="color:${ovrColor(Math.round(rt))}">${fmRound(rt)}</b>${dl.html}</div></div>`;
         }
         function fmSlotHtml(loc, s, name, team, tac, o) {
             o = o || {};
@@ -9838,7 +9855,7 @@
             const sub = o.ro && p ? `<div class="fm-sn" style="color:${td.c};" title="${gEsc(S.d)}">${S.n}</div>` : '';
             const foc = !o.ro && fmEditLoc === loc ? ' fm-focus' : '';
             const cus = !o.ro && (s.custom || (tac.mv && tac.mv[loc])) ? ' <span title="위치·화살표를 직접 조정함">✏️</span>' : '';
-            return `<div class="fm-slot${foc}" data-loc="${loc}" style="left:${s.x}%;top:${s.y}%">${p ? fmChip(p, s.r, { ro: o.ro, fit }) : `<div class="fm-empty" title="${gEsc(R.tip)}">${o.ro ? '' : '+'}</div>`}
+            return `<div class="fm-slot${foc}" data-loc="${loc}" style="left:${s.x}%;top:${s.y}%">${p ? fmChip(p, s.r, { ro: o.ro, fit, tc: team && team.color }) : `<div class="fm-empty" title="${gEsc(R.tip)}">${o.ro ? '' : '+'}</div>`}
                 <div class="fm-role" title="${gEsc(R.tip)}">${R.label}${p ? ` <span class="fm-tend" style="color:${td.c};" title="${gEsc(S.n + ' — ' + S.d)}">${td.ic}${td.t}</span>` : ''}${cus}</div>${sub}</div>`;
         }
         // 🧑‍💼 전술판 감독 카드: 필드 왼쪽 아래 '감독석'에 놓이며, 감독 OVR과 현재 보드가 감독 선호(1~3순위)와 얼마나 맞는지 보여 준다. 클릭하면 감독 상세.
@@ -9874,7 +9891,7 @@
             pitch += fmSlotHtml('GK', c.gkSlot, tac.slots.GK, team, tac, o) + `</div>`;
             return pitch;
         }
-        const fmArrowLegend = mode => mode === 'off' ? '' : `<div class="fm-legend">${mode !== 'def' ? '<span><i style="background:#f59e0b;"></i>공격 시 이동</span>' : ''}${mode !== 'atk' ? '<span><i class="dash" style="border-color:#38bdf8;"></i>수비 시 이동</span>' : ''}<span class="mut">굵은 선 = 직접 그린 화살표</span></div>`;
+        const fmArrowLegend = mode => mode === 'off' ? '' : `<div class="fm-legend">${mode !== 'def' ? '<span><i style="background:#f59e0b;"></i>공격 시 이동</span>' : ''}${mode !== 'atk' ? '<span><i class="dash" style="border-color:#38bdf8;"></i>수비 시 이동</span>' : ''}<span class="mut">굵은 선 = 직접 그린 화살표</span><span class="mut">👕 카드 색 = 팀 유니폼 · 글씨 = 포지션 · ▲▼ = OVR 대비 자리·전술 변화</span></div>`;
         function fmSummaryPills(c, R, st) {
             const pill = (ic, lb, v, txt) => `<div class="fm-pill"><div>${ic} ${lb}</div><b style="color:${ovrColor(v === null ? null : Math.round(v))}">${txt !== undefined ? txt : fmRound(v)}</b></div>`;
             const m2 = (a, b) => (a === null || b === null) ? null : (a + b) / 2;
@@ -9911,22 +9928,9 @@
             const o = fmOptOf(tac, loc);
             const optRows = Object.keys(FM_OPT).map(g => `<div class="fm-ed-row"><span class="fm-ed-l" title="${gEsc(FM_OPT[g].d)}">${FM_OPT[g].label}</span><div class="fm-opts">${Object.keys(FM_OPT[g].opts).map(k => `<button class="fm-opt${o[g] === k ? ' on' : ''}" onclick="fmSetOpt('${loc}','${g}','${k}')">${FM_OPT[g].opts[k].n}</button>`).join('')}</div></div>`).join('');
             const rng = (id, lb, min, max, step, val, oninput, suffix) => `<div class="fm-rng"><label>${lb}</label><input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${val}" oninput="${oninput}" onchange="fmEdCommit()"><span><span id="${id}v">${suffix === '°' ? Math.round(val) + '°' : (Math.round(val * 10) / 10)}</span>${suffix === '%' ? '%' : ''}</span></div>`;
-            const fx = c.field.find(x => x.loc === loc), idx = loc === 'GK' ? 4 : +loc[1], skk = loc === 'GK' ? (c.gsk || 'safe') : (fx ? fx.sk : Object.keys(FM_STYLES[role])[0]);
-            const dirs = [['↑', 0], ['↗', 45], ['→', 90], ['↘', 135], ['↓', 180], ['↙', 225], ['←', 270], ['↖', 315]];
-            const arrowBlock = ph => {
-                const v = fmArrowVec(s, loc, role, skk, tac.style, ph, tac, idx), ang = Math.round(fmVecAng(v)), len = Math.round(fmVecLen(v));
-                const colr = ph === 'atk' ? '#f59e0b' : '#38bdf8';
-                return `<div class="fm-ar-blk" style="border-left:3px ${ph === 'def' ? 'dashed' : 'solid'} ${colr};">
-                    <div class="fm-ar-h"><b>${ph === 'atk' ? '⚔️ 공격 시' : '🛡️ 수비 시'}</b><span class="fm-badge${v.custom ? ' cus' : ''}">${v.custom ? '✏️ 직접 지정' : '🤖 자동'}</span><span class="fm-ar-t">${fmVecText(v, s.x, v.custom)}</span></div>
-                    <div class="fm-dirs">${dirs.map(([ic, a]) => `<button class="fm-dbtn" onclick="fmEdDir('${ph}',${a})" title="${a}° 방향">${ic}</button>`).join('')}</div>
-                    ${rng('fmEdAng_' + ph, '방향', 0, 359, 1, ang, `fmEdArrow('${ph}','ang',this.value)`, '°')}
-                    ${rng('fmEdLen_' + ph, '거리', 0, 60, 1, len, `fmEdArrow('${ph}','len',this.value)`, '')}
-                    ${rng('fmEdCur_' + ph, '곡선', -100, 100, 1, Math.round(v.curve || 0), `fmEdArrow('${ph}','curve',this.value)`, '')}
-                    <div class="fm-ar-btns"><button class="fm-act" onclick="fmEdHide('${ph}')">${v.hide ? '👁️ 화살표 표시' : '🚫 화살표 숨김'}</button><button class="fm-act" onclick="fmEdAutoArrow('${ph}')" title="전술·성향에 따른 자동 화살표로 되돌립니다">🤖 자동값</button></div></div>`;
-            };
             return `<details class="fm-ed" ${fmEdOpen ? 'open' : ''} ontoggle="fmEdOpen=this.open">
-                <summary class="fm-ed-title">🎭 선수별 성향 · 위치 · 화살표 편집 <span class="fm-ed-fold">${fmEdOpen ? '' : '펼치기 ▾'}</span></summary>
-                <div class="fm-ed-sub">필드의 카드를 누르거나 아래 탭으로 자리를 고르세요. 슬라이더는 움직이는 즉시 필드에 반영됩니다.</div>
+                <summary class="fm-ed-title">🎭 선수별 성향 · 위치 편집 <span class="fm-ed-fold">${fmEdOpen ? '' : '펼치기 ▾'}</span></summary>
+                <div class="fm-ed-sub">필드의 카드를 누르거나 아래 탭으로 자리를 고르세요. 위치·이동 화살표는 전술판에서 카드와 ●를 직접 끌어 조정하세요.</div>
                 <div class="fm-etabs">${tabs}</div>
                 <div class="fm-ed-sec"><div class="fm-bt">🎭 세부 성향 <span style="color:${tdc.c};font-weight:800;">${tdc.ic} ${Scur.n}${sk.auto ? ' (자동)' : ''}</span></div>
                     <div class="fm-opts">${styleChips}</div><div class="fm-ed-d">${gEsc(Scur.d)} — ${p ? `${gEsc(p.name)} 적합 ${fmRound(fmRoleRating(p, role, sk.key))}` : '선수를 배치하면 적합도가 표시됩니다.'}</div></div>
@@ -9934,7 +9938,6 @@
                 <div class="fm-ed-sec"><div class="fm-bt">📍 배치 위치 ${s.custom ? '<span class="fm-badge cus">✏️ 직접 지정</span>' : '<span class="fm-badge">기본 위치</span>'}</div>
                     ${rng('fmEdX', '좌우', 3, 97, 0.5, s.x, "fmEdPos('x',this.value)", '%')}${rng('fmEdY', '앞뒤', loc === 'GK' ? 55 : 3, 97, 0.5, s.y, "fmEdPos('y',this.value)", '%')}
                     <div class="fm-ar-btns"><span class="fm-nudge"><button class="fm-dbtn" onclick="fmEdNudge(-1,0)">◀</button><button class="fm-dbtn" onclick="fmEdNudge(0,-1)">▲</button><button class="fm-dbtn" onclick="fmEdNudge(0,1)">▼</button><button class="fm-dbtn" onclick="fmEdNudge(1,0)">▶</button></span><button class="fm-act" onclick="fmResetPart('pos')">📍 기본 위치로</button></div></div>
-                <div class="fm-ed-sec"><div class="fm-bt">🧭 이동 화살표</div>${arrowBlock('atk')}${arrowBlock('def')}</div>
                 <div class="fm-ar-btns" style="margin-top:8px;"><button class="fm-act" onclick="fmResetShape('${loc}')" title="이 자리의 위치·화살표·개별 지시를 모두 기본으로 되돌립니다">♻️ 이 자리 전체 초기화</button></div></details>`;
         }
         function fmResetPart(part) { const team = fmCurrentTeam(); if (!team) return; const tac = fmGet(team); if (tac[part]) delete tac[part][fmEditLoc]; fmCommit(tac); }
@@ -9976,10 +9979,10 @@
             }).join('')}</details>` : '';
 
             // 교체 · 선수 풀
-            const subs = [0, 1, 2].map(i => { const n = tac.slots['s' + i], p = n ? fmPlayer(team, n) : null; return `<div class="fm-sub" data-loc="s${i}">${p ? fmChip(p, null, { mini: true }) : `<span class="fm-subph">교체 ${i + 1}</span>`}</div>`; }).join('');
+            const subs = [0, 1, 2].map(i => { const n = tac.slots['s' + i], p = n ? fmPlayer(team, n) : null; return `<div class="fm-sub" data-loc="s${i}">${p ? fmChip(p, null, { mini: true, tc: team.color }) : `<span class="fm-subph">교체 ${i + 1}</span>`}</div>`; }).join('');
             const used = new Set(Object.values(tac.slots));
             const pool = team.players.filter(p => !used.has(p.name)).sort((a, b) => (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0));
-            const poolHtml = pool.length ? pool.map(p => fmChip(p, null, { mini: true })).join('') : `<span class="fm-subph">모든 선수가 배치됨</span>`;
+            const poolHtml = pool.length ? pool.map(p => fmChip(p, null, { mini: true, tc: team.color })).join('') : `<span class="fm-subph">모든 선수가 배치됨</span>`;
 
             const summary = `<div class="fm-sum"><div class="fm-style">${fmStyleName(st)}${st.fgk ? ' <span style="color:#fbbf24;">+ 🧤 플라잉 GK</span>' : ''}</div><div class="fm-phase-line"><span>🛡️ 수비 시 <b>${fmPhaseLabel(st, 'def')}</b></span><span>⚔️ 공격 시 <b>${fmPhaseLabel(st, 'atk')}</b></span></div><div class="fm-pills">${fmSummaryPills(c, R, st)}</div>${fmShapeText(c)}</div>`;
 
@@ -10024,11 +10027,11 @@
             box.innerHTML = `<div class="card fm-card">
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">${head}${autoTag}</div>
                     <div style="display:flex; gap:6px; flex-wrap:wrap;"><button class="fm-act" data-new="1.07" onclick="fmRunOptimize('all')" title="모든 포메이션·전술을 비교해 선수단과 감독 선호(1~3순위)·스타일에 가장 맞는 조합으로 한 번에 세팅">🤖 최적 세팅</button><button class="fm-act" data-new="1.07" onclick="fmRunOptimize('formation')" title="현재 전술은 유지하고, 선수단에 가장 잘 맞는 포메이션과 라인업으로 바꿉니다">📐 최적 포메이션</button><button class="fm-act" onclick="fmAuto()" title="현재 포메이션에서 능력치 적합도가 가장 높은 조합으로 배치">🪄 자동 배치</button><button class="fm-act" onclick="fmApplyRec()" title="현재 선발 라인업 기준으로 적합도가 가장 높은 전술을 각 항목마다 선택">🎯 추천 전술</button><button class="fm-act" onclick="fmAutoRoles()" title="모든 자리의 세부 성향을 선수 능력치에 맞춰 자동으로 되돌립니다">🤖 성향 자동</button><button class="fm-act" onclick="fmClear()">🧹 비우기</button></div></div>
-                <div class="ranking-info">5인제(필드 4 + 골키퍼 1) 기준입니다. 필드의 카드와 화살표를 직접 끌어 조정하고, <b>오른쪽 아래 🎭 편집 패널(접혀 있음 — 필요할 때 펼치세요)</b>에서 선수별 세부 성향·개별 지시·위치·이동 화살표를 숫자로 세밀하게 맞출 수 있어요. <b>적합</b>은 그 자리(성향·전술)에 필요한 능력치의 가중 평균(50~99), ★는 현재 선수단에 가장 잘 맞는 선택입니다. 배치·전술은 팀별로 저장됩니다.</div>
+                <div class="ranking-info">5인제(필드 4 + 골키퍼 1) 기준입니다. 필드의 카드와 화살표를 직접 끌어 조정하고, <b>왼쪽 아래(대기 선수 밑) 🎭 편집 패널(접혀 있음 — 필요할 때 펼치세요)</b>에서 선수별 세부 성향·개별 지시·위치를 세밀하게 맞출 수 있어요. <b>적합</b>은 그 자리(성향·전술)에 필요한 능력치의 가중 평균(50~99), ★는 현재 선수단에 가장 잘 맞는 선택입니다. 배치·전술은 팀별로 저장됩니다.</div>
                 ${autoRep}<div class="fm-forms">${fmChips}</div>
                 <div class="fm-wrap">
-                    <div class="fm-left">${modeCtl}${pitch}<div class="fm-mhint">${modeHint}</div>${fmArrowLegend(fmArrowMode)}${moveList}<div class="fm-bench"><div class="fm-bt">🔄 교체 (최대 3명)</div><div class="fm-subs">${subs}</div><div class="fm-bt" style="margin-top:8px;">🪑 대기 선수</div><div class="fm-pool" data-loc="pool">${poolHtml}</div></div></div>
-                    <div class="fm-panel">${summary}${mgrBox}${applyBox}${dimHtml}<div class="fm-hints">${hintHtml}</div>${fmEditorHtml(team, tac, c)}</div>
+                    <div class="fm-left">${modeCtl}${pitch}<div class="fm-mhint">${modeHint}</div>${fmArrowLegend(fmArrowMode)}${moveList}<div class="fm-bench"><div class="fm-bt">🔄 교체 (최대 3명)</div><div class="fm-subs">${subs}</div><div class="fm-bt" style="margin-top:8px;">🪑 대기 선수</div><div class="fm-pool" data-loc="pool">${poolHtml}</div></div>${fmEditorHtml(team, tac, c)}</div>
+                    <div class="fm-panel">${summary}${mgrBox}${applyBox}${dimHtml}<div class="fm-hints">${hintHtml}</div></div>
                 </div></div>
                 <div class="card fm-card fm-strat"><div class="tc-sec-title" data-new="1.07" style="margin:0 0 6px;">📑 전략 분석 <span class="mut" style="font-size:0.7rem;font-weight:600;">현재 전술판 구성 기준 · 🧠 전력분석·시뮬레이션과 같은 수치</span></div>${fmStrategyHtml(strat)}</div>`;
             if (typeof gApplyNewBadges === 'function') gApplyNewBadges();
@@ -19932,16 +19935,17 @@
             c.gsk = S.fgk ? 'sweeper' : 'safe';
             return c;
         }
-        function tacMbChip(name, role, sel) {   // 필드 위 선수 카드 (전술판 카드와 같은 모양)
+        function tacMbChip(name, role, sel, tc, posOv) {   // 필드 위 선수 카드 (전술판 카드와 같은 모양)
             const p = tacFindPlayer(name), tip = gEsc(name);
             if (!p) return `<div class="fm-chip off${sel ? ' sel' : ''}" data-name="${tip}" title="${tip} — 현재 선수 정보 없음" style="--pc:#94a3b8"><div class="fm-nm" style="margin-top:4px;">${tip}</div><div class="fm-rt">정보 없음</div></div>`;
             let rt = null; try { rt = fmRoleRating(p, role); } catch (e) { }
-            const ovr = calcPlayerOVR(p), pc = FM_POS_COLOR[p.pos] || '#94a3b8', nat = FM_ROLES[role].nat.includes(p.pos);
-            return `<div class="fm-chip${nat ? '' : ' off'}${sel ? ' sel' : ''}" data-name="${tip}" title="${gEsc(`${name} · ${p.pos} · OVR ${ovr === null ? '미설정' : ovr}${rt !== null ? ` · ${FM_ROLES[role].label} 자리 적합 ${fmRound(rt)}${nat ? '' : ' (비주포지션)'}` : ''}`)}" style="--pc:${pc}"><div class="fm-ovr" style="background:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</div><div class="fm-nm">${tip}</div><div class="fm-rt">${nat ? '' : '↔ '}적합 <b style="color:${ovrColor(rt === null ? null : Math.round(rt))}">${fmRound(rt)}</b></div></div>`;
+            const cpos = posOv || p.pos, ovr = calcPlayerOVR(p), pc = FM_POS_COLOR[cpos] || '#94a3b8', nat = FM_ROLES[role].nat.includes(cpos), dl = fmDeltaInfo(ovr, rt), jy = fmJersey(tc);
+            return `<div class="fm-chip${jy.style ? ' jersey' : ''}${nat ? '' : ' off'}${sel ? ' sel' : ''}" data-name="${tip}" title="${gEsc(`${name} · ${cpos} · OVR ${ovr === null ? '미설정' : ovr}${rt !== null ? ` · ${FM_ROLES[role].label} 자리 적합 ${fmRound(rt)}${nat ? '' : ' (비주포지션)'}${dl.txt}` : ''}`)}" style="--pc:${pc};${jy.style}"><span class="fm-pos" title="현재 포지션">${cpos}</span><div class="fm-ovr" style="background:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</div><div class="fm-nm">${tip}</div><div class="fm-rt">${nat ? '' : '↔ '}적합 <b style="color:${ovrColor(rt === null ? null : Math.round(rt))}">${fmRound(rt)}</b>${dl.html}</div></div>`;
         }
-        function tacMbMini(c, live, sel) {   // 오른쪽 목록의 선수 (교체 · 부상 · 미출전 · 자리 미지정 선발)
+        function tacMbMini(c, live, sel, tc) {   // 오른쪽 목록의 선수 (교체 · 부상 · 미출전 · 자리 미지정 선발)
             const p = tacFindPlayer(c.name), pos = c.pos || (p && p.pos) || '', pc = FM_POS_COLOR[pos] || '#94a3b8', ovr = p ? calcPlayerOVR(p) : null;
-            return `<div class="fm-mini${sel ? ' sel' : ''}"${live ? ' draggable="true"' : ''} data-name="${gEsc(c.name)}" style="--pc:${pc}" title="${gEsc(c.name + ' · 이 경기 기록 포지션 ' + (pos || '-') + (live ? ' — 필드 자리로 끌어다 놓거나, 클릭 후 자리를 클릭 / 더블클릭: 선수 상세' : ''))}"><span class="fm-mpos">${pos || '-'}</span><span class="fm-mnm">${gEsc(c.name)}</span><b style="color:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</b></div>`;
+            const jy = fmJersey(tc);
+            return `<div class="fm-mini${jy.style ? ' jersey' : ''}${sel ? ' sel' : ''}"${live ? ' draggable="true"' : ''} data-name="${gEsc(c.name)}" style="--pc:${pc};${jy.style}" title="${gEsc(c.name + ' · 이 경기 기록 포지션 ' + (pos || '-') + (live ? ' — 필드 자리로 끌어다 놓거나, 클릭 후 자리를 클릭 / 더블클릭: 선수 상세' : ''))}"><span class="fm-mpos">${pos || '-'}</span><span class="fm-mnm">${gEsc(c.name)}</span><b style="color:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</b></div>`;
         }
         function tacMbMgrHtml(name, key, S) {   // 오른쪽 감독 카드 (클릭 → 감독 상세)
             if (!name) return `<div class="tac-mb-mgr empty"><div class="fm-mgr-r">🧑‍💼 감독</div><div class="fm-mgr-n">기록 없음</div></div>`;
@@ -19967,11 +19971,12 @@
             o = o || {}; lu = lu || {};
             const key = FM_FORMATIONS[fm] ? fm : '1-2-1', F = FM_FORMATIONS[key], S = Object.assign({}, FM_DEFAULT_STYLE, st || {});
             const live = !!o.live, pos = o.pos || {}, mv = o.mv || {};
+            const tbc = team && team.color, tbPos = {}; (o.cands || []).forEach(c => { if (c.pos) tbPos[c.name] = c.pos; });
             let arrows = '', slots = F.slots, gk = FM_GK_SLOT;
             try { const c = tacMbCtx(team, key, S, pos, mv); slots = c.slots; gk = c.gkSlot; arrows = fmArrowsSvg(c, S, live ? fmArrowMode : 'both', live); } catch (e) { console.error('전술 보드 화살표 오류', e); }
             const dot = (s, role, ab, lb, loc) => {
                 const nm = lu[loc], cu = (pos[loc] || mv[loc]) ? ' <span title="위치·화살표를 직접 조정함">✏️</span>' : '';
-                const inner = nm ? tacMbChip(nm, role, o.sel === nm)
+                const inner = nm ? tacMbChip(nm, role, o.sel === nm, tbc, tbPos[nm])
                     : live ? `<div class="fm-empty" title="${gEsc(FM_ROLES[role].tip)}">+</div>`
                     : `<div class="tac-dot" style="--rc:${TAC_ROLE_COL[role]};" title="${gEsc(FM_ROLES[role].tip)}">${ab}</div>`;
                 return `<div class="fm-slot" data-loc="${loc}" style="left:${s.x}%;top:${s.y}%">${inner}<div class="fm-role${nm ? ' has' : ''}">${lb}${cu}</div></div>`;
@@ -19983,7 +19988,7 @@
             const cands = o.cands || [], placed = new Set(Object.values(lu));
             const grp = TAC_MB_GROUPS.map(([k, t]) => {
                 const arr = cands.filter(c => c.status === k && !placed.has(c.name));
-                return arr.length ? `<div class="tac-mb-grp"><div class="tac-mb-gt">${t} <span class="mut">${arr.length}</span></div><div class="tac-mb-list">${arr.map(c => tacMbMini(c, live, o.sel === c.name)).join('')}</div></div>` : '';
+                return arr.length ? `<div class="tac-mb-grp"><div class="tac-mb-gt">${t} <span class="mut">${arr.length}</span></div><div class="tac-mb-list">${arr.map(c => tacMbMini(c, live, o.sel === c.name, tbc)).join('')}</div></div>` : '';
             }).join('');
             const hint = live ? `<div class="fm-mhint">🖱️ <b>카드를 끌면</b> 위치 이동 · <b>화살표 끝 ●을 끌면</b> 방향·거리 조정 · 오른쪽 선수를 <b>끌어다 놓거나</b>(클릭 → 자리 클릭) 그 자리에 배치 · 카드를 오른쪽으로 끌면 자리에서 뺍니다. (✏️ = 직접 조정)${fmArrowMode === 'off' ? ' <b style="color:#f59e0b;">(이동 예측이 꺼져 있어 ●이 숨겨져 있어요)</b>' : ''}</div>` : '';
             return `<div class="tac-mb${live ? ' live' : ''}"${live ? ` data-side="${o.side}"` : ''}><div class="tac-mb-main">${live ? tacMbCtlHtml(o.side, pos, mv) : ''}${pitch}${hint}<div class="fm-legend"><span><i style="background:#f59e0b;"></i>공격 시 이동</span><span><i class="dash" style="border-color:#38bdf8;"></i>수비 시 이동</span></div><div class="tac-bd-cap"><b>${gEsc(F.label)}</b><br>${gEsc(F.desc)}</div></div><div class="tac-mb-side">${tacMbMgrHtml(o.mgr, key, S)}${grp || '<div class="tac-mb-none">교체 · 부상 · 미출전 선수가 없습니다.</div>'}</div></div>`;
@@ -20865,6 +20870,11 @@
                     const aWin = m.aScore > m.hScore || (m.aScore === m.hScore && m.aPk > m.hPk);
                     // 이 경기가 과거 시즌(아카이브) 소속인지 찾아둔다 — resolvePlayerMatchTeamId가
                     // ps.teamId가 없는 아주 옛날 기록일 때 아카이브 스냅샷을 참고할 수 있도록.
+                    // 🏆 승리팀 강조(대시보드 최근 경기와 같은 방식): 이긴 쪽은 팀 컬러 테두리·배경 그라데이션 + 🏆 + 굵은 글씨, 진 쪽은 흐리게
+                    const hiBg = hWin ? `background:linear-gradient(90deg, ${ht.color}33, #1e293b 60%); border-left:4px solid ${ht.color};`
+                        : aWin ? `background:linear-gradient(270deg, ${at.color}33, #1e293b 60%); border-right:4px solid ${at.color};` : '';
+                    const hiTeamStyle = (win, lose, col) => win ? `color:${col}; font-weight:900; text-shadow:0 0 8px ${col}66;` : `color:${col};${lose ? ' opacity:0.5; font-weight:600;' : ''}`;
+                    const hiScoreStyle = (win, lose) => win ? 'color:#fff; font-size:1.08em;' : (lose ? 'opacity:0.45;' : '');
                     const historyArchiveIdx = state.archives.findIndex(a => (a.matches || []).some(x => x.id === m.id));
                 const getPlayersHTML = (team) => {
                     // 현재 팀 로스터가 아니라 그 경기 당시 실제 소속팀(ps.teamId 등)을 기준으로 판별한다.
@@ -20896,11 +20906,12 @@
                             sortPlayers(group.players).forEach(ps => {
                                 const ratingColor = getRatingColor(ps.r);
                                 const status = ps.status || 'starter';
+                                const isMomP = !!m.mom && ps.name === m.mom;
                                 html += `
-                                    <div class="player-item">
+                                    <div class="player-item${isMomP ? ' is-mom' : ''}">
                                         <div class="player-name-pos">
                                             <span class="pos-badge" style="background-color:${posColors[ps.pos] || 'var(--pos-sub)'}">${ps.pos || '🔄후보'}</span>
-                                            <span class="player-name-text">${ps.name}</span>
+                                            <span class="player-name-text">${isMomP ? '👑 ' : ''}${ps.name}</span>
                                         </div>
                                         <div class="player-stats-row">
                                             <span class="emoji-count">
@@ -20917,15 +20928,16 @@
                     return html;
                 };
                     hist.innerHTML += `
-                        <div class="history-item collapsed" id="histItem_${m.id}">
+                        <div class="history-item collapsed" id="histItem_${m.id}" style="${hiBg}" data-mom="${gEsc(m.mom || '')}">
                             <div class="history-tag">${state.seasonName ? state.seasonName + ' · ' : ''}${m.type} No.${m.num}</div>
                             <div class="history-main">
-                                <div class="team-box"><div class="team-name" style="color:${ht.color}">${ht.name}</div></div>
+                                <div class="team-box"><div class="team-name" style="${hiTeamStyle(hWin, aWin, ht.color)}">${hWin ? '🏆 ' : ''}${ht.name}</div></div>
                                 <div class="score-box">
-                                    <div><span class="${hWin ? 'win-score' : ''}">${m.hScore}</span> : <span class="${aWin ? 'win-score' : ''}">${m.aScore}</span></div>
+                                    <div><span class="${hWin ? 'win-score' : ''}" style="${hiScoreStyle(hWin, aWin)}">${m.hScore}</span> : <span class="${aWin ? 'win-score' : ''}" style="${hiScoreStyle(aWin, hWin)}">${m.aScore}</span></div>
                                     ${(m.hScore===m.aScore && (m.hPk>0||m.aPk>0))?`<div style="font-size:0.8rem; color:var(--gold);">PK ${m.hPk}:${m.aPk}</div>`:''}
+                                    <div class="hi-score-mom" title="Man of the Match">👑 MOM · <b>${m.mom || '미지정'}</b></div>
                                 </div>
-                                <div class="team-box"><div class="team-name" style="color:${at.color}">${at.name}</div></div>
+                                <div class="team-box"><div class="team-name" style="${hiTeamStyle(aWin, hWin, at.color)}">${at.name}${aWin ? ' 🏆' : ''}</div></div>
                             </div>
                             <div class="history-momentum" style="margin:2px 0 8px;">
                                 ${buildMatchMomentumSVG(m, ht, at)}
@@ -20934,11 +20946,10 @@
                                     <span>▼ <b style="color:${at.color}">${at.name}</b> 우세</span>
                                 </div>
                             </div>
-                            <div class="history-summary-line history-mom-line">👑 MOM: ${m.mom || '미지정'}</div>
                             ${tacHistoryHtml(m, ht, at, 'line')}
                             <div class="hi-panes">
                                 <section class="hi-pane hi-tac">
-                                    <div class="hi-pane-t">🧭 경기 전술 · 포메이션</div>
+                                    <div class="hi-pane-t">🧭 경기 전술 · 포메이션 <span class="hi-pane-sub">카드 색 = 팀 유니폼 · 글씨 = 포지션 · ▲▼ = OVR 대비 변화</span></div>
                                     ${tacHistoryHtml(m, ht, at, 'full') || '<div class="hi-pane-empty">이 경기에는 전술이 기록되지 않았습니다.</div>'}
                                 </section>
                                 <section class="hi-pane hi-rec">
@@ -20962,7 +20973,7 @@
                             </div>
                             <div class="history-footer">
                                 <button class="history-toggle-btn" onclick="toggleHistoryCard(this)">🔽 상세보기</button>
-                                <div style="flex:1; text-align:center; font-weight:800;">👑 MOM: ${m.mom || '미지정'}</div>
+                                <div style="flex:1;"></div>
                                 <div><button class="btn-edit" onclick="maToggle(${m.id})">🧠 분석</button><button class="btn-edit" onclick="editMatch(${m.id})">수정</button><button class="btn-del" onclick="deleteMatch(${m.id})">삭제</button></div>
                             </div>
                         </div>`;
@@ -20972,6 +20983,13 @@
             if (!hist.innerHTML) {
                 hist.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:40px 0;">조건에 맞는 경기 기록이 없습니다.</div>`;
             }
+            // 👑 MOM 선수를 전술 보드(카드 · 교체 목록)에서도 하이라이트
+            try {
+                hist.querySelectorAll('.history-item[data-mom]').forEach(card => {
+                    const mom = card.getAttribute('data-mom'); if (!mom) return;
+                    card.querySelectorAll('.hi-tac [data-name]').forEach(el => { if (el.getAttribute('data-name') === mom) el.classList.add('is-mom'); });
+                });
+            } catch (e) { console.error('MOM 하이라이트 오류', e); }
         }
 
         // 현재 수정 중인 경기 원본 데이터(m). loadPlayerForms()가 여기서 pStats를 참고해서,
@@ -26613,7 +26631,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.25';
+        const G_HTML_VERSION = '1.26';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -27180,7 +27198,6 @@
                 prev.forEach(({ m: q }) => { const hh = String(q.hId) === String(m.hId), a1 = hh ? q.hScore : q.aScore, b1 = hh ? q.aScore : q.hScore; gf += a1; ga += b1; if (a1 > b1) w++; else if (a1 < b1) l++; else d++; });
                 html += h('🤝 이전 맞대결과 비교') + `<div>이전 ${prev.length}경기: ${nm(ht)} 기준 ${w}승 ${d}무 ${l}패, 경기당 ${(gf / prev.length).toFixed(1)}:${(ga / prev.length).toFixed(1)}골 → 이번 ${m.hScore}:${m.aScore} (${m.hScore - m.aScore > gf / prev.length - ga / prev.length ? '평소보다 ' + gEsc(ht.name) + ' 우세' : m.hScore - m.aScore < gf / prev.length - ga / prev.length ? '평소보다 ' + gEsc(at.name) + ' 우세' : '평소와 비슷'})</div>`;
             } else html += h('🤝 이전 맞대결') + '<div style="color:var(--text-muted);">이전 맞대결 기록이 없습니다.</div>';
-            html += `<div style="margin-top:12px;padding:8px 10px;border-radius:8px;background:rgba(251,191,36,0.07);border:1px dashed rgba(251,191,36,0.5);font-size:0.72rem;color:var(--text-muted);"><b style="color:#fbbf24;">추가 입력이 필요해 분석하지 않는 항목</b><br>슈팅 수 · 유효 슈팅 · 점유율 · 패스 성공률 · 코너/파울 — 현재 경기 기록에 저장되지 않아 임의로 만들지 않았습니다. (득점 시간은 입력된 골만 반영)</div>`;
             return html;
         }
 
@@ -28814,6 +28831,134 @@ all();
 /* 접힌 카드의 한 줄 전술 요약 */
 .history-item .history-tac-line { overflow-wrap: anywhere; }
 @media (max-width: 600px) { .history-item { padding: 18px 8px 12px; } .hi-pane { padding: 6px 6px; } }
+
+/* ===== v1.26 — 📜 히스토리 컴팩트 보기: 접힌 카드는 작게(여러 열), 펼친 카드만 가로 전체 ===== */
+#matchHistory { grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)) !important; gap: 8px 10px !important; align-items: start; }
+#matchHistory > div[style*="grid-column"] { margin: 10px 0 2px !important; padding: 5px 10px !important; font-size: 0.8rem; border-radius: 4px; }
+#matchHistory > div[style*="grid-column"]:first-child { margin-top: 0 !important; }
+#historyScheduled .card, #historyScheduled > * { margin-bottom: 8px; }
+/* 접힌 카드(기본) */
+.history-item.collapsed { padding: 6px 10px 7px !important; border-radius: 8px; }
+.history-item.collapsed .history-tag { position: static; display: inline-block; margin: 0 0 3px; padding: 0 7px; font-size: 0.62rem; line-height: 1.5; border-radius: 5px; }
+.history-item.collapsed .history-main { margin-bottom: 2px; gap: 6px; }
+.history-item.collapsed .team-name { font-size: 0.86rem; margin: 0; line-height: 1.2; }
+.history-item.collapsed .score-box { font-size: 1.25rem; line-height: 1.1; }
+.history-item.collapsed .score-box > div[style*="font-size:0.8rem"] { font-size: 0.62rem !important; line-height: 1.1; }
+.history-item.collapsed .history-momentum { display: none; }
+.history-item.collapsed .history-summary-line { margin: 0 0 2px; font-size: 0.7rem; min-height: 0; }
+.history-item.collapsed .history-tac-line { display: none; }
+.history-item.collapsed .history-footer { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 4px; gap: 4px; flex-wrap: nowrap; }
+.history-item.collapsed .history-footer > div[style*="flex:1"] { display: none; }
+.history-item.collapsed .history-footer > div:last-child { margin-left: auto; display: flex; gap: 3px; }
+.history-item.collapsed .history-toggle-btn { padding: 2px 8px; font-size: 0.64rem; }
+.history-item.collapsed .btn-edit, .history-item.collapsed .btn-del { padding: 2px 6px; font-size: 0.62rem; margin: 0; }
+/* 펼친 카드: 가로 전체로 넓히되 여백은 줄임 */
+.history-item:not(.collapsed) { grid-column: 1 / -1; padding: 12px clamp(10px, 1.2vw, 16px) 10px !important; }
+.history-item:not(.collapsed) .history-momentum { max-width: 640px; margin: 2px auto 6px !important; }
+.history-item:not(.collapsed) .history-main { margin-bottom: 4px; }
+.history-item:not(.collapsed) .history-tag { top: -9px; }
+.history-item.ma-open { grid-column: 1 / -1; }
+@media (max-width: 600px) { #matchHistory { grid-template-columns: 1fr 1fr !important; gap: 6px !important; } .history-item.collapsed { padding: 5px 6px 6px !important; } .history-item.collapsed .team-name { font-size: 0.78rem; } .history-item.collapsed .score-box { font-size: 1.05rem; } .history-item.collapsed .history-footer { flex-wrap: wrap; } }
+
+/* ===== v1.27 — 📜 히스토리 상세보기 컴팩트: 전술판 축소 · 홈/원정 나란히 · 세로 길이 단축 ===== */
+.history-item:not(.collapsed) .history-momentum { max-width: 440px; }
+.hi-panes { gap: 8px; margin-top: 4px; }
+.hi-pane { padding: 6px 8px; border-radius: 8px; }
+.hi-pane-t { font-size: 0.74rem; margin-bottom: 4px; padding-bottom: 3px; }
+/* 분석 칸은 분석을 열었을 때만 표시 (열기 버튼은 하단 🧠 분석 버튼과 중복) */
+.hi-ana:not(:has([id^="maBox_"])) { display: none; }
+/* 3칸 → 2칸: [전술 보드 | 경기 기록], 분석은 아래 전체 폭 */
+@container hi (min-width: 640px) { .hi-panes { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); } .hi-ana { grid-column: 1 / -1; } }
+@container hi (min-width: 940px) { .hi-panes { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); } .hi-ana { grid-column: 1 / -1; } }
+/* 전술 pane: 홈/원정 보드를 나란히, 보드는 작게 */
+.hi-tac .history-tac-full { gap: 8px; }
+@container (min-width: 480px) { .hi-tac .history-tac-full { grid-template-columns: 1fr 1fr !important; } }
+.hi-tac .history-tac-full > div { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8px; align-content: start; font-size: 0.68rem; }
+.hi-tac .history-tac-full > div > .tt, .hi-tac .history-tac-full > div > .tac-board { grid-column: 1 / -1; }
+.hi-tac .history-tac-full .tt { font-size: 0.72rem; margin-bottom: 2px; line-height: 1.3; }
+.hi-tac .history-tac-full .ti { padding: 0; font-size: 0.66rem; line-height: 1.5; }
+.hi-tac .history-tac-full .tac-board { margin: 2px auto 4px; max-width: 100%; }
+.hi-tac .tac-mb { flex-direction: column; flex-wrap: nowrap; align-items: center; gap: 4px; }
+.hi-tac .tac-mb-main { flex: none; width: 100%; max-width: 235px; min-width: 0; margin: 0 auto; }
+.hi-tac .tac-mb-side { flex: none; width: 100%; max-width: 235px; min-width: 0; flex-direction: row; flex-wrap: wrap; gap: 4px; padding: 0; }
+.hi-tac .tac-mb-grp { flex: 1 1 100px; padding: 3px 5px; }
+.hi-tac .tac-mb-gt { font-size: 0.62rem; margin-bottom: 2px; }
+.hi-tac .tac-mb-list { flex-direction: row; flex-wrap: wrap; gap: 3px; }
+.hi-tac .tac-mb .fm-mini { font-size: 0.62rem; padding: 1px 4px; }
+.hi-tac .tac-mb-mgr { flex: 1 1 100px; max-width: none; padding: 9px 4px 3px; }
+.hi-tac .tac-mb .fm-chip { width: clamp(26px, 17cqw, 46px); }
+.hi-tac .fm-legend, .hi-tac .tac-bd-cap { display: none; }
+/* 기록 pane: 한 줄 높이 줄이기 (결과 줄은 상단 점수와 중복이라 숨김) */
+.hi-rec .hi-result { display: none; }
+.hi-rec .player-list-container { gap: 8px; }
+.hi-rec .hi-side-t { font-size: 0.72rem; margin: 0 0 1px; }
+.hi-rec .player-list-side { font-size: 0.68rem; line-height: 1.3; }
+.hi-rec .player-item { padding: 2px 5px; margin-bottom: 2px; min-height: 22px; gap: 4px; }
+.hi-rec .player-list-side > div[style*="font-weight:800"] { margin: 4px 0 2px !important; padding-bottom: 1px !important; font-size: 0.64rem !important; }
+.hi-rec .player-name-text { max-width: 7em; font-size: 0.7rem; }
+
+/* ===== v1.28 — 🧠 경기 분석을 ⚽ 경기 기록 · 결과 아래(같은 열)로 배치 ===== */
+.hi-panes { grid-template-columns: 1fr; }
+.hi-ana { grid-column: 1; }
+@container hi (min-width: 640px) {
+  .hi-panes { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); grid-template-rows: auto auto; }
+  .hi-tac { grid-column: 1; grid-row: 1 / span 2; }
+  .hi-rec { grid-column: 2; grid-row: 1; }
+  .hi-ana { grid-column: 2; grid-row: 2; }
+}
+@container hi (min-width: 940px) {
+  .hi-panes { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+  .hi-tac { grid-column: 1; grid-row: 1 / span 2; }
+  .hi-rec { grid-column: 2; grid-row: 1; }
+  .hi-ana { grid-column: 2; grid-row: 2; }
+}
+
+/* ===== v1.29 — 👑 MOM 표시를 경기 결과(점수 아래)로 이동 + 선수 목록 · 전술판 하이라이트 ===== */
+.hi-score-mom { font-family: inherit; font-size: 0.74rem; font-weight: 700; color: var(--gold); margin-top: 3px; line-height: 1.2; white-space: normal; text-align: center; padding: 1px 9px; border-radius: 10px; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.45); }
+.hi-score-mom b { color: #fde68a; font-weight: 900; }
+.history-item.collapsed .hi-score-mom { font-size: 0.64rem; margin-top: 2px; padding: 0 7px; }
+.player-item.is-mom { background: linear-gradient(90deg, rgba(251,191,36,0.22), rgba(251,191,36,0.06)); outline: 1px solid rgba(251,191,36,0.65); box-shadow: 0 0 8px rgba(251,191,36,0.3); }
+.player-item.is-mom .player-name-text { color: #fde68a; font-weight: 900; }
+.hi-tac .fm-chip.is-mom { outline: 2px solid #fbbf24; outline-offset: 1px; box-shadow: 0 0 10px 2px rgba(251,191,36,0.75); border-radius: 8px; z-index: 5; position: relative; }
+.hi-tac .fm-chip.is-mom::after { content: '👑'; position: absolute; top: -13px; right: -6px; font-size: 0.8rem; line-height: 1; filter: drop-shadow(0 1px 2px #000); }
+.hi-tac .fm-chip.is-mom .fm-nm { color: #fde68a; }
+.hi-tac .fm-mini.is-mom { outline: 2px solid #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.6); background: rgba(251,191,36,0.18); font-weight: 900; }
+.hi-tac .fm-mini.is-mom::before { content: '👑'; margin-right: 2px; }
+
+/* ===== v1.30 — 🧠 경기 분석 글씨 크기를 다른 상세 칸(전술 · 기록)과 비슷하게 ===== */
+.hi-ana > [id^="maBox_"] { font-size: 0.7rem !important; line-height: 1.45; padding: 6px 8px !important; }
+.hi-ana > [id^="maBox_"] > div[style*="font-size:0.9rem"] { font-size: 0.74rem !important; line-height: 1.35; }
+.hi-ana > [id^="maBox_"] > div[style*="font-size:0.78rem"] { font-size: 0.7rem !important; margin: 7px 0 2px !important; }
+.hi-ana > [id^="maBox_"] > div[style*="font-size:0.72rem"] { font-size: 0.66rem !important; }
+.hi-ana > [id^="maBox_"] .pattern-table { font-size: 0.66rem; }
+.hi-ana > [id^="maBox_"] .pattern-table th, .hi-ana > [id^="maBox_"] .pattern-table td { padding: 3px 6px; font-size: 0.66rem; }
+
+/* ===== v1.26 — 👕 전술판 선수 카드: 팀 유니폼 색 + 포지션 글씨색 + OVR 대비 적합 변화(▲▼) ===== */
+.fm-chip.jersey { border-color: rgba(255,255,255,0.85); }
+.fm-chip.jersey .fm-nm { text-shadow: var(--sh, none); }
+.fm-chip.jersey .fm-rt { background: rgba(2,6,23,0.78); color: #e2e8f0; border-radius: 6px; padding: 0 3px; margin: 2px 1px 0; white-space: nowrap; }
+.fm-pos { position: absolute; right: -6px; top: -9px; font-size: 0.56rem; font-weight: 900; line-height: 1.5; padding: 0 4px; border-radius: 8px; background: rgba(2,6,23,0.9); color: var(--pc); border: 1px solid var(--pc); letter-spacing: 0.2px; z-index: 2; }
+.fm-sm .fm-pos { font-size: 0.48rem; padding: 0 3px; right: -5px; top: -8px; }
+.tac-mb .fm-pos { font-size: clamp(0.44rem, 2.4cqw, 0.58rem); }
+.fm-dl { font-weight: 900; margin-left: 1px; }
+.fm-dl.up { color: #4ade80; } .fm-dl.dn { color: #f87171; } .fm-dl.eq { color: #94a3b8; }
+.fm-mini.jersey { border-color: rgba(255,255,255,0.7); }
+.fm-mini.jersey .fm-mpos { background: rgba(2,6,23,0.88); padding: 0 4px; border-radius: 5px; color: var(--pc); }
+.fm-mini.jersey b { background: rgba(2,6,23,0.82); padding: 0 4px; border-radius: 5px; }
+.hi-pane-sub { font-weight: 600; font-size: 0.6rem; color: var(--text-muted); margin-left: 4px; }
+
+/* 🎭 선수별 성향 · 위치 편집: 왼쪽 열(대기 선수 아래)로 이동 — 좁은 폭에 맞춰 컴팩트하게 */
+.fm-left .fm-ed { width: 100%; box-sizing: border-box; min-width: 0; margin-top: 10px; padding: 8px 9px; }
+.fm-left .fm-ed-title { font-size: 0.82rem; }
+.fm-left .fm-etabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+.fm-left .fm-etab { min-width: 0; padding: 3px 5px; font-size: 0.68rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fm-left .fm-ed-l { min-width: 0; flex: 0 0 100%; }
+.fm-left .fm-ed-row { gap: 3px; margin-bottom: 6px; }
+.fm-left .fm-ed .fm-opts { gap: 4px; }
+.fm-left .fm-ed .fm-opt { padding: 3px 7px; font-size: 0.68rem; }
+.fm-left .fm-rng label { min-width: 30px; }
+.fm-left .fm-ed-sec { padding: 6px 0; }
+.fm-left .fm-ar-btns { flex-wrap: wrap; }
 </style>
 <script id="pmSimplifyJs">
 (function(){
