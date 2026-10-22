@@ -3732,15 +3732,15 @@
         // ----- 🧑‍💼 감독: 기존 6개 능력치 = 대분류, 소분류 3개씩 (FM 감독 능력치 참고) -----
         const AB_MGR = [
             { k: '전술', ic: '📋', subs: [
-                { k: '공격지도', n: '공격 지도', d: '공격 전술 · 공격력 훈련' },
-                { k: '수비지도', n: '수비 지도', d: '수비 전술 · 수비력 훈련' },
+                { k: '공격시전술', n: '공격 시 전술', d: '공격할 때의 전술 구상 · 빌드업 · 마무리 방식' },
+                { k: '수비시전술', n: '수비 시 전술', d: '수비할 때의 전술 구상 · 압박 · 수비 라인 · 마킹 방식' },
                 { k: '세트피스', n: '세트피스', d: '코너킥 · 프리킥 등 세트피스 준비' } ] },
             { k: '분석력', ic: '🔍', subs: [
-                { k: '전술이해', n: '전술 이해도', d: '상대·자기 팀 전술을 읽는 능력' },
-                { k: '현재능력판단', n: '선수 현재 능력 판단', d: '선수의 지금 실력을 정확히 보는 눈' },
-                { k: '성장판단', n: '성장 가능성 판단', d: '선수의 성장 가능성을 보는 눈' } ] },
+                { k: '자팀선수분석', n: '자팀 선수 분석', d: '우리 팀 선수의 현재 능력 · 컨디션 · 장단점 파악' },
+                { k: '상대선수분석', n: '상대 선수 분석', d: '상대 팀 선수의 장단점 · 약점 파악' },
+                { k: '전술분석', n: '전술 분석', d: '상대 · 우리 팀 전술을 읽고 대응책을 찾는 능력' } ] },
             { k: '용병술', ic: '🎲', subs: [
-                { k: '인력관리', n: '인력 관리', d: '선수 기용 · 역할 분배' },
+                { k: '선발기용', n: '선발 기용', d: '선발 명단 구성 · 포지션 배치 · 역할 분배' },
                 { k: '교체판단', n: '교체 판단', d: '교체 카드를 쓰는 타이밍 판단' },
                 { k: '체력관리', n: '체력 관리', d: '체력 훈련 · 선수 컨디션 안배' } ] },
             { k: '위기대처', ic: '🚨', subs: [
@@ -3753,9 +3753,13 @@
                 { k: '선수육성', n: '선수 육성', d: '어린 · 신입 선수를 키우는 능력' } ] },
             { k: '소통', ic: '💬', subs: [
                 { k: '심리지도', n: '선수 심리 지도', d: '선수 개개인의 심리 관리' },
-                { k: '협상', n: '협상 능력', d: '선수 · 구단과의 협상' },
-                { k: '스탭관리', n: '스탭 관리', d: '코치진 · 스탭을 이끄는 능력' } ] }
+                { k: '선수면담', n: '선수 면담', d: '선수와 1:1 대화 · 고민 경청 · 신뢰 쌓기' },
+                { k: '갈등조율', n: '갈등 조율', d: '선수 간 불화 · 서운함을 풀어 팀 분위기를 지키는 능력' } ] }
         ];
+        // v1.30: 감독 세부능력치 이름 정리 — 예전 DB(JSON)의 소분류 키를 새 이름으로 자동 변환 (값은 그대로 유지)
+        const MGR_SUB_RENAME = { '공격지도': '공격시전술', '수비지도': '수비시전술', '전술이해': '전술분석', '현재능력판단': '자팀선수분석', '성장판단': '상대선수분석', '인력관리': '선발기용', '협상': '선수면담', '스탭관리': '갈등조율' };
+        function migrateMgrSubObj(o) { if (!o || typeof o !== 'object') return o; Object.keys(MGR_SUB_RENAME).forEach(old => { if (old in o) { const nk = MGR_SUB_RENAME[old]; if (!(nk in o)) o[nk] = o[old]; delete o[old]; } }); return o; }
+        function migrateMgrSubKeys(raw) { (raw.managers || []).forEach(m => migrateMgrSubObj(m && m.sub)); Object.keys(raw.mgrStatLog || {}).forEach(n => (raw.mgrStatLog[n] || []).forEach(e => migrateMgrSubObj(e && e.sub))); }
         function abMgrSub(m, g, s) { const v = m && m.sub ? m.sub[s.k] : undefined; if (typeof v === 'number' && isFinite(v)) return abClamp(v); const b = m && m.stats ? m.stats[g.k] : undefined; return typeof b === 'number' ? b : ABILITY_STAT_DEFAULT; }
         function abRenderMgrSubs(m) {
             const radarEl = document.getElementById('modalManagerRadar'); if (!radarEl) return;
@@ -3776,7 +3780,7 @@
             '용병술': '선수 기용과 교체 타이밍 판단력',
             '동기부여': '선수들의 사기와 집중력을 끌어올리는 능력',
             '소통': '선수단 분위기 관리와 갈등 조율 능력',
-            '분석력': '상대 팀 분석과 약점 파악 능력',
+            '분석력': '우리 선수 · 상대 선수 · 전술을 읽는 분석 능력',
             '위기대처': '열세나 돌발 상황에서의 대응 능력'
         };
 
@@ -7894,6 +7898,7 @@
             raw.matches = (raw.matches || []).map(m => ({ ...m, hId: String(m.hId), aId: String(m.aId) }));
             raw.interMatches = raw.interMatches.map(x => ({ ...x, hId: String(x.hId), aId: String(x.aId) }));
             if(!Array.isArray(raw.managers)) raw.managers = [];
+            migrateMgrSubKeys(raw);   // v1.30: 감독 세부능력치 이름 변경 반영
             raw.archives = raw.archives.map(a => ({
                 ...a,
                 matches: (a.matches || []).map(m => ({ ...m, hId: String(m.hId), aId: String(m.aId) })),
@@ -14417,8 +14422,8 @@
         // ======================================================
         // 🧑‍💼 감독 효과 엔진 (v3_15)
         //  - 감독 능력치 6가지를 '리그 감독 평균 대비 격차'로 환산해 전력 계산(tcTeamPower)과 맞대결 예측(tcMatchupModel)에 반영한다.
-        //    전술 → 공격력·패스·수비력 / 동기부여 → 스피드·체력 / 용병술 → 교체 선수 반영 비중 / 소통 → 출전 가능성·팀 케미
-        //    분석력 → 상대 약점 공략(맞대결 전용) / 위기대처 → 열세일 때 격차 완화(맞대결 전용)
+        //    전술 → 공격력·패스·수비력 / 동기부여 → 스피드·체력 / 용병술(선발 기용·교체 판단·자팀 선수 분석) → 교체 선수 반영 비중 / 소통(심리 지도·선수 면담·갈등 조율) → 출전 가능성·팀 케미
+        //    분석력(상대 선수 분석·전술 분석) → 상대 약점 공략(맞대결 전용) / 위기대처 → 열세일 때 격차 완화(맞대결 전용)
         //  - 평균 대비 격차 기준이라 리그 감독들이 비슷하면 효과가 거의 0이고, 감독이 없거나 능력치가 없는 팀은 보정 0(중립)이다.
         //  - 전력 비교 탭의 스위치(tcMgrOn)로 반영 여부를 끌 수 있다. (전력분석·팀 데이터센터도 같은 값을 쓴다)
         // ======================================================
@@ -14466,8 +14471,8 @@
             // v1.11: 소분류(세부 능력치)도 반영 — 대분류 격차와 해당 소분류 격차를 섞어 쓴다 (소분류를 입력하지 않은 감독은 대분류와 같아 결과 불변)
             const sr = sk => { for (const g of AB_MGR) { const s = g.subs.find(x => x.k === sk); if (s) return abMgrSub(ref, g, s) - lg.smu[sk]; } return 0; };
             const mix = (main, sk, w) => rel[main] * (1 - w) + sr(sk) * w;
-            const tacAtk = mgrClamp(mix('전술', '공격지도', .5) * F.tactic.per, -F.tactic.cap, F.tactic.cap);
-            const tacDef = mgrClamp(mix('전술', '수비지도', .5) * F.tactic.per, -F.tactic.cap, F.tactic.cap);
+            const tacAtk = mgrClamp(mix('전술', '공격시전술', .5) * F.tactic.per, -F.tactic.cap, F.tactic.cap);
+            const tacDef = mgrClamp(mix('전술', '수비시전술', .5) * F.tactic.per, -F.tactic.cap, F.tactic.cap);
             const tacPas = mgrClamp(mix('전술', '세트피스', .4) * F.tactic.per, -F.tactic.cap, F.tactic.cap);
             const tac = (tacAtk + tacDef + tacPas) / 3;
             const motSpd = mgrClamp(mix('동기부여', '승부욕', .5) * F.motive.per, -F.motive.cap, F.motive.cap);
@@ -14475,10 +14480,10 @@
             const mot = (motSpd + motSta) / 2;
             return {
                 on: true, name, ref, rel, tac, mot,
-                benchW: mgrClamp(F.bench.base + mix('용병술', '교체판단', .4) * F.bench.per, F.bench.min, F.bench.max),
-                availC: mgrClamp(mix('소통', '심리지도', .4) * F.comm.availPer, -F.comm.availCap, F.comm.availCap),
-                chem: mgrClamp(mix('소통', '스탭관리', .4) * F.comm.chemPer, -F.comm.chemCap, F.comm.chemCap),
-                analysisPts: mgrClamp(mix('분석력', '전술이해', .4) * F.analysis.per, -F.analysis.cap, F.analysis.cap),
+                benchW: mgrClamp(F.bench.base + (rel['용병술'] * .4 + sr('교체판단') * .25 + sr('선발기용') * .2 + sr('자팀선수분석') * .15) * F.bench.per, F.bench.min, F.bench.max),
+                availC: mgrClamp((rel['소통'] * .6 + sr('심리지도') * .25 + sr('선수면담') * .15) * F.comm.availPer, -F.comm.availCap, F.comm.availCap),
+                chem: mgrClamp(mix('소통', '갈등조율', .4) * F.comm.chemPer, -F.comm.chemCap, F.comm.chemCap),
+                analysisPts: mgrClamp((rel['분석력'] * .5 + sr('상대선수분석') * .25 + sr('전술분석') * .25) * F.analysis.per, -F.analysis.cap, F.analysis.cap),
                 crisisFrac: mgrClamp(mix('위기대처', '열세대응', .4) * F.crisis.per, F.crisis.min, F.crisis.max),
                 catAdj: { atk: tacAtk, pas: tacPas, def: tacDef, spd: motSpd, sta: motSta }
             };
@@ -27084,7 +27089,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.29';
+        const G_HTML_VERSION = '1.30';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
