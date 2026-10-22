@@ -26474,9 +26474,25 @@
         }
 
         // 저장된 로그가 있으면 그대로, 없으면 ovrHistory로 복원. curPlayer를 주면 그 값을 '현재'로 본다.
+        // v1.29: 같은 날(로컬 날짜 기준)에 여러 번 수정한 기록은 그날의 마지막 기록만 남긴다.
+        //  - at이 없는 '이전 값' 지점과 날짜를 알 수 없는 기록은 그대로 둔다. 저장된 statLog 원본은 건드리지 않고 표시용 시리즈만 줄인다.
+        function stCollapseByDay(series) {
+            const out = [];
+            let lastKey = null;
+            series.forEach(e => {
+                if (!e.at) { out.push(e); lastKey = null; return; }
+                const d = new Date(e.at);
+                const key = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+                if (key === lastKey) out[out.length - 1] = e;   // 같은 날이면 뒤 기록이 앞 기록을 대체
+                else out.push(e);
+                lastKey = key;
+            });
+            return out;
+        }
+
         function stBuildSeries(name, curPlayer) {
             const log = state.statLog && state.statLog[name];
-            if (Array.isArray(log) && log.length) return log.map(e => ({ at: e.at, pos: e.pos, stats: e.stats, ext: e.ext, est: !!e.est }));
+            if (Array.isArray(log) && log.length) return stCollapseByDay(log.map(e => ({ at: e.at, pos: e.pos, stats: e.stats, ext: e.ext, est: !!e.est })));
             const cur = curPlayer || findPlayerRefByName(name);
             if (!cur || !cur.stats) return [];
             const h = state.ovrHistory && state.ovrHistory[name];
@@ -26554,7 +26570,7 @@
                 return `<button onclick="stSelect('${k}')" style="cursor:pointer; font-size:${small ? '0.66rem' : '0.72rem'}; font-weight:800; padding:${small ? '2px 8px' : '3px 10px'}; border-radius:14px; border:1px solid ${on ? color : 'rgba(255,255,255,0.15)'}; background:${on ? color + '33' : 'rgba(255,255,255,0.04)'}; color:${on ? '#fff' : '#cbd5e1'};">${label}</button>`;
             };
             let html = `<div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.07);">
-                <div style="font-size:0.66rem; color:var(--text-muted); font-weight:800; margin-bottom:6px; text-align:center;">📈 능력치 변화 추이 — 항목을 눌러 보세요 (대분류 · 소분류)</div>
+                <div style="font-size:0.66rem; color:var(--text-muted); font-weight:800; margin-bottom:6px; text-align:center;">📈 능력치 변화 추이 — 항목을 눌러 보세요 (대분류 · 소분류) · 같은 날 여러 번 수정해도 그날 마지막 값만 표시${gUpdTag('1.29')}</div>
                 <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">${chip('OVR', '종합 OVR')}${tree.map(g => chip('m:' + g.k, `${g.ic} ${g.k}`)).join('')}
                     <button onclick="stToggleSub()" style="cursor:pointer; font-size:0.7rem; font-weight:800; padding:3px 9px; border-radius:14px; border:1px dashed rgba(255,255,255,0.25); background:transparent; color:#94a3b8;">${_stTrendSubOpen ? '소분류 접기 ▴' : '소분류 보기 ▾'}</button></div>
                 ${_stTrendSubOpen ? `<div style="display:flex; flex-wrap:wrap; gap:5px; justify-content:center; margin-top:6px;">${tree.map(g => g.subs.map(s => chip('s:' + s.k, s.n || s.k, true)).join('')).join('')}</div>` : ''}`;
@@ -27068,7 +27084,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.28';
+        const G_HTML_VERSION = '1.29';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
