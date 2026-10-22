@@ -13431,34 +13431,6 @@
       "tableB": [],
       "teamRank": [
         {
-          "id": "2",
-          "name": "월드클라스",
-          "color": "#f472b6",
-          "gms": 1,
-          "w": 0,
-          "gf": 4,
-          "ga": 7,
-          "groupMsW": 0,
-          "groupMsL": 0,
-          "groupMsGF": 0,
-          "groupMsGA": 0,
-          "interW": 0,
-          "rp": 4,
-          "h2h": {
-            "3": 0
-          },
-          "rpBreakdown": {
-            "rank": 0,
-            "goal": 4,
-            "inter": 0,
-            "tourn": 0
-          },
-          "l": 1,
-          "gd": -3,
-          "pts": 0,
-          "elo": 1048.1
-        },
-        {
           "id": "7",
           "name": "발라드림",
           "color": "#36b7e2",
@@ -13486,7 +13458,7 @@
           "l": 0,
           "gd": 2,
           "pts": 9,
-          "elo": 1036
+          "elo": 1036.8
         },
         {
           "id": "3",
@@ -13516,35 +13488,35 @@
           "l": 1,
           "gd": 4,
           "pts": 6,
-          "elo": 1014.3
+          "elo": 1009.6
         },
         {
-          "id": "1",
-          "name": "국대패밀리",
-          "color": "#ef4444",
+          "id": "2",
+          "name": "월드클라스",
+          "color": "#f472b6",
           "gms": 1,
           "w": 0,
-          "gf": 1,
-          "ga": 5,
+          "gf": 4,
+          "ga": 7,
           "groupMsW": 0,
           "groupMsL": 0,
           "groupMsGF": 0,
           "groupMsGA": 0,
           "interW": 0,
-          "rp": 1,
+          "rp": 4,
           "h2h": {
-            "8": 0
+            "3": 0
           },
           "rpBreakdown": {
             "rank": 0,
-            "goal": 1,
+            "goal": 4,
             "inter": 0,
             "tourn": 0
           },
           "l": 1,
-          "gd": -4,
+          "gd": -3,
           "pts": 0,
-          "elo": 1014.2
+          "elo": 1004.5
         },
         {
           "id": "8",
@@ -13573,7 +13545,7 @@
           "l": 1,
           "gd": 3,
           "pts": 3,
-          "elo": 991.5
+          "elo": 985.1
         },
         {
           "id": "5",
@@ -13602,7 +13574,35 @@
           "l": 1,
           "gd": 1,
           "pts": 3,
-          "elo": 982.9
+          "elo": 981.5
+        },
+        {
+          "id": "1",
+          "name": "국대패밀리",
+          "color": "#ef4444",
+          "gms": 1,
+          "w": 0,
+          "gf": 1,
+          "ga": 5,
+          "groupMsW": 0,
+          "groupMsL": 0,
+          "groupMsGF": 0,
+          "groupMsGA": 0,
+          "interW": 0,
+          "rp": 1,
+          "h2h": {
+            "8": 0
+          },
+          "rpBreakdown": {
+            "rank": 0,
+            "goal": 1,
+            "inter": 0,
+            "tourn": 0
+          },
+          "l": 1,
+          "gd": -4,
+          "pts": 0,
+          "elo": 976
         },
         {
           "id": "6",
@@ -13630,7 +13630,7 @@
           "l": 1,
           "gd": -2,
           "pts": 0,
-          "elo": 965.8
+          "elo": 965.4
         },
         {
           "id": "4",
@@ -13658,7 +13658,7 @@
           "l": 1,
           "gd": -1,
           "pts": 0,
-          "elo": 947.1
+          "elo": 955.8
         }
       ],
       "playerRank": [
@@ -15205,15 +15205,175 @@
         "9": "박지혜"
       },
       "finalElo": {
-        "1": 1014.2,
-        "2": 1048.1,
-        "3": 1014.3,
-        "4": 947.1,
-        "5": 982.9,
-        "6": 965.8,
-        "7": 1036,
-        "8": 991.5,
+        "1": 976,
+        "2": 1004.5,
+        "3": 1009.6,
+        "4": 955.8,
+        "5": 981.5,
+        "6": 965.4,
+        "7": 1036.8,
+        "8": 985.1,
         "9": 1000
+      },
+      "startAdj": {
+        "1": -48.2,
+        "2": -50.6,
+        "3": 1.8,
+        "4": 9,
+        "5": 1,
+        "6": -2.7,
+        "7": 1.3,
+        "8": 3.2
+      },
+      "startAdjDetail": {
+        "1": {
+          "delta": -48.2,
+          "skipped": "",
+          "base": 1052,
+          "Pprev": 82.14814814814815,
+          "Pnow": 76.25925925925925,
+          "dPower": -5.8888888888889,
+          "powerAdj": -40,
+          "regress": -8.2,
+          "retention": 0.7073170731707317,
+          "keptN": 5,
+          "prevN": 7,
+          "mPrevName": "최진철",
+          "mNowName": "최진철",
+          "mPrev": 85,
+          "mNow": 85,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "2": {
+          "delta": -50.6,
+          "skipped": "",
+          "base": 1084.5,
+          "Pprev": 83.4074074074074,
+          "Pnow": 79.03703703703704,
+          "dPower": -8.570370370370366,
+          "powerAdj": -40,
+          "regress": -10.6,
+          "retention": 0.8717948717948718,
+          "keptN": 6,
+          "prevN": 7,
+          "mPrevName": "이영표",
+          "mNowName": "김영광",
+          "mPrev": 90,
+          "mNow": 76,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "3": {
+          "delta": 1.8,
+          "skipped": "",
+          "base": 982,
+          "Pprev": 82.7037037037037,
+          "Pnow": 82.7037037037037,
+          "dPower": 0,
+          "powerAdj": 0,
+          "regress": 1.8,
+          "retention": 1,
+          "keptN": 7,
+          "prevN": 7,
+          "mPrevName": "김병지",
+          "mNowName": "김병지",
+          "mPrev": 58,
+          "mNow": 58,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "4": {
+          "delta": 9,
+          "skipped": "",
+          "base": 958.1,
+          "Pprev": 78.44444444444444,
+          "Pnow": 78.44444444444444,
+          "dPower": 0.6,
+          "powerAdj": 4.8,
+          "regress": 4.2,
+          "retention": 1,
+          "keptN": 7,
+          "prevN": 7,
+          "mPrevName": "김영광",
+          "mNowName": "조원희",
+          "mPrev": 76,
+          "mNow": 78,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "5": {
+          "delta": 1,
+          "skipped": "",
+          "base": 980.8,
+          "Pprev": 78.07142857142857,
+          "Pnow": 77.88888888888889,
+          "dPower": -0.18253968253968367,
+          "powerAdj": -1.5,
+          "regress": 2.5,
+          "retention": 0.8518518518518519,
+          "keptN": 6,
+          "prevN": 7,
+          "mPrevName": "조재진",
+          "mNowName": "조재진",
+          "mPrev": 80,
+          "mNow": 80,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "6": {
+          "delta": -2.7,
+          "skipped": "",
+          "base": 983,
+          "Pprev": 79.8076923076923,
+          "Pnow": 79.22222222222221,
+          "dPower": -0.5854700854700923,
+          "powerAdj": -4.7,
+          "regress": 2,
+          "retention": 0.90625,
+          "keptN": 6,
+          "prevN": 7,
+          "mPrevName": "박주호",
+          "mNowName": "박주호",
+          "mPrev": 82,
+          "mNow": 82,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "7": {
+          "delta": 1.3,
+          "skipped": "",
+          "base": 986.9,
+          "Pprev": 84.18518518518518,
+          "Pnow": 84.18518518518518,
+          "dPower": 0,
+          "powerAdj": 0,
+          "regress": 1.3,
+          "retention": 1,
+          "keptN": 7,
+          "prevN": 7,
+          "mPrevName": "이근호",
+          "mNowName": "이근호",
+          "mPrev": 88,
+          "mNow": 88,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "8": {
+          "delta": 3.2,
+          "skipped": "",
+          "base": 972.6,
+          "Pprev": 81.59259259259258,
+          "Pnow": 81.59259259259258,
+          "dPower": 0,
+          "powerAdj": 0,
+          "regress": 3.2,
+          "retention": 0.9230769230769231,
+          "keptN": 6,
+          "prevN": 7,
+          "mPrevName": "백지훈",
+          "mNowName": "백지훈",
+          "mPrev": 89,
+          "mNow": 89,
+          "prevSeason": "⭐ 2026 G리그"
+        },
+        "9": {
+          "delta": 0,
+          "skipped": "직전 시즌 기록 없음"
+        }
       }
     }
   ],
@@ -23916,14 +24076,14 @@
         "skipped": "이번 시즌 불참 (보정 보류)"
       },
       "2": {
-        "delta": -1,
+        "delta": 3.4,
         "skipped": "",
-        "base": 1048.1,
+        "base": 1004.5,
         "Pprev": 79.03703703703704,
         "Pnow": 79.51851851851852,
         "dPower": 0.48148148148148096,
         "powerAdj": 3.9,
-        "regress": -4.8,
+        "regress": -0.5,
         "retention": 1,
         "keptN": 7,
         "prevN": 7,
@@ -23934,14 +24094,14 @@
         "prevSeason": "🏆 2026 제2회 GIFA컵"
       },
       "3": {
-        "delta": -7.8,
+        "delta": -7.1,
         "skipped": "",
-        "base": 1014.3,
+        "base": 1009.6,
         "Pprev": 82.7037037037037,
         "Pnow": 81.96296296296295,
         "dPower": -0.7407407407407476,
         "powerAdj": -5.9,
-        "regress": -1.8,
+        "regress": -1.2,
         "retention": 0.8571428571428571,
         "keptN": 6,
         "prevN": 7,
@@ -23952,14 +24112,14 @@
         "prevSeason": "🏆 2026 제2회 GIFA컵"
       },
       "4": {
-        "delta": 0.3,
+        "delta": -0.8,
         "skipped": "",
-        "base": 947.1,
+        "base": 955.8,
         "Pprev": 78.44444444444444,
         "Pnow": 77.62962962962962,
         "dPower": -0.8148148148148238,
         "powerAdj": -6.5,
-        "regress": 6.8,
+        "regress": 5.7,
         "retention": 0.8571428571428571,
         "keptN": 6,
         "prevN": 7,
@@ -23970,14 +24130,14 @@
         "prevSeason": "🏆 2026 제2회 GIFA컵"
       },
       "5": {
-        "delta": -4,
+        "delta": -3.8,
         "skipped": "",
-        "base": 982.9,
+        "base": 981.5,
         "Pprev": 75.8,
         "Pnow": 75,
         "dPower": -0.7999999999999972,
         "powerAdj": -6.4,
-        "regress": 2.4,
+        "regress": 2.6,
         "retention": 0.8,
         "keptN": 4,
         "prevN": 5,
@@ -23988,14 +24148,14 @@
         "prevSeason": "🏆 2026 제2회 GIFA컵"
       },
       "6": {
-        "delta": 18,
+        "delta": 18.1,
         "skipped": "",
-        "base": 965.8,
+        "base": 965.4,
         "Pprev": 79.22222222222221,
         "Pnow": 80.14814814814814,
         "dPower": 1.8259259259259237,
         "powerAdj": 14.6,
-        "regress": 3.4,
+        "regress": 3.5,
         "retention": 1,
         "keptN": 7,
         "prevN": 7,
@@ -24006,14 +24166,14 @@
         "prevSeason": "🏆 2026 제2회 GIFA컵"
       },
       "7": {
-        "delta": -46.7,
+        "delta": -46.8,
         "skipped": "",
-        "base": 1036,
+        "base": 1036.8,
         "Pprev": 84.18518518518518,
         "Pnow": 76.85185185185185,
         "dPower": -7.333333333333329,
         "powerAdj": -40,
-        "regress": -6.7,
+        "regress": -6.8,
         "retention": 0.5714285714285714,
         "keptN": 4,
         "prevN": 7,
@@ -24024,14 +24184,14 @@
         "prevSeason": "🏆 2026 제2회 GIFA컵"
       },
       "8": {
-        "delta": 0.9,
+        "delta": 1.5,
         "skipped": "",
-        "base": 991.5,
+        "base": 985.1,
         "Pprev": 81.59259259259258,
         "Pnow": 81.59259259259258,
         "dPower": 0,
         "powerAdj": 0,
-        "regress": 0.9,
+        "regress": 1.5,
         "retention": 1,
         "keptN": 7,
         "prevN": 7,
@@ -24047,6 +24207,6 @@
       }
     },
     "manual": {},
-    "at": 1792655502077
+    "at": 1792659929867
   }
 }
