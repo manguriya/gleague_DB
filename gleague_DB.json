@@ -19663,6 +19663,43 @@
         "소통": 82,
         "분석력": 78,
         "위기대처": 72
+      },
+      "tac": {
+        "sm": {
+          "forms": true,
+          "defs": true,
+          "atks": true
+        },
+        "forms": [
+          "2-2",
+          "2-1-1",
+          "1-2-1M"
+        ],
+        "defs": [
+          "mid",
+          "press",
+          "highmid"
+        ],
+        "atks": [
+          "combo",
+          "balanced",
+          "drib"
+        ],
+        "man": {
+          "forms": true,
+          "defs": true,
+          "atks": true
+        },
+        "beh": {
+          "rot": 3,
+          "core": 3,
+          "setp": 2,
+          "lead": 3,
+          "trail": 2,
+          "fgk": 1,
+          "subT": 3,
+          "fat": 2
+        }
       }
     },
     {
