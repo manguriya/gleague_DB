@@ -8722,7 +8722,34 @@
             const lineFit = fmMean(fits);
             const overall = fmClamp(((fit === null ? 74 : fit) - 74) * 0.07, -2.2, 2.2) + fmClamp(((lineFit === null ? 74 : lineFit) - 74) * 0.05, -1.5, 1.5);
             const trx = fmTraitEffects(c, st); Object.keys(trx.cats).forEach(k => { cats[k] += trx.cats[k]; });
-            return { cats, overall: overall + trx.overall, fit, lineFit, tilt, traitNotes: trx.notes };
+            const mpf = fmMgrPrefFit(c);
+            return { cats, overall: overall + trx.overall + mpf.overall, fit, lineFit, tilt, traitNotes: trx.notes.concat(mpf.notes), mgrPref: mpf };
+        }
+        // v1.32: 🧠 감독 선호 전술(포메이션 · 수비 시 · 공격 시)과 실제 전술판의 일치도 → 종합 전력 보정
+        //  선호 1·2·3순위와 일치하면 가점, 선호를 지정했는데 벗어나면 소폭 감점. 감독 '전술' 능력치가 높을수록 영향이 커진다.
+        //  '감독 효과 반영'(tcMgrOn)을 끄면 적용하지 않는다. (선호를 하나도 지정하지 않은 감독은 영향 없음)
+        const FM_PREF_FIT = { bonus: [.14, .08, .03], miss: -.06, min: -.25, max: .45 };
+        function fmMgrPrefFit(c) {
+            const none = { overall: 0, notes: [], hit: 0, total: 0 };
+            try {
+                if (typeof tcMgrOn !== 'undefined' && !tcMgrOn) return none;
+                const mg = fmMgrOf(c.team); if (!mg || !c.tac) return none;
+                const P = fmMgrPref(mg), st = c.tac.style;
+                const cats = [['포메이션', P.forms, c.tac.formation, FM_FORMATIONS[c.tac.formation] && FM_FORMATIONS[c.tac.formation].label],
+                    ['수비 시 전술', P.defs, fmPhasePresetOf(st, 'def'), fmPhaseLabel(st, 'def')],
+                    ['공격 시 전술', P.atks, fmPhasePresetOf(st, 'atk'), fmPhaseLabel(st, 'atk')]];
+                const scale = fmClamp(.6 + (fmMgrStat(mg, '전술') - 50) / 100, .6, 1.2);
+                let sum = 0, hit = 0, total = 0; const notes = [];
+                cats.forEach(([lab, arr, cur, name]) => {
+                    if (!arr.some(Boolean)) return;
+                    total++; const i = cur ? arr.indexOf(cur) : -1;
+                    if (i >= 0) { hit++; sum += FM_PREF_FIT.bonus[i]; } else sum += FM_PREF_FIT.miss;
+                    if (i === 0) notes.push({ t: 'info', m: `🧑‍💼 감독이 가장 선호하는 ${lab}(${name || ''})입니다. 익숙한 전술이라 전력에 소폭 가점이 붙습니다.` });
+                    else if (i < 0) notes.push({ t: 'warn', m: `🧑‍💼 ${lab}(${name || '직접 구성'})은 감독 선호(1~3순위)에 없어 팀이 덜 익숙합니다 (소폭 감점).` });
+                });
+                if (!total) return none;
+                return { overall: fmClamp(sum * scale, FM_PREF_FIT.min, FM_PREF_FIT.max), notes, hit, total };
+            } catch (e) { return none; }
         }
         // 전력 계산(tcTeamPowerCore)이 쓰는 계획: 전술판이 '직접 구성됨(set) + 반영 켜짐'일 때만 만든다. team.tactic은 건드리지 않는다.
         function fmPowerPlan(team) {
@@ -8828,6 +8855,7 @@
                 if (w.v < 70) add('info', `가장 약한 자리: ${FM_ROLES[w.x.role].label} ${w.x.p.name} (적합 ${fmRound(w.v)}) — 성향을 바꿔 보세요.`);
             }
             try { fmTraitEffects(c, st).notes.forEach(n => add(n.t, n.m)); } catch (e) { console.error(e); }
+            try { fmMgrPrefFit(c).notes.forEach(n => add(n.t, n.m)); } catch (e) { console.error(e); }
             return h;
         }
 
@@ -8974,7 +9002,7 @@
             setp:   { g: '공통', ic: '🎌', n: '세트피스 키커', pos: _A, b: { atk: .15 }, d: '프리킥·코너킥 전담. 세트피스를 중시하는 감독과 만나면 가점이 커집니다.' },
             pk:     { g: '공통', ic: '🥅', n: 'PK 전담', pos: _A, b: { atk: .1 }, d: '승부차기·페널티킥을 책임집니다.' },
             comm:   { g: '공통', ic: '📣', n: '수비 조율(콜플레이)', pos: ['GK', 'DF', 'MF'], b: { def: .12 }, w: [['line', 'high', { def: .15 }]], d: '라인을 맞추고 소리쳐 조직력을 올립니다. 높은 수비 라인에서 더 효과적입니다.' },
-            engine: { g: '필드 공통', ic: '🔋', n: '많이 뛰는 선수', pos: _F, b: { sta: .25 }, d: '90분 내내 뛰는 활동량의 소유자입니다.' },
+            engine: { g: '필드 공통', ic: '🔋', n: '많이 뛰는 선수', pos: _F, b: { sta: .25 }, d: '경기 내내 쉬지 않고 뛰는 활동량의 소유자입니다.' },
             calm:   { g: '필드 공통', ic: '🧊', n: '침착한 마무리', pos: _F, b: { atk: .15 }, d: '찬스에서 흔들리지 않습니다.' },
             lpass:  { g: '필드 공통', ic: '🎯', n: '롱패서(배급형)', pos: ['GK', 'DF', 'MF'], b: { pas: .1 }, w: [['build', 'long', { atk: .2 }], ['attack', 'counter', { atk: .2 }]], d: '한 번에 길게 찔러 줍니다. 롱볼·역습과 잘 맞습니다.' },
             drib:   { g: '필드 공통', ic: '💨', n: '돌파 선호', pos: _F, b: { dri: .25 }, d: '1:1 돌파를 먼저 시도합니다. 같은 측면에 둘이면 공간을 뺏습니다.' },
@@ -9141,7 +9169,9 @@
             // 🤝 팀워크(호흡)
             const tw = fmTeamwork(c);
             if (tw) {
-                const d = tw.chem - .5; cats.pas += d * 1.0; cats.def += d * .6; overall += d * .5;
+                const mgT = fmMgrOf(c.team), bRot = fmBehNum(mgT, 'rot'), bCore = fmBehNum(mgT, 'core');
+                const twMul = fmClamp(1 + .12 * (bCore === null ? 0 : bCore - 3) - .08 * (bRot === null ? 0 : bRot - 3), .7, 1.3);   // v1.32: 주전 고집(⭐)은 호흡의 영향을 키우고, 로테이션(🔄)은 줄인다
+                const d = (tw.chem - .5) * twMul; cats.pas += d * 1.0; cats.def += d * .6; overall += d * .5;
                 if (tw.chem >= .75) notes.push({ t: 'info', m: `🤝 오래 함께 뛴 조합이라 호흡이 좋습니다 (호흡 ${Math.round(tw.chem * 100)}%${tw.best && tw.best.co ? `, 최다 ${tw.best.a}·${tw.best.b} ${tw.best.co}경기` : ''}).` });
                 else if (tw.chem < .3) notes.push({ t: 'warn', m: `🤝 함께 뛴 경기가 적은 조합이라 호흡이 약합니다 (호흡 ${Math.round(tw.chem * 100)}%). 주전을 자주 바꾸지 않는 편이 좋습니다.` });
             }
@@ -9202,8 +9232,8 @@
         (function () { const o = renderPlayerAbilityBlock; renderPlayerAbilityBlock = function (name) { const r = o.apply(this, arguments); try { pmTraitRender(name); pmExtRender(name); } catch (e) { console.error(e); } return r; }; })();
         // ----- 감독 모달 › 🧑‍💼 운영 성향 (0~5 슬라이더) -----
         const FM_BEH = {
-            rot:   { n: '🔄 로테이션',        lo: '고정', hi: '적극', d: '선수를 얼마나 자주 바꾸는지 (아직 저장만 됨)' },
-            core:  { n: '⭐ 주전 선호',        lo: '유동', hi: '고정', d: '주전을 얼마나 고집하는지 (아직 저장만 됨)' },
+            rot:   { n: '🔄 로테이션',        lo: '고정', hi: '적극', d: '선수를 얼마나 자주 바꾸는지 — 높을수록 교체 선수 반영 비중↑ · 호흡(팀워크) 영향↓ (v1.32 반영)' },
+            core:  { n: '⭐ 주전 선호',        lo: '유동', hi: '고정', d: '주전을 얼마나 고집하는지 — 높을수록 교체 선수 반영 비중↓ · 호흡(팀워크) 영향↑ (v1.32 반영)' },
             setp:  { n: '🎌 세트피스 중시',    lo: '낮음', hi: '높음', d: '3 이상이면 🎌 세트피스 키커 선수에게 가점 (지금 반영)' },
             lead:  { n: '🛡️ 앞서면 수비 전환', lo: '공격 유지', hi: '내려앉기', d: '리드 중 경기 운영 — 높을수록 앞서면 공격을 줄이고 내려앉음 (v1.17 전·후반 시뮬레이션에 반영)' },
             trail: { n: '🔥 지면 공격 강화',   lo: '유지', hi: '올인', d: '뒤지고 있을 때 공격을 끌어올리는 정도 (v1.17에서 반영)' },
@@ -9226,7 +9256,7 @@
             const rows = Object.keys(FM_BEH).map(k => { const has = typeof b[k] === 'number', v = has ? b[k] : 3, f = FM_BEH[k];
                 return `<div class="mt-brow${has ? '' : ' mt-un'}" title="${gEsc(f.d)}"><div class="mt-bh"><b>${f.n}</b><span class="mt-slv">${has ? v + ' / 5' : '미설정'}</span>${has ? `<a style="cursor:pointer;color:#38bdf8;font-size:.72rem;" title="미설정으로 되돌리기" onclick="mgrSetBeh('${k}','')">↺</a>` : ''}</div><div class="mt-bs"><span class="mt-lo">${f.lo}</span><input class="mt-sl" type="range" min="0" max="5" step="1" value="${v}" oninput="const r=this.closest('.mt-brow');r.querySelector('.mt-slv').textContent=this.value+' / 5';r.classList.remove('mt-un')" onchange="mgrSetBeh('${k}',this.value)"><span class="mt-hi">${f.hi}</span></div></div>`; }).join('');
             return `<div class="mt-title" style="margin-top:12px;">🧑‍💼 운영 성향 ${gUpdTag('1.17')} <span class="mt-sub">0~5단계 슬라이더 · 안 움직이면 미설정(효과 없음)</span></div>${rows}
-                <div class="mt-note">🎌 세트피스 중시는 전술판 전력에 반영됩니다(3 이상 + 세트피스 키커 선수가 선발). 🛡️ 앞서면 수비 전환 · 🔥 지면 공격 강화 · 🧤 플라잉 GK 선호 · ⏱️ 교체 시점 · 🫁 피로 관리는 <b>v1.17 전·후반 분할 시뮬레이션</b>(🎲 경기 · 🏁 시즌 시뮬레이션과 승률 예측)에 반영됩니다. 🔄 로테이션 · ⭐ 주전 선호는 아직 저장만 됩니다.</div>`;
+                <div class="mt-note">${gNewTag('1.32')} 🔄 로테이션 · ⭐ 주전 선호는 교체 반영 비중과 팀 호흡 영향에 반영됩니다(v1.32). 🎌 세트피스 중시는 전술판 전력에 반영됩니다(3 이상 + 세트피스 키커 선수가 선발). 🛡️ 앞서면 수비 전환 · 🔥 지면 공격 강화 · 🧤 플라잉 GK 선호 · ⏱️ 교체 시점 · 🫁 피로 관리는 <b>v1.17 전·후반 분할 시뮬레이션</b>(🎲 경기 · 🏁 시즌 시뮬레이션과 승률 예측)에 반영됩니다. 🔄 로테이션 · ⭐ 주전 선호는 아직 저장만 됩니다.</div>`;
         }
         function mgrSetBeh(k, v) {
             const m = findManagerRef(_mgrModalName); if (!m || !FM_BEH[k]) return;
@@ -14658,12 +14688,14 @@
             const tacDef = mgrClamp(mix('전술', '수비시전술', .5) * F.tactic.per, -F.tactic.cap, F.tactic.cap);
             const tacPas = mgrClamp(mix('전술', '세트피스', .4) * F.tactic.per, -F.tactic.cap, F.tactic.cap);
             const tac = (tacAtk + tacDef + tacPas) / 3;
+            // v1.32: 운영 성향 — 로테이션(🔄)이 적극적일수록 · 주전 선호(⭐)가 낮을수록 교체 선수 반영 비중↑
+            let benchBeh = 0; try { const r0 = fmBehNum(ref, 'rot'), c0 = fmBehNum(ref, 'core'); if (r0 !== null) benchBeh += .02 * (r0 - 3); if (c0 !== null) benchBeh -= .015 * (c0 - 3); } catch (e) { }
             const motSpd = mgrClamp(mix('동기부여', '승부욕', .5) * F.motive.per, -F.motive.cap, F.motive.cap);
             const motSta = mgrClamp(((rel['동기부여'] * .5) + sr('의욕고취') * .25 + sr('체력관리') * .25) * F.motive.per, -F.motive.cap, F.motive.cap);
             const mot = (motSpd + motSta) / 2;
             return {
                 on: true, name, ref, rel, tac, mot,
-                benchW: mgrClamp(F.bench.base + (rel['용병술'] * .4 + sr('교체판단') * .25 + sr('선발기용') * .2 + sr('자팀선수분석') * .15) * F.bench.per, F.bench.min, F.bench.max),
+                benchW: mgrClamp(F.bench.base + (rel['용병술'] * .4 + sr('교체판단') * .25 + sr('선발기용') * .2 + sr('자팀선수분석') * .15) * F.bench.per + benchBeh, F.bench.min, F.bench.max),
                 availC: mgrClamp((rel['소통'] * .6 + sr('심리지도') * .25 + sr('선수면담') * .15) * F.comm.availPer, -F.comm.availCap, F.comm.availCap),
                 chem: mgrClamp(mix('소통', '갈등조율', .4) * F.comm.chemPer, -F.comm.chemCap, F.comm.chemCap),
                 analysisPts: mgrClamp((rel['분석력'] * .5 + sr('상대선수분석') * .25 + sr('전술분석') * .25) * F.analysis.per, -F.analysis.cap, F.analysis.cap),
@@ -15305,17 +15337,19 @@
         const PK_KICK_FIELD = { '결정력': 0.38, '위치선정': 0.18, '패스': 0.14, '드리블': 0.12, '체력': 0.10, '스피드': 0.05, '수비': 0.03 };
         const PK_KICK_GK = { '배급': 0.35, '판단력': 0.25, '위치선정': 0.15, '체력': 0.10, '순발력': 0.10, '반사신경': 0.05 };
         const PK_SAVE = { '선방력': 0.32, '반사신경': 0.24, '판단력': 0.18, '순발력': 0.14, '위치선정': 0.08, '체력': 0.04 };
+        const PK_TRAIT = { kick: 4, calm: 1.5, save: 4 };   // v1.32: PK 특성 보정(능력치 점수 단위) — 1점당 성공률 0.4%p
         const PK_BASE = 0.75, PK_SLOPE = 0.004, PK_MIN = 0.40, PK_MAX = 0.94, PK_ROUNDS = 5, PK_GK_KICK_PENALTY = 8, PK_NO_GK_SAVE = 55;
 
         function tcPkKickSkill(p) {
             if (!p) return ABILITY_STAT_DEFAULT;
             // v1.11: 직접 입력한 소분류 반영 — 침착성·결정력·공격 위치(필드) / 침착성·킥력·발밑(GK 키커)
             const d = k => abExtDelta(p, k);
-            return p.pos === 'GK' ? tcFormula(p, PK_KICK_GK) - PK_GK_KICK_PENALTY + d('킥력') * .15 + d('침착성') * .12
-                : tcFormula(p, PK_KICK_FIELD) + d('침착성') * .18 + d('공격위치') * .06 + d('개인기') * .04 + d('판단력') * .04;
+            const trk = PK_TRAIT.kick * (fmTraits(p).includes('pk') ? 1 : 0) + PK_TRAIT.calm * (fmTraits(p).includes('calm') ? 1 : 0);   // v1.32: 🥅 PK 전담 · 🧊 침착한 마무리
+            return trk + (p.pos === 'GK' ? tcFormula(p, PK_KICK_GK) - PK_GK_KICK_PENALTY + d('킥력') * .15 + d('침착성') * .12
+                : tcFormula(p, PK_KICK_FIELD) + d('침착성') * .18 + d('공격위치') * .06 + d('개인기') * .04 + d('판단력') * .04);
         }
         // v1.11: 1대1방어·반사·집중력·침착성·핸들링 같은 GK 소분류도 PK 선방에 반영
-        function tcPkSaveSkill(gk) { return gk ? tcFormula(gk, PK_SAVE) + abExtDelta(gk, '1대1방어') * .22 + abExtDelta(gk, '집중력') * .08 + abExtDelta(gk, '침착성') * .08 + abExtDelta(gk, '핸들링') * .05 : PK_NO_GK_SAVE; }
+        function tcPkSaveSkill(gk) { return gk ? (fmTraits(gk).includes('pkstop') ? PK_TRAIT.save : 0) + tcFormula(gk, PK_SAVE) + abExtDelta(gk, '1대1방어') * .22 + abExtDelta(gk, '집중력') * .08 + abExtDelta(gk, '침착성') * .08 + abExtDelta(gk, '핸들링') * .05 : PK_NO_GK_SAVE; }
         function tcPkGoalDist(ps) {
             let d = [1];
             ps.forEach(p => { const n = new Array(d.length + 1).fill(0); d.forEach((v, i) => { n[i] += v * (1 - p); n[i + 1] += v * p; }); d = n; });
@@ -27228,7 +27262,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.31';
+        const G_HTML_VERSION = '1.32';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -27890,11 +27924,11 @@
         }
 
         // ======= ⏱️ 전·후반 분할 시뮬레이션 · 🫁 체력 소모 · 🧑‍💼 운영 성향 5종 연결 (v1.17) =======
-        // 90분을 3구간(전반 0~45' / 후반 초중반 46~70' / 후반 막판 71~90')으로 나눠 득점을 추첨한다. 기존 기대 득점(la·lb)은 그대로 3구간에 나눠 담는다.
+        // 경기(전반 13분 + 후반 13분 = 26분)를 3구간(전반 1~13' / 후반 초중반 14~20' / 후반 막판 21~26')으로 나눠 득점을 추첨한다. 기존 기대 득점(la·lb)은 그대로 3구간에 나눠 담는다.
         //  · 🫁 체력: 팀 체력(전력 비교 값)이 리그 평균보다 낮으면 뒤 구간 공격 출력이 떨어지고 상대 공격은 쉬워진다 (평균 팀 · 성향 미설정 = ×1.00)
         //  · 🧑‍💼 감독 운영 성향(0~5, 미설정이면 효과 없음) — 🛡️ 앞서면 수비 전환 / 🔥 지면 공격 강화 / 🧤 플라잉 GK / ⏱️ 교체 시점 / 🫁 피로 관리
-        const SIM_HALF = { w: [.45, .30, .25], t0: [0, 46, 71], t1: [45, 70, 90], mid: [22, 58, 80], k0: .14, pw: 1.5, staPer: .03, kMin: .5, kMax: 1.8, defW: .5, subGain: .35, subCost: .012, mLo: .3, mHi: 3, N: 18 };
-        const SIM_HALF_NAMES = ['전반 (0~45분)', '후반 초중반 (46~70분)', '후반 막판 (71~90분)'];
+        const SIM_HALF = { L: MATCH_HALF_MIN * 2, w: [.47, .26, .27], t0: [0, 14, 21], t1: [13, 20, 26], mid: [6.5, 17, 23.5], k0: .14, pw: 1.5, staPer: .03, kMin: .5, kMax: 1.8, defW: .5, subGain: .35, subCost: .012, mLo: .3, mHi: 3, N: 18 };
+        const SIM_HALF_NAMES = ['전반 (1~13분)', '후반 초중반 (14~20분)', '후반 막판 (21~26분)'];
         const SIM_BEH_KEYS = ['lead', 'trail', 'fgk', 'subT', 'fat'];
         function simBehOf(X) {   // 감독 효과가 켜져 있고 감독이 있을 때만 운영 성향을 읽는다 (null = 미설정 = 효과 없음)
             const ref = simMgrRef(X), out = {};
@@ -27906,8 +27940,8 @@
         function simHalfSide(sta, bh, mSta) {
             const H = SIM_HALF, cl = (v, a, b) => Math.max(a, Math.min(b, v));
             const fat = bh.fat == null ? 0 : bh.fat - 3, subT = bh.subT == null ? 3 : bh.subT;
-            const k = H.k0 * cl(1 + H.staPer * (mSta - sta), H.kMin, H.kMax) * (1 - 0.12 * fat), tsub = 55 + 5 * subT;   // 체력 낮을수록 · 밀어붙일수록 피로↑ / 교체 시점 55'(이르게)~80'(늦게)
-            const f = [0, 1, 2].map(s => { const p = cl((H.t1[s] - tsub) / (H.t1[s] - H.t0[s]), 0, 1); return k * Math.pow(H.mid[s] / 90, H.pw) * (1 - H.subGain * p) + H.subCost * p; });   // 구간별 출력 손실(교체로 회복 − 후보가 약한 만큼 손해)
+            const k = H.k0 * cl(1 + H.staPer * (mSta - sta), H.kMin, H.kMax) * (1 - 0.12 * fat), tsub = (55 + 5 * subT) / 90 * H.L;   // 체력 낮을수록 · 밀어붙일수록 피로↑ / 교체 시점 경기 진행 61%(이르게)~89%(늦게) 지점 = 약 16'~23'
+            const f = [0, 1, 2].map(s => { const p = cl((H.t1[s] - tsub) / (H.t1[s] - H.t0[s]), 0, 1); return k * Math.pow(H.mid[s] / H.L, H.pw) * (1 - H.subGain * p) + H.subCost * p; });   // 구간별 출력 손실(교체로 회복 − 후보가 약한 만큼 손해)
             const e = 1 - 0.012 * fat;
             return { f, early: [e, e, 1], lead: bh.lead == null ? null : bh.lead / 5, trail: bh.trail == null ? null : bh.trail / 5, fgk: bh.fgk == null ? null : bh.fgk / 5, sta };
         }
@@ -27977,7 +28011,7 @@
                 <div style="font-size:0.8rem;font-weight:900;margin-bottom:4px;">⏱️ 전·후반 분할 · 🫁 체력 소모 ${gNewTag('1.17')}</div>
                 <div style="overflow-x:auto;"><table class="pattern-table" style="font-size:0.72rem;"><thead><tr><th>구간</th><th>${gEsc(A.t.name)} 평균 득점</th><th>${gEsc(B.t.name)} 평균 득점</th></tr></thead><tbody>${rows}</tbody></table></div>
                 <div style="font-size:0.7rem;line-height:1.55;margin-top:4px;">${side(A, hm.bhA, hm.a)}${side(B, hm.bhB, hm.b)}${eff}</div>
-                <div style="font-size:0.64rem;color:var(--text-muted);margin-top:5px;line-height:1.5;">90분을 3구간으로 나눠 추첨합니다(기대 득점 45 : 30 : 25). 체력이 리그 평균보다 낮은 팀은 뒤 구간 공격이 약해지고 수비가 흔들리며, 평균 체력 · 성향 미설정 팀은 변화가 없습니다. 🛡️ 앞서면 수비 전환(내 공격↓ · 막판 실점↓) · 🔥 지면 공격 강화(내 공격↑ · 상대 역습↑) · 🧤 플라잉 GK(후반 막판 1~2골 차로 질 때 공격↑↑ · 실점 위험↑↑) · ⏱️ 교체 시점(이를수록 후반 체력 저하 완화, 늦을수록 후보 투입 손해 적음) · 🫁 피로 관리(후반 체력 저하 완화, 초반 출력 소폭↓)가 반영됩니다. 연장전은 분할 없이 기존 방식으로 계산합니다.</div></div>`;
+                <div style="font-size:0.64rem;color:var(--text-muted);margin-top:5px;line-height:1.5;">전·후반 13분씩 26분을 3구간(1~13' · 14~20' · 21~26')으로 나눠 추첨합니다(기대 득점 47 : 26 : 27 — 이 리그 기록된 득점 시간 분포 기준). 체력이 리그 평균보다 낮은 팀은 뒤 구간 공격이 약해지고 수비가 흔들리며, 평균 체력 · 성향 미설정 팀은 변화가 없습니다. 🛡️ 앞서면 수비 전환(내 공격↓ · 막판 실점↓) · 🔥 지면 공격 강화(내 공격↑ · 상대 역습↑) · 🧤 플라잉 GK(후반 막판 1~2골 차로 질 때 공격↑↑ · 실점 위험↑↑) · ⏱️ 교체 시점(이를수록 후반 체력 저하 완화, 늦을수록 후보 투입 손해 적음) · 🫁 피로 관리(후반 체력 저하 완화, 초반 출력 소폭↓)가 반영됩니다. 연장전은 분할 없이 기존 방식으로 계산합니다.</div></div>`;
         }
         // 🔍 능력치 매치업 설명 패널 (🎲 경기 시뮬레이션 결과 아래)
         function simMxHtml(A, B, mx) {
