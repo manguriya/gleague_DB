@@ -212,6 +212,12 @@
         .mt-auto-b { display:inline-block; margin-top:2px; font-style:normal; font-size:0.58rem; font-weight:800; padding:1px 5px; border-radius:8px; background:rgba(56,189,248,0.16); color:#7dd3fc; white-space:nowrap; }
         .mt-auto-b.man { background:rgba(251,191,36,0.16); color:#fcd34d; }
         .mt-auto-b.sm { background:rgba(167,139,250,0.18); color:#c4b5fd; }
+        /* v1.33: 🔗 자동 연동 / ✋ 수동 전환 */
+        .mt-auto-b.lk { background:rgba(34,197,94,0.18); color:#86efac; }
+        .mt-modebar { display:flex; gap:6px; flex-wrap:wrap; align-items:center; font-size:0.76rem; }
+        .mt-mode.on, .fm-lnk .fm-act.on { background:#15803d; border-color:#22c55e; color:#fff; }
+        .fm-lnk { display:inline-flex; gap:4px; align-items:center; flex-wrap:wrap; }
+        .mt-sel:disabled, .mt-sl:disabled { opacity:0.65; cursor:not-allowed; }
         /* v1.31: 🪄 감독 성향 자동 설정 */
         .mt-autoset { margin:6px 0 8px; padding:8px 10px; border:1px dashed rgba(56,189,248,0.5); border-radius:10px; background:rgba(56,189,248,0.07); }
         .mt-rep { margin-top:6px; padding:6px 8px; border-radius:8px; background:rgba(2,6,23,0.45); font-size:0.7rem; line-height:1.55; }
@@ -695,6 +701,10 @@
 
         /* 🎯 개인 기록 랭킹: 창이 좁아져도 카드형(2줄)으로 바꾸지 않고, 표 구조를 유지한 채 가로 스크롤 */
         #playerRankTable { min-width: 640px; }
+        /* v1.35: GK 보기에서만 🧤 슈퍼세이브 열 표시 */
+        #playerRankTable:not(.rank-gk-mode) .rank-gk-col { display: none !important; }
+        #playerRankTable.rank-gk-mode { min-width: 820px; }
+        #playerRankTable.rank-gk-mode:not(.rank-adv-hidden) { min-width: 1320px; }
         #playerRankTable:not(.rank-adv-hidden) { min-width: 1060px; }
         #playerRankTable th, #playerRankTable td { font-size: 0.8rem; padding: 6px 8px; white-space: nowrap !important; }
         #playerRankTable th { font-size: 0.76rem; }
@@ -856,6 +866,77 @@
         .btn-add-og { background: var(--danger); color: #fff; border: none; border-radius: 4px; font-size: 0.65rem; padding: 2px 6px; cursor: pointer; font-weight: 800; margin-top: 2px; }
         
         .og-badge { font-size: 0.65rem; color: var(--danger); margin-right: 2px; font-weight: 800; }
+
+
+        /* ===== v1.34: 📝 경기 기록 입력 화면 — 선수 카드형 레이아웃 ===== */
+        #playerStatsForm { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)) !important; align-items: start; }
+        .pf-team-h { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+        .pf-team-h h4 { margin: 0; }
+        .pf-tot { font-size: .72rem; font-weight: 800; padding: 3px 8px; border-radius: 20px; background: rgba(148,163,184,.15); color: var(--text-muted); }
+        .pf-tot.ok { background: rgba(34,197,94,.18); color: #4ade80; }
+        .pf-tot.bad { background: rgba(239,68,68,.18); color: #f87171; }
+        .pf-group { font-size: .68rem; font-weight: 800; color: var(--text-muted); margin: 10px 0 4px; padding-bottom: 2px; border-bottom: 1px dashed rgba(148,163,184,.25); }
+        .pf-card { background: rgba(2,6,23,.55); border: 1px solid rgba(148,163,184,.18); border-left: 4px solid #38bdf8; border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; }
+        .pf-card.st-substitute { border-left-color: #94a3b8; }
+        .pf-card.st-injured { border-left-color: #ef4444; opacity: .85; }
+        .pf-card.st-absent { border-left-color: #475569; opacity: .75; }
+        .pf-card.pf-hot { background: rgba(250,204,21,.07); border-color: rgba(250,204,21,.45); border-left-color: #facc15; }
+        .pf-head { display: flex; align-items: center; gap: 6px; }
+        .pf-head .pos-select { width: 54px; flex: none; }
+        .pf-name { flex: 1; min-width: 0; font-weight: 800; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+        .pf-chips { display: flex; gap: 4px; flex: none; }
+        .pf-chip { font-size: .68rem; font-weight: 800; padding: 1px 6px; border-radius: 10px; background: rgba(255,255,255,.08); white-space: nowrap; }
+        .pf-chip.g { background: rgba(250,204,21,.2); color: #fde047; } .pf-chip.a { background: rgba(56,189,248,.2); color: #7dd3fc; }
+        .pf-chip.s { background: rgba(34,197,94,.2); color: #86efac; } .pf-chip.o { background: rgba(239,68,68,.2); color: #fca5a5; }
+        .pf-rate { display: flex; align-items: center; gap: 2px; flex: none; font-size: .65rem; color: var(--text-muted); }
+        .pf-rate input.rating { width: 52px !important; padding: 3px 2px; text-align: center; }
+        .pf-head select.status { width: 84px !important; flex: none; padding: 3px 2px; }
+        .pf-mom { flex: none; display: flex; align-items: center; cursor: pointer; font-size: .85rem; gap: 1px; filter: grayscale(1) opacity(.6); }
+        .pf-mom:has(input:checked) { filter: none; }
+        .pf-mom input { width: 15px !important; height: 15px !important; margin: 0; cursor: pointer; }
+        .pf-body { margin-top: 6px; display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 5px 10px; }
+        .pf-events { display: contents; }
+        .pf-events .goal-container { flex: 1 1 100%; }
+        .pf-card.pf-collapsed .pf-body { display: none; }
+                .pf-events .goal-container { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+        .pf-events .goal-container:empty { display: none; }
+        .pf-events .goal-time-row { margin: 0; padding: 3px 6px; gap: 5px; flex-wrap: nowrap !important; background: rgba(250,204,21,.1); border-left: 3px solid #facc15; border-radius: 6px; }
+        .pf-events .goal-time-row.og { background: rgba(239,68,68,.12); border-left-color: #ef4444; }
+        .pf-events .goal-time-row .gi { font-size: .85rem; flex: none; }
+        .pf-events .goal-ast-select { flex: 1 1 auto; min-width: 70px; width: auto !important; }
+        .pf-events .og-fill { flex: 1 1 auto; font-size: .68rem; color: #fca5a5; }
+        .pf-btns { display: flex; gap: 4px; flex: none; }
+        .pf-btns .btn-add-goal, .pf-btns .btn-add-og { margin: 0; padding: 3px 10px; font-size: .7rem; }
+        .pf-sub { display: contents; font-size: .65rem; color: var(--text-muted); }
+        .pf-sub label.pf-f { display: inline-flex; align-items: center; gap: 3px; }
+        .pf-sub input.assist, .pf-sub input.ss-input { width: 44px !important; padding: 3px 2px; text-align: center; margin: 0 !important; }
+        .pf-rot { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; flex: 1 1 auto; }
+        .pf-sub > label.pf-f { font-size: .65rem; color: var(--text-muted); }
+        .pf-rot label.rl { display: inline-flex; align-items: center; gap: 3px; cursor: pointer; font-size: .68rem; }
+        .pf-rot .rot-more-box { width: 100%; }
+        .pf-legend { font-size: .68rem; color: var(--text-muted); margin: 0 0 8px; line-height: 1.5; }
+
+
+        /* ===== v1.34: 경기 기록 화면 배치 — 위: 홈(왼쪽) · 원정(오른쪽) 전술판 / 아래: 각 팀 선수 기록 ===== */
+        #matchSideGrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 14px; align-items: start; margin-bottom: 15px; }
+        #matchSideGrid > .card { display: contents; }
+        #matchSideGrid #tacticForm, #matchSideGrid #playerStatsForm { display: contents !important; }
+        #matchSideGrid > #tacticCard > h4 { grid-column: 1 / -1; grid-row: 1; margin: 0; }
+        #matchSideGrid #tacticForm > div:not(.tac-panel) { grid-column: 1 / -1; grid-row: 2; }
+        #matchSideGrid #tacPanel_h { grid-column: 1; grid-row: 2; }
+        #matchSideGrid #tacPanel_a { grid-column: 2; grid-row: 2; }
+        #matchSideGrid > #playerCard > h4 { grid-column: 1 / -1; grid-row: 3; margin: 6px 0 0; }
+        #matchSideGrid > #playerCard > .pf-legend { grid-column: 1 / -1; grid-row: 4; margin: 0; }
+        #matchSideGrid #playerStatsForm > .pf-team:nth-child(1) { grid-column: 1; grid-row: 5; }
+        #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-column: 2; grid-row: 5; }
+        #matchSideGrid .tac-panel, #matchSideGrid .pf-team { background: var(--bg-card); }
+        @media (max-width: 900px) {
+            #matchSideGrid { grid-template-columns: minmax(0, 1fr); }
+            #matchSideGrid #tacPanel_h, #matchSideGrid #tacPanel_a, #matchSideGrid #playerStatsForm > .pf-team { grid-column: 1; }
+            #matchSideGrid #tacPanel_a { grid-row: 3; }
+            #matchSideGrid > #playerCard > h4 { grid-row: 4; } #matchSideGrid > #playerCard > .pf-legend { grid-row: 5; }
+            #matchSideGrid #playerStatsForm > .pf-team:nth-child(1) { grid-column: 1; grid-row: 6; } #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-column: 1; grid-row: 7; }
+        }
 
         /* 모달 스타일 */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
@@ -1347,11 +1428,12 @@
                         <button class="pm-tab on" id="playerTabOverview" onclick="switchPlayerModalTab('overview')">📊 개요</button>
                         <button class="pm-tab" id="playerTabMatch" onclick="switchPlayerModalTab('match')">⚽ 경기 기록</button>
                         <button class="pm-tab" id="playerTabSeason" onclick="switchPlayerModalTab('season')">📅 시즌별 요약</button>
+                        <button class="pm-tab" id="playerTabAnalysis" data-new="1.35" onclick="switchPlayerModalTab('analysis')">🔬 선수 분석</button>
                         <button class="pm-tab" id="playerTabCompare" onclick="switchPlayerModalTab('compare')">⚖️ 선수 비교</button>
                         <button class="pm-tab" id="playerTabPower" onclick="switchPlayerModalTab('power')">🧑‍💼 전력·감독</button>
                         <button class="pm-tab" id="playerTabGrowth" onclick="switchPlayerModalTab('growth')">📈 성장 분석</button>
                     </div>
-                    <span class="pm-pageno" id="playerPageNo">1 / 6</span>
+                    <span class="pm-pageno" id="playerPageNo">1 / 7</span>
                     <button class="pm-nav" onclick="pmStepTab('player',1)" title="다음 페이지 (→)">›</button>
                 </div>
                 <div id="playerTabContentOverview" class="pm-page on">
@@ -1403,7 +1485,11 @@
                 <!-- GK 전용 스탯 (GK일 때만 표시) -->
                 <div id="gkStatsSection" style="display:none; background:linear-gradient(135deg,rgba(234,179,8,0.1),rgba(234,179,8,0.03)); border:1px solid rgba(234,179,8,0.3); border-radius:10px; padding:14px; margin-bottom:12px;">
                     <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🧤 골키퍼 전용 기록</div>
-                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;">
+                        <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:10px;">
+                            <div id="modalGkSS" style="font-size:1.4rem; font-weight:800; color:#38bdf8; font-family:'Orbitron';">0</div>
+                            <div style="font-size:.68rem; color:var(--text-muted); margin-top:3px;">🧤 슈퍼세이브</div>
+                        </div>
                         <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:10px;">
                             <div id="modalGkCleanSheets" style="font-size:1.4rem; font-weight:800; color:var(--success); font-family:'Orbitron';">0</div>
                             <div style="font-size:0.68rem; color:var(--text-muted); margin-top:3px;">🧱 무실점 경기</div>
@@ -1476,6 +1562,9 @@
 
                 </div></div>
                 </div>
+
+                <!-- 선수 분석 탭 (v1.35: 득점 위치 · 도움 연결 · 슈퍼세이브 등 개인 기록 분석) -->
+                <div id="playerTabContentAnalysis" class="pm-page"><div id="playerAnalysisBody"></div></div>
 
                 <!-- 성장 분석 탭 -->
                 <div id="playerTabContentGrowth" class="pm-page"><div id="playerGrowthBody"></div></div>
@@ -2331,18 +2420,21 @@
             </div>
 
             <!-- ② 전술 기록 (v1.18) — 이 경기에서 각 팀이 쓴 전술. 전술판이 설정된 팀은 현재 전술판 값으로 미리 채워짐 -->
+            <div id="matchSideGrid">
             <div class="card" id="tacticCard">
-                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">2</span> 전술 기록 <span data-upd="1.23"></span><span class="mut" style="font-size:0.74rem; font-weight:600; color:var(--text-muted);">이 경기에서 쓴 전술 · 기록해 두면 이후 성향 분석·예측에 쓰입니다 (선택)</span> <button type="button" class="tac-btn" data-new="1.23" onclick="tacLuBackfillRun()" title="모든 과거 경기의 출전 포지션을 ⭐선발 · 기록 포지션 기준으로 자동으로 채웁니다" style="margin-left:auto;">🪄 모든 경기 출전 포지션 채우기</button></h4>
+                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">2</span> 전술 기록 <span data-upd="1.23"></span><button type="button" class="tac-btn tac-fold-btn" id="tacFoldBtn" data-new="1.35" onclick="tacFoldToggle()" title="전술 입력칸을 접거나 펼칩니다 (접어도 입력한 값은 그대로 저장돼요)">▶ 펼치기</button><span class="tac-sum" id="tacSum"></span><span class="mut tac-help-txt" style="font-size:0.74rem; font-weight:600; color:var(--text-muted);">이 경기에서 쓴 전술 · 기록해 두면 이후 성향 분석·예측에 쓰입니다 (선택)</span> <button type="button" class="tac-btn tac-help-btn" onclick="tacHelpToggle()" title="설명 문구를 보이거나 숨깁니다" style="margin-left:auto;">💡 설명 보기</button><button type="button" class="tac-btn" onclick="tacLuBackfillRun()" title="모든 과거 경기의 출전 포지션을 ⭐선발 · 기록 포지션 기준으로 자동으로 채웁니다">🪄 모든 경기 출전 포지션 채우기</button></h4>
                 <div id="tacticForm" class="tac-form"><div style="color:var(--text-muted); font-size:0.82rem; padding:6px 2px;">홈·원정 팀을 고르면 전술 입력칸이 나타납니다.</div></div>
             </div>
 
             <!-- ③ 선수 기록 (골 시간·자책골 입력 포함) -->
-            <div class="card">
-                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">3</span> 선수 기록</h4>
+            <div class="card" id="playerCard">
+                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">3</span> 선수 기록 <button type="button" class="tac-btn tac-help-btn" onclick="tacHelpToggle()" title="설명 문구를 보이거나 숨깁니다" style="margin-left:auto;">💡 설명 보기</button></h4>
+                <div class="pf-legend tac-help-txt">선수 카드 한 장 = 한 명. <b>⚽ + 득점</b>을 누르면 득점 줄이 생기고, 줄에서 <b>시간 · 도움 선수 · 📍위치</b>를 입력해요. 노란 카드 = 기록이 있는 선수 · 팀 이름 옆 배지는 입력한 득점 합계와 스코어가 맞는지 보여줘요. 부상 · 미출전 선수는 접혀 있고, 이름을 누르면 펼쳐져요.</div>
                 <div id="playerStatsForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:15px;">
                     <!-- 선수별 입력 폼 동적 생성 -->
                 </div>
             </div>
+            </div><!-- /matchSideGrid -->
 
             <!-- ③ 저장 -->
             <div class="card" style="position:sticky; bottom:0; z-index:5;">
@@ -2486,6 +2578,7 @@
             <div class="card" style="margin-top:15px;">
                 <h3 id="playerRankTitle">🎯 개인 기록 랭킹 (현재 시즌)</h3>
                 <div class="ranking-info">정렬 기준: 공격포인트 > 평균평점 > MOM > 경기수</div>
+                <div class="ranking-info" id="rankGkHint" style="display:none;">🧤 GK 보기 — 🧤 슈퍼세이브 · 경기당 열이 추가됐어요. 열 제목을 누르면 그 기준으로 정렬하고, '고급 통계 보기'를 켜면 한 경기 최다 · 실점 · 세이브 기여율도 볼 수 있어요.</div>
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
                     <label style="display:flex; align-items:center; gap:6px; font-size:0.8rem; font-weight:800; color:var(--text-muted); cursor:pointer; margin-right:4px;">
                         <input type="checkbox" id="rankAdvancedToggle" onchange="toggleRankAdvancedView()"> 🔍 고급 통계 보기
@@ -2517,6 +2610,11 @@
                                 <th onclick="sortPlayerRank('assists')" style="cursor:pointer;">도움 ↕️</th>
                                 <th class="rank-adv-col" onclick="sortPlayerRank('mom')" style="cursor:pointer;">MOM ↕️</th>
                                 <th onclick="sortPlayerRank('avgRating')" style="cursor:pointer;">평균평점 ↕️</th>
+                                <th class="rank-gk-col" onclick="sortPlayerRank('ss')" style="cursor:pointer;" title="경기 기록의 GK 행에 입력한 결정적 선방(슈퍼세이브) 합계">🧤 슈퍼세이브 ↕️</th>
+                                <th class="rank-gk-col" onclick="sortPlayerRank('ssPerG')" style="cursor:pointer;" title="출전 경기 환산(교체·포지션 변경 반영) 대비 슈퍼세이브">경기당 ↕️</th>
+                                <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssBest')" style="cursor:pointer;">한 경기 최다 ↕️</th>
+                                <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssGa')" style="cursor:pointer;" title="GK로 뛴 동안의 실점">실점 ↕️</th>
+                                <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssRate')" style="cursor:pointer;" title="슈퍼세이브 ÷ (슈퍼세이브 + 실점)">세이브 기여율 ↕️</th>
                                 <th onclick="sortPlayerRank('pwr')" style="cursor:pointer;" title="평균평점(정규화) + 경기영향력(GK/필드 그룹별 정규화) + 팀성과(정규화), 신뢰도 보정 포함 / 100점 만점 상대 지표">파워랭킹 🌟 ↕️</th>
                                 <th class="rank-adv-col" onclick="sortPlayerRank('awardsTotal')" style="cursor:pointer;" title="⚽️득점왕 · 🎯도움왕 · 👑MVP · ⭐평점왕 · 🌱신인상 · 🧤야신상 · 🏅골롱도르 (아카이브된 시즌 기준, 현재 시즌은 진행중 선두 기준)">수상기록 ↕️</th>
                             </tr>
@@ -3139,6 +3237,7 @@
                         </div>
                     </div>
                     <div class="card"><h3>🔎 구간별 득실 · 시즌별 · 득점자</h3><div id="dcTimeTables"></div></div>
+                    <div class="card" id="gaTeamCard" data-new="1.35"></div>
                     <div class="dc-grid">
                     <div class="card"><h3>🧠 전력분석 팀 카드</h3><div class="ranking-info">전력분석 탭에서 쓰는 팀 카드와 같은 카드입니다. 누르면 팀 상세분석 창이 열립니다.</div><div id="dcMlCardDetail"></div></div>
                     <div class="card" style="border:1px solid rgba(167,139,250,0.4);"><h3 style="color:#a78bfa;">🧠 전력분석 주요내용</h3><div class="ranking-info">전력분석 탭의 팀 상세분석에서 핵심만 가져온 요약입니다.</div><div id="dcMlKey"></div></div>
@@ -3470,7 +3569,7 @@
         // ======= 선수 능력치(오버롤) 시스템 =======
         // 풋살팀빌더의 20여개 세부 능력치를 축약해, 필드 선수 7개 / GK 7개의 핵심 능력치만 사용한다.
         // OVR(오버롤)은 포지션별 능력치 세트의 단순 평균으로 계산한다.
-        // 레이더 축 순서 = 배열 순서. 연관 능력치가 이웃하도록 배치 (공격 마무리·개인기 → 연결·판단 → 수비 → 신체)
+        // 레이더 축 순서 = 배열 순서. 연관 능력치가 이웃하도록 배치 (공격 마무리·중거리슛 → 연결·판단 → 수비 → 신체)
         const FIELD_ABILITY_STATS = ['결정력', '드리블', '패스', '위치선정', '수비', '체력', '스피드'];
         const GK_ABILITY_STATS = ['선방력', '반사신경', '순발력', '체력', '위치선정', '판단력', '배급'];
         const ABILITY_STAT_MIN = 50;
@@ -3511,7 +3610,7 @@
             field: [
                 { k: '공격', ic: '⚔️', subs: [
                     { k: '결정력', s: 1, d: '골문 앞 마무리 · 골 결정력' },
-                    { k: '개인기', n: '개인기', d: '페인트와 기술로 상대를 제치는 재능' },
+                    { k: '중거리슛', n: '중거리슛', d: '박스 밖에서 때리는 슈팅 · 먼 거리에서의 골 결정력' },
                     { k: '공격위치', n: '공격 위치선정', d: '빈 공간 침투 · 오프 더 볼 움직임' } ] },
                 { k: '수비', ic: '🛡️', subs: [
                     { k: '수비', n: '태클', s: 1, d: '태클 · 볼 탈취 (기존 \'수비\' 능력치)' },
@@ -3532,7 +3631,7 @@
                 { k: '팀워크', ic: '🤝', subs: [
                     { k: '연계', n: '연계 플레이', d: '동료와 주고받는 호흡 · 연결' },
                     { k: '소통', n: '소통', d: '콜 플레이 · 위치 조율' },
-                    { k: '헌신', n: '헌신', d: '궂은일 · 수비 가담 · 팀을 위한 희생' } ] }
+                    { k: '적극성', n: '적극성', d: '먼저 달려드는 압박 · 수비 가담 · 궂은일을 마다하지 않는 자세' } ] }
             ],
             gk: [
                 { k: '선방', ic: '🧤', subs: [
@@ -3564,7 +3663,7 @@
         // 비워 둔(선택 입력) 소분류의 자동 계산값 — 기존 7개 능력치에서 파생
         const AB_DERIVE = {
             field: {
-                개인기: S => (S('드리블') + S('결정력')) / 2,
+                중거리슛: S => (S('결정력') * 2 + S('패스')) / 3,
                 공격위치: S => S('위치선정'),
                 대인마크: S => S('수비'),
                 수비위치: S => S('위치선정'),
@@ -3575,7 +3674,7 @@
                 침착성: S => (S('결정력') + S('위치선정')) / 2,
                 연계: S => S('패스'),
                 소통: S => S('위치선정'),
-                헌신: S => (S('체력') + S('수비')) / 2
+                적극성: S => (S('체력') + S('수비')) / 2
             },
             gk: {
                 '1대1방어': S => (S('선방력') + S('반사신경')) / 2,
@@ -3616,7 +3715,7 @@
             const pct = v => Math.max(0, Math.min(100, (v - ABILITY_STAT_MIN) / (ABILITY_STAT_MAX - ABILITY_STAT_MIN) * 100));
             return `<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px;">${groups.map(g => `
                 <div style="border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:7px 10px 9px; background:rgba(255,255,255,0.02);">
-                    <div style="display:flex; justify-content:space-between; font-weight:900; font-size:0.86rem; margin-bottom:3px;"><span>${g.ic} ${g.k}</span><span style="color:${ovrColor(g.v)};">${g.v}</span></div>
+                    <div title="6대분류 평균이 선수 OVR이 됩니다 (세부 능력치를 입력한 선수). 항목에 마우스를 올리면 팀 전력에 미치는 영향을 볼 수 있어요." style="display:flex; justify-content:space-between; font-weight:900; font-size:0.86rem; margin-bottom:3px; cursor:help;"><span>${g.ic} ${g.k}</span><span style="color:${ovrColor(g.v)};">${g.v}</span></div>
                     ${g.subs.map(x => `<div title="${x.d || ''}" style="display:flex; justify-content:space-between; font-size:0.8rem; margin-top:5px;"><span style="color:var(--text-muted);">${x.n}${x.auto ? ' <i style="font-style:normal; opacity:.6; font-size:.7rem;">자동</i>' : ''}</span><b style="color:${ovrColor(x.v)};">${x.v}</b></div>
                     <div style="height:3px; border-radius:2px; background:rgba(255,255,255,0.07);"><div style="height:100%; width:${pct(x.v).toFixed(0)}%; border-radius:2px; background:${ovrColor(x.v)};"></div></div>`).join('')}
                 </div>`).join('')}</div>`;
@@ -3732,13 +3831,26 @@
                 { k: '승부욕', n: '승부욕', d: '지지 않으려는 집념' },
                 { k: '선수육성', n: '선수 육성', d: '어린 · 신입 선수를 키우는 능력' } ] },
             { k: '소통', ic: '💬', subs: [
-                { k: '심리지도', n: '선수 심리 지도', d: '선수 개개인의 심리 관리' },
-                { k: '선수면담', n: '선수 면담', d: '선수와 1:1 대화 · 고민 경청 · 신뢰 쌓기' },
-                { k: '갈등조율', n: '갈등 조율', d: '선수 간 불화 · 서운함을 풀어 팀 분위기를 지키는 능력' } ] }
+                { k: '팀케미', n: '팀 케미', d: '팀원들을 하나로 뭉치게 하는 능력 · 선수들의 팀워크 능력치(연계 · 소통 · 적극성)에 관여' },
+                { k: '적극성', n: '적극성', d: '경기 중 사이드라인에서 적극적으로 경기에 관여하는 정도 · 선수들의 멘탈 능력치(판단력 · 활동량 · 침착성)에 관여' },
+                { k: '분위기메이커', n: '분위기메이커', d: '팀 분위기를 무겁지 않게 만드는 능력 · 선수들의 멘탈 · 팀워크 능력치에 관여' } ] }
         ];
         // v1.30: 감독 세부능력치 이름 정리 — 예전 DB(JSON)의 소분류 키를 새 이름으로 자동 변환 (값은 그대로 유지)
         const MGR_SUB_RENAME = { '공격지도': '공격시전술', '수비지도': '수비시전술', '전술이해': '전술분석', '현재능력판단': '자팀선수분석', '성장판단': '상대선수분석', '인력관리': '선발기용', '협상': '선수면담', '스탭관리': '갈등조율' };
-        function migrateMgrSubObj(o) { if (!o || typeof o !== 'object') return o; Object.keys(MGR_SUB_RENAME).forEach(old => { if (old in o) { const nk = MGR_SUB_RENAME[old]; if (!(nk in o)) o[nk] = o[old]; delete o[old]; } }); return o; }
+        // v1.33: 소통 세부 항목 교체 — 심리 지도 · 선수 면담 · 갈등 조율 → 팀 케미 · 적극성 · 분위기메이커. 뜻이 달라 값을 옮기지 않고 지운다 (새 항목은 입력 전까지 대분류 소통 값과 같음 · 대분류 값은 그대로 유지)
+        const MGR_SUB_DROP = ['심리지도', '선수면담', '갈등조율'];
+        function migrateMgrSubObj(o) { if (!o || typeof o !== 'object') return o; Object.keys(MGR_SUB_RENAME).forEach(old => { if (old in o) { const nk = MGR_SUB_RENAME[old]; if (!(nk in o)) o[nk] = o[old]; delete o[old]; } }); MGR_SUB_DROP.forEach(k => { if (k in o) delete o[k]; }); return o; }   // 이름 변환(옛 협상·스탭관리 → 선수면담·갈등조율)을 먼저 하고 마지막에 지운다
+        // v1.33: 선수 세부능력치 이름 변경 — 개인기 → 중거리슛, 헌신 → 적극성 (예전 DB(JSON)·브라우저 저장본의 키를 자동 변환, 값은 그대로 유지)
+        const PL_EXT_RENAME = { '개인기': '중거리슛', '헌신': '적극성' };
+        function migratePlExtObj(o) { if (!o || typeof o !== 'object') return o; Object.keys(PL_EXT_RENAME).forEach(old => { if (old in o) { const nk = PL_EXT_RENAME[old]; if (!(nk in o)) o[nk] = o[old]; delete o[old]; } }); return o; }
+        function migratePlayerExtKeys(raw) {
+            const fix = p => { if (p) migratePlExtObj(p.ext); };
+            (raw.teams || []).forEach(t => (t.players || []).forEach(fix));
+            (raw.freeAgents || []).forEach(fix);
+            (raw.archives || []).forEach(a => (a.teams || []).forEach(t => (t.players || []).forEach(fix)));
+            Object.keys(raw.statLog || {}).forEach(n => (raw.statLog[n] || []).forEach(e => { if (e) migratePlExtObj(e.ext); }));
+            Object.keys(raw.ovrHistory || {}).forEach(n => { const h = raw.ovrHistory[n]; if (h) migratePlExtObj(h.subDeltas); });
+        }
         function migrateMgrSubKeys(raw) { (raw.managers || []).forEach(m => migrateMgrSubObj(m && m.sub)); Object.keys(raw.mgrStatLog || {}).forEach(n => (raw.mgrStatLog[n] || []).forEach(e => migrateMgrSubObj(e && e.sub))); }
         function abMgrSub(m, g, s) { const v = m && m.sub ? m.sub[s.k] : undefined; if (typeof v === 'number' && isFinite(v)) return abClamp(v); const b = m && m.stats ? m.stats[g.k] : undefined; return typeof b === 'number' ? b : ABILITY_STAT_DEFAULT; }
 
@@ -3751,10 +3863,88 @@
             '전술': '전술 이해도와 경기 운영 구상 능력',
             '용병술': '선수 기용과 교체 타이밍 판단력',
             '동기부여': '선수들의 사기와 집중력을 끌어올리는 능력',
-            '소통': '선수단 분위기 관리와 갈등 조율 능력',
+            '소통': '팀을 하나로 묶고 경기 중 · 평소 분위기를 이끄는 능력 (팀 케미 · 적극성 · 분위기메이커)',
             '분석력': '우리 선수 · 상대 선수 · 전술을 읽는 분석 능력',
             '위기대처': '열세나 돌발 상황에서의 대응 능력'
         };
+
+        // ======= v1.33: 💡 능력치 · 세부 능력치마다 '어디에 영향을 주는지' 마우스오버 설명 (선수 · 감독 공통) =======
+        //  위 d(설명) 뒤에 줄을 바꿔 '팀 전력 영향'을 덧붙인다. 계산식(abSubFx · TC_FIELD_FORMULA · tcMgrEffect)을 바꾸면 여기 문구도 함께 고친다.
+        const PL_FX_FIELD = {
+            결정력: '공격력 55% · 중거리슛·침착성 자동값 · PK 키커 능력',
+            중거리슛: '공격력 (자동값보다 높게 입력한 1점당 +0.05) · PK 키커',
+            공격위치: '공격력 (자동값과 다른 1점당 +0.04)',
+            수비: '수비력 75% · 대인마크·적극성·몸싸움 자동값',
+            대인마크: '수비력 (자동값과 다른 1점당 +0.04)',
+            수비위치: '수비력 (자동값과 다른 1점당 +0.04)',
+            패스: '패스·빌드업 · 롱패스·판단력·연계·중거리슛 자동값',
+            롱패스: '패스·빌드업 (1점당 +0.04 · 롱볼·역습 전술이면 1.5배)',
+            드리블: '드리블 항목 · 공격력 20%',
+            스피드: '스피드 항목 (필드 전원 동일 반영)',
+            체력: '체력 항목 · 활동량·적극성 자동값',
+            피지컬: '수비력 +0.03 · 공격력 +0.02 (자동값과 다른 1점당)',
+            판단력: '패스 +0.02 · 종합 전력 +0.02 (자동값과 다른 1점당) · 🧬 감독 적극성·분위기메이커가 보정',
+            활동량: '체력 항목 +0.05 (자동값과 다른 1점당) · 압박·빠른 템포에서 낮으면 후반 경고 · 🧬 감독 적극성·분위기메이커가 보정',
+            침착성: '공격력 +0.03 · 종합 +0.01 (자동값과 다른 1점당) · 🧬 감독 적극성·분위기메이커가 보정',
+            연계: '패스 +0.04 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정',
+            소통: '수비력 +0.02 · 종합 +0.01 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정',
+            적극성: '수비력 +0.03 · 체력 +0.02 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정'
+        };
+        const PL_FX_GK = {
+            선방력: '골키퍼 항목 30%',
+            반사신경: '골키퍼 항목 25%',
+            '1대1방어': '수비력 +0.02 (자동값과 다른 1점당)',
+            위치선정: '골키퍼 항목 10%',
+            공중볼: '수비력 +0.02 (자동값과 다른 1점당)',
+            핸들링: '수비력 +0.02 (자동값과 다른 1점당)',
+            배급: '골키퍼 항목 5% · 패스·빌드업(GK 배급 비중 0.3)',
+            킥력: '패스·빌드업 +0.02 (자동값과 다른 1점당)',
+            발밑: '패스·빌드업 +0.02 (자동값과 다른 1점당)',
+            순발력: '골키퍼 항목 10%',
+            체력: '골키퍼 항목 5%',
+            점프력: '수비력 +0.01 (자동값과 다른 1점당)',
+            판단력: '골키퍼 항목 15%',
+            침착성: '종합 전력 +0.01 (자동값과 다른 1점당) · 🧬 감독 적극성·분위기메이커가 보정',
+            집중력: '종합 전력 +0.01 (자동값과 다른 1점당) · 🧬 감독 적극성·분위기메이커가 보정',
+            수비조율: '수비력 +0.02 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정',
+            소통: '종합 전력 +0.01 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정',
+            연계: '패스·빌드업 +0.02 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정'
+        };
+        const MGR_FX_MAIN = {
+            '전술': '공격·패스·수비 항목 (격차 1점당 +0.16, 최대 ±6) · 선호 전술 일치 가점의 크기',
+            '분석력': '맞대결에서 상대 약점 공략 (종합 전력 최대 ±3.5) · PK 선방 읽기',
+            '용병술': '교체 선수 반영 비중 (기본 20%, 5~50%)',
+            '위기대처': '열세일 때 격차 완화 (−20%~+30%) · PK 키커 능력',
+            '동기부여': '스피드·체력 항목 (최대 ±5) · PK 키커 능력',
+            '소통': '선발 선수의 팀워크·멘탈 능력치 보정 (최대 ±10점) · 출전 가능성(결장 영향 완화 최대 ±30%p)'
+        };
+        const MGR_FX_SUB = {
+            공격시전술: '공격력 (대분류 전술과 50:50으로 섞어 반영)',
+            수비시전술: '수비력 (대분류 전술과 50:50)',
+            세트피스: '패스 항목 (대분류 전술과 60:40)',
+            자팀선수분석: '교체 선수 반영 비중 (15%)',
+            상대선수분석: '맞대결 상대 약점 공략 (25%)',
+            전술분석: '맞대결 상대 약점 공략 (25%)',
+            선발기용: '교체 선수 반영 비중 (20%)',
+            교체판단: '교체 선수 반영 비중 (25%)',
+            체력관리: '체력 항목 (동기부여 체력 효과의 20%)',
+            적응력: '열세일 때 격차 완화 (15%)',
+            열세대응: '열세일 때 격차 완화 (30%)',
+            기강유지: '열세일 때 격차 완화 (15%)',
+            의욕고취: '체력 항목 (동기부여 체력 효과의 25%)',
+            승부욕: '스피드 항목 (대분류 동기부여와 50:50)',
+            선수육성: '체력 항목 (동기부여 체력 효과의 15%)',
+            팀케미: '선발 선수 팀워크 능력치 (연계·소통·적극성 / GK 수비조율·소통·연계) — 팀워크 보정의 65%',
+            적극성: '선발 선수 멘탈 능력치 (판단력·활동량·침착성 / GK 침착성·집중력) — 멘탈 보정의 65%',
+            분위기메이커: '선발 선수 멘탈·팀워크 능력치 모두 — 각 보정의 35% · 결장 영향 완화(25%)에도 반영'
+        };
+        (function () {
+            const add = (o, fx) => { if (fx) o.d = (o.d ? o.d + '\n' : '') + '📌 팀 전력 영향: ' + fx; };
+            AB_TREES.field.forEach(g => g.subs.forEach(s => add(s, PL_FX_FIELD[s.k])));
+            AB_TREES.gk.forEach(g => g.subs.forEach(s => add(s, PL_FX_GK[s.k])));
+            AB_MGR.forEach(g => g.subs.forEach(s => add(s, MGR_FX_SUB[s.k])));
+            Object.keys(MGR_FX_MAIN).forEach(k => { MANAGER_ABILITY_DESC[k] += '\n📌 팀 전력 영향: ' + MGR_FX_MAIN[k] + ' (세부 능력치를 입력하면 해당 항목에 따로 반영)'; });
+        })();
 
         // 감독 OVR = 6가지 능력치 평균(반올림). 능력치가 아예 없으면 null.
         function calcManagerOVR(m) {
@@ -3921,7 +4111,7 @@
                     </div>`;
                 }).join('');
                 return `<div style="grid-column:1/-1; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:7px 8px; background:rgba(255,255,255,0.02);">
-                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:900; margin-bottom:5px; cursor:help;" title="${MANAGER_ABILITY_DESC[g.k]}"><span>${g.ic} ${g.k}</span><span>대분류 <b id="meMain_${gi}" style="font-size:0.95rem;"></b></span></div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:900; margin-bottom:5px; cursor:help;" title="${MANAGER_ABILITY_DESC[g.k]}"><span>${g.ic} ${g.k}${g.k === '소통' ? gNewTag('1.33') : ''}</span><span>대분류 <b id="meMain_${gi}" style="font-size:0.95rem;"></b></span></div>
                     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">${cells}</div></div>`;
             }).join('');
             meUpdateOvrPreview();
@@ -7843,6 +8033,7 @@
             raw.interMatches = raw.interMatches.map(x => ({ ...x, hId: String(x.hId), aId: String(x.aId) }));
             if(!Array.isArray(raw.managers)) raw.managers = [];
             migrateMgrSubKeys(raw);   // v1.30: 감독 세부능력치 이름 변경 반영
+            migratePlayerExtKeys(raw);   // v1.33: 선수 세부능력치 이름 변경(개인기→중거리슛, 헌신→적극성) 반영
             raw.archives = raw.archives.map(a => ({
                 ...a,
                 matches: (a.matches || []).map(m => ({ ...m, hId: String(m.hId), aId: String(m.aId) })),
@@ -8201,7 +8392,7 @@
                     if (ps.name === playerName) {
                         const p = ps.pos || '-';
                         counts[p] = (counts[p] || 0) + 1;
-                        if (ps.pos2 && ps.pos2 !== ps.pos) counts[ps.pos2] = (counts[ps.pos2] || 0) + 1;
+                        if (ps.pos2 && ps.pos2 !== ps.pos) counts[ps.pos2] = (counts[ps.pos2] || 0) + 1; if(ps.pos2 && ps.pos2 !== ps.pos) rotMoreList(ps).forEach(_r => { counts[_r.pos] = (counts[_r.pos] || 0) + 1; });
                     }
                 });
             });
@@ -8467,12 +8658,13 @@
             let t = team.tactic, fresh = false;
             if (!t || typeof t !== 'object') { t = team.tactic = { formation: '1-2-1', slots: {}, roleStyle: {}, pos: {}, mv: {}, opt: {}, style: Object.assign({}, FM_DEFAULT_STYLE), set: false }; fresh = true; }
             fmNorm(team, t);
-            if (fresh) fmFreshInit(team, t);
+            if (fresh) fmFreshInit(team, t); else fmLinkSync(team, t);   // v1.33: 🔗 자동 연동 팀은 데이터가 바뀌면 다시 짬
             return t;
         }
         // 읽기 전용(분석·요약용): team.tactic을 건드리지 않는다. 없으면 자동 배치로 만든 가상 전술을 돌려준다.
         function fmGetRO(team) {
             let t;
+            try { if (team.tactic && team.tactic.autoGen === true) fmLinkSync(team, team.tactic); } catch (e) { }   // v1.33
             if (team.tactic && typeof team.tactic === 'object') { try { t = JSON.parse(JSON.stringify(team.tactic)); } catch (e) { t = null; } }
             const fresh = !t;
             if (!t) t = { formation: '1-2-1', slots: {}, roleStyle: {}, pos: {}, mv: {}, opt: {}, style: Object.assign({}, FM_DEFAULT_STYLE), set: false };
@@ -9046,7 +9238,7 @@
         ];
         const FM_TRAIT_MAX = 3;
         // ----- 🔬 세부 능력치 (선택 입력: p.ext) — 비어 있으면 기존 7개 능력치에서 파생 -----
-        const FM_EXT = { 판단력: '🧠 판단력', 활동량: '🏃 활동량', 롱패스: '🎯 롱패스', 피지컬: '💪 피지컬(몸싸움)', 공격위치: '⚔️ 공격 위치선정', 수비위치: '🛡️ 수비 위치선정', 개인기: '✨ 개인기', 대인마크: '🧍 대인 마크', 침착성: '🧊 침착성', 연계: '🔗 연계 플레이', 소통: '🗣️ 소통', 헌신: '🤲 헌신' };
+        const FM_EXT = { 판단력: '🧠 판단력', 활동량: '🏃 활동량', 롱패스: '🎯 롱패스', 피지컬: '💪 피지컬(몸싸움)', 공격위치: '⚔️ 공격 위치선정', 수비위치: '🛡️ 수비 위치선정', 중거리슛: '🚀 중거리슛', 대인마크: '🧍 대인 마크', 침착성: '🧊 침착성', 연계: '🔗 연계 플레이', 소통: '🗣️ 소통', 적극성: '🔥 적극성' };
         function fmExtDerive(p, k) {
             const S = x => fmStat(p, x);
             const f = AB_DERIVE.field[k];
@@ -9134,26 +9326,40 @@
         // 선발 선수의 특성·세부 능력치·팀워크 → 전력 보정 · 시너지/충돌 · 해설 (fmEffects·fmHints가 사용)
         // ======= v1.11: 직접 입력한 소분류 → 팀 전력 항목 보정 (자동값과 다른 만큼만 반영 = 이중 계산 없음) =======
         //  전술판이 있으면 fmTraitEffects가, 없으면 tcTeamPowerCore가 같은 함수를 호출하므로 전술판 유무와 관계없이 같은 효과가 적용된다.
-        function abSubFx(fp, gk, st) {
+        //  adj(선택): 감독 소통 효과로 선수 능력치가 몇 점 오르내리는지 { f: {필드 소분류: 점수}, gk: {GK 소분류: 점수} } — 직접 입력 차이에 더해서 같은 식으로 반영한다
+        function abSubFx(fp, gk, st, adj) {
             const cats = { atk: 0, def: 0, pas: 0, dri: 0, spd: 0, sta: 0 }; let overall = 0;
             st = st || {};
             if (fp.length) {
-                const md = k => fmMean(fp.map(p => fmExtDelta(p, k)));
+                const md = k => fmMean(fp.map(p => fmExtDelta(p, k))) + ((adj && adj.f && adj.f[k]) || 0);
                 const long = st.build === 'long' || st.attack === 'counter';
                 cats.sta += md('활동량') * .05; cats.pas += md('롱패스') * .04 * (long ? 1.5 : 1) + md('판단력') * .02;
                 cats.def += md('피지컬') * .03 + md('수비위치') * .04; cats.atk += md('피지컬') * .02 + md('공격위치') * .04;
                 overall += fmClamp(md('판단력') * .02, -.5, .5);
-                cats.dri += md('개인기') * .04; cats.atk += md('개인기') * .02 + md('침착성') * .03;
-                cats.def += md('대인마크') * .04 + md('소통') * .02 + md('헌신') * .03; cats.pas += md('연계') * .04; cats.sta += md('헌신') * .02;
+                cats.atk += md('중거리슛') * .05 + md('침착성') * .03;   // v1.33: 개인기 → 중거리슛 (드리블 중복 반영 제거, 공격에만 반영)
+                cats.def += md('대인마크') * .04 + md('소통') * .02 + md('적극성') * .03; cats.pas += md('연계') * .04; cats.sta += md('적극성') * .02;
                 overall += fmClamp(md('침착성') * .01 + md('소통') * .01, -.3, .3);
             }
-            if (gk && gk.ext) {
-                const gm = k => abExtDelta(gk, k);
+            if (gk && (gk.ext || adj)) {
+                const gm = k => abExtDelta(gk, k) + ((adj && adj.gk && adj.gk[k]) || 0);
                 cats.def += (gm('1대1방어') + gm('핸들링') + gm('공중볼')) * .02 + gm('수비조율') * .02 + gm('점프력') * .01;
                 cats.pas += (gm('킥력') + gm('발밑')) * .02 + gm('연계') * .02;
                 overall += fmClamp((gm('침착성') + gm('집중력') + gm('소통')) * .01, -.3, .3);
             }
             return { cats, overall };
+        }
+        // v1.33: 감독 소통 세부 3종(팀 케미 · 적극성 · 분위기메이커)이 선발 선수의 멘탈 · 팀워크 능력치를 올리거나 내리는 효과 (전술판 유무와 관계없이 tcTeamPowerCore가 호출)
+        //  팀워크 능력치: 필드 연계 · 소통 · 적극성 / GK 수비 조율 · 소통 · 연계    멘탈 능력치: 필드 판단력 · 활동량 · 침착성 / GK 침착성 · 집중력
+        //  (GK 판단력은 기본 능력치라 소분류 보정에서 제외) 보정 전후 abSubFx 차이만 돌려줘서 직접 입력한 소분류와 이중 계산되지 않는다.
+        function abMgrCommFx(fp, gk, mg, st) {
+            const z = { cats: { atk: 0, def: 0, pas: 0, dri: 0, spd: 0, sta: 0 }, overall: 0 };
+            if (!mg || !mg.on || (!mg.shTeam && !mg.shMental)) return z;
+            const T = mg.shTeam || 0, M = mg.shMental || 0;
+            const adj = { f: { 연계: T, 소통: T, 적극성: T, 판단력: M, 활동량: M, 침착성: M }, gk: { 수비조율: T, 소통: T, 연계: T, 침착성: M, 집중력: M } };
+            const a = abSubFx(fp, gk, st || {}, adj), b = abSubFx(fp, gk, st || {});
+            Object.keys(z.cats).forEach(k => { z.cats[k] = a.cats[k] - b.cats[k]; });
+            z.overall = a.overall - b.overall;
+            return z;
         }
         function fmTraitEffects(c, st) {
             const cats = { atk: 0, def: 0, pas: 0, dri: 0, spd: 0, sta: 0 }, notes = []; let overall = 0;
@@ -9250,16 +9456,61 @@
             Object.keys(b).forEach(k => { if (!FM_BEH[k] || typeof b[k] !== 'number' || !isFinite(b[k])) delete b[k]; else b[k] = fmClamp(Math.round(b[k]), 0, 5); });
             return b;
         }
-        function fmBehNum(m, k) { const b = mgrBehNorm(m); return b && typeof b[k] === 'number' ? b[k] : null; }
+        function fmBehNum(m, k) { const b = mgrBehEff(m); return b && typeof b[k] === 'number' ? b[k] : null; }
         function mgrBehHtml(m) {
-            const b = mgrBehNorm(m) || {};
+            const lk = mgrLinked(m, 'beh'), lp = lk ? mgrLivePlan(m, 'beh') : null, eff = !!lp;
+            const b = eff ? mgrBehEff(m) : (mgrBehNorm(m) || {});
             const rows = Object.keys(FM_BEH).map(k => { const has = typeof b[k] === 'number', v = has ? b[k] : 3, f = FM_BEH[k];
-                return `<div class="mt-brow${has ? '' : ' mt-un'}" title="${gEsc(f.d)}"><div class="mt-bh"><b>${f.n}</b><span class="mt-slv">${has ? v + ' / 5' : '미설정'}</span>${has ? `<a style="cursor:pointer;color:#38bdf8;font-size:.72rem;" title="미설정으로 되돌리기" onclick="mgrSetBeh('${k}','')">↺</a>` : ''}</div><div class="mt-bs"><span class="mt-lo">${f.lo}</span><input class="mt-sl" type="range" min="0" max="5" step="1" value="${v}" oninput="const r=this.closest('.mt-brow');r.querySelector('.mt-slv').textContent=this.value+' / 5';r.classList.remove('mt-un')" onchange="mgrSetBeh('${k}',this.value)"><span class="mt-hi">${f.hi}</span></div></div>`; }).join('');
-            return `<div class="mt-title" style="margin-top:12px;">🧑‍💼 운영 성향 ${gUpdTag('1.17')} <span class="mt-sub">0~5단계 슬라이더 · 안 움직이면 미설정(효과 없음)</span></div>${rows}
-                <div class="mt-note">${gNewTag('1.32')} 🔄 로테이션 · ⭐ 주전 선호는 교체 반영 비중과 팀 호흡 영향에 반영됩니다(v1.32). 🎌 세트피스 중시는 전술판 전력에 반영됩니다(3 이상 + 세트피스 키커 선수가 선발). 🛡️ 앞서면 수비 전환 · 🔥 지면 공격 강화 · 🧤 플라잉 GK 선호 · ⏱️ 교체 시점 · 🫁 피로 관리는 <b>v1.17 전·후반 분할 시뮬레이션</b>(🎲 경기 · 🏁 시즌 시뮬레이션과 승률 예측)에 반영됩니다. 🔄 로테이션 · ⭐ 주전 선호는 아직 저장만 됩니다.</div>`;
+                return `<div class="mt-brow${has ? '' : ' mt-un'}" title="${gEsc(f.d)}"><div class="mt-bh"><b>${f.n}</b><span class="mt-slv">${has ? v + ' / 5' : '미설정'}</span>${eff ? '<i class="mt-auto-b lk">🔗 연동</i>' : (has ? `<a style="cursor:pointer;color:#38bdf8;font-size:.72rem;" title="미설정으로 되돌리기" onclick="mgrSetBeh('${k}','')">↺</a>` : '')}</div><div class="mt-bs"><span class="mt-lo">${f.lo}</span><input class="mt-sl" type="range" min="0" max="5" step="1" value="${v}"${eff ? ' disabled' : ''} oninput="const r=this.closest('.mt-brow');r.querySelector('.mt-slv').textContent=this.value+' / 5';r.classList.remove('mt-un')" onchange="mgrSetBeh('${k}',this.value)"><span class="mt-hi">${f.hi}</span></div></div>`; }).join('');
+            return `<div class="mt-title" style="margin-top:12px;">🧑‍💼 운영 성향 ${gUpdTag('1.17')}${gNewTag('1.33')} <span class="mt-sub">0~5단계 슬라이더 · 안 움직이면 미설정(효과 없음)</span></div>${mgrModeBar('beh', m, lk, lp)}${rows}
+                <div class="mt-note">${gNewTag('1.32')} 🔄 로테이션 · ⭐ 주전 선호는 교체 반영 비중과 팀 호흡 영향에 반영됩니다(v1.32). 🎌 세트피스 중시는 전술판 전력에 반영됩니다(3 이상 + 세트피스 키커 선수가 선발). 🛡️ 앞서면 수비 전환 · 🔥 지면 공격 강화 · 🧤 플라잉 GK 선호 · ⏱️ 교체 시점 · 🫁 피로 관리는 <b>v1.17 전·후반 분할 시뮬레이션</b>(🎲 경기 · 🏁 시즌 시뮬레이션과 승률 예측)에 반영됩니다.</div>`;
+        }
+        // v1.33: 🔗 자동 연동 / ✋ 수동 입력 전환 바 (scope: 'tac' 전술 성향 · 'beh' 운영 성향)
+        function mgrModeBar(scope, m, linked, plan) {
+            const und = !!(window._mgrAutoUndo && window._mgrAutoUndo.name === m.name), lab = scope === 'tac' ? '전술 성향' : '운영 성향';
+            const rep0 = (window._mgrAutoReport && window._mgrAutoReport.name === m.name) ? window._mgrAutoReport : null;
+            let body = '';
+            if (linked) {
+                body = plan ? `<div class="mt-rep"><div class="mt-li">${plan.head}</div>${(scope === 'tac' ? plan.tacLines : plan.behLines).map(l => `<div class="mt-li">${l}</div>`).join('')}</div>`
+                    : `<div class="mt-note">⚠️ 연동할 근거(감독 능력치 · 소속 팀 · 경기 기록)가 아직 없어 저장된 값을 임시로 사용합니다. 근거가 생기면 자동으로 계산됩니다.</div>`;
+            } else {
+                body = `<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:5px;"><button class="fm-act" onclick="mgrAutoSetAll('${scope}')" title="지금 데이터로 한 번만 계산해 채웁니다 (이후에는 고정)">🪄 지금 값으로 한 번 채우기</button></div>${rep0 ? `<div class="mt-rep">${rep0.lines.map(l => `<div class="mt-li">${l}</div>`).join('')}</div>` : ''}`;
+            }
+            return `<div class="mt-autoset"><div class="mt-modebar"><b>${lab} 설정 방식</b><button class="fm-act mt-mode${linked ? ' on' : ''}" onclick="mgrSetLink('${scope}',true)" title="팀 이동 · 경기 기록 추가/수정 · 능력치 변경에 맞춰 실시간으로 자동 계산 · 적용">🔗 자동 연동</button><button class="fm-act mt-mode${linked ? '' : ' on'}" onclick="mgrSetLink('${scope}',false)" title="직접 입력한 값을 고정합니다">✋ 수동 입력</button>${und ? '<button class="fm-act" onclick="mgrAutoUndo()" title="직전 변경 이전 상태로 복원 (이번 접속 중에만)">↩ 되돌리기</button>' : ''}</div>
+                <div class="mt-note" style="margin-top:4px;">${linked ? '🔗 <b>실시간 연동 중</b> — 이 감독의 경기 기록 · 감독 능력치 · 지금 맡은 팀의 전력이 바뀌면(팀 이동 · 기록 추가/수정 · 능력치 변경) 자동으로 다시 계산해 바로 적용합니다. 값을 직접 정하려면 ✋ 수동 입력을 누르세요.' : '✋ <b>수동 입력</b> — 직접 고른 값이 고정되며 팀 · 기록이 바뀌어도 변하지 않습니다. 실시간으로 맞추려면 🔗 자동 연동을 누르세요.'}</div>${body}</div>`;
+        }
+        // 🔗 / ✋ 전환 — 수동으로 바꿀 때는 지금 적용 중이던 연동 값을 그대로 고정값으로 가져온다 (값이 갑자기 바뀌지 않음)
+        function mgrSetLink(scope, on) {
+            const m = findManagerRef(_mgrModalName); if (!m || !['tac', 'beh'].includes(scope)) return;
+            if (mgrLinked(m, scope) === on) return;
+            window._mgrAutoUndo = { name: m.name, snap: m.tac ? JSON.stringify(m.tac) : null }; window._mgrAutoReport = null;
+            const t = m.tac = m.tac || {}; t.link = t.link || {};
+            if (on) { t.link[scope] = true; }
+            else {
+                const lp = mgrLivePlan(m, scope), kinds = ['forms', 'defs', 'atks'];
+                if (scope === 'tac') {
+                    if (lp && lp.tac) {
+                        kinds.forEach(k => { if (!Array.isArray(t[k])) t[k] = ['', '', '']; });
+                        if (!t.man || typeof t.man !== 'object') t.man = {};
+                        t.sm = t.sm || {}; delete t.presets;
+                        kinds.forEach(k => { const a = lp.tac[k]; if (!a) return; t[k] = a.slice(0, 3); t.man[k] = true; t.sm[k] = true; });
+                    }
+                } else if (lp) {
+                    mgrBehNorm(m); t.beh = t.beh || {}; t.sm = t.sm || {};
+                    Object.keys(FM_BEH).forEach(k => { if (lp.beh[k]) t.beh[k] = lp.beh[k].v; });
+                    t.sm.beh = true;
+                }
+                t.link[scope] = false;
+            }
+            if (!t.link.tac && !t.link.beh) delete t.link;
+            if (mgrTacEmpty(t)) delete m.tac;
+            let n = 0; try { n = fmReapplyAutoForManager(m.name); } catch (e) { console.error(e); }
+            window._mgrTacOpen = true; save(); mgrRenderTacticBlock(m.name);
+            try { fmRefresh(); } catch (e) { }
+            if (typeof gToast === 'function') { try { gToast((on ? '🔗 ' : '✋ ') + m.name + ' 감독의 ' + (scope === 'tac' ? '전술 성향' : '운영 성향') + (on ? '을 자동 연동으로 바꿨습니다.' : '을 현재 값으로 고정했습니다.')); } catch (e) { } }
         }
         function mgrSetBeh(k, v) {
-            const m = findManagerRef(_mgrModalName); if (!m || !FM_BEH[k]) return;
+            const m = findManagerRef(_mgrModalName); if (!m || !FM_BEH[k] || mgrLinked(m, 'beh')) return;   // v1.33: 🔗 자동 연동 중에는 수정 불가 (✋ 수동 입력으로 전환)
             const t = m.tac = m.tac || {}; mgrBehNorm(m); t.beh = t.beh || {};
             if (t.sm) delete t.sm.beh; window._mgrAutoReport = null;   // v1.31
             if (v === '' || v === null) delete t.beh[k]; else t.beh[k] = fmClamp(Math.round(+v), 0, 5);
@@ -9386,6 +9637,40 @@
             MGR_AUTO_CACHE.map[name] = out;
             return out;
         }
+        // ======= v1.33: 🔗 실시간 자동 연동 =======
+        //  · 감독 🧠 전술 성향 · 🧑‍💼 운영 성향: m.tac.link = { tac, beh } 가 켜져 있으면 저장된 값 대신 '지금 데이터'로 매번 새로 계산한 값을 쓴다
+        //    (팀 이동 · 경기 기록 추가/수정 · 선수/감독 능력치 변경 → 저장(save)될 때마다 캐시를 비우고 다시 계산) · 꺼져 있으면(✋ 수동) 저장된 값 그대로 고정
+        //  · 팀 전술판(팀 데이터센터): tactic.autoGen === true 가 '🔗 자동 연동' — 읽을 때마다 데이터가 바뀌었는지 확인해 포메이션 · 라인업 · 전술을 다시 짠다. 직접 고치면 ✋ 수동(고정)
+        //  · 모든 소비처(🤖 최적 세팅 · 전술판 가점 · 전략 분석 · 전력분석 · 시뮬레이션)는 fmMgrPref / fmBehNum 을 거치므로 자동으로 같은 값을 본다
+        var MAU_LIVE = { key: '', map: {}, busy: 0 };
+        var FM_LINK_SIG = {}, FM_LINK_BUSY = false;
+        function mauLiveKey() {
+            const mm = (state.teams || []).map(t => t.id + ':' + (t.manager || '')).join(',');
+            return (window.MAU_VER || 0) + '|' + (state.matches || []).length + '|' + (state.archives || []).length + '|' + mm;
+        }
+        function mauLive(name) {   // 자동 연동용 실시간 계산 (같은 데이터면 캐시) — 계산 중 재진입이면 null(저장값 사용)
+            if (!name || MAU_LIVE.busy) return null;
+            const key = mauLiveKey(); if (MAU_LIVE.key !== key) MAU_LIVE = { key, map: {}, busy: 0 };
+            if (name in MAU_LIVE.map) return MAU_LIVE.map[name];
+            MAU_LIVE.busy++; let plan = null;
+            try { plan = mauCompute(name); } catch (e) { console.error('감독 자동 연동 계산 오류', e); } finally { MAU_LIVE.busy--; }
+            MAU_LIVE.map[name] = plan; return plan;
+        }
+        const mgrLinked = (m, scope) => !!(m && m.tac && m.tac.link && m.tac.link[scope]);
+        function mgrLivePlan(m, scope) { if (!mgrLinked(m, scope)) return null; const p = mauLive(m.name); return (p && p.basis) ? p : null; }
+        function mgrBehEff(m) {   // 운영 성향의 '지금 적용 값' — 자동 연동이면 실시간 값, 아니면 저장값
+            const lp = mgrLivePlan(m, 'beh');
+            if (lp) { const o = {}; Object.keys(FM_BEH).forEach(k => { if (lp.beh[k]) o[k] = lp.beh[k].v; }); return o; }
+            return mgrBehNorm(m);
+        }
+        function fmLinkSync(team, t) {   // 🔗 자동 연동 팀 전술판 — 데이터가 바뀌었으면 최적 세팅으로 다시 짠다
+            if (!team || !t || t.autoGen !== true || FM_LINK_BUSY || MAU_LIVE.busy || !(team.players || []).length) return;
+            const id = String(team.id), key = mauLiveKey() + '|' + team.players.length;
+            if (FM_LINK_SIG[id] === key) return;
+            FM_LINK_BUSY = true;
+            try { const res = fmOptimize(team, 'all', t.style); if (res) { fmApplyOptTo(team, t, res, 'all'); t.autoGen = true; } FM_LINK_SIG[id] = key; }
+            catch (e) { console.error('전술 자동 연동 오류', e); } finally { FM_LINK_BUSY = false; }
+        }
         function fmMgrPref(m) {
             const t = (m && m.tac) || {};
             const norm = (a, ok) => { const o = ['', '', '']; (Array.isArray(a) ? a : []).slice(0, 3).forEach((k, i) => { if (ok(k) && !o.includes(k)) o[i] = k; }); return o; };
@@ -9409,10 +9694,15 @@
                 out[kind] = o; out.autoKinds[kind] = true;
                 if (kind !== 'forms') out.legacy = false;
             });
-            out.auto = au;
+            out.auto = au; out.linked = {};
+            if (m && t.link && t.link.tac) {   // v1.33: 🔗 자동 연동 — 저장값 대신 실시간 계산값
+                const lp = mgrLivePlan(m, 'tac');
+                if (lp && lp.tac) { ['forms', 'defs', 'atks'].forEach(kind => { const a = lp.tac[kind]; if (!a) return; out[kind] = a.slice(0, 3); out.manual[kind] = false; out.autoKinds[kind] = false; out.linked[kind] = true; }); out.legacy = false; }
+                out.linkOn = true; out.linkPlan = lp || null;
+            }
             return out;
         }
-        const mgrTacEmpty = t => !(t.forms || []).some(Boolean) && !(t.presets || []).some(Boolean) && !(t.defs || []).some(Boolean) && !(t.atks || []).some(Boolean) && !(t.beh && Object.keys(t.beh).length) && !(t.man && Object.keys(t.man).some(k => t.man[k]));
+        const mgrTacEmpty = t => !(t.forms || []).some(Boolean) && !(t.presets || []).some(Boolean) && !(t.defs || []).some(Boolean) && !(t.atks || []).some(Boolean) && !(t.beh && Object.keys(t.beh).length) && !(t.man && Object.keys(t.man).some(k => t.man[k])) && !(t.link && (t.link.tac || t.link.beh));
         function fmMgrStyleScore(m, key) { const w = FM_PRESETS[key].mg; let s = 0, t = 0; Object.keys(w).forEach(k => { s += fmMgrStat(m, k) * w[k]; t += w[k]; }); return s / t; }
         const fmRankTag = (arr, k) => { const i = arr.indexOf(k); return i >= 0 ? ` <i class="fm-rank" title="감독 선호 ${i + 1}순위">감독 ${i + 1}</i>` : ''; };
         // 현재 선발(c)에서 한 전술 조합(style)의 평균 적합도 (자리·구성 궁합 감점 포함)
@@ -9485,9 +9775,28 @@
         function fmRunOptimize(mode) {
             const team = fmCurrentTeam(); if (!team) return;
             const tac = fmGet(team), res = fmOptimize(team, mode, tac.style); if (!res) return;
-            fmApplyOptTo(team, tac, res, mode); tac.set = true; tac.autoGen = true;
+            fmApplyOptTo(team, tac, res, mode); tac.set = true; if (mode === 'formation') delete tac.autoGen; else { tac.autoGen = true; FM_LINK_SIG[String(team.id)] = mauLiveKey() + '|' + team.players.length; }   // v1.33: 🤖 최적 세팅 = 자동 연동 켬 · 📐 최적 포메이션(현재 전술 유지) = 수동 고정
             fmAutoReport = { teamId: String(team.id), mode, why: res.why.slice() };
             fmSelName = null; save(); fmRefresh();
+        }
+        // v1.33: 팀 데이터센터 › 전술판 — 🔗 자동 연동 / ✋ 수동(고정) 전환
+        function fmSetLink(on) {
+            const team = fmCurrentTeam(); if (!team) return;
+            const tac = fmGet(team), toast = x => { if (typeof gToast === 'function') { try { gToast(x); } catch (e) { } } };
+            if (on) {
+                if (tac.autoGen === true) return;
+                if (tac.set === true && !confirm(team.name + ' 전술판을 🔗 자동 연동으로 바꿀까요?\n지금 직접 구성한 포메이션 · 라인업 · 전술 · 화살표가 선수단 · 감독 성향 · 경기 기록에 맞춘 최적 세팅으로 다시 짜이고, 이후에도 데이터가 바뀔 때마다 자동으로 갱신됩니다.')) return;
+                const res = fmOptimize(team, 'all', tac.style); if (!res) { toast('선수단이 없어 자동 연동할 수 없습니다.'); return; }
+                fmApplyOptTo(team, tac, res, 'all'); tac.set = true; tac.autoGen = true; tac.apply = tac.apply !== false;
+                FM_LINK_SIG[String(team.id)] = mauLiveKey() + '|' + team.players.length;
+                fmAutoReport = { teamId: String(team.id), mode: 'all', why: res.why.slice() };
+                toast('🔗 ' + team.name + ' 전술판을 자동 연동으로 바꿨습니다.');
+            } else {
+                if (tac.autoGen !== true) return;
+                delete tac.autoGen; tac.set = true; fmAutoReport = null;
+                toast('✋ ' + team.name + ' 전술판을 현재 상태로 고정했습니다. (수동)');
+            }
+            save(); fmRefresh();
         }
         function fmApplyPreset(key) { const team = fmCurrentTeam(); if (!team || !FM_PRESETS[key]) return; const tac = fmGet(team); tac.style = Object.assign({}, FM_DEFAULT_STYLE, FM_PRESETS[key].st, { fgk: !!tac.style.fgk }); fmCommit(tac); }
         // 감독 선호/능력치가 바뀌면 '자동 세팅' 상태인 그 감독 팀의 전술판을 다시 최적화
@@ -9696,7 +10005,7 @@
             const toast = s => { if (typeof gToast === 'function') { try { gToast(s); } catch (e) { } } };
             let plan = null; try { plan = mauCompute(m.name); } catch (e) { console.error('감독 자동 설정 오류', e); }
             if (!plan || !plan.basis) { toast('근거가 될 데이터(감독 능력치 · 소속 팀 · 경기 기록)가 없어 자동 설정할 수 없습니다.'); return; }
-            const doTac = scope !== 'beh', doBeh = scope !== 'tac';
+            const doTac = scope !== 'beh' && !mgrLinked(m, 'tac'), doBeh = scope !== 'tac' && !mgrLinked(m, 'beh');   // v1.33: 자동 연동 중인 쪽은 고정하지 않음
             const t0 = m.tac || {}, sm0 = t0.sm || {}, pref0 = fmMgrPref(m);
             const hasManual = (doTac && ['forms', 'defs', 'atks'].some(k => pref0.manual && pref0.manual[k] && !sm0[k])) || (doBeh && !sm0.beh && Object.keys(mgrBehNorm(m) || {}).length > 0);
             if (hasManual && !confirm(m.name + ' 감독이 직접 고른 ' + (doTac && doBeh ? '전술 · 운영 성향' : doTac ? '전술 성향' : '운영 성향') + ' 값을 자동 계산 결과로 바꿀까요?\n(바로 아래 ↩ 되돌리기 버튼으로 이전 상태로 돌릴 수 있습니다 — 이번 접속 중에만)')) return;
@@ -9740,15 +10049,15 @@
             const sec = document.getElementById('managerTacticSection'); if (!sec) return;
             const m = findManagerRef(name); if (!m) { sec.style.display = 'none'; return; }
             sec.style.display = '';
-            const pref = fmMgrPref(m), team = managerCurrentTeam(name);
+            const pref = fmMgrPref(m), team = managerCurrentTeam(name), lkT = !!pref.linkOn;
             const top = ph => Object.keys(FM_PHASE_PRESETS[ph]).map(k => ({ k, v: fmMgrPhaseScore(m, ph, k) })).sort((a, b) => b.v - a.v)[0];
-            const sel = (kind, i, list, cur) => `<select class="mt-sel" onchange="mgrSetTacPref('${kind}',${i},this.value)"><option value="">— 미설정 —</option>${list.map(([k, l]) => `<option value="${k}"${cur === k ? ' selected' : ''}>${gEsc(l)}</option>`).join('')}</select>`;
+            const sel = (kind, i, list, cur) => `<select class="mt-sel"${lkT ? ' disabled' : ''} onchange="mgrSetTacPref('${kind}',${i},this.value)"><option value="">— 미설정 —</option>${list.map(([k, l]) => `<option value="${k}"${cur === k ? ' selected' : ''}>${gEsc(l)}</option>`).join('')}</select>`;
             const fl = Object.keys(FM_FORMATIONS).map(k => [k, FM_FORMATIONS[k].label]);
             const dl = Object.keys(FM_DEF_PRESETS).map(k => [k, FM_DEF_PRESETS[k].n]), al = Object.keys(FM_ATK_PRESETS).map(k => [k, FM_ATK_PRESETS[k].n]);
             const row = (label, kind, list, cur) => {
                 const ak = pref.autoKinds && pref.autoKinds[kind], det = (pref.auto && pref.auto[kind]) || [];
                 const tip = ak ? '전술 기록 ' + pref.auto.n + '경기에서 많이 쓴 순으로 자동 설정 — ' + det.map((r, i) => { const z = list.find(q => q[0] === r.k); return (i + 1) + '순위 ' + (z ? z[1] : r.k) + ' ' + r.g + '경기 ' + r.w + '승 ' + r.l + '패'; }).join(' / ') : '직접 고른 설정';
-                const bd = ak ? `<i class="mt-auto-b" title="${gEsc(tip)}">📊 자동</i>` : (pref.manual && pref.manual[kind] && m.tac && m.tac.sm && m.tac.sm[kind] ? `<i class="mt-auto-b sm" title="기록 · 감독 능력치 · 팀 전력으로 자동 설정 — 드롭다운을 바꾸면 직접 설정으로 바뀝니다">🪄 자동</i>` : pref.manual && pref.manual[kind] ? `<i class="mt-auto-b man" title="직접 고른 설정 — 아래 버튼으로 기록 기반 자동 설정으로 되돌릴 수 있습니다">✋ 직접</i>` : '');
+                const bd = (pref.linked && pref.linked[kind]) ? `<i class="mt-auto-b lk" title="실시간 자동 연동 — 기록 · 감독 능력치 · 팀 전력이 바뀌면 자동으로 갱신됩니다">🔗 연동</i>` : ak ? `<i class="mt-auto-b" title="${gEsc(tip)}">📊 자동</i>` : (pref.manual && pref.manual[kind] && m.tac && m.tac.sm && m.tac.sm[kind] ? `<i class="mt-auto-b sm" title="기록 · 감독 능력치 · 팀 전력으로 자동 설정 — 드롭다운을 바꾸면 직접 설정으로 바뀝니다">🪄 자동</i>` : pref.manual && pref.manual[kind] ? `<i class="mt-auto-b man" title="직접 고른 설정 — 아래 버튼으로 기록 기반 자동 설정으로 되돌릴 수 있습니다">✋ 직접</i>` : '');
                 return `<div class="mt-row3"><b>${label}<br>${bd}</b>${[0, 1, 2].map(i => sel(kind, i, list, cur[i])).join('')}</div>`;
             };
             const combo = (pref.defs[0] || pref.atks[0]) ? `<div class="mt-combo">1순위 조합: 🛡️ <b>${pref.defs[0] ? FM_DEF_PRESETS[pref.defs[0]].n : '미설정'}</b> + ⚔️ <b>${pref.atks[0] ? FM_ATK_PRESETS[pref.atks[0]].n : '미설정'}</b></div>` : '';
@@ -9757,21 +10066,21 @@
             if (team && (team.players || []).length) {
                 const res = fmOptimize(team, 'all'), tac = team.tactic;
                 if (res) auto = `<div class="mt-auto"><div class="mt-h">🤖 ${gEsc(team.name)} 최적 세팅 미리보기</div>${res.why.slice(0, 5).map(w => `<div class="mt-li">${w}</div>`).join('')}
-                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><button class="fm-act" onclick="mgrApplyOptimize()">🤖 이 팀 전술판에 적용</button>${tac && tac.autoGen ? '<span class="fm-badge cus">자동 세팅 유지 중 — 선호·능력치를 바꾸면 다시 맞춰집니다</span>' : ''}</div></div>`;
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><button class="fm-act" onclick="mgrApplyOptimize()">🤖 이 팀 전술판에 적용</button>${tac && tac.autoGen ? '<span class="fm-badge cus">🔗 자동 연동 중 — 선호·능력치·기록이 바뀌면 다시 맞춰집니다</span>' : ''}</div></div>`;
             } else auto = `<div class="mt-li" style="color:var(--text-muted);">현재 맡은 팀이 없어 최적 세팅 미리보기를 표시하지 않습니다.</div>`;
             const td = top('def'), ta = top('atk');
             const anyMan = ['forms', 'defs', 'atks'].some(k => pref.manual && pref.manual[k]), au = pref.auto;
             const autoBar = au ? `<div class="mt-note" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">📊 전술 기록 ${au.n}경기 기준 — 직접 고르지 않은 항목은 많이 쓴 순으로 자동 설정됩니다.${anyMan ? ` <button class="fm-act" onclick="mgrResetTacAuto()">📊 기록으로 자동 설정</button>` : ''}</div>` : `<div class="mt-note">📊 이 감독이 기록된 경기(전술 기록)가 생기면 많이 쓴 포메이션 · 수비 시 · 공격 시 전술이 자동으로 1~3순위에 채워집니다.</div>`;
             const rep = (window._mgrAutoReport && window._mgrAutoReport.name === name) ? window._mgrAutoReport : null, und = !!(window._mgrAutoUndo && window._mgrAutoUndo.name === name);   // v1.31
-            const autoSetBar = `<div class="mt-autoset"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><button class="fm-act" onclick="mgrAutoSetAll('all')" title="과거 경기 기록 · 감독 능력치 · 소속 팀 전력을 함께 보고 전술 성향과 운영 성향을 한 번에 설정합니다">🪄 전술 · 운영 성향 자동 설정${gNewTag('1.31')}</button><button class="fm-act" onclick="mgrAutoSetAll('tac')">🧠 전술만</button><button class="fm-act" onclick="mgrAutoSetAll('beh')">🧑‍💼 운영만</button>${und ? '<button class="fm-act" onclick="mgrAutoUndo()" title="자동 설정 직전 상태로 복원 (이번 접속 중에만)">↩ 되돌리기</button>' : ''}</div><div class="mt-note" style="margin-top:4px;">① 이 감독의 과거 경기 기록 · ② 감독 능력치(세부능력치 포함) · ③ 지금 맡은 팀의 전력을 함께 봅니다. 기록이 적을수록 기록 비중은 줄고 능력치 · 팀 전력 쪽으로 기울며, 맡은 팀이 없으면 팀 전력은 빼고 계산합니다.</div>${rep ? `<div class="mt-rep">${rep.lines.map(l => `<div class="mt-li">${l}</div>`).join('')}</div>` : ''}</div>`;
-            sec.innerHTML = `<div class="mt-title" data-new="1.13">🧠 전술 성향 <span class="mt-sub">포메이션 · 수비 시 전술 · 공격 시 전술 각각 1~3순위</span></div>
+            const autoSetBar = mgrModeBar('tac', m, lkT, pref.linkPlan);   // v1.33: 🔗 자동 연동 / ✋ 수동 입력
+            sec.innerHTML = `<div class="mt-title" data-new="1.13">🧠 전술 성향 ${gNewTag('1.33')} <span class="mt-sub">포메이션 · 수비 시 전술 · 공격 시 전술 각각 1~3순위</span></div>
                 <div class="mt-style">능력치로 본 스타일: 🛡️ <b>${FM_DEF_PRESETS[td.k].n}</b> <span class="mut">${Math.round(td.v)}</span> · ⚔️ <b>${FM_ATK_PRESETS[ta.k].n}</b> <span class="mut">${Math.round(ta.v)}</span></div>
                 ${autoSetBar}${legacy}<div class="mt-row3 mt-head"><b></b><span>1순위</span><span>2순위</span><span>3순위</span></div>
-                ${row('📐 포메이션', 'forms', fl, pref.forms)}${row('🛡️ 수비 시', 'defs', dl, pref.defs)}${row('⚔️ 공격 시', 'atks', al, pref.atks)}${autoBar}${combo}${auto}${mgrBehHtml(m)}
+                ${row('📐 포메이션', 'forms', fl, pref.forms)}${row('🛡️ 수비 시', 'defs', dl, pref.defs)}${row('⚔️ 공격 시', 'atks', al, pref.atks)}${lkT ? '' : autoBar}${combo}${auto}${mgrBehHtml(m)}
                 <div class="mt-note">직접 고르지 않은 항목은 감독의 전술 기록(많이 쓴 순 · 같으면 승률)으로 자동 설정되고, 드롭다운을 고르면 그 항목은 직접 설정으로 바뀝니다. 순위가 높을수록 자동 세팅 때 가점이 붙습니다 (포메이션 +2.5/+1.6/+0.8 · 수비 시와 공격 시 각각 +1.8/+1.2/+0.6). 수비 시와 공격 시는 따로 골라 조합하며, 선수단 구성과 감독 능력치(전술 · 스타일 적합)를 함께 비교해 최적 조합을 고릅니다.</div>`;
         }
         function mgrSetTacPref(kind, i, val) {
-            const m = findManagerRef(_mgrModalName); if (!m || !['forms', 'defs', 'atks'].includes(kind)) return;
+            const m = findManagerRef(_mgrModalName); if (!m || !['forms', 'defs', 'atks'].includes(kind) || mgrLinked(m, 'tac')) return;   // v1.33
             const t = m.tac = m.tac || {}, cur = fmMgrPref(m);
             // 예전 종합 프리셋 선호는 처음 고칠 때 수비 시 / 공격 시 값으로 옮기고 옛 값은 지운다
             ['forms', 'defs', 'atks'].forEach(k => { if (!Array.isArray(t[k])) t[k] = (cur.autoKinds && cur.autoKinds[k] && k !== kind) ? ['', '', ''] : cur[k].slice(); while (t[k].length < 3) t[k].push(''); });   // v1.30: 자동 설정 중인 다른 항목은 저장하지 않음
@@ -9789,7 +10098,7 @@
         }
         // v1.30: 직접 설정한 전술 성향을 지우고 전술 기록 기반 자동 설정으로 되돌림
         function mgrResetTacAuto() {
-            const m = findManagerRef(_mgrModalName); if (!m) return;
+            const m = findManagerRef(_mgrModalName); if (!m || mgrLinked(m, 'tac')) return;
             if (!mgrAutoPref(m.name)) { if (typeof gToast === 'function') { try { gToast('이 감독의 전술 기록이 없어 자동 설정할 수 없습니다.'); } catch (e) { } } return; }
             if (!confirm(m.name + ' 감독이 직접 고른 포메이션 · 수비 시 · 공격 시 전술 순위를 지우고, 전술 기록으로 자동 설정할까요?')) return;
             const t = m.tac = m.tac || {};
@@ -10248,10 +10557,11 @@
 
             const E1 = fmEffects(c, R, st), strat = fmStrategy(team, tac, c, R, E1);
             const ar = fmAutoReport && fmAutoReport.teamId === String(team.id) ? fmAutoReport : null;
-            const autoTag = tac.autoGen ? `<span class="fm-badge cus" title="🤖 최적 세팅으로 만든 전술판입니다. 직접 고치면 해제됩니다.">🤖 자동 세팅${mgr0 ? ` · ${gEsc(mgr0.name)} 감독 선호 반영` : ''}</span>` : '';
+            const autoTag = tac.autoGen ? `<span class="fm-badge cus" title="선수단 · 감독 성향 · 경기 기록이 바뀌면 포메이션 · 라인업 · 전술이 자동으로 다시 짜입니다. 직접 고치면 ✋ 수동(고정)으로 바뀝니다.">🔗 자동 연동 중${mgr0 ? ` · ${gEsc(mgr0.name)} 감독 선호 반영` : ''}</span>` : (tac.set === true ? `<span class="fm-badge" title="직접 구성한 값이 고정되어 있습니다. 🔗 자동 연동을 누르면 최적 세팅으로 실시간 갱신됩니다.">✋ 수동 · 고정</span>` : '');
+            const linkCtl = `<span class="fm-lnk">${gNewTag('1.33')}<button class="fm-act${tac.autoGen ? ' on' : ''}" onclick="fmSetLink(true)" title="선수단 · 감독 성향(전술/운영) · 경기 기록이 바뀌면 전술판을 자동으로 다시 짭니다">🔗 자동 연동</button><button class="fm-act${tac.autoGen ? '' : ' on'}" onclick="fmSetLink(false)" title="지금 상태를 그대로 고정합니다 (직접 고치면 자동으로 수동이 됩니다)">✋ 수동(고정)</button></span>`;
             const autoRep = ar ? `<div class="fm-autorep"><div class="fm-bt">🤖 ${ar.mode === 'formation' ? '최적 포메이션' : '최적 세팅'} 결과</div>${ar.why.map(w => `<div class="fm-st-li">${w}</div>`).join('')}</div>` : '';
             box.innerHTML = `<div class="card fm-card">
-                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">${head}${autoTag}</div>
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">${head}${autoTag}${linkCtl}</div>
                     <div style="display:flex; gap:6px; flex-wrap:wrap;"><button class="fm-act" data-new="1.07" onclick="fmRunOptimize('all')" title="모든 포메이션·전술을 비교해 선수단과 감독 선호(1~3순위)·스타일에 가장 맞는 조합으로 한 번에 세팅">🤖 최적 세팅</button><button class="fm-act" data-new="1.07" onclick="fmRunOptimize('formation')" title="현재 전술은 유지하고, 선수단에 가장 잘 맞는 포메이션과 라인업으로 바꿉니다">📐 최적 포메이션</button><button class="fm-act" onclick="fmAuto()" title="현재 포메이션에서 능력치 적합도가 가장 높은 조합으로 배치">🪄 자동 배치</button><button class="fm-act" onclick="fmApplyRec()" title="현재 선발 라인업 기준으로 적합도가 가장 높은 전술을 각 항목마다 선택">🎯 추천 전술</button><button class="fm-act" onclick="fmAutoRoles()" title="모든 자리의 세부 성향을 선수 능력치에 맞춰 자동으로 되돌립니다">🤖 성향 자동</button><button class="fm-act" onclick="fmClear()">🧹 비우기</button></div></div>
                 <div class="ranking-info">5인제(필드 4 + 골키퍼 1) 기준입니다. 필드의 카드와 화살표를 직접 끌어 조정하고, <b>왼쪽 아래(대기 선수 밑) 🎭 편집 패널(접혀 있음 — 필요할 때 펼치세요)</b>에서 선수별 세부 성향·개별 지시·위치를 세밀하게 맞출 수 있어요. <b>적합</b>은 그 자리(성향·전술)에 필요한 능력치의 가중 평균(50~99), ★는 현재 선수단에 가장 잘 맞는 선택입니다. 배치·전술은 팀별로 저장됩니다.</div>
                 ${autoRep}<div class="fm-forms">${fmChips}</div>
@@ -14635,7 +14945,7 @@
         // ======================================================
         // 🧑‍💼 감독 효과 엔진 (v3_15)
         //  - 감독 능력치 6가지를 '리그 감독 평균 대비 격차'로 환산해 전력 계산(tcTeamPower)과 맞대결 예측(tcMatchupModel)에 반영한다.
-        //    전술 → 공격력·패스·수비력 / 동기부여 → 스피드·체력 / 용병술(선발 기용·교체 판단·자팀 선수 분석) → 교체 선수 반영 비중 / 소통(심리 지도·선수 면담·갈등 조율) → 출전 가능성·팀 케미
+        //    전술 → 공격력·패스·수비력 / 동기부여 → 스피드·체력 / 용병술(선발 기용·교체 판단·자팀 선수 분석) → 교체 선수 반영 비중 / 소통(팀 케미·적극성·분위기메이커) → 선발 선수의 팀워크·멘탈 능력치 보정 + 출전 가능성
         //    분석력(상대 선수 분석·전술 분석) → 상대 약점 공략(맞대결 전용) / 위기대처 → 열세일 때 격차 완화(맞대결 전용)
         //  - 평균 대비 격차 기준이라 리그 감독들이 비슷하면 효과가 거의 0이고, 감독이 없거나 능력치가 없는 팀은 보정 0(중립)이다.
         //  - 전력 비교 탭의 스위치(tcMgrOn)로 반영 여부를 끌 수 있다. (전력분석·팀 데이터센터도 같은 값을 쓴다)
@@ -14645,7 +14955,7 @@
             tactic:   { per: 0.16,  cap: 6.0 },                          // 전술 1점 격차 → 공격·패스·수비 +0.09점 (최대 ±3.5)
             motive:   { per: 0.12,  cap: 5.0 },                          // 동기부여 1점 격차 → 스피드·체력 +0.07점 (최대 ±3)
             bench:    { base: TC_BENCH_W, per: 0.010, min: 0.05, max: 0.50 }, // 용병술 → 교체 3명 반영 비중
-            comm:     { availPer: 0.02, availCap: 0.3, chemPer: 0.05, chemCap: 2.0 }, // 소통 → 결장 영향 완화 · 종합 전력 케미
+            comm:     { availPer: 0.02, availCap: 0.3, shiftPer: 0.7, shiftCap: 10 }, // 소통 → 결장 영향 완화 · 선수 멘탈/팀워크 능력치 보정(격차 1점 → 능력치 +0.7점, 최대 ±10점 — 이전 '케미' 효과와 비슷한 크기)
             analysis: { per: 0.10,  cap: 3.5 },                          // 분석력 1점 격차 → 맞대결 시 종합 전력 +0.06점 (최대 ±2)
             crisis:   { per: 0.02, min: -0.2, max: 0.3 }               // 위기대처 1점 격차 → 열세 시 격차 1.2% 완화 (-15%~+20%)
         };
@@ -14672,7 +14982,7 @@
             return { mu, smu, cnt };
         }
         function tcMgrNone(name, ref) {
-            return { on: false, name: name || '', ref: ref || null, rel: {}, tac: 0, mot: 0, benchW: TC_BENCH_W, availC: 0, chem: 0, analysisPts: 0, crisisFrac: 0, catAdj: {} };
+            return { on: false, name: name || '', ref: ref || null, rel: {}, tac: 0, mot: 0, benchW: TC_BENCH_W, availC: 0, shTeam: 0, shMental: 0, analysisPts: 0, crisisFrac: 0, catAdj: {} };
         }
         // 팀(또는 가정한 감독 이름)의 감독 효과. overrideName 이 있으면 '그 감독이 이 팀을 맡는다면'을 계산한다.
         function tcMgrEffect(team, overrideName) {
@@ -14691,15 +15001,20 @@
             // v1.32: 운영 성향 — 로테이션(🔄)이 적극적일수록 · 주전 선호(⭐)가 낮을수록 교체 선수 반영 비중↑
             let benchBeh = 0; try { const r0 = fmBehNum(ref, 'rot'), c0 = fmBehNum(ref, 'core'); if (r0 !== null) benchBeh += .02 * (r0 - 3); if (c0 !== null) benchBeh -= .015 * (c0 - 3); } catch (e) { }
             const motSpd = mgrClamp(mix('동기부여', '승부욕', .5) * F.motive.per, -F.motive.cap, F.motive.cap);
-            const motSta = mgrClamp(((rel['동기부여'] * .5) + sr('의욕고취') * .25 + sr('체력관리') * .25) * F.motive.per, -F.motive.cap, F.motive.cap);
+            const motSta = mgrClamp(((rel['동기부여'] * .4) + sr('의욕고취') * .25 + sr('체력관리') * .2 + sr('선수육성') * .15) * F.motive.per, -F.motive.cap, F.motive.cap);   // v1.33: 선수육성도 반영
             const mot = (motSpd + motSta) / 2;
+            // v1.33: 소통 세부 3종 → 선수 능력치 보정(점). 팀 케미 → 팀워크 / 적극성 → 멘탈 / 분위기메이커 → 멘탈 + 팀워크 (대분류 30% + 세부 70% 격차)
+            const cg = sk => mix('소통', sk, .7);
+            const cgT = cg('팀케미'), cgA = cg('적극성'), cgM = cg('분위기메이커');
+            const shTeam = mgrClamp((cgT * .65 + cgM * .35) * F.comm.shiftPer, -F.comm.shiftCap, F.comm.shiftCap);
+            const shMental = mgrClamp((cgA * .65 + cgM * .35) * F.comm.shiftPer, -F.comm.shiftCap, F.comm.shiftCap);
             return {
                 on: true, name, ref, rel, tac, mot,
                 benchW: mgrClamp(F.bench.base + (rel['용병술'] * .4 + sr('교체판단') * .25 + sr('선발기용') * .2 + sr('자팀선수분석') * .15) * F.bench.per + benchBeh, F.bench.min, F.bench.max),
-                availC: mgrClamp((rel['소통'] * .6 + sr('심리지도') * .25 + sr('선수면담') * .15) * F.comm.availPer, -F.comm.availCap, F.comm.availCap),
-                chem: mgrClamp(mix('소통', '갈등조율', .4) * F.comm.chemPer, -F.comm.chemCap, F.comm.chemCap),
+                availC: mgrClamp((rel['소통'] * .5 + sr('팀케미') * .25 + sr('분위기메이커') * .25) * F.comm.availPer, -F.comm.availCap, F.comm.availCap),
+                shTeam, shMental,
                 analysisPts: mgrClamp((rel['분석력'] * .5 + sr('상대선수분석') * .25 + sr('전술분석') * .25) * F.analysis.per, -F.analysis.cap, F.analysis.cap),
-                crisisFrac: mgrClamp(mix('위기대처', '열세대응', .4) * F.crisis.per, F.crisis.min, F.crisis.max),
+                crisisFrac: mgrClamp((rel['위기대처'] * .4 + sr('열세대응') * .3 + sr('적응력') * .15 + sr('기강유지') * .15) * F.crisis.per, F.crisis.min, F.crisis.max),   // v1.33: 적응력 · 기강유지도 반영
                 catAdj: { atk: tacAtk, pas: tacPas, def: tacDef, spd: motSpd, sta: motSta }
             };
         }
@@ -14710,13 +15025,13 @@
                 case '전술': return `공격·패스·수비 ${tcSg(m.tac)}`;
                 case '동기부여': return `스피드·체력 ${tcSg(m.mot)}`;
                 case '용병술': return `교체 반영 ${Math.round(m.benchW * 100)}%`;
-                case '소통': return `출전가능성 ${m.availC >= 0 ? '+' : ''}${Math.round(m.availC * 100)}%p · 케미 ${tcSg(m.chem)}`;
+                case '소통': return `팀워크 능력치 ${tcSg(m.shTeam)}점 · 멘탈 능력치 ${tcSg(m.shMental)}점 · 출전가능성 ${m.availC >= 0 ? '+' : ''}${Math.round(m.availC * 100)}%p`;
                 case '분석력': return `맞대결 공략 ${tcSg(m.analysisPts)}`;
                 case '위기대처': return `열세 시 격차 ${m.crisisFrac >= 0 ? '완화' : '확대'} ${Math.abs(Math.round(m.crisisFrac * 100))}%`;
             }
             return '';
         }
-        const TC_MGR_TARGET = { '전술': '공격력·패스·수비력', '동기부여': '스피드·체력', '용병술': '교체 선수 반영 비중', '소통': '출전 가능성 · 팀 케미', '분석력': '상대 약점 공략 (맞대결)', '위기대처': '열세 시 격차 완화 (맞대결)' };
+        const TC_MGR_TARGET = { '전술': '공격력·패스·수비력', '동기부여': '스피드·체력', '용병술': '교체 선수 반영 비중', '소통': '선수 멘탈·팀워크 능력치 · 출전 가능성', '분석력': '상대 약점 공략 (맞대결)', '위기대처': '열세 시 격차 완화 (맞대결)' };
 
         // 팀 전력: 선수단(코어) + 감독 효과. 감독 반영 전 값(rawOverall)과 증감(mgrDelta)도 함께 돌려준다.
         function tcTeamPower(team, availMap, overrideName) {
@@ -14915,10 +15230,15 @@
             let subFx = null;
             if (!tplan) { subFx = abSubFx(startersField, gk, {}); Object.entries(subFx.cats).forEach(([k, d]) => { const dd = fmClamp(d, -1.2, 1.2); if (cats[k] !== null && cats[k] !== undefined) cats[k] = Math.max(0, Math.min(99, cats[k] + dd)); }); }
 
+            // 🧑‍💼 v1.33: 감독 소통(팀 케미 · 적극성 · 분위기메이커) → 선발 선수의 팀워크 · 멘탈 능력치 보정 (전술판 유무와 관계없이 같은 계산)
+            let commFx = null;
+            try { commFx = abMgrCommFx(startersField, gk, mg, tplan && tplan.tac ? tplan.tac.style : {}); } catch (e) { commFx = null; }
+            if (commFx) Object.entries(commFx.cats).forEach(([k, d]) => { if (cats[k] !== null && cats[k] !== undefined) cats[k] = Math.max(0, Math.min(99, cats[k] + d)); });
+
             // 종합 전력 (비어 있는 항목은 50점으로 취급)
             let overall = 0;
             Object.entries(TC_OVERALL_W).forEach(([k, w]) => { overall += w * (cats[k] === null ? 50 : cats[k]); });
-            overall += mg.chem || 0;   // 소통 → 팀 케미
+            if (commFx) overall += fmClamp(commFx.overall, -.5, .5);   // 소통 → 선수 멘탈·팀워크 능력치 보정의 종합 반영분
             if (tplan) overall += tplan.E.overall;   // 전술판: 전술 적합도 · 라인업 자리 적합도
             else if (subFx) overall += fmClamp(subFx.overall, -.4, .7);   // 소분류 효과(판단력·침착성·소통 등)
 
@@ -15274,8 +15594,8 @@
                     · <b>필드와 GK는 분리</b>: GK의 선방력과 필드 선수의 결정력은 같은 항목으로 합치지 않습니다. 골키퍼 항목은 GK 전용 능력치(선방력 30%·반사신경 25%·판단력 15%·위치선정 10%·순발력 10%·배급 5%·체력 5%)로만 계산합니다.<br>
                     · <b>공격력</b> = 결정력 55% + 위치선정 25% + 드리블 20% (FW 1.0 · MF 0.7 · DF 0.35 반영) / <b>패스·빌드업</b> = 패스 (MF 1.0 · DF 0.7 · FW 0.6, GK 배급 0.3 추가) / <b>드리블</b> (FW 1.0 · MF 0.8 · DF 0.4) / <b>수비력</b> = 수비 75% + 위치선정 25% (DF 1.0 · MF 0.6 · FW 0.25) / <b>스피드·체력</b>은 필드 선수 전원 동일 반영.<br>
                     · <b>주전·교체</b>: OVR × 출전 가능성 순으로 필드 4명 + GK 1명이 주전, 다음 3명이 교체(기본 20% 반영)입니다. 출전 가능성은 전 시즌 출전·결장 기록으로 계산하며 기록이 적으면 100%에 가깝게 보정됩니다. 📅 예정 경기에서 선발을 직접 지정하면 지정한 선수가 우선 주전이 되고 빈자리는 같은 방식으로 자동 보충합니다.<br>
-                    · <b>종합 전력</b> = 공격 22% + 패스 12% + 드리블 10% + 수비 18% + 스피드 9% + 체력 9% + 골키퍼 20% (+ 감독 소통 케미 ±1.0 이내).<br>
-                    · <b>감독 효과</b>(리그 감독 평균 대비 격차 기준): 전술 → 공격·패스·수비 (격차 1점당 0.16점, 최대 ±6) / 동기부여 → 스피드·체력 (0.12점, ±5) / 용병술 → 교체 3명 반영 비중 (기본 20%, 5~50%) / 소통 → 선수 결장 영향 완화(±30%p)와 케미(±2.0) / 분석력 → 맞대결에서 상대 약점 공략(종합 전력 ±3.5) / 위기대처 → 열세 쪽 감독이 격차를 -20%~+30% 완화. 감독이 없거나 능력치가 없는 팀은 보정 0입니다.<br>
+                    · <b>종합 전력</b> = 공격 22% + 패스 12% + 드리블 10% + 수비 18% + 스피드 9% + 체력 9% + 골키퍼 20% (+ 감독 소통이 선발 선수의 멘탈·팀워크 능력치를 보정한 만큼, ±0.5 이내).<br>
+                    · <b>감독 효과</b>(리그 감독 평균 대비 격차 기준): 전술 → 공격·패스·수비 (격차 1점당 0.16점, 최대 ±6) / 동기부여 → 스피드·체력 (0.12점, ±5) / 용병술 → 교체 3명 반영 비중 (기본 20%, 5~50%) / 소통 → 선발 선수의 능력치 보정 (팀 케미 → 팀워크[연계·소통·적극성] / 적극성 → 멘탈[판단력·활동량·침착성] / 분위기메이커 → 멘탈+팀워크, 격차 1점당 0.7점, 최대 ±10점)과 선수 결장 영향 완화(±30%p) / 분석력 → 맞대결에서 상대 약점 공략(종합 전력 ±3.5) / 위기대처 → 열세 쪽 감독이 격차를 -20%~+30% 완화. 감독이 없거나 능력치가 없는 팀은 보정 0입니다.<br>
                     · <b>PK 승부</b>: 정규시간 무승부 시 주전 5명(필드 4 + GK)의 키커 능력(결정력 38%·위치선정 18%·패스 14%·드리블 12%·체력 10%·스피드 5%·수비 3%)과 상대 GK 능력(선방력 32%·반사신경 24%·판단력 18%·순발력 14%·위치선정 8%·체력 4%)으로 5번씩 차는 확률을 계산하고, 동점이면 서든데스로 이어집니다. 감독 위기대처·동기부여·분석력도 소폭 반영합니다.<br>
                     · <b>종합 예측</b> = 여섯 지표의 가중 평균 — 능력치 우세도(비중 1.0) · Elo 기대 승률(1.0) · 득실 시뮬레이션(1.0, 전력분석 탭과 같은 포아송 모델에 이 화면의 주전·출전 가능성 반영 능력치를 넣어 확률로 계산) · 역대 맞대결(최대 0.9, 6경기 이상이면 최대, 소표본은 50% 쪽으로 보정) · 통산 전적(최대 0.6, 10경기 이상이면 최대, log5 방식) · 최근 5경기(최대 0.5). 지표들이 같은 방향이면 신뢰도 '높음', 엇갈리거나 표본이 적으면 낮아집니다.<br>
                     · <b>해석 항목</b>은 기록실(연승·무실점·득점/실점 시간대·시즌별 기록)과 팀 데이터센터(감독 능력치·감독별 기록·선수 기록·상대팀별 기록)의 저장된 데이터만 사용합니다. 시간대 분석은 해석용이며 승률 계산에는 넣지 않습니다. 감독 능력치는 위 <b>🧑‍💼 감독 효과</b> 기준대로 전력과 예측에 반영됩니다(스위치로 끌 수 있음).<br>
@@ -15346,7 +15666,7 @@
             const d = k => abExtDelta(p, k);
             const trk = PK_TRAIT.kick * (fmTraits(p).includes('pk') ? 1 : 0) + PK_TRAIT.calm * (fmTraits(p).includes('calm') ? 1 : 0);   // v1.32: 🥅 PK 전담 · 🧊 침착한 마무리
             return trk + (p.pos === 'GK' ? tcFormula(p, PK_KICK_GK) - PK_GK_KICK_PENALTY + d('킥력') * .15 + d('침착성') * .12
-                : tcFormula(p, PK_KICK_FIELD) + d('침착성') * .18 + d('공격위치') * .06 + d('개인기') * .04 + d('판단력') * .04);
+                : tcFormula(p, PK_KICK_FIELD) + d('침착성') * .18 + d('공격위치') * .06 + d('중거리슛') * .04 + d('판단력') * .04);
         }
         // v1.11: 1대1방어·반사·집중력·침착성·핸들링 같은 GK 소분류도 PK 선방에 반영
         function tcPkSaveSkill(gk) { return gk ? (fmTraits(gk).includes('pkstop') ? PK_TRAIT.save : 0) + tcFormula(gk, PK_SAVE) + abExtDelta(gk, '1대1방어') * .22 + abExtDelta(gk, '집중력') * .08 + abExtDelta(gk, '침착성') * .08 + abExtDelta(gk, '핸들링') * .05 : PK_NO_GK_SAVE; }
@@ -15458,7 +15778,7 @@
                     const tm = (state.teams || []).find(t => String(t.id) === String(id)), st = {};
                     ((tm && tm.players) || []).forEach(q => { st[q.name] = q; });
                     const fl = (pw.lineup || []).filter(l => l.starter && l.pos !== 'GK').map(l => st[l.name]).filter(q => q && q.stats);
-                    if (fl.length) { out[id].ace = Math.max(...fl.map(q => tcStatVal(q, '결정력') + abExtDelta(q, '침착성') * .3 + abExtDelta(q, '개인기') * .2)); out[id].wall = Math.max(...fl.map(q => tcStatVal(q, '수비') + abExtDelta(q, '대인마크') * .4 + abExtDelta(q, '피지컬') * .15)); }
+                    if (fl.length) { out[id].ace = Math.max(...fl.map(q => tcStatVal(q, '결정력') + abExtDelta(q, '침착성') * .3 + abExtDelta(q, '중거리슛') * .2)); out[id].wall = Math.max(...fl.map(q => tcStatVal(q, '수비') + abExtDelta(q, '대인마크') * .4 + abExtDelta(q, '피지컬') * .15)); }
                     out[id].mgr = pw.mgr || null;
                 } catch (e) { }
             });
@@ -16734,6 +17054,24 @@
         function fmtRotationTime(ps) {
             return (ps && ps.rotHalf && ps.rotMin) ? `${ps.rotHalf.charAt(0)}${parseInt(ps.rotMin)}'` : '';
         }
+        // v1.34: 로테이션 여러 번 — 첫 번째 변경은 pos2/rotHalf/rotMin, 두 번째 이후 변경은 rotMore:[{half,min,pos}] 에 저장
+        function rotMoreList(ps) {
+            return (ps && Array.isArray(ps.rotMore)) ? ps.rotMore.filter(r => r && r.pos).slice().sort((a, b) => matchOrdinal(a.half, a.min) - matchOrdinal(b.half, b.min)) : [];
+        }
+        function rotMoreHtml(ps, badge) {
+            return rotMoreList(ps).map(r => `<div>${r.half.charAt(0)}${parseInt(r.min)}'~${badge(r.pos)}</div>`).join('');
+        }
+        // 이 선수의 출전 구간 [{from, to, pos}] (경기 진행 분 1~26)
+        function playerPosSegments(ps) {
+            const total = MATCH_HALF_MIN * 2;
+            const segs = [{ from: 1, pos: ps.pos }];
+            if (ps.pos2 && ps.pos2 !== ps.pos) {
+                segs.push({ from: rotationStartOrdinal(ps), pos: ps.pos2 });
+                rotMoreList(ps).forEach(r => segs.push({ from: matchOrdinal(r.half, r.min), pos: r.pos }));
+            }
+            segs.forEach((s, i) => { s.to = i + 1 < segs.length ? segs[i + 1].from - 1 : total; });
+            return segs.filter(s => s.to >= s.from);
+        }
         // 특정 팀이 경기 진행 분 [fromOrd, toOrd] 구간에 실점한 골 수 (상대 득점 + 우리 자책골)
         function concededInRange(match, teamId, fromOrd, toOrd) {
             let conceded = 0;
@@ -16755,6 +17093,11 @@
         //   득점 시간 태그로 집계하고, weight는 GK로 뛴 시간 비율로 잡는다. (하프타임 교체면 0.5로 기존과 동일)
         function calcPlayerGkStint(ps, m, matchTeamId, oppScoreWhole) {
             const total = MATCH_HALF_MIN * 2;
+            if (ps && rotMoreList(ps).length && ps.pos2 && ps.pos2 !== ps.pos) {   // v1.34: 로테이션 2번 이상 — GK로 뛴 모든 구간 합산
+                let mins = 0, conc = 0;
+                playerPosSegments(ps).forEach(s => { if (s.pos === 'GK') { mins += s.to - s.from + 1; conc += concededInRange(m, matchTeamId, s.from, s.to); } });
+                return { weight: mins / total, conceded: conc };
+            }
             const R = rotationStartOrdinal(ps);
             if(!ps || ps.pos !== 'GK') {
                 if(!ps || !ps.pos2 || ps.pos2 !== 'GK' || ps.pos === 'GK') return { weight: 0, conceded: 0 };
@@ -16806,7 +17149,7 @@
                     if(ps.pos) playerPos = ps.pos;
                     if(countsAsAppearance) {
                         if(ps.pos) posCounts[ps.pos] = (posCounts[ps.pos] || 0) + 1;
-                        if(ps.pos2 && ps.pos2 !== ps.pos) posCounts[ps.pos2] = (posCounts[ps.pos2] || 0) + 1;
+                        if(ps.pos2 && ps.pos2 !== ps.pos) posCounts[ps.pos2] = (posCounts[ps.pos2] || 0) + 1; if(ps.pos2 && ps.pos2 !== ps.pos) rotMoreList(ps).forEach(_r => { posCounts[_r.pos] = (posCounts[_r.pos] || 0) + 1; });
                     }
 
                     // 하프타임에 포지션이 바뀐 경우(ps.pos2 존재)에만 득점 시간표기를 이용해 GK로 뛴 하프만
@@ -16828,6 +17171,8 @@
                         pos2: ps.pos2 || '',
                         rotHalf: ps.rotHalf || '',
                         rotMin: ps.rotMin || 0,
+                        rotMore: ps.rotMore || [],
+                        ss: ps.ss || 0,
                         gkWeight: gkWeight,
                         gkConceded: gkConceded,
                         gkCleanSheet: gkWeight > 0 && gkConceded === 0,
@@ -16907,8 +17252,9 @@
             //  실제 골키퍼로 선 시간에 맞게 계산되도록 함)
             const gkGamesStats = stats.filter(s => s.gkWeight > 0);
             const gkSection = document.getElementById('gkStatsSection');
-            if(gkGamesStats.length > 0) {
+            if(gkGamesStats.length > 0 || stats.some(s => s.ss > 0)) {
                 gkSection.style.display = 'block';
+                document.getElementById('modalGkSS').innerText = stats.reduce((a, s) => a + (s.ss || 0), 0);
                 let totalGA = 0, cleanSheets = 0, totalGkWeight = 0;
                 gkGamesStats.forEach(s => {
                     totalGA += s.gkConceded;
@@ -16940,7 +17286,7 @@
                 const rotCustom = isSplit && !isDefaultRotation(s);
                 const posBadge = isSplit
                     ? (rotCustom
-                        ? `<div style="display:flex; flex-direction:column; gap:2px; align-items:flex-start;"><div>시작${miniBadge(s.pos)}</div><div>${fmtRotationTime(s)}~${miniBadge(s.pos2)}</div></div>`
+                        ? `<div style="display:flex; flex-direction:column; gap:2px; align-items:flex-start;"><div>시작${miniBadge(s.pos)}</div><div>${fmtRotationTime(s)}~${miniBadge(s.pos2)}</div>${rotMoreHtml(s, miniBadge)}</div>`
                         : `<div style="display:flex; flex-direction:column; gap:2px; align-items:flex-start;"><div>전${miniBadge(s.pos)}</div><div>후${miniBadge(s.pos2)}</div></div>`)
                     : (s.pos ? `<span style="background:${posColorMap[s.pos]||'#94a3b8'}; color:${(s.pos==='GK'||s.pos==='MF')?'#000':'#fff'}; padding:2px 6px; border-radius:4px; font-size:0.68rem; font-weight:800;">${s.pos}</span>` : '-');
                 const csTag = s.gkWeight > 0 ? `<div style="margin-top:2px; font-size:0.6rem; color:${s.gkCleanSheet?'var(--success)':'var(--text-muted)'};">${s.gkCleanSheet ? (s.gkWeight < 1 ? '🧱 무실점(일부)' : '🧱 무실점') : ''}</div>` : '';
@@ -17434,7 +17780,7 @@
                         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">${catRows.map(x => `<span style="padding:3px 9px; border-radius:6px; background:rgba(255,255,255,0.06); font-size:0.74rem;">${x.c.label} <b style="color:${x.d < 0 ? '#f87171' : '#22c55e'};">${tcSg(x.d)}</b></span>`).join('')}</div>`
                         : '<div class="dk-hint">이 선수가 빠져도 전력 항목에 큰 변화가 없습니다. (주전·교체 밖)</div>';
                     const mg = pw.mgr;
-                    html += `<div class="dk-hint">${mg.on ? `감독 <b>${gEsc(mg.name)}</b>의 용병술(교체 반영 ${Math.round(mg.benchW * 100)}%)·소통(결장 완화 ${mg.availC >= 0 ? '+' : ''}${Math.round(mg.availC * 100)}%p)이 이 수치에 반영되어 있습니다.` : '감독 능력치가 없어 선수단 능력치만으로 계산했습니다.'} 능력치·출전 기록이 바뀌면 값도 달라집니다.${pw2.noGK && !pw.noGK ? ' 대체 GK가 없어 이탈 시 골키퍼 항목은 50점으로 계산됩니다.' : ''}</div>
+                    html += `<div class="dk-hint">${mg.on ? `감독 <b>${gEsc(mg.name)}</b>의 용병술(교체 반영 ${Math.round(mg.benchW * 100)}%)·소통(팀워크 능력치 ${tcSg(mg.shTeam)}점 · 멘탈 능력치 ${tcSg(mg.shMental)}점 · 결장 완화 ${mg.availC >= 0 ? '+' : ''}${Math.round(mg.availC * 100)}%p)이 이 수치에 반영되어 있습니다.` : '감독 능력치가 없어 선수단 능력치만으로 계산했습니다.'} 능력치·출전 기록이 바뀌면 값도 달라집니다.${pw2.noGK && !pw.noGK ? ' 대체 GK가 없어 이탈 시 골키퍼 항목은 50점으로 계산됩니다.' : ''}</div>
                         <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"><button class="btn-edit" onclick="closePlayerModal(); tcGoTeam('${team.id}')">🗂️ 소속팀 데이터센터</button>
                         <button class="btn-edit" onclick="closePlayerModal(); openTeamCompare('${team.id}', ${JSON.stringify(String((state.teams.find(t => String(t.id) !== String(team.id)) || {}).id || ''))})">⚔️ 매치업 분석 열기</button></div>`;
                 }
@@ -17470,7 +17816,7 @@
 
         // ===== 선수·감독 모달 공용: 상단 탭 + 페이지 넘김 =====
         const PM_TABS = {
-            player:  { tabs: ['overview','match','season','compare','power','growth'], pre: 'player',  cur: 'overview' },
+            player:  { tabs: ['overview','match','season','analysis','compare','power','growth'], pre: 'player',  cur: 'overview' },
             manager: { tabs: ['overview','h2h','history'], pre: 'manager', cur: 'overview' }
         };
         function pmCap(s) { return s === 'h2h' ? 'H2H' : s.charAt(0).toUpperCase() + s.slice(1); }
@@ -17528,6 +17874,7 @@
             if(tab === 'season') renderPlayerSeasonRecords();
             if(tab === 'compare') { populateModalPlayerCompareSelect(); renderPlayerModalCompare(); }
             if(tab === 'growth') renderPlayerGrowth();
+            if(tab === 'analysis') { try { GA.renderAnalysis(); } catch (e) { console.error(e); } }
             if(tab === 'power') renderPlayerPowerTab();
         }
 
@@ -17845,6 +18192,7 @@
                         pos2: ps.pos2 || '',
                         rotHalf: ps.rotHalf || '',
                         rotMin: ps.rotMin || 0,
+                        rotMore: ps.rotMore || [],
                         g: ps.g||0,
                         a: ps.a||0,
                         r: ps.r||0,
@@ -17880,7 +18228,7 @@
                     const isSplit = r.pos2 && r.pos2 !== r.pos;
                     const miniBadge = (p) => `<span style="background:${posColorMap[p]||'#94a3b8'}; color:${(p==='GK'||p==='MF')?'#000':'#fff'}; padding:0px 4px; border-radius:3px; font-size:0.6rem; font-weight:800;">${p}</span>`;
                     const posBadge = isSplit
-                        ? (!isDefaultRotation(r) ? `${miniBadge(r.pos)} ${fmtRotationTime(r)}~${miniBadge(r.pos2)}` : `전${miniBadge(r.pos)} 후${miniBadge(r.pos2)}`)
+                        ? (!isDefaultRotation(r) ? `${miniBadge(r.pos)} ${fmtRotationTime(r)}~${miniBadge(r.pos2)}${rotMoreList(r).map(x => ` ${x.half.charAt(0)}${parseInt(x.min)}'~${miniBadge(x.pos)}`).join('')}` : `전${miniBadge(r.pos)} 후${miniBadge(r.pos2)}`)
                         : (r.pos ? `<span style="background:${posColorMap[r.pos]||'#94a3b8'}; color:${(r.pos==='GK'||r.pos==='MF')?'#000':'#fff'}; padding:1px 5px; border-radius:4px; font-size:0.65rem; font-weight:800;">${r.pos}</span>` : '');
                     // 승리팀 점수는 초록, 패배팀 점수는 빨강
                     const myScoreColor = r.myScore > r.oppScore ? 'var(--success)' : (r.myScore < r.oppScore ? '#f87171' : 'var(--text-muted)');
@@ -18972,7 +19320,7 @@
                     const type = select.getAttribute('data-type');
                     const min = parseInt(row.querySelector('.goal-time-input').value) || 0;
                     if(type === 'og') ogTimes.push({ half, min });
-                    else goalTimes.push({ half, min });
+                    else { const _as = row.querySelector('.goal-ast-select'); goalTimes.push({ half, min, ast: _as ? _as.value : '', loc: gmRowLoc(row) }); }
                 });
                 const assistInput = document.querySelector(`.assist[data-p="${name}"]`);
                 const ratingInput = document.querySelector(`.rating[data-p="${name}"]`);
@@ -18986,12 +19334,14 @@
                     goalTimes,
                     ogTimes,
                     a: assistInput ? assistInput.value : 0,
+                    ss: (document.querySelector(`.ss-input[data-p="${name}"]`) || {}).value || 0,
                     r: ratingInput ? ratingInput.value : 6.0,
                     status: statusSelect ? statusSelect.value : 'starter',
                     pos: posSelect ? posSelect.value : '',
                     pos2: (splitToggle && splitToggle.checked && pos2Select) ? pos2Select.value : '',
                     rotHalf: (splitToggle && splitToggle.checked) ? ((document.querySelector(`.rot-half-select[data-p="${name}"]`) || {}).value || '후반') : '',
                     rotMin: (splitToggle && splitToggle.checked) ? (parseInt((document.querySelector(`.rot-min-input[data-p="${name}"]`) || {}).value) || 1) : 0,
+                    rotMore: readRotMore(name),
                     mom: momRadio ? momRadio.checked : false
                 };
             });
@@ -19027,83 +19377,75 @@
             const aExtraPlayers = extraFor(aTeam, aSeasonRoster);
 
             const renderSide = (team, seasonRoster, extraPlayers) => {
-                let html = `<div class="card" style="margin-bottom:0; padding:10px;"><h4 style="color:${team.color}">${team.name}</h4>`;
-                html += `<div class="input-label-row">
-                            <div class="input-label-pos">포지션</div>
-                            <div class="input-label-name">이름</div>
-                            <div class="input-label-item" style="width:100px;">득점(시간)</div>
-                            <div class="input-label-item">도움</div>
-                            <div class="input-label-item" style="width:70px;">평점</div>
-                            <div class="input-label-item" style="width:70px;">상태</div>
-                            <div class="input-label-mom">M</div>
-                         </div>`;
-                
+                let html = `<div class="card pf-team" data-team="${team.id}" style="margin-bottom:0; padding:10px;"><div class="pf-team-h"><h4 style="color:${team.color}">${team.name}</h4><span class="pf-tot" data-team="${team.id}"></span></div>`;
                 const statusPriority = { 'starter': 1, 'substitute': 2, 'injured': 3, 'absent': 4 };
                 const posPriorityLocal = { 'FW': 1, 'MF': 2, 'DF': 3, 'GK': 4 };
-                // 📁 표시 대상: 이번 경기 기록에서만 추가로 찾아낸 선수 + (지난 시즌 로스터엔 있지만
-                // 지금 그 팀 로스터에는 없는, 즉 이후 이적/방출된) 선수
+                const groupLabel = { starter: '⭐ 선발', substitute: '🔄 후보', injured: '🩹 부상 · 🪑 미출전', absent: '🩹 부상 · 🪑 미출전' };
                 const historicNames = new Set([
                     ...extraPlayers.map(p => p.name),
                     ...seasonRoster.filter(p => !team.players.some(tp => tp.name === p.name)).map(p => p.name)
                 ]);
-
                 const sortedPlayers = [...seasonRoster, ...extraPlayers].sort((a, b) => {
                     const dataA = currentData[a.name] || { status: 'starter', pos: a.pos };
                     const dataB = currentData[b.name] || { status: 'starter', pos: b.pos };
-                    
-                    if (statusPriority[dataA.status] !== statusPriority[dataB.status]) {
-                        return statusPriority[dataA.status] - statusPriority[dataB.status];
-                    }
-                    const pA = dataA.pos || a.pos;
-                    const pB = dataB.pos || b.pos;
-                    return (posPriorityLocal[pA] || 99) - (posPriorityLocal[pB] || 99);
+                    if (statusPriority[dataA.status] !== statusPriority[dataB.status]) return statusPriority[dataA.status] - statusPriority[dataB.status];
+                    return (posPriorityLocal[dataA.pos || a.pos] || 99) - (posPriorityLocal[dataB.pos || b.pos] || 99);
                 });
-                
+                let lastGroup = '';
                 sortedPlayers.forEach(p => {
                     const d = currentData[p.name] || { goalTimes: [], ogTimes: [], a: 0, r: 6.0, status: 'starter', pos: p.pos, mom: false };
                     const currentPos = d.pos || p.pos;
                     const hasSplit = !!d.pos2 && d.pos2 !== currentPos;
                     const currentPos2 = d.pos2 || currentPos;
+                    const st = d.status || 'starter';
                     const posOptions = (sel) => Object.keys(posColors).filter(k => k !== '🔄후보').map(pos => `<option value="${pos}" ${sel === pos ? 'selected' : ''}>${pos}</option>`).join('');
-
+                    const gl = groupLabel[st] || '';
+                    if (gl !== lastGroup) { html += `<div class="pf-group">${gl}</div>`; lastGroup = gl; }
+                    const isGk = (currentPos === 'GK' || currentPos2 === 'GK');
                     html += `
-                        <div style="display:flex; align-items:center; gap:5px; margin-bottom:8px;">
-                            <div style="display:flex; flex-direction:column; gap:2px;">
-                                <select class="pos-select" data-p="${p.name}" onchange="loadPlayerForms();">
-                                    ${posOptions(currentPos)}
+                        <div class="pf-card st-${st}" data-p="${p.name}" data-team="${team.id}">
+                            <div class="pf-head">
+                                <select class="pos-select" data-p="${p.name}" onchange="loadPlayerForms();" style="color:${posColors[currentPos] || '#fff'}; font-weight:800;">${posOptions(currentPos)}</select>
+                                <div class="pf-name" onclick="this.closest('.pf-card').classList.toggle('pf-open'); pfRefresh();" title="${p.name} (눌러서 펼치기/접기)">${p.name}${historicNames.has(p.name) ? ' <span style="font-size:0.6rem; color:var(--text-muted);" title="현재 로스터에는 없지만 이 경기 출전 기록이 있는 선수(이적/방출 등)">📁</span>' : ''}</div>
+                                <div class="pf-chips" data-p="${p.name}"></div>
+                                <label class="pf-rate" title="평점">⭐<input type="number" step="0.1" class="p-input rating" data-p="${p.name}" value="${d.r}"></label>
+                                <select class="p-input status" data-p="${p.name}" onchange="loadPlayerForms()">
+                                    <option value="starter" ${st === 'starter' ? 'selected' : ''}>⭐선발</option>
+                                    <option value="substitute" ${st === 'substitute' ? 'selected' : ''}>🔄후보</option>
+                                    <option value="injured" ${st === 'injured' ? 'selected' : ''}>🩹부상</option>
+                                    <option value="absent" ${st === 'absent' ? 'selected' : ''}>🪑미출전</option>
                                 </select>
-                                <label title="경기 도중 포지션이 바뀐 경우(예: 후반 9분부터 GK)에 체크하고, 바뀐 시점을 입력하세요" style="font-size:0.55rem; color:var(--text-muted); display:flex; align-items:center; gap:2px; cursor:pointer; white-space:nowrap;">
-                                    <input type="checkbox" class="split-pos-toggle" data-p="${p.name}" ${hasSplit ? 'checked' : ''} onchange="toggleSplitPos('${p.name}')" style="width:11px; height:11px; margin:0;">로테이션
-                                </label>
-                                <select class="pos2-select" data-p="${p.name}" style="display:${hasSplit ? 'inline-block' : 'none'};" title="로테이션 이후 포지션">
-                                    ${posOptions(currentPos2)}
-                                </select>
-                                <div class="rot-time-wrap" data-p="${p.name}" style="display:${hasSplit ? 'flex' : 'none'}; align-items:center; gap:2px;" title="이 시점부터 위 포지션으로 뛰었어요. 후반 1분 = 하프타임 교체 (기본값)">
-                                    <select class="rot-half-select" data-p="${p.name}" style="background:#020617; color:#fff; border:1px solid #475569; border-radius:4px; font-size:0.6rem; padding:1px;">
-                                        <option value="전반" ${d.rotHalf === '전반' ? 'selected' : ''}>전반</option>
-                                        <option value="후반" ${d.rotHalf !== '전반' ? 'selected' : ''}>후반</option>
-                                    </select>
-                                    <input type="number" class="rot-min-input" data-p="${p.name}" min="1" max="13" value="${d.rotMin || 1}" style="width:30px; background:#020617; color:#fff; border:1px solid #475569; border-radius:4px; text-align:center; font-size:0.65rem; padding:1px 0;">
-                                    <span style="font-size:0.55rem; color:var(--text-muted);">분~</span>
+                                <label class="pf-mom" title="MOM(경기 최우수 선수)">👑<input type="radio" name="mom" value="${p.name}" data-p="${p.name}" ${d.mom ? 'checked' : ''}></label>
+                            </div>
+                            <div class="pf-body">
+                                <div class="pf-events">
+                                    <div class="goal-container" data-p="${p.name}" data-team="${team.id}"></div>
+                                    <div class="pf-btns">
+                                        <button type="button" class="btn-add-goal" onclick="addGoalTime('${p.name}')">⚽ + 득점</button>
+                                        <button type="button" class="btn-add-og" onclick="addOGTime('${p.name}')">🥅 + 자책</button>
+                                    </div>
+                                </div>
+                                <div class="pf-sub">
+                                    <label class="pf-f" title="골과 연결하지 않은 도움 수(옛 기록 · 직접 입력). 득점 줄의 도움 선택으로 연결하면 자동으로 더해집니다">🅰️ 기타도움 <input type="number" class="p-input assist" data-p="${p.name}" value="${d.a}" min="0"></label>
+                                    ${isGk ? `<label class="pf-f" title="슈퍼세이브(결정적 득점 선방) 횟수">🧤 슈퍼세이브 <input type="number" class="p-input ss-input" data-p="${p.name}" value="${d.ss || 0}" min="0"></label>` : `<span class="ss-ph" data-p="${p.name}" style="display:none;"></span>`}
+                                    <div class="pf-rot">
+                                        <label class="rl" title="경기 도중 포지션이 바뀐 경우(예: 후반 9분부터 GK)에 체크하고, 바뀐 시점을 입력하세요"><input type="checkbox" class="split-pos-toggle" data-p="${p.name}" ${hasSplit ? 'checked' : ''} onchange="toggleSplitPos('${p.name}')" style="width:13px; height:13px; margin:0;">🔄 로테이션</label>
+                                        <select class="pos2-select" data-p="${p.name}" style="display:${hasSplit ? 'inline-block' : 'none'};" title="로테이션 이후 포지션">${posOptions(currentPos2)}</select>
+                                        <div class="rot-time-wrap" data-p="${p.name}" style="display:${hasSplit ? 'flex' : 'none'}; align-items:center; gap:2px;" title="이 시점부터 위 포지션으로 뛰었어요. 후반 1분 = 하프타임 교체 (기본값)">
+                                            <select class="rot-half-select" data-p="${p.name}" style="background:#020617; color:#fff; border:1px solid #475569; border-radius:4px; font-size:0.65rem; padding:1px;">
+                                                <option value="전반" ${d.rotHalf === '전반' ? 'selected' : ''}>전반</option>
+                                                <option value="후반" ${d.rotHalf !== '전반' ? 'selected' : ''}>후반</option>
+                                            </select>
+                                            <input type="number" class="rot-min-input" data-p="${p.name}" min="1" max="13" value="${d.rotMin || 1}" style="width:34px; background:#020617; color:#fff; border:1px solid #475569; border-radius:4px; text-align:center; font-size:0.7rem; padding:1px 0;">
+                                            <span>분부터</span>
+                                        </div>
+                                        <div class="rot-more-box" data-p="${p.name}" style="display:${hasSplit ? 'flex' : 'none'}; flex-direction:column; gap:2px;">
+                                            <div class="rot-more-wrap" data-p="${p.name}" style="display:flex; flex-direction:column; gap:2px;"></div>
+                                            <button type="button" class="btn-add-goal" style="align-self:flex-start;" onclick="addRotMore('${p.name}')" title="한 경기에서 포지션이 여러 번 바뀐 경우, 다음 변경 시점과 포지션을 추가하세요">+ 로테이션 추가</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div style="width:80px; font-size:0.8rem; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center;" ${historicNames.has(p.name) ? `title="현재 로스터에는 없지만 이 경기 출전 기록이 있는 선수(이적/방출 등)"` : ''}>${p.name}${historicNames.has(p.name) ? ' <span style="font-size:0.6rem; color:var(--text-muted);">📁</span>' : ''}</div>
-                            <div style="display:flex; flex-direction:column; align-items:center; width:100px;">
-                                <div class="goal-container" data-p="${p.name}" data-team="${team.id}"></div>
-                                <div style="display:flex; gap:2px;">
-                                    <button type="button" class="btn-add-goal" onclick="addGoalTime('${p.name}')">+ 득점</button>
-                                    <button type="button" class="btn-add-og" onclick="addOGTime('${p.name}')">+ 자책</button>
-                                </div>
-                            </div>
-                            <input type="number" class="p-input assist" data-p="${p.name}" value="${d.a}" style="margin-left:5px;">
-                            <input type="number" step="0.1" class="p-input rating" data-p="${p.name}" value="${d.r}" style="width:70px;">
-                            <select class="p-input status" data-p="${p.name}" style="width:70px;" onchange="loadPlayerForms()">
-                                <option value="starter" ${d.status === 'starter' ? 'selected' : ''}>⭐선발</option>
-                                <option value="substitute" ${d.status === 'substitute' ? 'selected' : ''}>🔄후보</option>
-                                <option value="injured" ${d.status === 'injured' ? 'selected' : ''}>🩹부상</option>
-                                <option value="absent" ${d.status === 'absent' ? 'selected' : ''}>🪑미출전</option>
-                            </select>
-                            <input type="radio" name="mom" value="${p.name}" data-p="${p.name}" ${d.mom ? 'checked' : ''} style="width:20px; height:20px; cursor:pointer;">
                         </div>`;
                 });
                 return html + `</div>`;
@@ -19113,44 +19455,241 @@
             // 득점 시간 복원
             Object.keys(currentData).forEach(name => {
                 const d = currentData[name];
-                if(d.goalTimes) d.goalTimes.forEach(gt => addGoalTime(name, gt.half, gt.min));
+                if(d.goalTimes) d.goalTimes.forEach(gt => addGoalTime(name, gt.half, gt.min, gt.ast || '', gt.loc || null));
                 if(d.ogTimes) d.ogTimes.forEach(ot => addOGTime(name, ot.half, ot.min));
+                if(d.rotMore && d.pos2) d.rotMore.forEach(r => addRotMore(name, r.half, r.min, r.pos));
             });
+            try { pfRefresh(); } catch (e) { }
             try { ['h', 'a'].forEach(sd => { tacLuRender(sd); tacBoardRefresh(sd); }); } catch (e) { }   // v1.22~23: 출전 포지션 선택칸 · 보드 오른쪽 선수 목록(교체·부상·미출전)을 ③ 선수 목록·상태에 맞춰 갱신
         }
 
-        function addGoalTime(playerName, half = '전반', min = 0) {
+
+        // ======= v1.34: 📍 득점 위치 (⚽ 슈팅 위치 + 마지막 슈팅 방향 화살표) =======
+        // 좌표는 0~1 (x: 우리 팀이 공격하는 방향이 오른쪽 골대 = 1, y: 위 0 ~ 아래 1). loc = { x, y, tx, ty }  (tx,ty = 공이 향한 곳)
+        const GM_W = 400, GM_H = 260;
+        function gmPitchInner(uid) {
+            const L = '#ffffff55';
+            return `<rect x="0" y="0" width="${GM_W}" height="${GM_H}" rx="6" fill="#166534"/>
+                <g fill="none" stroke="${L}" stroke-width="1.5">
+                    <rect x="6" y="6" width="${GM_W - 12}" height="${GM_H - 12}"/>
+                    <line x1="${GM_W / 2}" y1="6" x2="${GM_W / 2}" y2="${GM_H - 6}"/>
+                    <circle cx="${GM_W / 2}" cy="${GM_H / 2}" r="30"/>
+                    <rect x="6" y="${GM_H / 2 - 55}" width="55" height="110"/><rect x="${GM_W - 61}" y="${GM_H / 2 - 55}" width="55" height="110"/>
+                    <rect x="6" y="${GM_H / 2 - 25}" width="20" height="50"/><rect x="${GM_W - 26}" y="${GM_H / 2 - 25}" width="20" height="50"/>
+                </g>
+                <rect x="${GM_W - 6}" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/><rect x="1" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/>`;
+        }
+        // 한 골의 ⚽ + 화살표 SVG 조각 (flip = 180° 뒤집기: 원정팀 시점)
+        function gmGoalSvg(loc, color, uid, label, flip) {
+            if (!loc || typeof loc.x !== 'number') return '';
+            const fx = v => (flip ? 1 - v : v);
+            const bx = fx(loc.x) * GM_W, by = fx(loc.y) * GM_H;
+            let s = '';
+            if (typeof loc.tx === 'number') {
+                const ex = fx(loc.tx) * GM_W, ey = fx(loc.ty) * GM_H;
+                const ang = Math.atan2(ey - by, ex - bx), hl = 11, hw = 0.45;   // 화살표 머리를 직접 그림 (브라우저 호환)
+                const p1 = [ex - hl * Math.cos(ang - hw), ey - hl * Math.sin(ang - hw)], p2 = [ex - hl * Math.cos(ang + hw), ey - hl * Math.sin(ang + hw)];
+                s += `<line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="#000" stroke-width="5.5" stroke-linecap="round" opacity=".45"/><line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="${color}" stroke-width="3" stroke-linecap="round"/><polygon points="${ex},${ey} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}" fill="${color}" stroke="#000" stroke-width="1" stroke-opacity=".5"/>`;
+            }
+            s += `<circle cx="${bx}" cy="${by}" r="9" fill="#fff" stroke="#111" stroke-width="1.5"/><text x="${bx}" y="${by + 4.5}" font-size="13" text-anchor="middle">⚽</text>`;
+            if (label) s += `<text x="${bx}" y="${by - 12}" font-size="10" font-weight="800" text-anchor="middle" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${label}</text>`;
+            return s;
+        }
+        let gmRowRef = null, gmCur = null, gmStep = 0, gmCtx = null;
+        function gmRowLoc(row) { try { return row && row.dataset.loc ? JSON.parse(row.dataset.loc) : null; } catch (e) { return null; } }
+        function gmUpdateBtn(row) {
+            const b = row.querySelector('.gm-btn'); if (!b) return;
+            const has = !!gmRowLoc(row);
+            b.style.background = has ? '#14532d' : '#020617'; b.style.borderColor = has ? '#4ade80' : '#475569';
+            b.title = has ? '득점 위치 기록됨 (눌러서 수정)' : '득점 위치 기록';
+        }
+        // v1.35: 전반에 홈이 오른쪽(→)으로 공격하는 것이 기본 · 후반에는 진영 교체 (↔ 버튼으로 반대로 바꿀 수 있고 브라우저에 기억)
+        function gmHomeRight1() { try { return localStorage.getItem('gleague_gm_home_left1') !== '1'; } catch (e) { return true; } }
+        function gmTeamInfo(id) { const t = (state.teams || []).find(x => String(x.id) === String(id)); return { name: t ? t.name : '팀', color: (t && t.color) || '#94a3b8' }; }
+        // 저장 좌표는 항상 '득점 팀이 → 방향으로 공격'하는 기준 (전/후반을 바꿔도 값이 어긋나지 않음). 화면에서만 진영에 맞춰 180° 뒤집어 보여준다.
+        function gmCalcCtx(row) {
+            const cont = row.closest('.goal-container'), teamId = cont ? cont.getAttribute('data-team') : '';
+            const hId = (document.getElementById('hTeamSel') || {}).value, aId = (document.getElementById('aTeamSel') || {}).value;
+            const isHome = String(teamId) === String(hId);
+            const hs = row.querySelector('.goal-time-select'), half = hs && hs.value === '후반' ? '후반' : '전반';
+            let homeRight = gmHomeRight1(); if (half === '후반') homeRight = !homeRight;
+            const scorerRight = isHome ? homeRight : !homeRight;
+            return { half, isHome, homeRight, scorerRight, flip: !scorerRight, sc: gmTeamInfo(teamId), opp: gmTeamInfo(isHome ? aId : hId), home: gmTeamInfo(hId), away: gmTeamInfo(aId) };
+        }
+        // 좌·우 골대를 지키는 팀을 색과 이름으로 표시 (Lt = 왼쪽 골대 팀, Rt = 오른쪽 골대 팀)
+        function gmSideOverlay(Lt, Rt, o) {
+            o = o || {};
+            const lab = (x, anchor, t, mark) => `<text x="${x}" y="19" font-size="11" font-weight="800" text-anchor="${anchor}" fill="#fff" stroke="#000" stroke-width="3" paint-order="stroke" style="pointer-events:none">${mark} ${gEsc(t.name)} 골대</text>`;
+            return `<rect x="6" y="6" width="${GM_W / 2 - 6}" height="${GM_H - 12}" fill="${Lt.color}" opacity=".22" style="pointer-events:none"/>
+                <rect x="${GM_W / 2}" y="6" width="${GM_W / 2 - 6}" height="${GM_H - 12}" fill="${Rt.color}" opacity=".22" style="pointer-events:none"/>
+                <rect x="1" y="${GM_H / 2 - 18}" width="5" height="36" fill="${Lt.color}" stroke="#fff" stroke-width="1.2" style="pointer-events:none"/>
+                <rect x="${GM_W - 6}" y="${GM_H / 2 - 18}" width="5" height="36" fill="${Rt.color}" stroke="#fff" stroke-width="1.2" style="pointer-events:none"/>
+                ${lab(12, 'start', Lt, o.lMark || '🥅')}${lab(GM_W - 12, 'end', Rt, o.rMark || '🥅')}`;
+        }
+        function gmOpen(btn) {
+            gmRowRef = btn.closest('.goal-time-row');
+            const cont = gmRowRef.closest('.goal-container');
+            const scorer = cont ? cont.getAttribute('data-p') : '';
+            gmCur = gmRowLoc(gmRowRef) || null; gmStep = gmCur ? 2 : 0;
+            let m = document.getElementById('gmModal');
+            if (!m) { m = document.createElement('div'); m.id = 'gmModal'; m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:12px;'; document.body.appendChild(m); }
+            m.innerHTML = `<div style="background:#0f172a;border:1px solid #334155;border-radius:12px;padding:14px;width:min(560px,96vw);max-height:96vh;overflow:auto;">
+                <div style="font-weight:800;margin-bottom:6px;">📍 득점 위치 기록 — <span id="gmWho">${gEsc(scorer)}</span></div>
+                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px;">
+                    <span id="gmHalfBtns" style="display:inline-flex;gap:4px;"></span>
+                    <span id="gmEnds" style="font-size:.7rem;color:var(--text-muted);"></span>
+                    <button type="button" class="btn-edit" onclick="gmSwapEnds()" title="전반에 홈이 왼쪽 골대를 지키는 경기라면 눌러서 반대로 바꾸세요 (기억해 둡니다)" style="margin-left:auto;font-size:.68rem;padding:2px 8px;">↔ 전반 진영 반대로</button>
+                </div>
+                <div id="gmHint" style="font-size:.75rem;color:#fbbf24;margin-bottom:8px;"></div>
+                <svg id="gmSvg" viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;display:block;cursor:crosshair;border-radius:6px;" onclick="gmClick(event)"></svg>
+                <div id="gmNote" style="font-size:.65rem;color:var(--text-muted);margin:4px 0 8px;"></div>
+                <div style="display:flex;gap:6px;justify-content:flex-end;">
+                    <button type="button" class="btn-edit" onclick="gmClear()">초기화</button>
+                    <button type="button" class="btn-edit" onclick="gmClose()">취소</button>
+                    <button type="button" class="btn-add-goal" onclick="gmSave()" style="padding:4px 12px;">확인</button>
+                </div></div>`;
+            gmRender();
+        }
+        function gmRender() {
+            const svg = document.getElementById('gmSvg'); if (!svg || !gmRowRef) return;
+            const c = gmCtx = gmCalcCtx(gmRowRef);
+            const L = c.scorerRight ? c.sc : c.opp, R = c.scorerRight ? c.opp : c.sc;   // 왼쪽 / 오른쪽 골대를 지키는 팀
+            const atk = `<text x="${GM_W / 2}" y="${GM_H - 12}" font-size="11" font-weight="800" text-anchor="middle" fill="#fde047" stroke="#000" stroke-width="3" paint-order="stroke" style="pointer-events:none">${c.scorerRight ? gEsc(c.sc.name) + ' 공격 방향 ▶▶' : '◀◀ ' + gEsc(c.sc.name) + ' 공격 방향'}</text>`;
+            svg.innerHTML = gmPitchInner('M') + gmSideOverlay(L, R, { lMark: c.scorerRight ? '🛡️' : '🎯', rMark: c.scorerRight ? '🎯' : '🛡️' }) + atk + gmGoalSvg(gmCur, '#facc15', 'M', '', c.flip);
+            const hb = document.getElementById('gmHalfBtns');
+            if (hb) hb.innerHTML = ['전반', '후반'].map(h => `<button type="button" class="btn-edit" onclick="gmSetHalf('${h}')" style="padding:2px 14px;font-weight:800;${c.half === h ? 'background:#facc15;color:#111;border-color:#facc15;' : 'background:#1e293b;color:#cbd5e1;border-color:#475569;'}">${h}</button>`).join('');
+            const en = document.getElementById('gmEnds');
+            if (en) en.innerHTML = `<b style="color:${c.home.color}">${gEsc(c.home.name)}</b>(홈) ${c.homeRight ? '▶ 오른쪽' : '◀ 왼쪽'} 공격 · <b style="color:${c.away.color}">${gEsc(c.away.name)}</b>(원정) ${c.homeRight ? '◀ 왼쪽' : '▶ 오른쪽'} 공격`;
+            document.getElementById('gmNote').innerHTML = `🎯 = <b style="color:${c.opp.color}">${gEsc(c.opp.name)}</b> 골대(득점 목표) · 🛡️ = <b style="color:${c.sc.color}">${gEsc(c.sc.name)}</b> 골대. ${c.half}에는 <b style="color:${c.sc.color}">${gEsc(c.sc.name)}</b>이(가) ${c.scorerRight ? '오른쪽' : '왼쪽'} 골대를 향해 공격합니다. (전·후반을 바꿔도 기록한 위치는 공격 방향 기준으로 유지돼요)`;
+            document.getElementById('gmHint').innerText = gmStep === 0 ? '① 슈팅한 위치를 클릭하세요' : gmStep === 1 ? '② 공이 향한 곳(골문 안쪽 등)을 클릭하세요 — 건너뛰려면 확인' : '✔ 위치 · 방향이 입력됐어요. 다시 클릭하면 위치부터 새로 찍어요';
+        }
+        function gmSetHalf(h) {   // 팝업에서 전/후반을 바꾸면 득점 줄의 전/후반도 같이 바뀐다
+            const hs = gmRowRef && gmRowRef.querySelector('.goal-time-select');
+            if (hs && hs.value !== h) { hs.value = h; hs.dispatchEvent(new Event('change', { bubbles: true })); }
+            gmRender();
+        }
+        function gmSwapEnds() { try { localStorage.setItem('gleague_gm_home_left1', gmHomeRight1() ? '1' : '0'); } catch (e) { } gmRender(); }
+        function gmClick(ev) {
+            const svg = document.getElementById('gmSvg'), r = svg.getBoundingClientRect();
+            let x = Math.min(Math.max((ev.clientX - r.left) / r.width, 0), 1), y = Math.min(Math.max((ev.clientY - r.top) / r.height, 0), 1);
+            if (gmCtx && gmCtx.flip) { x = 1 - x; y = 1 - y; }   // 화면 좌표 → 저장 좌표(득점 팀이 → 공격 기준)
+            const rd = v => Math.round(v * 1000) / 1000;
+            if (gmStep === 0 || gmStep === 2) { gmCur = { x: rd(x), y: rd(y) }; gmStep = 1; }
+            else { gmCur.tx = rd(x); gmCur.ty = rd(y); gmStep = 2; }
+            gmRender();
+        }
+        function gmClear() { gmCur = null; gmStep = 0; gmRender(); }
+        function gmClose() { const m = document.getElementById('gmModal'); if (m) m.remove(); gmRowRef = null; }
+        function gmSave() { if (gmRowRef) { if (gmCur) gmRowRef.dataset.loc = JSON.stringify(gmCur); else delete gmRowRef.dataset.loc; gmUpdateBtn(gmRowRef); } gmClose(); }
+
+        // 경기 기록 카드: 이 경기의 득점 위치 지도 (홈 → 오른쪽 공격, 원정은 180° 뒤집어 왼쪽 공격) + 🧤 슈퍼세이브
+        function goalMapHtml(m, ht, at) {
+            const items = []; let svg = '', n = 0; const uid = 'H' + m.id;
+            (m.pStats || []).forEach(ps => (ps.goalTimes || []).forEach(gt => {
+                if (!gt.loc) return;
+                const home = String(ps.teamId) === String(m.hId), tm = home ? ht : at; n++;
+                svg += gmGoalSvg(gt.loc, tm.color, uid, String(n), !home);
+                items.push(`<div style="font-size:.68rem;"><b style="color:${tm.color}">${n}</b> ${gt.half.charAt(0)}${gt.min}' ${ps.name}${gt.ast ? ` <span style="color:#fbbf24;">🅰️${gt.ast}</span>` : ''}</div>`);
+            }));
+            const ssList = (m.pStats || []).filter(ps => ps.ss > 0).map(ps => `<span style="font-size:.68rem;margin-right:8px;">🧤 ${ps.name} <b>${ps.ss}</b></span>`).join('');
+            if (!n && !ssList) return '';
+            return `<div class="gm-card" style="margin:6px 0 8px;">
+                ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · <span style="color:${ht.color}">${ht.name}</span>은 →, <span style="color:${at.color}">${at.name}</span>은 ← 방향 공격)</span></div>
+                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:460px;display:block;border-radius:6px;">${gmPitchInner(uid)}${gmSideOverlay(ht, at)}${svg}</svg>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>` : ''}
+                ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">슈퍼세이브(결정적 득점 선방)</span></div>` : ''}
+            </div>`;
+        }
+
+        // 같은 팀 동료 목록으로 '도움' 선택지를 만든다 (득점자 본인 제외)
+        function goalAssistOptionsHtml(container, playerName, sel) {
+            const teamId = container.getAttribute('data-team');
+            let opts = `<option value="">도움 없음</option>`;
+            document.querySelectorAll('.goal-container').forEach(c => {
+                const n = c.getAttribute('data-p');
+                if (n !== playerName && c.getAttribute('data-team') === teamId) opts += `<option value="${n}" ${sel === n ? 'selected' : ''}>🅰️ ${n}</option>`;
+            });
+            return opts;
+        }
+        function addGoalTime(playerName, half = '전반', min = 0, ast = '', loc = null) {
             const container = document.querySelector(`.goal-container[data-p="${playerName}"]`);
             if (!container) return;
             const row = document.createElement('div');
             row.className = 'goal-time-row';
             row.innerHTML = `
+                <span class="gi">⚽</span>
                 <select class="goal-time-select" data-type="goal">
                     <option value="전반" ${half === '전반' ? 'selected' : ''}>전반</option>
                     <option value="후반" ${half === '후반' ? 'selected' : ''}>후반</option>
                 </select>
-                <input type="number" class="goal-time-input" value="${min}" min="0" max="13">
+                <input type="number" class="goal-time-input" value="${min}" min="0" max="13"><span style="font-size:.65rem;color:var(--text-muted);">분</span>
+                <select class="goal-ast-select" title="이 골을 도운 선수" style="font-size:.7rem;background:#020617;color:#fbbf24;border:1px solid #475569;border-radius:4px;padding:2px;">${goalAssistOptionsHtml(container, playerName, ast)}</select>
+                <button type="button" class="gm-btn" onclick="gmOpen(this)" style="border:1px solid #475569;border-radius:4px;background:#020617;font-size:.8rem;padding:1px 5px;cursor:pointer;">📍</button>
                 <button type="button" class="btn-remove-goal" onclick="this.parentElement.remove()">×</button>
             `;
+            if (loc && typeof loc.x === 'number') row.dataset.loc = JSON.stringify(loc);
             container.appendChild(row);
+            gmUpdateBtn(row);
         }
 
         function addOGTime(playerName, half = '전반', min = 0) {
             const container = document.querySelector(`.goal-container[data-p="${playerName}"]`);
             if (!container) return;
             const row = document.createElement('div');
-            row.className = 'goal-time-row';
+            row.className = 'goal-time-row og';
             row.innerHTML = `
-                <span class="og-badge">OG</span>
+                <span class="gi">🥅</span><span class="og-badge">자책</span>
                 <select class="goal-time-select" data-type="og">
                     <option value="전반" ${half === '전반' ? 'selected' : ''}>전반</option>
                     <option value="후반" ${half === '후반' ? 'selected' : ''}>후반</option>
                 </select>
-                <input type="number" class="goal-time-input" value="${min}" min="0" max="13">
+                <input type="number" class="goal-time-input" value="${min}" min="0" max="13"><span style="font-size:.65rem;color:var(--text-muted);">분</span>
+                <span class="og-fill">상대팀 득점으로 계산</span>
                 <button type="button" class="btn-remove-goal" onclick="this.parentElement.remove()">×</button>
             `;
             container.appendChild(row);
         }
+
+        // ===== v1.34: 선수 카드 요약 칩 · 팀 득점 합계 배지 갱신 =====
+        function pfRefresh() {
+            const form = document.getElementById('playerStatsForm'); if (!form) return;
+            const linked = {};
+            form.querySelectorAll('.goal-ast-select').forEach(s => { if (s.value) linked[s.value] = (linked[s.value] || 0) + 1; });
+            const goals = {}, ogs = {};
+            form.querySelectorAll('.pf-card').forEach(card => {
+                const n = card.dataset.p, tid = card.dataset.team;
+                let g = 0, og = 0;
+                card.querySelectorAll('.goal-time-row .goal-time-select').forEach(s => { if (s.getAttribute('data-type') === 'og') og++; else g++; });
+                const a = (parseInt((card.querySelector('.assist') || {}).value) || 0) + (linked[n] || 0);
+                const ss = parseInt((card.querySelector('.ss-input') || {}).value) || 0;
+                const chips = card.querySelector('.pf-chips');
+                if (chips) chips.innerHTML = (g ? `<span class="pf-chip g">⚽${g}</span>` : '') + (a ? `<span class="pf-chip a">🅰️${a}</span>` : '') + (ss ? `<span class="pf-chip s">🧤${ss}</span>` : '') + (og ? `<span class="pf-chip o">🥅${og}</span>` : '');
+                const hot = !!(g || og || a || ss);
+                const st = (card.querySelector('.status') || {}).value || 'starter';
+                card.classList.toggle('pf-hot', hot);
+                card.classList.toggle('pf-collapsed', (st === 'injured' || st === 'absent') && !hot && !card.classList.contains('pf-open'));
+                goals[tid] = (goals[tid] || 0) + g; ogs[tid] = (ogs[tid] || 0) + og;
+            });
+            const tids = [...form.querySelectorAll('.pf-team')].map(e => e.dataset.team);
+            const home = (document.getElementById('hTeamSel') || {}).value;
+            const inter = (document.getElementById('matchType') || {}).value === '인터리그';
+            const hs = parseInt(document.getElementById(inter ? 'interHScore' : 'hScore').value) || 0, as = parseInt(document.getElementById(inter ? 'interAScore' : 'aScore').value) || 0;
+            tids.forEach(tid => {
+                const opp = tids.find(x => x !== tid);
+                const got = (goals[tid] || 0) + (ogs[opp] || 0);
+                const exp = String(tid) === String(home) ? hs : as;
+                const el = form.querySelector(`.pf-tot[data-team="${tid}"]`); if (!el) return;
+                el.textContent = `⚽ 입력 ${got} / 스코어 ${exp} ${got === exp ? '✔' : '⚠'}`;
+                el.className = 'pf-tot ' + (got === exp ? 'ok' : 'bad');
+                el.title = got === exp ? '입력한 득점(자책 포함)이 스코어와 같아요' : '입력한 득점 수와 스코어가 달라요 (시간 입력이 빠졌거나 스코어를 확인하세요)';
+            });
+        }
+        (function pfBind() {
+            const run = () => setTimeout(() => { try { pfRefresh(); } catch (e) { } }, 0);
+            document.addEventListener('input', ev => { if (ev.target.closest && (ev.target.closest('#playerStatsForm') || /^(hScore|aScore|interHScore|interAScore)$/.test(ev.target.id))) run(); });
+            document.addEventListener('change', ev => { if (ev.target.closest && (ev.target.closest('#playerStatsForm') || /^(hTeamSel|aTeamSel|matchType)$/.test(ev.target.id))) run(); });
+            document.addEventListener('click', ev => { if (ev.target.closest && ev.target.closest('#playerStatsForm')) run(); });
+        })();
 
         function checkPK() {
             const type = document.getElementById('matchType').value;
@@ -19818,7 +20357,7 @@
         var TAC_APPLY_KEY = 'gleague_tac_apply_v119';
         var TAC_AGG = null, TAC_AGG_SIG = '', tacScope = 'team', tacCardTeam = null;
         var TAC_ALL_DIMS = ['fm'].concat(FM_DIMS, ['fgk']);
-        function tacAggReset() { TAC_AGG = null; TAC_AGG_SIG = ''; }
+        function tacAggReset() { TAC_AGG = null; TAC_AGG_SIG = ''; window.MAU_VER = (window.MAU_VER || 0) + 1; }   // v1.33: 저장/불러오기마다 🔗 자동 연동 캐시도 새로 계산
         function tacApplyOn() { try { return localStorage.getItem(TAC_APPLY_KEY) !== '0'; } catch (e) { return true; } }
         function tacQ(s) { return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
         function tacPct(x) { return (x === null || x === undefined) ? '-' : Math.round(x * 100) + '%'; }
@@ -20193,8 +20732,8 @@
                 const arr = cands.filter(c => c.status === k && !placed.has(c.name));
                 return arr.length ? `<div class="tac-mb-grp"><div class="tac-mb-gt">${t} <span class="mut">${arr.length}</span></div><div class="tac-mb-list">${arr.map(c => tacMbMini(c, live, o.sel === c.name, tbc)).join('')}</div></div>` : '';
             }).join('');
-            const hint = live ? `<div class="fm-mhint">🖱️ <b>카드를 끌면</b> 위치 이동 · <b>화살표 끝 ●을 끌면</b> 방향·거리 조정 · 오른쪽 선수를 <b>끌어다 놓거나</b>(클릭 → 자리 클릭) 그 자리에 배치 · 카드를 오른쪽으로 끌면 자리에서 뺍니다. (✏️ = 직접 조정)${fmArrowMode === 'off' ? ' <b style="color:#f59e0b;">(이동 예측이 꺼져 있어 ●이 숨겨져 있어요)</b>' : ''}</div>` : '';
-            return `<div class="tac-mb${live ? ' live' : ''}"${live ? ` data-side="${o.side}"` : ''}><div class="tac-mb-main">${live ? tacMbCtlHtml(o.side, pos, mv) : ''}${pitch}${hint}<div class="fm-legend"><span><i style="background:#f59e0b;"></i>공격 시 이동</span><span><i class="dash" style="border-color:#38bdf8;"></i>수비 시 이동</span></div><div class="tac-bd-cap"><b>${gEsc(F.label)}</b><br>${gEsc(F.desc)}</div></div><div class="tac-mb-side">${tacMbMgrHtml(o.mgr, key, S)}${grp || '<div class="tac-mb-none">교체 · 부상 · 미출전 선수가 없습니다.</div>'}</div></div>`;
+            const hint = live ? `<div class="fm-mhint tac-help-txt">🖱️ <b>카드를 끌면</b> 위치 이동 · <b>화살표 끝 ●을 끌면</b> 방향·거리 조정 · 오른쪽 선수를 <b>끌어다 놓거나</b>(클릭 → 자리 클릭) 그 자리에 배치 · 카드를 오른쪽으로 끌면 자리에서 뺍니다. (✏️ = 직접 조정)${fmArrowMode === 'off' ? ' <b style="color:#f59e0b;">(이동 예측이 꺼져 있어 ●이 숨겨져 있어요)</b>' : ''}</div>` : '';
+            return `<div class="tac-mb${live ? ' live' : ''}"${live ? ` data-side="${o.side}"` : ''}><div class="tac-mb-main">${live ? tacMbCtlHtml(o.side, pos, mv) : ''}${pitch}<div class="tac-below">${hint}<div class="fm-legend"><span><i style="background:#f59e0b;"></i>공격 시 이동</span><span><i class="dash" style="border-color:#38bdf8;"></i>수비 시 이동</span></div><div class="tac-bd-cap${live ? ' tac-help-txt' : ''}"><b>${gEsc(F.label)}</b><br>${gEsc(F.desc)}</div></div></div><div class="tac-mb-side">${tacMbMgrHtml(o.mgr, key, S)}${grp || '<div class="tac-mb-none">교체 · 부상 · 미출전 선수가 없습니다.</div>'}</div></div>`;
         }
         function tacMbState(side) {   // 입력 화면: 지금 고른 값 (포메이션 · 전술 · 출전 · 위치 · 화살표)
             const p = document.getElementById('tacPanel_' + side), f = document.getElementById('tacFm_' + side); if (!p || !f) return null;
@@ -20214,6 +20753,7 @@
             }
             const s = tacMbState(side);
             box.innerHTML = tacBoardHtml(s.team, s.fm, s.S, s.lu, { live: true, side, pos: s.pos, mv: s.mv, cands: tacLuCands(p.dataset.team), mgr: s.mgr, sel: (tacMbSel && tacMbSel.side === side) ? tacMbSel.name : null });
+            try { tacSumRefresh(); } catch (e) { }
         }
         function tacMbLive(side) {   // 드래그 중에는 카드 위치와 화살표만 갱신
             const s = tacMbState(side), mb = document.querySelector(`#tacticForm .tac-mb[data-side="${side}"]`); if (!s || !mb) return;
@@ -20503,15 +21043,43 @@
         function renderTacticForms() {
             const box = document.getElementById('tacticForm'); if (!box) return;
             const hId = tacSideTeamId('h'), aId = tacSideTeamId('a');
-            if (!hId || !aId) { box.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem; padding:6px 2px;">홈·원정 팀을 고르면 전술 입력칸이 나타납니다.</div>'; return; }
+            if (!hId || !aId) { box.innerHTML = '<div style="color:var(--text-muted); font-size:0.82rem; padding:6px 2px;">홈·원정 팀을 고르면 전술 입력칸이 나타납니다.</div>'; try { tacSumRefresh(); } catch (e) { } return; }
             const need = ['h', 'a'].some(sd => { const p = document.getElementById('tacPanel_' + sd); return !p || p.dataset.team !== String(sd === 'h' ? hId : aId); });
             if (!need) return;   // 같은 팀이면 입력 중이던 값 유지
             box.innerHTML = ['h', 'a'].map(sd => { const id = sd === 'h' ? hId : aId; const t = state.teams.find(x => String(x.id) === String(id)); return t ? tacPanelHtml(sd, t, tacInitSmart(id, sd === 'h' ? aId : hId)) : ''; }).join('');
             if (!box._mbInit) { tacMbInit(box); box._mbInit = true; }
             tacMbSel = null;
             ['h', 'a'].forEach(sd => { try { tacLuRender(sd); tacBoardRefresh(sd); } catch (e) { console.error(e); } });
+            try { tacSumRefresh(); } catch (e) { }
         }
-        function tacToggle(side) { const p = document.getElementById('tacPanel_' + side), c = document.getElementById('tacOn_' + side); if (p && c) p.classList.toggle('off', !c.checked); }
+        // ===== v1.35: 전술 입력 접기 · 설명 접기 (설정은 브라우저에 기억) =====
+        var tacFold = (function () { try { return localStorage.getItem('gleague_tac_fold') !== '0'; } catch (e) { return true; } })();   // 기본: 접힘
+        var tacHelp = (function () { try { return localStorage.getItem('gleague_tac_help') === '1'; } catch (e) { return false; } })();    // 기본: 설명 숨김
+        function tacSumRefresh() {
+            const el = document.getElementById('tacSum'); if (!el) return;
+            const parts = ['h', 'a'].map(sd => {
+                const p = document.getElementById('tacPanel_' + sd); if (!p) return '';
+                const t = (state.teams || []).find(x => String(x.id) === String(p.dataset.team)), f = document.getElementById('tacFm_' + sd), c = document.getElementById('tacOn_' + sd);
+                if (!t) return '';
+                return `<span style="color:${t.color || 'inherit'};font-weight:800;">${gEsc(t.name)}</span> ${c && c.checked ? (f ? gEsc(f.value) : '기록') : '<span style="opacity:.7;">미기록</span>'}`;
+            }).filter(Boolean);
+            el.innerHTML = parts.length ? parts.join(' <span style="opacity:.5;">vs</span> ') : '<span style="opacity:.7;">홈·원정 팀을 고르면 표시돼요</span>';
+        }
+        function tacFoldApply() {
+            const g = document.getElementById('matchSideGrid'), c = document.getElementById('tacticCard'), b = document.getElementById('tacFoldBtn');
+            if (g) g.classList.toggle('tac-folded', !!tacFold);
+            if (c) c.classList.toggle('tac-fold', !!tacFold);
+            if (b) b.textContent = tacFold ? '▶ 펼치기' : '▼ 접기';
+            try { tacSumRefresh(); } catch (e) { }
+        }
+        function tacFoldToggle() { tacFold = !tacFold; try { localStorage.setItem('gleague_tac_fold', tacFold ? '1' : '0'); } catch (e) { } tacFoldApply(); }
+        function tacHelpApply() {
+            document.body.classList.toggle('tac-help-open', !!tacHelp);
+            document.querySelectorAll('.tac-help-btn').forEach(b => { b.textContent = tacHelp ? '💡 설명 접기' : '💡 설명 보기'; });
+        }
+        function tacHelpToggle() { tacHelp = !tacHelp; try { localStorage.setItem('gleague_tac_help', tacHelp ? '1' : '0'); } catch (e) { } tacHelpApply(); }
+        (function () { const run = () => { try { tacFoldApply(); tacHelpApply(); } catch (e) { } }; if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run(); })();
+        function tacToggle(side) { const p = document.getElementById('tacPanel_' + side), c = document.getElementById('tacOn_' + side); if (p && c) p.classList.toggle('off', !c.checked); try { tacSumRefresh(); } catch (e) { } }
         function tacSetValues(side, fm, st, on) {
             const f = document.getElementById('tacFm_' + side); if (f) f.value = FM_FORMATIONS[fm] ? fm : '1-2-1';
             const S = Object.assign({}, FM_DEFAULT_STYLE, st || {});
@@ -20591,6 +21159,10 @@
             if(hScore === aScore && hPk === aPk) { alert("무승부인 경우 승부차기 결과를 입력해주세요."); return; }
 
             const pStats = [];
+            let rotErr = '';
+            // 골에 연결된 도움 집계 (득점자 → 도움 선수)
+            const linkedAst = {};
+            document.querySelectorAll('.goal-time-row .goal-ast-select').forEach(s => { if (s.value) linkedAst[s.value] = (linkedAst[s.value] || 0) + 1; });
             document.querySelectorAll('.goal-container').forEach(el => {
                 const name = el.getAttribute('data-p');
                 const pTeamId = el.getAttribute('data-team');
@@ -20602,11 +21174,13 @@
                     const type = select.getAttribute('data-type');
                     const min = parseInt(row.querySelector('.goal-time-input').value) || 0;
                     if(type === 'og') ogTimes.push({ half, min });
-                    else goalTimes.push({ half, min });
+                    else { const _as = row.querySelector('.goal-ast-select'); const _lc = gmRowLoc(row); goalTimes.push({ half, min, ...(_as && _as.value ? { ast: _as.value } : {}), ...(_lc ? { loc: _lc } : {}) }); }
                 });
                 const g = goalTimes.length;
                 const og = ogTimes.length;
-                const a = parseInt(document.querySelector(`.assist[data-p="${name}"]`).value) || 0;
+                const a = (parseInt(document.querySelector(`.assist[data-p="${name}"]`).value) || 0) + (linkedAst[name] || 0);   // 미연결 도움 + 골에 연결된 도움
+                const ssEl = document.querySelector(`.ss-input[data-p="${name}"]`);
+                const ss = ssEl ? Math.max(parseInt(ssEl.value) || 0, 0) : 0;
                 const r = parseFloat(document.querySelector(`.rating[data-p="${name}"]`).value) || 0;
                 const status = document.querySelector(`.status[data-p="${name}"]`).value;
                 const pos = document.querySelector(`.pos-select[data-p="${name}"]`).value;
@@ -20618,13 +21192,20 @@
                 const rotMinEl = document.querySelector(`.rot-min-input[data-p="${name}"]`);
                 const rotHalfVal = rotHalfEl ? rotHalfEl.value : '후반';
                 const rotMinVal = Math.min(Math.max(parseInt(rotMinEl ? rotMinEl.value : 1) || 1, 1), 13);
-                const rotExtra = (pos2 && !(rotHalfVal === '후반' && rotMinVal === 1)) ? { rotHalf: rotHalfVal, rotMin: rotMinVal } : {};
+                let rotExtra = (pos2 && !(rotHalfVal === '후반' && rotMinVal === 1)) ? { rotHalf: rotHalfVal, rotMin: rotMinVal } : {};
+                if (pos2) {   // v1.34: 두 번째 이후 로테이션 (시간 순 · 첫 로테이션보다 뒤여야 함)
+                    const more = readRotMore(name).sort((x, y) => matchOrdinal(x.half, x.min) - matchOrdinal(y.half, y.min));
+                    const firstOrd = matchOrdinal(rotHalfVal, rotMinVal);
+                    if (more.some(x => matchOrdinal(x.half, x.min) <= firstOrd)) { rotErr = `${name}: 추가 로테이션 시점은 첫 로테이션(${rotHalfVal} ${rotMinVal}분)보다 뒤여야 합니다.`; }
+                    else if (more.length) rotExtra = { ...rotExtra, rotMore: more };
+                }
 
                 // ※ 경기 폼의 포지션(전반/후반)은 이 경기 기록(pStats)에만 저장한다.
                 //    선수의 기본(로스터) 포지션은 팀 관리에서만 바뀌도록, 여기서 state.teams 를 건드리지 않는다.
 
-                if(g > 0 || og > 0 || a > 0 || r > 0 || name === mom || status !== 'normal') pStats.push({ name, g, og, a, r, status, pos, pos2, ...rotExtra, goalTimes, ogTimes, teamId: pTeamId });
+                if(g > 0 || og > 0 || a > 0 || ss > 0 || r > 0 || name === mom || status !== 'normal') pStats.push({ name, g, og, a, r, status, pos, pos2, ...rotExtra, ...(ss > 0 ? { ss } : {}), goalTimes, ogTimes, teamId: pTeamId });
             });
+            if (rotErr) { alert(rotErr); return; }
             const matchData = { id: editingId ? parseInt(editingId) : Date.now(), type, season, num, hId, aId, hScore, aScore, hPk, aPk, mom, pStats };
             { const _th = tacRead('h'), _ta = tacRead('a'); if (_th || _ta) { matchData.tac = {}; if (_th) matchData.tac.h = _th; if (_ta) matchData.tac.a = _ta; } }   // v1.18: 이 경기에서 쓴 전술
             // 순위 변동 스냅샷은 '새 경기 추가' 시에만 갱신한다.
@@ -21149,6 +21730,7 @@
                                 </div>
                             </div>
                             ${tacHistoryHtml(m, ht, at, 'line')}
+                            ${goalMapHtml(m, ht, at)}
                             <div class="hi-panes">
                                 <section class="hi-pane hi-tac">
                                     <div class="hi-pane-t">🧭 경기 전술 · 포메이션 <span class="hi-pane-sub">카드 색 = 팀 유니폼 · 글씨 = 포지션 · ▲▼ = OVR 대비 변화</span></div>
@@ -21253,11 +21835,16 @@
             tacLoadForEdit(m);   // v1.18: 저장된 전술 복원 (없으면 '기록 안 함')
             
             setTimeout(() => {
+                const _linked = {};
+                m.pStats.forEach(ps => (ps.goalTimes || []).forEach(gt => { if (gt.ast) _linked[gt.ast] = (_linked[gt.ast] || 0) + 1; }));
                 m.pStats.forEach(ps => {
-                    if(ps.goalTimes) ps.goalTimes.forEach(gt => addGoalTime(ps.name, gt.half, gt.min));
+                    if(ps.goalTimes) ps.goalTimes.forEach(gt => addGoalTime(ps.name, gt.half, gt.min, gt.ast || '', gt.loc || null));
                     if(ps.ogTimes) ps.ogTimes.forEach(ot => addOGTime(ps.name, ot.half, ot.min));
                     const assistInput = document.querySelector(`.assist[data-p="${ps.name}"]`);
-                    if(assistInput) assistInput.value = ps.a;
+                    if(assistInput) assistInput.value = Math.max((ps.a || 0) - (_linked[ps.name] || 0), 0);
+                    let ssInput = document.querySelector(`.ss-input[data-p="${ps.name}"]`);
+                    if(!ssInput && ps.ss) { const ph = document.querySelector(`.ss-ph[data-p="${ps.name}"]`); if(ph) { ph.outerHTML = `<input type="number" class="p-input ss-input" data-p="${ps.name}" value="${ps.ss}" min="0" title="슈퍼세이브(결정적 득점 선방) 횟수" style="width:46px;">`; ssInput = document.querySelector(`.ss-input[data-p="${ps.name}"]`); } }
+                    if(ssInput) ssInput.value = ps.ss || 0;
                     const ratingInput = document.querySelector(`.rating[data-p="${ps.name}"]`);
                     if(ratingInput) ratingInput.value = ps.r;
                     const statusSelect = document.querySelector(`.status[data-p="${ps.name}"]`);
@@ -21276,12 +21863,15 @@
                             if(rh) rh.value = ps.rotHalf || '후반';
                             if(rm) rm.value = ps.rotMin || 1;
                         }
+                        const _mb = document.querySelector(`.rot-more-box[data-p="${ps.name}"]`); if(_mb) _mb.style.display = 'flex';
+                        (ps.rotMore || []).forEach(r => addRotMore(ps.name, r.half, r.min, r.pos));
                     }
                     if(ps.name === m.mom) {
                         const momRadio = document.querySelector(`input[name="mom"][value="${ps.name}"]`);
                         if(momRadio) momRadio.checked = true;
                     }
                 });
+                try { pfRefresh(); } catch (e) { }
             }, 100);
         }
 
@@ -22499,7 +23089,7 @@
                     else s.absent++;
                     if(status === 'starter' || status === 'substitute') {
                         if(ps.pos) s.posCounts[ps.pos] = (s.posCounts[ps.pos] || 0) + 1;
-                        if(ps.pos2 && ps.pos2 !== ps.pos) s.posCounts[ps.pos2] = (s.posCounts[ps.pos2] || 0) + 1;
+                        if(ps.pos2 && ps.pos2 !== ps.pos) s.posCounts[ps.pos2] = (s.posCounts[ps.pos2] || 0) + 1; if(ps.pos2 && ps.pos2 !== ps.pos) rotMoreList(ps).forEach(_r => { s.posCounts[_r.pos] = (s.posCounts[_r.pos] || 0) + 1; });
                     }
                     if(ps.teamId !== undefined && ps.teamId !== null) s.teamId = ps.teamId; // 이적 반영: 그 경기 시점 최신 소속팀
                 });
@@ -25465,6 +26055,7 @@
             // 포지션별 필터 드롭다운 (GK/DF/MF/FW) - 팀 필터와 동일한 방식으로 선택값 유지
             const posFilterEl = document.getElementById('playerRankPosFilter');
             const posFilterVal = posFilterEl ? (posFilterEl.value || 'all') : 'all';
+            { const _rt = document.getElementById('playerRankTable'); if(_rt) _rt.classList.toggle('rank-gk-mode', posFilterVal === 'GK'); const _gh = document.getElementById('rankGkHint'); if(_gh) _gh.style.display = posFilterVal === 'GK' ? '' : 'none'; }
             // 제목을 실제 선택된 필터 값으로 갱신 (필터를 바꿔도 제목이 안 바뀌던 문제 수정)
             const rankTitleEl = document.getElementById('playerRankTitle');
             if(rankTitleEl) {
@@ -25499,7 +26090,7 @@
                     // 이렇게 모은 횟수 중 가장 많은 포지션이 주포지션, 두 번째로 많은 포지션이 부포지션이 된다.
                     if(status === 'starter' || status === 'substitute') {
                         if(ps.pos) s.posCounts[ps.pos] = (s.posCounts[ps.pos] || 0) + 1;
-                        if(ps.pos2 && ps.pos2 !== ps.pos) s.posCounts[ps.pos2] = (s.posCounts[ps.pos2] || 0) + 1;
+                        if(ps.pos2 && ps.pos2 !== ps.pos) s.posCounts[ps.pos2] = (s.posCounts[ps.pos2] || 0) + 1; if(ps.pos2 && ps.pos2 !== ps.pos) rotMoreList(ps).forEach(_r => { s.posCounts[_r.pos] = (s.posCounts[_r.pos] || 0) + 1; });
                     }
                     // 표시용 teamId는 여기서 갱신하지 않음: 현재 로스터에 있는 선수는 항상 '현재 소속팀'으로 보여준다.
                     // (파워랭킹의 팀 성과 요소는 더 이상 이 값에 의존하지 않고, 경기 기록의 ps.teamId를 매 경기마다
@@ -25526,6 +26117,11 @@
                     mom: s.mom, rating: s.rating, avgRating: s.ratingCount > 0 ? (s.rating / s.ratingCount) : 0,
                     games: s.starter + s.substitute, starter: s.starter, substitute: s.substitute, absent: s.absent };
             }).filter(p => p.games > 0 || p.goals > 0 || p.assists > 0);
+            // v1.35: GK 슈퍼세이브 집계 (같은 경기 범위 기준)
+            try {
+                const _gkR = GA.collect(matchPool).gk;
+                data.forEach(p => { const g = _gkR[p.name]; p.ss = g ? g.ss : 0; p.ssPerG = (g && g.w > 0) ? Math.round(g.ss / g.w * 100) / 100 : 0; p.ssBest = g ? g.bestSS : 0; p.ssGa = g ? g.ga : 0; p.ssRate = (g && (g.ss + g.ga) > 0) ? Math.round(g.ss / (g.ss + g.ga) * 1000) / 10 : 0; });
+            } catch (e) { console.error('GK 슈퍼세이브 집계 오류', e); data.forEach(p => { p.ss = 0; p.ssPerG = 0; p.ssBest = 0; p.ssGa = 0; p.ssRate = 0; }); }
             // 수상기록(득점왕/도움왕/MVP/평점왕/신인상/야신상/골롱도르) 집계 — 🏆 리그 전체 개인 기록 표와 동일한 방식
             // (확정 수상 / 미확정(수상유력, 진행중인 현재 시즌 선두 후보)을 구분해서 보관)
             const rankAwards = computeAwardCountsForSeasonFilter(sf);
@@ -25707,7 +26303,7 @@
                 const subBadge = p.subPos ? `<span style="background:${posColorMap[p.subPos]||'#94a3b8'}; opacity:0.55; color:${(p.subPos==='GK'||p.subPos==='MF')?'#000':'#fff'}; padding:0px 5px; border-radius:4px; font-size:0.6rem; font-weight:800; margin-left:3px;" title="부포지션">${p.subPos}</span>` : '';
                 const posBadge = mainBadge + subBadge;
                 const awardsCell = buildAwardsCell(p.awardsConfirmed, p.awardsPending);
-                tbody.innerHTML += `<tr><td style="white-space:nowrap;">${i+1}${changeHtml}</td><td class="clickable-player" onclick="showPlayerDetail('${p.name}')" style="font-weight:800;">${p.name}</td><td style="color:${p.color}">${p.teamName}</td><td class="rank-adv-col" style="white-space:nowrap;">${posBadge}</td><td class="rank-adv-col" title="⭐선발/🔄후보/🪑미출전" style="white-space:nowrap;">${gamesDisplay}${catChangeBadge('games', p.name)}</td><td class="rank-adv-col" style="color:var(--accent); font-weight:800; white-space:nowrap;">${p.points}${catChangeBadge('points', p.name)}</td><td style="white-space:nowrap;">${p.goals}${catChangeBadge('goals', p.name)}</td><td style="white-space:nowrap;">${p.assists}${catChangeBadge('assists', p.name)}</td><td class="rank-adv-col" style="white-space:nowrap;">${p.mom}${catChangeBadge('mom', p.name)}</td><td style="white-space:nowrap;">${p.avgRating.toFixed(2)}${catChangeBadge('avgRating', p.name)}</td><td style="color:var(--gold); font-weight:800; white-space:nowrap;">${p.pwr.toFixed(1)}${pwrSampleTag(p)}${pwrRankTag}${catChangeBadge('pwr', p.name)}</td><td class="rank-adv-col" style="font-size:0.85rem; white-space:nowrap; letter-spacing:-0.5px;">${awardsCell}</td></tr>`;
+                tbody.innerHTML += `<tr><td style="white-space:nowrap;">${i+1}${changeHtml}</td><td class="clickable-player" onclick="showPlayerDetail('${p.name}')" style="font-weight:800;">${p.name}</td><td style="color:${p.color}">${p.teamName}</td><td class="rank-adv-col" style="white-space:nowrap;">${posBadge}</td><td class="rank-adv-col" title="⭐선발/🔄후보/🪑미출전" style="white-space:nowrap;">${gamesDisplay}${catChangeBadge('games', p.name)}</td><td class="rank-adv-col" style="color:var(--accent); font-weight:800; white-space:nowrap;">${p.points}${catChangeBadge('points', p.name)}</td><td style="white-space:nowrap;">${p.goals}${catChangeBadge('goals', p.name)}</td><td style="white-space:nowrap;">${p.assists}${catChangeBadge('assists', p.name)}</td><td class="rank-adv-col" style="white-space:nowrap;">${p.mom}${catChangeBadge('mom', p.name)}</td><td style="white-space:nowrap;">${p.avgRating.toFixed(2)}${catChangeBadge('avgRating', p.name)}</td><td class="rank-gk-col" style="white-space:nowrap;"><b style="color:#38bdf8;">${p.ss}</b></td><td class="rank-gk-col" style="white-space:nowrap;">${p.ssPerG}</td><td class="rank-gk-col rank-adv-col" style="white-space:nowrap;">${p.ssBest}</td><td class="rank-gk-col rank-adv-col" style="white-space:nowrap;">${p.ssGa}</td><td class="rank-gk-col rank-adv-col" style="white-space:nowrap;">${(p.ss + p.ssGa) > 0 ? p.ssRate + '%' : '-'}</td><td style="color:var(--gold); font-weight:800; white-space:nowrap;">${p.pwr.toFixed(1)}${pwrSampleTag(p)}${pwrRankTag}${catChangeBadge('pwr', p.name)}</td><td class="rank-adv-col" style="font-size:0.85rem; white-space:nowrap; letter-spacing:-0.5px;">${awardsCell}</td></tr>`;
             });
 
             // (스냅샷은 여기서 저장하지 않음 — 실제 갱신은 경기 추가/삭제 직전 snapshotCurrentPlayerRanks()에서 처리.
@@ -25789,6 +26385,34 @@
 
 
         // 경기 입력 폼에서 "로테이션" 체크박스를 눌렀을 때 후반 포지션 select를 보이거나 숨김
+        // v1.34: 두 번째 이후 로테이션 한 줄 추가 (시점 + 그 시점부터의 포지션)
+        function addRotMore(playerName, half = '후반', min = '', pos = '') {
+            const wrap = document.querySelector(`.rot-more-wrap[data-p="${playerName}"]`);
+            if (!wrap) return;
+            const p2 = document.querySelector(`.pos2-select[data-p="${playerName}"]`);
+            const last = wrap.lastElementChild;
+            const defPos = pos || (last ? last.querySelector('.rot-more-pos').value : (p2 ? p2.value : 'FW'));
+            const defMin = min !== '' ? min : 5;
+            const opts = Object.keys(posColors).filter(k => k !== '🔄후보').map(k => `<option value="${k}" ${k === defPos ? 'selected' : ''}>${k}</option>`).join('');
+            const row = document.createElement('div');
+            row.className = 'rot-more-row';
+            row.style.cssText = 'display:flex; align-items:center; gap:2px;';
+            const sty = 'background:#020617; color:#fff; border:1px solid #475569; border-radius:4px; font-size:0.6rem; padding:1px;';
+            row.innerHTML = `<select class="rot-more-half" style="${sty}"><option value="전반" ${half === '전반' ? 'selected' : ''}>전반</option><option value="후반" ${half !== '전반' ? 'selected' : ''}>후반</option></select>
+                <input type="number" class="rot-more-min" min="1" max="13" value="${defMin}" style="width:30px; ${sty} text-align:center;">
+                <span style="font-size:0.55rem; color:var(--text-muted);">분~</span>
+                <select class="rot-more-pos" style="${sty}">${opts}</select>
+                <button type="button" class="btn-remove-goal" onclick="this.parentElement.remove()">×</button>`;
+            wrap.appendChild(row);
+        }
+        function readRotMore(playerName) {
+            const out = [];
+            document.querySelectorAll(`.rot-more-wrap[data-p="${playerName}"] .rot-more-row`).forEach(r => {
+                out.push({ half: r.querySelector('.rot-more-half').value, min: Math.min(Math.max(parseInt(r.querySelector('.rot-more-min').value) || 1, 1), 13), pos: r.querySelector('.rot-more-pos').value });
+            });
+            return out;
+        }
+
         function toggleSplitPos(playerName) {
             const checkbox = document.querySelector(`.split-pos-toggle[data-p="${playerName}"]`);
             const pos2Select = document.querySelector(`.pos2-select[data-p="${playerName}"]`);
@@ -25796,7 +26420,9 @@
             pos2Select.style.display = checkbox.checked ? 'inline-block' : 'none';
             const rotWrap = document.querySelector(`.rot-time-wrap[data-p="${playerName}"]`);
             if(rotWrap) rotWrap.style.display = checkbox.checked ? 'flex' : 'none';
-            if(!checkbox.checked) {
+            const moreBox = document.querySelector(`.rot-more-box[data-p="${playerName}"]`);
+            if(moreBox) moreBox.style.display = checkbox.checked ? 'flex' : 'none';
+            if(!checkbox.checked) { const mw = document.querySelector(`.rot-more-wrap[data-p="${playerName}"]`); if(mw) mw.innerHTML = '';
                 const posSelect = document.querySelector(`.pos-select[data-p="${playerName}"]`);
                 if(posSelect) pos2Select.value = posSelect.value;
             }
@@ -27262,7 +27888,7 @@
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.32';
+        const G_HTML_VERSION = '1.35';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -27752,9 +28378,7 @@
                 html += sec('⚖️ 과거 시즌과 최신 시즌 비교', `${gEsc(p.sn)} → ${gEsc(c.sn)} (경기 수가 적은 시즌은 해석에 주의)`, `<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="${th}text-align:left;">항목</th><th style="${th}">과거</th><th style="${th}">최신</th><th style="${th}">차이</th></tr></thead><tbody>${r('출전', p.app, c.app, n0)}${r('득점', p.g, c.g, n0)}${r('도움', p.a, c.a, n0)}${r('평균 평점', p.avg, c.avg, n2)}${r('MOM', p.mom, c.mom, n0)}</tbody></table>`, '#fb923c');
             }
 
-            // F. 수상
-            const aw = pgAwards(name).filter(a => ss === 'all' || a[0] === ss);
-            html += sec('🏅 주요 기록 및 수상 이력', '', aw.length ? aw.map(([sn, t]) => `<div style="font-size:0.82rem;padding:3px 0;"><span style="color:var(--text-muted);">${gEsc(sn)}</span> · <b>${t}</b></div>`).join('') : '<div style="color:var(--text-muted);font-size:0.8rem;">수상 기록이 없습니다.</div>', '#facc15');
+            // (v1.35) 🏅 주요 기록 및 수상 이력은 🔬 선수 분석 탭으로 이동
 
             const opts = played.map((r, i) => `<option value="${i}"${r.sn === ss ? ' selected' : ''}>${gEsc(r.sn)}</option>`).join('');
             const bar = `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);"><span style="font-weight:800;font-size:0.8rem;">📅 분석 기간</span><select class="archive-select" style="margin:0;min-width:200px;" onchange="pgSetSeason(this.value)"><option value="all"${ss === 'all' ? ' selected' : ''}>📚 전체 시즌</option>${opts}</select><span style="font-size:0.68rem;color:var(--text-muted);">${ss === 'all' ? '모든 시즌 기록 기준' : '선택한 시즌 기록 기준'}</span></div>`;
@@ -29589,6 +30213,45 @@ all();
 .fm-left .fm-rng label { min-width: 30px; }
 .fm-left .fm-ed-sec { padding: 6px 0; }
 .fm-left .fm-ar-btns { flex-wrap: wrap; }
+
+/* ===== v1.35: 경기 기록 — 전술 접기 · 설명 접기 · [전술판 | 감독·교체 | 전술 설정] 가로 배치 ===== */
+#tacticCard > h4 { flex-wrap: wrap; }
+.tac-fold-btn { padding: 2px 10px; font-size: .72rem; }
+.tac-sum { font-size: .76rem; font-weight: 700; margin-left: 2px; }
+body:not(.tac-help-open) .tac-help-txt { display: none !important; }
+#matchSideGrid #tacticCard.tac-fold #tacticForm { display: none !important; }
+#matchSideGrid #tacPanel_h { grid-column: 1 / -1; grid-row: 2; }
+#matchSideGrid #tacPanel_a { grid-column: 1 / -1; grid-row: 3; }
+@media (min-width: 901px) {
+    #matchSideGrid > #playerCard > h4 { grid-row: 4; }
+    #matchSideGrid > #playerCard > .pf-legend { grid-row: 5; }
+    #matchSideGrid #playerStatsForm > .pf-team:nth-child(1), #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-row: 6; }
+    #matchSideGrid.tac-folded > #playerCard > h4 { grid-row: 2; }
+    #matchSideGrid.tac-folded > #playerCard > .pf-legend { grid-row: 3; }
+    #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(1), #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(2) { grid-row: 4; }
+}
+@media (max-width: 900px) {
+    #matchSideGrid.tac-folded > #playerCard > h4 { grid-row: 2; }
+    #matchSideGrid.tac-folded > #playerCard > .pf-legend { grid-row: 3; }
+    #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(1) { grid-row: 4; }
+    #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(2) { grid-row: 5; }
+}
+/* 한 팀 = 한 줄: 왼쪽 전술판 · 가운데 감독/교체 카드 · 오른쪽 조작 줄과 전술 설정 */
+#matchSideGrid .tac-panel { container-type: inline-size; }
+#matchSideGrid .tac-body { display: grid; grid-template-columns: minmax(220px, 330px) minmax(130px, 170px) minmax(0, 1fr); grid-template-areas: "pitch side ctl" "pitch side set" "below side set"; gap: 8px 14px; align-items: start; }
+#matchSideGrid .tac-panel.off .tac-body { display: none; }
+#matchSideGrid .tac-bd-l, #matchSideGrid .tac-boardbox, #matchSideGrid .tac-board, #matchSideGrid .tac-mb, #matchSideGrid .tac-mb-main { display: contents; }
+#matchSideGrid .tac-mb-ctl { grid-area: ctl; min-width: 0; }
+#matchSideGrid .tac-mb .fm-pitch { grid-area: pitch; }
+#matchSideGrid .tac-below { grid-area: below; min-width: 0; }
+#matchSideGrid .tac-mb-side { grid-area: side; min-width: 0; }
+#matchSideGrid .tac-bd-r { grid-area: set; min-width: 0; }
+@container (max-width: 700px) {
+    #matchSideGrid .tac-body { grid-template-columns: minmax(200px, 330px) minmax(120px, 1fr); grid-template-areas: "pitch side" "below below" "ctl ctl" "set set"; }
+}
+@container (max-width: 470px) {
+    #matchSideGrid .tac-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "pitch" "below" "side" "ctl" "set"; }
+}
 </style>
 <script id="pmSimplifyJs">
 (function(){
@@ -29622,7 +30285,7 @@ all();
       var groups = {}; Object.keys(FM_TRAITS).filter(function(k){ return FM_TRAITS[k].pos.indexOf(ref.pos) >= 0; }).forEach(function(k){ (groups[FM_TRAITS[k].g] = groups[FM_TRAITS[k].g] || []).push(k); });
       var btns = Object.keys(groups).map(function(g){ return '<div class="pt-g">'+g+'</div><div class="pt-row">' + groups[g].map(function(k){ var on = cur.indexOf(k) >= 0, dis = !on && cur.length >= FM_TRAIT_MAX; return '<button class="pt-b'+(on?' on':'')+(dis?' dis':'')+'" title="'+gEsc(FM_TRAITS[k].d)+'" onclick="pmTraitToggle(\''+k+'\')">'+FM_TRAITS[k].ic+' '+FM_TRAITS[k].n+'</button>'; }).join('') + '</div>'; }).join('');
       ed.innerHTML = '<div class="pt-t">🧬 선수 특성 <span class="mut" style="font-size:.7rem;font-weight:600;">최대 '+FM_TRAIT_MAX+'개 · 누르면 바로 저장 · 전술판 전력·시너지·조언에 반영</span></div>' + btns
-        + '<div class="pt-note">' + (sug.length ? '능력치로 본 추천: ' + sug.map(function(k){ return FM_TRAITS[k].ic+' '+FM_TRAITS[k].n; }).join(', ') + ' <a style="cursor:pointer;color:#38bdf8;font-weight:800;" onclick="pmTraitApplySuggest()">추천 적용</a>' : '버튼에 마우스를 올리면 설명이 보입니다.') + '</div>';
+        + '<div class="pt-note">' + (sug.length ? '능력치 · 득점 기록으로 본 추천: ' + sug.map(function(k){ return FM_TRAITS[k].ic+' '+FM_TRAITS[k].n; }).join(', ') + ' <a style="cursor:pointer;color:#38bdf8;font-weight:800;" onclick="pmTraitApplySuggest()">추천 적용</a>' : '버튼에 마우스를 올리면 설명이 보입니다.') + '</div>';
     }
   };
 
@@ -29663,7 +30326,7 @@ all();
     try {
       var m = findManagerRef(name), pref = fmMgrPref(m);
       var d = pref.defs[0] ? FM_DEF_PRESETS[pref.defs[0]].n : '', a = pref.atks[0] ? FM_ATK_PRESETS[pref.atks[0]].n : '', f = pref.forms[0] && FM_FORMATIONS[pref.forms[0]] ? FM_FORMATIONS[pref.forms[0]].label : '';
-      sum = (f || d || a) ? [f ? '📐 ' + f : '', d ? '🛡️ ' + d : '', a ? '⚔️ ' + a : ''].filter(Boolean).join(' · ') + (pref.autoKinds && Object.keys(pref.autoKinds).length ? ' · 📊 기록 기반' : '') : '선호 미설정';
+      sum = (f || d || a) ? [f ? '📐 ' + f : '', d ? '🛡️ ' + d : '', a ? '⚔️ ' + a : ''].filter(Boolean).join(' · ') + (pref.linkOn ? ' · 🔗 연동' : (pref.autoKinds && Object.keys(pref.autoKinds).length ? ' · 📊 기록 기반' : '')) : '선호 미설정';
     } catch(e){}
     sec.innerHTML = '<details id="mgrTacDet"' + (window._mgrTacOpen ? ' open' : '') + ' ontoggle="window._mgrTacOpen=this.open"><summary>🧠 전술 성향 <span class="mut" style="font-size:.72rem;font-weight:600;">' + sum + '</span> <button class="fm-act" style="margin-left:8px;padding:2px 8px;font-size:.66rem;" onclick="event.preventDefault();event.stopPropagation();mgrAutoSetAll(\'all\')" title="기록 · 감독 능력치 · 팀 전력으로 전술 · 운영 성향 자동 설정">🪄 자동 설정</button></summary><div class="mt-body">' + sec.innerHTML + '</div></details>';
   };
@@ -29698,6 +30361,520 @@ all();
     } catch(e){ console.error('감독 전술 성적 오류', e); box.innerHTML = ''; }
   };
 })();
+</script>
+<script>
+/* ===== v1.35 득점 위치 · 도움 연결 · 슈퍼세이브 상세 분석 (1단계: 분석 엔진 · 선수 분석 탭 · 랭킹 / 2단계: 팀 데이터센터 · 경기 카드) ===== */
+(function () {
+  'use strict';
+  var GA = window.GA = window.GA || {};
+  var W = (typeof GM_W === 'number') ? GM_W : 400, H = (typeof GM_H === 'number') ? GM_H : 260;
+  var BOX_X = (W - 61) / W, BOX_HY = 55 / H, SIX_X = (W - 26) / W, SIX_HY = 25 / H;
+  var ZONES = {
+    six:  { n: '골에어리어', c: '#ef4444' },
+    box:  { n: '박스 안',    c: '#f97316' },
+    mid:  { n: '중거리',     c: '#38bdf8' },
+    long: { n: '장거리',     c: '#a78bfa' }
+  };
+  var ZKEYS = ['six', 'box', 'mid', 'long'];
+  GA.ui = GA.ui || {};
+  GA.ui.paSf = GA.ui.paSf || 'all';      // 선수 분석 탭 기간
+  GA.ui.teamSf = GA.ui.teamSf || 'all';  // 팀 데이터센터 카드 기간
+  GA.ui.teamMin = GA.ui.teamMin || 2;    // 팀 카드 › 득점 유형 최소 위치 기록 수
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return (typeof gEsc === 'function') ? gEsc(s) : String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
+  function pct(a, b) { return b > 0 ? Math.round(a / b * 1000) / 10 : 0; }
+  function r2(x) { return Math.round(x * 100) / 100; }
+  function teamOf(id) { return (state.teams || []).find(function (t) { return String(t.id) === String(id); }) || null; }
+  function tcol(id) { var t = teamOf(id); return t ? t.color : '#94a3b8'; }
+  function tname(id) { var t = teamOf(id); return t ? t.name : '무소속'; }
+  function curSeasonName() { return state.seasonName || '현재 시즌'; }
+  function seasonNames() { return (state.archives || []).map(function (a) { return a.name; }).concat([curSeasonName()]); }
+
+  // 저장 좌표는 '득점 팀이 → 방향(오른쪽 골대)으로 공격' 기준 (x,y = 0~1)
+  GA.zoneOf = function (loc) {
+    if (!loc || typeof loc.x !== 'number' || typeof loc.y !== 'number') return null;
+    var dy = Math.abs(loc.y - 0.5);
+    if (loc.x >= SIX_X && dy <= SIX_HY) return 'six';
+    if (loc.x >= BOX_X && dy <= BOX_HY) return 'box';
+    if (loc.x >= 0.5) return 'mid';
+    return 'long';
+  };
+
+  GA.poolOf = function (sf) {
+    if (Array.isArray(sf)) return sf;
+    if (sf == null || sf === 'all') {
+      var pool = []; (state.archives || []).forEach(function (a) { pool = pool.concat(a.matches || []); }); return pool.concat(state.matches || []);
+    }
+    return getSeasonMatchPool(sf) || [];
+  };
+
+  // 경기 목록(또는 시즌 필터) → 득점 · 도움 · GK · 출전 로그 집계
+  GA.collect = function (sf) {
+    var pool = GA.poolOf(sf);
+    var arcIdx = new Map(); (state.archives || []).forEach(function (a, i) { (a.matches || []).forEach(function (m) { arcIdx.set(m, i); }); });
+    var R = { goals: [], players: {}, pairs: {}, teamGoals: {}, gk: {}, gkTeam: {}, log: {}, zoneTotal: { six: 0, box: 0, mid: 0, long: 0, located: 0 } };
+    function P(name) { return R.players[name] || (R.players[name] = { name: name, goals: 0, located: 0, z: { six: 0, box: 0, mid: 0, long: 0 }, astLinked: 0, setupBy: {}, setupFor: {} }); }
+    pool.forEach(function (m) {
+      var ai = arcIdx.has(m) ? arcIdx.get(m) : -1, season = ai >= 0 ? state.archives[ai].name : curSeasonName();
+      R.teamGoals[m.hId] = (R.teamGoals[m.hId] || 0) + (m.hScore || 0);
+      R.teamGoals[m.aId] = (R.teamGoals[m.aId] || 0) + (m.aScore || 0);
+      (m.pStats || []).forEach(function (ps) {
+        var tid = resolvePlayerMatchTeamId(ps.name, ps, ai), p = P(ps.name);
+        var isH = String(m.hId) === String(tid), oppId = isH ? m.aId : m.hId;
+        (ps.goalTimes || []).forEach(function (gt) {
+          var z = GA.zoneOf(gt.loc), g = { scorer: ps.name, teamId: tid, oppId: oppId, season: season, ast: gt.ast || '', half: gt.half, min: gt.min, loc: gt.loc || null, zone: z };
+          R.goals.push(g); p.goals++;
+          if (z) { p.located++; p.z[z]++; R.zoneTotal[z]++; R.zoneTotal.located++; }
+          if (gt.ast) {
+            p.astLinked++;
+            var k = gt.ast + '>' + ps.name, pr = R.pairs[k] || (R.pairs[k] = { ast: gt.ast, scorer: ps.name, teamId: tid, n: 0 });
+            pr.n++;
+            p.setupBy[gt.ast] = (p.setupBy[gt.ast] || 0) + 1;
+            var a = P(gt.ast); a.setupFor[ps.name] = (a.setupFor[ps.name] || 0) + 1;
+          }
+        });
+        var st = ps.status || 'starter', played = (st === 'starter' || st === 'substitute');
+        if (played) {
+          var my = isH ? m.hScore : m.aScore, th = isH ? m.aScore : m.hScore;
+          (R.log[ps.name] || (R.log[ps.name] = [])).push({ season: season, oppId: oppId, res: (my > th ? '승' : my < th ? '패' : '무') + ' ' + my + ':' + th, g: ps.g || 0, a: ps.a || 0, r: ps.r, mom: m.mom === ps.name });
+          var stint;
+          try { stint = calcPlayerGkStint(ps, m, tid, th); } catch (e) { stint = { weight: 0, conceded: 0 }; }
+          if ((stint.weight > 0) || (ps.ss > 0)) {
+            var gk = R.gk[ps.name] || (R.gk[ps.name] = { name: ps.name, teamId: tid, ss: 0, w: 0, ga: 0, bestSS: 0, cs: 0 });
+            gk.teamId = tid || gk.teamId; gk.ss += (ps.ss || 0); gk.w += stint.weight; gk.ga += stint.conceded;
+            if ((ps.ss || 0) > gk.bestSS) gk.bestSS = ps.ss;
+            if (stint.weight > 0 && stint.conceded === 0) gk.cs++;
+            var gt2 = R.gkTeam[tid] || (R.gkTeam[tid] = { ss: 0, w: 0, ga: 0, by: {} });
+            gt2.ss += (ps.ss || 0); gt2.w += stint.weight; gt2.ga += stint.conceded;
+            var b = gt2.by[ps.name] || (gt2.by[ps.name] = { name: ps.name, ss: 0, w: 0, ga: 0 });
+            b.ss += (ps.ss || 0); b.w += stint.weight; b.ga += stint.conceded;
+          }
+        }
+      });
+    });
+    return R;
+  };
+
+  // 한 선수의 베스트 파트너 (도움 → 득점 방향별 · 합작골 합산)
+  GA.partnersOf = function (R, name) {
+    var p = R.players[name]; if (!p) return { by: [], forw: [], duo: [] };
+    var by = Object.keys(p.setupBy).map(function (k) { return { n: k, c: p.setupBy[k] }; }).sort(function (a, b) { return b.c - a.c; });
+    var forw = Object.keys(p.setupFor).map(function (k) { return { n: k, c: p.setupFor[k] }; }).sort(function (a, b) { return b.c - a.c; });
+    var m = {}; by.forEach(function (x) { m[x.n] = (m[x.n] || 0) + x.c; }); forw.forEach(function (x) { m[x.n] = (m[x.n] || 0) + x.c; });
+    var duo = Object.keys(m).map(function (k) { return { n: k, c: m[k] }; }).sort(function (a, b) { return b.c - a.c; });
+    return { by: by, forw: forw, duo: duo };
+  };
+
+  // 양방향 콤비 목록 (A↔B 합산). teamId를 주면 그 팀 콤비만
+  GA.duos = function (R, teamId) {
+    var map = {};
+    Object.keys(R.pairs).forEach(function (k) {
+      var pr = R.pairs[k]; if (teamId != null && String(pr.teamId) !== String(teamId)) return;
+      var key = [pr.ast, pr.scorer].sort().join('|');
+      var d = map[key] || (map[key] = { a: pr.ast < pr.scorer ? pr.ast : pr.scorer, b: pr.ast < pr.scorer ? pr.scorer : pr.ast, n: 0, ab: 0, ba: 0, teamId: pr.teamId });
+      d.n += pr.n;
+      if (pr.ast === d.a) d.ab += pr.n; else d.ba += pr.n;     // ab: a가 도와 b가 득점 / ba: b가 도와 a가 득점
+    });
+    return Object.keys(map).map(function (k) { return map[k]; }).sort(function (x, y) { return y.n - x.n || (y.ab && y.ba ? 1 : 0) - (x.ab && x.ba ? 1 : 0); });
+  };
+
+  GA.leagueBoxPct = function (R) { return pct(R.zoneTotal.six + R.zoneTotal.box, R.zoneTotal.located); };
+  GA.leagueGkPerGame = function (R) { var ss = 0, w = 0; Object.keys(R.gk).forEach(function (k) { ss += R.gk[k].ss; w += R.gk[k].w; }); return w > 0 ? r2(ss / w) : 0; };
+
+  // 득점 위치 기준 성향 라벨 (위치 기록 3골 이상)
+  GA.styleLabel = function (z, located) {
+    if (located < 3) return null;
+    var box = pct(z.six + z.box, located), mid = pct(z.mid + z.long, located);
+    if (box >= 70) return { t: '🎯 박스 안 골잡이', c: '#f97316' };
+    if (mid >= 40) return { t: '🚀 중거리 슈터', c: '#38bdf8' };
+    return { t: '⚖️ 다양한 위치에서 득점', c: '#a3e635' };
+  };
+
+  /* ---------- 표시 조각 ---------- */
+  function zoneBar(z, located) {
+    if (!located) return '';
+    return '<div style="display:flex;height:16px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.06);">' + ZKEYS.map(function (k) {
+      return z[k] ? '<div title="' + ZONES[k].n + ' ' + z[k] + '골 (' + pct(z[k], located) + '%)" style="width:' + (z[k] / located * 100) + '%;background:' + ZONES[k].c + ';"></div>' : '';
+    }).join('') + '</div>';
+  }
+  function zoneChips(z, located) {
+    return ZKEYS.map(function (k) {
+      return '<span style="font-size:.7rem;margin-right:10px;white-space:nowrap;"><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:' + ZONES[k].c + ';margin-right:4px;"></i>' + ZONES[k].n + ' <b>' + z[k] + '</b>골 <span style="color:var(--text-muted);">(' + pct(z[k], located) + '%)</span></span>';
+    }).join('');
+  }
+  function miniPitch(goals) {
+    var s = '<svg viewBox="' + (W / 2 - 5) + ' 0 ' + (W / 2 + 5) + ' ' + H + '" style="width:100%;max-width:300px;display:block;border-radius:6px;">' + (typeof gmPitchInner === 'function' ? gmPitchInner('ga') : '');
+    goals.forEach(function (g) {
+      if (!g.loc) return;
+      var x = g.loc.x * W, y = g.loc.y * H, col = ZONES[g.zone] ? ZONES[g.zone].c : '#fff';
+      if (typeof g.loc.tx === 'number') s += '<line x1="' + x + '" y1="' + y + '" x2="' + g.loc.tx * W + '" y2="' + g.loc.ty * H + '" stroke="' + col + '" stroke-width="1.4" opacity=".55"/>';
+      s += '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + col + '" stroke="#fff" stroke-width="1.2" opacity=".92"><title>' + esc(g.scorer) + ' ' + esc(String(g.half || '').charAt(0)) + esc(g.min) + "'" + (g.ast ? ' · 도움 ' + esc(g.ast) : '') + ' · ' + (ZONES[g.zone] ? ZONES[g.zone].n : '') + '</title></circle>';
+    });
+    return s + '</svg>';
+  }
+  function plLink(n) { return '<a class="ga-pl" data-n="' + esc(n) + '" style="cursor:pointer;color:var(--accent);font-weight:800;text-decoration:none;">' + esc(n) + '</a>'; }
+  function sec(t, sub, body, c) {
+    return '<div style="margin-bottom:18px;"><h4 style="color:' + c + ';border-left:3px solid ' + c + ';padding-left:8px;margin-bottom:4px;">' + t + '</h4>' + (sub ? '<div style="font-size:.7rem;color:var(--text-muted);margin-bottom:8px;">' + sub + '</div>' : '') + body + '</div>';
+  }
+  function card(v, lb, c) { return '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:1.25rem;font-weight:800;color:' + c + ';font-family:\'Orbitron\';">' + v + '</div><div style="font-size:.7rem;color:var(--text-muted);margin-top:3px;">' + lb + '</div></div>'; }
+  function cards(arr) { return '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin-bottom:10px;">' + arr.join('') + '</div>'; }
+  function medal(i) { return i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1); }
+  function duoDir(x) { return (x.ab ? plLink(x.a) + '→' + plLink(x.b) + ' ' + x.ab : '') + (x.ab && x.ba ? ' · ' : '') + (x.ba ? plLink(x.b) + '→' + plLink(x.a) + ' ' + x.ba : ''); }
+  function none(t) { return '<div style="font-size:.76rem;color:var(--text-muted);">' + t + '</div>'; }
+  function thS() { return 'padding:6px 8px;text-align:left;font-size:.72rem;color:var(--text-muted);border-bottom:1px solid rgba(255,255,255,.1);white-space:nowrap;'; }
+  function tdS() { return 'padding:6px 8px;font-size:.78rem;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap;'; }
+  function seasonSelect(cur, fn) {
+    return '<select class="archive-select" style="margin:0;min-width:180px;width:auto;" onchange="' + fn + '(this.value)"><option value="all"' + (cur === 'all' ? ' selected' : '') + '>📚 전체 시즌</option>' + seasonNames().map(function (n) { return '<option value="' + esc(n) + '"' + (cur === n ? ' selected' : '') + '>' + esc(n) + '</option>'; }).join('') + '</select>';
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('.ga-pl'); if (!a) return;
+    try { showPlayerDetail(a.getAttribute('data-n')); } catch (er) { console.error(er); }
+  });
+
+  /* ---------- 🔬 선수 상세 › 선수 분석 탭 (개인 기록 중심) ---------- */
+  GA.setPaSf = function (v) { GA.ui.paSf = v; GA.renderAnalysis(); };
+  GA.renderAnalysis = function () {
+    var box = $('playerAnalysisBody'); if (!box) return;
+    var name = (typeof _playerModalName === 'string') ? _playerModalName : '';
+    try {
+      if (seasonNames().indexOf(GA.ui.paSf) < 0 && GA.ui.paSf !== 'all') GA.ui.paSf = 'all';
+      var sf = GA.ui.paSf, R = GA.collect(sf), p = R.players[name] || { goals: 0, located: 0, z: { six: 0, box: 0, mid: 0, long: 0 }, setupBy: {}, setupFor: {} };
+      var log = R.log[name] || [], mine = R.goals.filter(function (g) { return g.scorer === name; });
+      var pr = GA.partnersOf(R, name), gk = R.gk[name], h = '';
+      h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);"><span style="font-weight:800;font-size:.8rem;">📅 분석 기간</span>' + seasonSelect(sf, 'GA.setPaSf') + '<span style="font-size:.68rem;color:var(--text-muted);">경기에서 직접 기록한 개인 데이터만 보여줘요 · 능력치 변화와 시즌별 추이는 📈 성장 분석</span></div>';
+
+      // 1) 기록 요약
+      if (!log.length) { box.innerHTML = h + none('이 기간에 출전 기록이 없습니다.'); return; }
+      var gSum = 0, aSum = 0, rSum = 0, rN = 0, mom = 0;
+      log.forEach(function (x) { gSum += x.g; aSum += x.a; if (typeof x.r === 'number') { rSum += x.r; rN++; } if (x.mom) mom++; });
+      h += sec('📋 기록 요약', '출전(선발·교체) 경기만 집계합니다.', cards([
+        card(log.length, '출전', '#a78bfa'), card(gSum, '득점', '#22c55e'), card(aSum, '도움', '#38bdf8'),
+        card(rN ? (rSum / rN).toFixed(2) : '-', '평균 평점', '#fbbf24'), card(mom, '👑 MOM', '#c084fc'),
+        card(r2(gSum / log.length), '경기당 득점', '#22c55e'), card(r2((gSum + aSum) / log.length), '경기당 공격P', '#f97316')
+      ]), '#a78bfa');
+
+      // 2) 득점 분석
+      var body = '';
+      if (p.goals) {
+        var sub = '총 ' + p.goals + '골 · 위치 기록 ' + p.located + '골';
+        if (p.located) {
+          var lg = GA.leagueBoxPct(R), mb = pct(p.z.six + p.z.box, p.located), lab = GA.styleLabel(p.z, p.located);
+          var arr = Object.keys(R.players).map(function (k) { return R.players[k]; }).filter(function (q) { return q.located >= 3; }).map(function (q) { return { n: q.name, v: pct(q.z.six + q.z.box, q.located) }; }).sort(function (a, b) { return b.v - a.v; });
+          var ri = arr.findIndex(function (x) { return x.n === name; });
+          body += zoneBar(p.z, p.located) + '<div style="margin-top:6px;">' + zoneChips(p.z, p.located) + '</div>';
+          body += '<div style="font-size:.74rem;margin-top:6px;line-height:1.7;">📦 박스 안 득점 비율 <b style="color:#f97316;">' + mb + '%</b> <span style="color:var(--text-muted);">(리그 평균 ' + lg + '% · ' + (mb >= lg ? '+' : '') + (Math.round((mb - lg) * 10) / 10) + '%p)</span>'
+            + (ri >= 0 ? '<br>📊 박스 안 비율 리그 <b>' + (ri + 1) + '위</b> <span style="color:var(--text-muted);">/ 위치 3골 이상 ' + arr.length + '명</span>' : '')
+            + (lab ? '<br>🧭 득점 성향 <b style="color:' + lab.c + ';">' + lab.t + '</b>' : '') + '</div>';
+          body += '<div style="margin-top:8px;">' + miniPitch(mine) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">오른쪽 골대를 향해 공격하는 기준 · 점에 마우스를 올리면 시간 · 도움 표시</div></div>';
+        } else body += none('아직 위치를 기록한 골이 없어요. 경기 기록의 득점 줄에서 📍 버튼으로 위치를 남기면 박스 안 · 중거리 비율이 여기에 표시돼요.');
+        h += sec('🎯 득점 분석', sub, body, '#38bdf8');
+
+        // 3) 득점 타이밍
+        var tm = { 전반: [0, 0, 0], 후반: [0, 0, 0] }, tn = 0;
+        mine.forEach(function (g) { var mn = parseInt(g.min, 10); if (!tm[g.half] || isNaN(mn)) return; tm[g.half][mn <= 5 ? 0 : mn <= 10 ? 1 : 2]++; tn++; });
+        if (tn) {
+          var cell = function (v) { return '<td style="' + tdS() + 'text-align:center;">' + (v ? '<b style="color:#22c55e;">' + v + '</b>' : '<span style="color:var(--text-muted);">-</span>') + '</td>'; };
+          h += sec('⏱️ 득점 타이밍', '시간이 입력된 ' + tn + '골 기준', '<div class="scrollable-table"><table class="pattern-table" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '"></th><th style="' + thS() + 'text-align:center;">1~5분</th><th style="' + thS() + 'text-align:center;">6~10분</th><th style="' + thS() + 'text-align:center;">11분+</th></tr></thead><tbody>'
+            + ['전반', '후반'].map(function (hf) { return '<tr><td style="' + tdS() + 'font-weight:800;">' + hf + '</td>' + cell(tm[hf][0]) + cell(tm[hf][1]) + cell(tm[hf][2]) + '</tr>'; }).join('') + '</tbody></table></div>', '#22d3ee');
+        }
+        // 4) 득점 상대
+        var vs = {}; mine.forEach(function (g) { vs[g.oppId] = (vs[g.oppId] || 0) + 1; });
+        var vsArr = Object.keys(vs).map(function (k) { return { id: k, c: vs[k] }; }).sort(function (a, b) { return b.c - a.c; }).slice(0, 3);
+        if (vsArr.length) h += sec('🥅 가장 많이 골을 넣은 상대', '', '<div style="font-size:.8rem;">' + vsArr.map(function (x) { return '<span style="color:' + tcol(x.id) + ';font-weight:800;">' + esc(tname(x.id)) + '</span> <b>' + x.c + '골</b>'; }).join(' · ') + '</div>', '#fb7185');
+      } else {
+        h += sec('🎯 득점 분석', '', none('이 기간에 득점 기록이 없습니다.'), '#38bdf8');
+      }
+
+      // 4.5) 득점 위치 기반 특성 추천 (3단계)
+      try { h += traitBlock(name); } catch (e) { console.error(e); }
+
+      // 5) 도움 · 파트너
+      var pb = '';
+      if (pr.by.length || pr.forw.length) {
+        var pl = function (a) { return a.slice(0, 3).map(function (x) { return plLink(x.n) + ' <b>' + x.c + '</b>'; }).join(' · ') || '<span style="color:var(--text-muted);">-</span>'; };
+        if (pr.duo.length) pb += '<div style="font-size:.8rem;margin-bottom:4px;">🥇 합작골 1위 ' + plLink(pr.duo[0].n) + ' <b>' + pr.duo[0].c + '합작골</b></div>';
+        pb += '<div style="font-size:.74rem;line-height:1.7;">🅰️→⚽ 내게 도움 준 선수: ' + pl(pr.by) + '<br>⚽←🅰️ 내가 도움 준 선수: ' + pl(pr.forw) + '</div>';
+      } else pb = none('도움이 연결된 골이 아직 없어요. 경기 기록의 득점 줄에서 🅰️ 도움 선수를 고르면 파트너가 표시돼요.');
+      h += sec('🤝 최고의 파트너', p.goals ? '내 득점 ' + p.goals + '골 중 도움 연결 ' + p.astLinked + '골' : '', pb, '#fbbf24');
+
+      // 6) GK
+      if (gk && (gk.ss || gk.w)) {
+        var perG = gk.w > 0 ? r2(gk.ss / gk.w) : 0, lgG = GA.leagueGkPerGame(R);
+        h += sec('🧤 키퍼 분석', '슈퍼세이브 = 경기 기록의 GK 행에 입력한 결정적 선방 · 기여율 = 슈퍼세이브 ÷ (슈퍼세이브 + 실점)', cards([
+          card(gk.ss, '슈퍼세이브', '#38bdf8'), card(perG, '경기당 (리그 ' + lgG + ')', '#38bdf8'), card(gk.bestSS, '한 경기 최다', '#38bdf8'),
+          card(pct(gk.ss, gk.ss + gk.ga) + '%', '세이브 기여율', '#38bdf8'), card(gk.cs, '무실점 경기', '#22c55e'), card(gk.ga, '실점', '#f87171')
+        ]), '#38bdf8');
+      }
+
+      // 7) 베스트 경기
+      var best = log.filter(function (x) { return typeof x.r === 'number'; }).sort(function (a, b) { return b.r - a.r || (b.g + b.a) - (a.g + a.a); }).slice(0, 3);
+      if (best.length) h += sec('⭐ 베스트 경기 TOP3', '평점 기준', '<div class="scrollable-table"><table class="pattern-table" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '">시즌</th><th style="' + thS() + '">상대</th><th style="' + thS() + '">결과</th><th style="' + thS() + '">득점</th><th style="' + thS() + '">도움</th><th style="' + thS() + '">평점</th></tr></thead><tbody>'
+        + best.map(function (x) { return '<tr><td style="' + tdS() + '">' + esc(x.season) + '</td><td style="' + tdS() + 'color:' + tcol(x.oppId) + ';font-weight:800;">' + esc(tname(x.oppId)) + '</td><td style="' + tdS() + '">' + x.res + '</td><td style="' + tdS() + '">' + x.g + '</td><td style="' + tdS() + '">' + x.a + '</td><td style="' + tdS() + '"><b style="color:#fbbf24;">' + x.r.toFixed(1) + '</b>' + (x.mom ? ' 👑' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>', '#f59e0b');
+
+      // 8) 수상
+      var aw = (typeof pgAwards === 'function' ? pgAwards(name) : []).filter(function (a) { return sf === 'all' || a[0] === sf; });
+      h += sec('🏅 주요 기록 및 수상 이력', '', aw.length ? aw.map(function (a) { return '<div style="font-size:.82rem;padding:3px 0;"><span style="color:var(--text-muted);">' + esc(a[0]) + '</span> · <b>' + a[1] + '</b></div>'; }).join('') : none('수상 이력이 없습니다.'), '#eab308');
+      box.innerHTML = h;
+    } catch (e) { console.error('선수 분석 탭 오류', e); box.innerHTML = none('분석 중 오류가 발생했습니다.'); }
+  };
+  if (typeof window.showPlayerDetail === 'function') {
+    var _sp2 = window.showPlayerDetail;
+    window.showPlayerDetail = function (n) { var r = _sp2.apply(this, arguments); try { if (typeof PM_TABS !== 'undefined' && PM_TABS.player.cur === 'analysis') GA.renderAnalysis(); } catch (e) { console.error(e); } return r; };
+  }
+
+  /* ---------- 🗂️ 팀 데이터센터 › 상세분석 › 득점·도움·슈퍼세이브 카드 ---------- */
+  GA.setTeamSf = function (v) { GA.ui.teamSf = v; GA.renderTeamCard(); };
+  GA.setTeamMin = function (v) { GA.ui.teamMin = parseInt(v) || 1; GA.renderTeamCard(); };
+  GA.renderTeamCard = function (team) {
+    var host = $('gaTeamCard'); if (!host) return;
+    if (team) host.setAttribute('data-tid', String(team.id));
+    var id = host.getAttribute('data-tid'); if (!id) return;
+    try {
+      var t = teamOf(id) || { name: '', color: '#38bdf8' };
+      if (seasonNames().indexOf(GA.ui.teamSf) < 0 && GA.ui.teamSf !== 'all') GA.ui.teamSf = 'all';
+      var R = GA.collect(GA.ui.teamSf), goals = R.goals.filter(function (g) { return String(g.teamId) === id; });
+      var z = { six: 0, box: 0, mid: 0, long: 0 }, loc = 0; goals.forEach(function (g) { if (g.zone) { z[g.zone]++; loc++; } });
+      var h = '<h3>🔬 득점 유형 · 콤비 · 슈퍼세이브</h3><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;"><span style="font-weight:800;font-size:.8rem;">📅 기간</span>' + seasonSelect(GA.ui.teamSf, 'GA.setTeamSf') + '<span style="font-size:.68rem;color:var(--text-muted);">경기 기록의 📍 득점 위치 · 🅰️ 도움 연결 · 🧤 슈퍼세이브 기준</span></div>';
+
+      // 득점 유형
+      var tb = '';
+      if (loc) {
+        var lg = GA.leagueBoxPct(R), mb = pct(z.six + z.box, loc);
+        var rk = (state.teams || []).map(function (tt) { var q = { six: 0, box: 0, n: 0 }; R.goals.forEach(function (g) { if (String(g.teamId) === String(tt.id) && g.zone) { q.n++; if (g.zone === 'six' || g.zone === 'box') q.box++; } }); return { id: String(tt.id), n: q.n, v: pct(q.box, q.n) }; }).filter(function (x) { return x.n >= 3; }).sort(function (a, b) { return b.v - a.v; });
+        var ri = rk.findIndex(function (x) { return x.id === id; });
+        tb += zoneBar(z, loc) + '<div style="margin-top:6px;">' + zoneChips(z, loc) + '</div>';
+        tb += '<div style="font-size:.74rem;margin-top:6px;line-height:1.7;">📦 박스 안 득점 비율 <b style="color:#f97316;">' + mb + '%</b> <span style="color:var(--text-muted);">(리그 평균 ' + lg + '% · ' + (mb >= lg ? '+' : '') + (Math.round((mb - lg) * 10) / 10) + '%p)</span>'
+          + '<br>🚀 중거리 이상 득점 <b style="color:#38bdf8;">' + pct(z.mid + z.long, loc) + '%</b>'
+          + (ri >= 0 ? '<br>📊 박스 안 비율 팀 <b>' + (ri + 1) + '위</b> <span style="color:var(--text-muted);">/ 위치 3골 이상 ' + rk.length + '팀</span>' : '') + '</div>';
+      } else tb = none('아직 위치를 기록한 골이 없어요. 경기 기록의 득점 줄에서 📍으로 위치를 남기면 팀 득점 유형이 쌓여요.');
+      h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🎯 팀 득점 유형 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">총 ' + goals.length + '골 · 위치 기록 ' + loc + '골</span></div>' + tb + '</div>';
+
+      // 팀 마무리 전술 ↔ 실제 득점 분포 (3단계)
+      h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#a78bfa;font-size:.84rem;margin-bottom:6px;">⚖️ 마무리 전술 vs 실제 득점</div>' + GA.finishCompare(t, z, loc) + '</div>';
+
+      // 득점 지도
+      if (loc) h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#22c55e;font-size:.84rem;margin-bottom:6px;">🗺️ 팀 득점 지도</div>' + miniPitch(goals) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">이 팀이 오른쪽 골대를 향해 공격하는 기준으로 모든 골을 겹쳐 그렸어요 · 점에 마우스를 올리면 득점자 · 도움 표시</div></div>';
+
+      // 득점 유형 선수 순위 (선수 개별 랭킹에서 이쪽으로 이동)
+      var pm = {}; goals.forEach(function (g) { var q = pm[g.scorer] || (pm[g.scorer] = { name: g.scorer, goals: 0, loc: 0, z: { six: 0, box: 0, mid: 0, long: 0 } }); q.goals++; if (g.zone) { q.loc++; q.z[g.zone]++; } });
+      var rows = Object.keys(pm).map(function (k) { return pm[k]; }).filter(function (q) { return q.loc >= GA.ui.teamMin; }).sort(function (a, b) { return pct(b.z.six + b.z.box, b.loc) - pct(a.z.six + a.z.box, a.loc) || b.loc - a.loc; });
+      var sel = '<select class="archive-select" style="margin:0 0 0 6px;width:auto;" onchange="GA.setTeamMin(this.value)">' + [1, 2, 3, 5].map(function (n) { return '<option value="' + n + '"' + (GA.ui.teamMin === n ? ' selected' : '') + '>' + n + '골 이상</option>'; }).join('') + '</select>';
+      h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#f97316;font-size:.84rem;margin-bottom:6px;">📦 선수별 득점 유형 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">박스 안 비율 순 · 최소 위치 기록</span>' + sel + '</div>'
+        + (rows.length ? '<div class="scrollable-table"><table class="pattern-table no-stack" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '">선수</th><th style="' + thS() + '">위치 기록</th><th style="' + thS() + '">📦 박스 안</th><th style="' + thS() + '">🚀 중거리</th><th style="' + thS() + '">장거리</th><th style="' + thS() + 'min-width:120px;">분포</th></tr></thead><tbody>'
+          + rows.map(function (q) { return '<tr><td style="' + tdS() + '">' + plLink(q.name) + '</td><td style="' + tdS() + '">' + q.loc + '/' + q.goals + '골</td><td style="' + tdS() + '"><b style="color:#f97316;">' + pct(q.z.six + q.z.box, q.loc) + '%</b></td><td style="' + tdS() + '">' + pct(q.z.mid, q.loc) + '%</td><td style="' + tdS() + '">' + pct(q.z.long, q.loc) + '%</td><td style="' + tdS() + '">' + zoneBar(q.z, q.loc) + '</td></tr>'; }).join('') + '</tbody></table></div>'
+          : none('조건에 맞는 선수가 없어요.')) + '</div>';
+
+      // 팀 베스트 콤비
+      var duos = GA.duos(R, id).slice(0, 5), linked = goals.filter(function (g) { return g.ast; }).length;
+      h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#fbbf24;font-size:.84rem;margin-bottom:6px;">🤝 팀 베스트 콤비 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">도움 연결 ' + linked + ' / ' + goals.length + '골 · 팀 득점 대비 비중</span></div>'
+        + (duos.length ? '<div class="scrollable-table"><table class="pattern-table no-stack" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '">순위</th><th style="' + thS() + '">콤비</th><th style="' + thS() + '">합작골</th><th style="' + thS() + '">방향</th><th style="' + thS() + '">팀 득점 비중</th></tr></thead><tbody>'
+          + duos.map(function (x, i) {
+            var dir = duoDir(x);
+            return '<tr><td style="' + tdS() + '">' + medal(i) + '</td><td style="' + tdS() + '">' + plLink(x.a) + ' ⇄ ' + plLink(x.b) + '</td><td style="' + tdS() + '"><b>' + x.n + '</b></td><td style="' + tdS() + '">' + dir + '</td><td style="' + tdS() + '">' + pct(x.n, goals.length) + '%</td></tr>';
+          }).join('') + '</tbody></table></div>' : none('아직 도움이 연결된 골이 없어요. 경기 기록에서 득점 줄의 🅰️ 도움 선수를 고르면 콤비가 만들어져요.')) + '</div>';
+
+      // 팀 슈퍼세이브
+      var gt = R.gkTeam[id], gb = '';
+      if (gt && (gt.ss || gt.w)) {
+        var by = Object.keys(gt.by).map(function (k) { return gt.by[k]; }).sort(function (a, b) { return b.ss - a.ss; });
+        gb += cards([card(gt.ss, '팀 슈퍼세이브', '#38bdf8'), card(gt.w > 0 ? r2(gt.ss / gt.w) : 0, '경기당 (리그 ' + GA.leagueGkPerGame(R) + ')', '#38bdf8'), card(pct(gt.ss, gt.ss + gt.ga) + '%', '세이브 기여율', '#38bdf8'), card(gt.ga, '실점', '#f87171')]);
+        gb += '<div style="font-size:.76rem;">' + by.map(function (b) { return plLink(b.name) + ' <b style="color:#38bdf8;">' + b.ss + '</b>' + (b.w > 0 ? ' <span style="color:var(--text-muted);">(경기당 ' + r2(b.ss / b.w) + ')</span>' : ''); }).join(' · ') + '</div>';
+      } else gb = none('아직 슈퍼세이브가 기록되지 않았어요. 경기 기록에서 GK 카드의 🧤 칸에 횟수를 입력해 주세요.');
+      h += '<div><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🧤 팀 슈퍼세이브</div>' + gb + '</div>';
+      host.innerHTML = h;
+    } catch (e) { console.error('팀 득점 유형 카드 오류', e); host.innerHTML = '<h3>🔬 득점 유형 · 콤비 · 슈퍼세이브</h3>' + none('계산 중 오류가 발생했습니다.'); }
+  };
+  if (typeof window.dcRenderDetailTab === 'function') {
+    var _dcd = window.dcRenderDetailTab;
+    window.dcRenderDetailTab = function (team) { var r = _dcd.apply(this, arguments); try { GA.renderTeamCard(team); } catch (e) { console.error(e); } return r; };
+  }
+
+  /* ---------- ⚔️ 경기 카드(경기 분석) › 득점 유형 · 합작골 · 슈퍼세이브 요약 ---------- */
+  GA.matchSummary = function (m) {
+    var ai = -1; (state.archives || []).some(function (a, i) { if ((a.matches || []).indexOf(m) >= 0) { ai = i; return true; } return false; });
+    var sides = {}, ids = [String(m.hId), String(m.aId)];
+    ids.forEach(function (i) { sides[i] = { z: { six: 0, box: 0, mid: 0, long: 0 }, loc: 0, goals: 0, duo: [], ss: [] }; });
+    (m.pStats || []).forEach(function (ps) {
+      var tid = String(ps.teamId || resolvePlayerMatchTeamId(ps.name, ps, ai)), sd = sides[tid]; if (!sd) return;
+      (ps.goalTimes || []).forEach(function (gt) {
+        sd.goals++; var z = GA.zoneOf(gt.loc); if (z) { sd.z[z]++; sd.loc++; }
+        if (gt.ast) sd.duo.push(gt.ast + ' → ' + ps.name);
+      });
+      if (ps.ss > 0) sd.ss.push(ps.name + ' ' + ps.ss);
+    });
+    var out = '';
+    ids.forEach(function (i) {
+      var sd = sides[i], t = teamOf(i); if (!t) return;
+      var parts = [];
+      if (sd.loc) parts.push('🎯 ' + ZKEYS.filter(function (k) { return sd.z[k]; }).map(function (k) { return ZONES[k].n + ' ' + sd.z[k]; }).join(' · ') + (sd.loc < sd.goals ? ' <span style="color:var(--text-muted);">(위치 기록 ' + sd.loc + '/' + sd.goals + ')</span>' : ''));
+      if (sd.duo.length) parts.push('🤝 ' + sd.duo.map(esc).join(', '));
+      if (sd.ss.length) parts.push('🧤 ' + sd.ss.map(esc).join(', '));
+      if (parts.length) out += '<div style="font-size:.76rem;line-height:1.7;margin-top:2px;"><b style="color:' + t.color + ';">' + esc(t.name) + '</b> ' + parts.join(' &nbsp;|&nbsp; ') + '</div>';
+    });
+    return out ? '<div style="font-size:.78rem;font-weight:800;color:#38bdf8;margin:12px 0 4px;">🔬 득점 유형 · 합작골 · 슈퍼세이브</div>' + out : '';
+  };
+  if (typeof window.maBuild === 'function') {
+    var _mb = window.maBuild;
+    window.maBuild = function (m) { var h = _mb.apply(this, arguments); try { h += GA.matchSummary(m); } catch (e) { console.error('경기 요약 오류', e); } return h; };
+  }
+
+  /* ---------- 🏅 랭킹 탭 › 🤝 최고의 콤비 (득점 유형은 선수 분석 · 팀 데이터센터로 이동, 슈퍼세이브는 개인 기록 랭킹 GK 보기로 이동) ---------- */
+  GA.renderRankPanel = function () {
+    var host = $('gaRankCard');
+    if (!host) {
+      var tbl = $('playerRankTable'); var card0 = tbl && tbl.closest('.card'); if (!card0) return;
+      host = document.createElement('div'); host.id = 'gaRankCard'; host.className = 'card'; host.style.marginTop = '15px';
+      card0.parentNode.insertBefore(host, card0.nextSibling);
+    }
+    var sfEl = $('rankingSeasonFilter'), sf = sfEl ? sfEl.value : 'all';
+    var R = GA.collect(sf), h = '';
+    var d = GA.duos(R).slice(0, 10), linkedGoals = R.goals.filter(function (g) { return g.ast; }).length;
+    h += '<h3 data-new="1.35">🤝 최고의 콤비 <span style="font-size:.7rem;color:var(--text-muted);font-weight:600;">합작골 TOP10 · 위 🔍 시즌 필터 기준</span></h3>';
+    h += '<div class="ranking-info" style="margin-bottom:8px;">득점 줄에 도움 선수를 연결해 둔 골만 집계해요. (연결된 골 ' + linkedGoals + ' / 전체 ' + R.goals.length + '골) · 두 선수가 서로 도운 골은 합산해서 보여줘요. 🧤 슈퍼세이브는 개인 기록 랭킹의 GK 보기, 🎯 득점 유형은 선수 상세 › 🔬 선수 분석과 팀 데이터센터 › 🔍 상세분석에서 볼 수 있어요.</div>';
+    if (!d.length) h += none('아직 도움이 연결된 골이 없어요. 경기 기록에서 득점 줄의 🅰️ 도움 선수를 고르면 콤비 순위가 만들어져요.');
+    else h += '<div class="scrollable-table"><table class="pattern-table no-stack" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '">순위</th><th style="' + thS() + '">콤비</th><th style="' + thS() + '">팀</th><th style="' + thS() + '">합작골</th><th style="' + thS() + '">방향</th><th style="' + thS() + '">팀 득점 대비</th></tr></thead><tbody>' + d.map(function (x, i) {
+      var tg = R.teamGoals[x.teamId] || 0;
+      var dir = duoDir(x);
+      return '<tr><td style="' + tdS() + '">' + medal(i) + '</td><td style="' + tdS() + '">' + plLink(x.a) + ' ⇄ ' + plLink(x.b) + '</td><td style="' + tdS() + 'color:' + tcol(x.teamId) + ';font-weight:800;">' + esc(tname(x.teamId)) + '</td><td style="' + tdS() + '"><b>' + x.n + '</b></td><td style="' + tdS() + '">' + dir + '</td><td style="' + tdS() + '">' + (tg ? pct(x.n, tg) + '%' : '-') + '</td></tr>';
+    }).join('') + '</tbody></table></div>';
+    host.innerHTML = h;
+    try { if (typeof gApplyNewBadges === 'function') gApplyNewBadges(); } catch (e) { }
+  };
+  if (typeof window.renderPlayerRank === 'function') {
+    var _rpr = window.renderPlayerRank;
+    window.renderPlayerRank = function () { var r = _rpr.apply(this, arguments); try { GA.renderRankPanel(); } catch (e) { console.error('콤비 랭킹 오류', e); } return r; };
+  }
+  /* ===================== 3단계: 다른 데이터와 연동 ===================== */
+  var _allC = null;
+  function allR() {
+    var ms = state.matches || [], sig = ms.length + '|' + (ms.length ? ms[ms.length - 1].id : '') + '|' + (state.archives || []).map(function (a) { return (a.matches || []).length; }).join(',');
+    if (_allC && _allC.sig === sig && Date.now() - _allC.t < 3000) return _allC.R;
+    var R = GA.collect('all'); _allC = { sig: sig, t: Date.now(), R: R }; return R;
+  }
+
+  // ① 득점 위치 기록 → 선수 특성 추천 (위치 기록 3골 이상)
+  GA.traitHints = function (name, pos, R) {
+    R = R || allR();
+    var p = R.players[name], out = [];
+    if (!p || p.located < 3 || p.goals < 3) return out;
+    var box = pct(p.z.six + p.z.box, p.located), far = pct(p.z.mid + p.z.long, p.located);
+    if (pos === 'FW' && box >= 70) out.push({ k: 'poacher', why: '위치를 기록한 ' + p.located + '골 중 박스 안 ' + box + '%' });
+    if (pos && pos !== 'GK' && far >= 40) out.push({ k: 'lshot', why: '위치를 기록한 ' + p.located + '골 중 박스 밖 ' + far + '%' });
+    return out;
+  };
+  GA.addTrait = function (k) {
+    try { var ref = findPlayerRefByName(_playerModalName); if (ref && fmTraits(ref).indexOf(k) < 0) pmTraitToggle(k); } catch (e) { console.error(e); }
+    _allC = null; GA.renderAnalysis();
+  };
+  function traitBlock(name) {
+    var ref = (typeof findPlayerRefByName === 'function') ? findPlayerRefByName(name) : null; if (!ref || typeof fmTraits !== 'function') return '';
+    var R = allR(), p = R.players[name], T = '#a3e635', sub = '전체 시즌 기록 기준 · 위치 기록 3골 이상부터 추천';
+    if (!p || p.located < 3 || p.goals < 3) return sec('🧬 득점 위치 기반 특성 추천', sub, none('위치를 기록한 골이 3골 이상 쌓이면 🦊 박스 안 골잡이 · 🚀 중거리 슈터 특성을 추천해 드려요. (현재 ' + (p ? p.located : 0) + '골)'), T);
+    var hints = GA.traitHints(name, ref.pos, R), cur = fmTraits(ref), box = pct(p.z.six + p.z.box, p.located), far = pct(p.z.mid + p.z.long, p.located), body = '';
+    if (!hints.length) body += none('득점 위치가 한쪽으로 크게 치우치지 않아 추천할 특성이 없어요. (박스 안 ' + box + '% · 박스 밖 ' + far + '%)');
+    else body += hints.map(function (x) {
+      var t = FM_TRAITS[x.k], has = cur.indexOf(x.k) >= 0;
+      return '<div style="font-size:.8rem;padding:4px 0;">' + t.ic + ' <b>' + t.n + '</b> <span style="color:var(--text-muted);font-size:.72rem;">' + x.why + '</span> '
+        + (has ? '<span style="color:#22c55e;font-weight:800;font-size:.72rem;">✔ 이미 보유</span>' : (cur.length >= FM_TRAIT_MAX ? '<span style="color:var(--text-muted);font-size:.72rem;">특성 칸이 가득 찼어요</span>' : '<button type="button" class="btn-edit" style="font-size:.7rem;padding:2px 8px;" onclick="GA.addTrait(\'' + x.k + '\')">➕ 특성 추가</button>')) + '</div>';
+    }).join('');
+    if (cur.indexOf('poacher') >= 0 && !hints.some(function (x) { return x.k === 'poacher'; }) && box < 50) body += '<div style="font-size:.72rem;color:#fbbf24;margin-top:4px;">⚠️ 🦊 박스 안 골잡이 특성이 있지만 실제 득점은 박스 안 ' + box + '%예요.</div>';
+    if (cur.indexOf('lshot') >= 0 && far < 20) body += '<div style="font-size:.72rem;color:#fbbf24;margin-top:4px;">⚠️ 🚀 중거리 슈터 특성이 있지만 박스 밖 득점은 ' + far + '%예요.</div>';
+    return sec('🧬 득점 위치 기반 특성 추천', sub, body, T);
+  }
+  if (typeof window.fmTraitSuggest === 'function') {
+    var _fts = window.fmTraitSuggest;
+    window.fmTraitSuggest = function (p) {
+      var base = _fts.apply(this, arguments) || [];
+      try {
+        if (!p) return base;
+        var rec = GA.traitHints(p.name, p.pos).map(function (x) { return x.k; }).filter(function (k) { return FM_TRAITS[k] && FM_TRAITS[k].pos.indexOf(p.pos) >= 0; });
+        return rec.concat(base.filter(function (k) { return rec.indexOf(k) < 0; })).slice(0, FM_TRAIT_MAX);
+      } catch (e) { return base; }
+    };
+  }
+
+  // ② 팀 마무리 전술 ↔ 실제 득점 분포
+  var FIN_N = { mixed: '상황에 맞게', box: '박스 침투', cross: '크로스·컷백', shot: '중거리 슈팅' };
+  GA.finishCompare = function (team, z, loc) {
+    var fin = null; try { var tac = fmGetRO(team); fin = tac && tac.style && tac.style.finish; } catch (e) { }
+    if (!fin || !FIN_N[fin]) return none('이 팀은 아직 마무리 전술이 설정되지 않았어요.');
+    var h = '<div style="font-size:.8rem;margin-bottom:4px;">🎯 설정한 마무리 방식 <b>' + FIN_N[fin] + '</b></div>';
+    if (loc < 5) return h + none('위치 기록이 5골 이상 쌓이면 실제 득점 분포와 비교해 드려요. (현재 ' + loc + '골)');
+    var box = pct(z.six + z.box, loc), far = pct(z.mid + z.long, loc), ok, msg;
+    var best = box >= 70 ? 'box' : far >= 35 ? 'shot' : 'mixed';
+    if (fin === 'box') { ok = box >= 60 ? 2 : box >= 40 ? 1 : 0; msg = '박스 안 득점 ' + box + '%'; }
+    else if (fin === 'shot') { ok = far >= 30 ? 2 : far >= 15 ? 1 : 0; msg = '박스 밖 득점 ' + far + '%'; }
+    else if (fin === 'cross') { ok = box >= 50 ? 2 : 1; msg = '문전(박스 안) 득점 ' + box + '% · 크로스 여부는 위치만으론 알 수 없어 참고용'; }
+    else { ok = (box < 70 && far < 35) ? 2 : 1; msg = '박스 안 ' + box + '% · 박스 밖 ' + far + '%'; }
+    var lab = ['❌ 실제와 달라요', '△ 조금 다르거나 참고용', '✅ 실제와 잘 맞아요'][ok], col = ['#f87171', '#fbbf24', '#22c55e'][ok];
+    h += '<div style="font-size:.8rem;">📊 ' + msg + ' → <b style="color:' + col + ';">' + lab + '</b></div>';
+    if (fin !== 'cross' && best !== fin && ok < 2) h += '<div style="font-size:.74rem;color:var(--text-muted);margin-top:3px;">실제 득점 분포에는 <b>' + FIN_N[best] + '</b>이 더 가까워요. (전술은 자동으로 바꾸지 않아요)</div>';
+    return h;
+  };
+
+  // ③ 야신상 · 시상 · 하이라이트
+  GA.gkRank = function (R) {
+    return Object.keys(R.gk).map(function (k) { return R.gk[k]; }).filter(function (g) { return g.ss > 0; }).sort(function (a, b) { return b.ss - a.ss || a.ga - b.ga; });
+  };
+  GA.pickYashin = function (selId, name) {
+    var el = $(selId); if (!el) return; el.value = name;
+    if (el.value !== name) alert('이 선수는 목록에 없어요. (그 시즌에 출전한 선수만 고를 수 있어요)');
+  };
+  function yashinHtml(matches, selId) {
+    var R = GA.collect(matches), top = GA.gkRank(R).slice(0, 3); if (!top.length) return '';
+    return '<div class="ga-yashin" style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.25);font-size:.74rem;line-height:1.8;">'
+      + '<b style="color:#38bdf8;">🧤 슈퍼세이브 기준 야신상 후보</b> <span style="color:var(--text-muted);">(참고용 · 슈퍼세이브 많은 순)</span><br>'
+      + top.map(function (g, i) {
+        return (i + 1) + '. <a style="cursor:pointer;color:var(--accent);font-weight:800;" onclick="GA.pickYashin(\'' + selId + '\',this.getAttribute(\'data-n\'))" data-n="' + esc(g.name) + '" title="누르면 선택 칸에 넣어요">' + esc(g.name) + '</a> 🧤 <b>' + g.ss + '</b>회 · 경기당 ' + (g.w > 0 ? r2(g.ss / g.w) : 0) + ' · 실점 ' + g.ga + ' · 무실점 ' + g.cs + '경기';
+      }).join('<br>') + '</div>';
+  }
+  GA.renderYashinHint = function () {
+    try {
+      var sel = $('awardYashin'), old = document.querySelector && document.querySelector('#gaYashinCur'); if (old && old.remove) old.remove();
+      if (!sel) return;
+      var box = sel.parentElement && sel.parentElement.parentElement; if (!box || !box.parentNode) return;
+      var html = yashinHtml(state.matches || [], 'awardYashin'); if (!html) return;
+      box.insertAdjacentHTML('afterend', '<div id="gaYashinCur">' + html + '</div>');
+    } catch (e) { console.error('야신상 후보 오류', e); }
+  };
+  if (typeof window.renderSpecialAwards === 'function') {
+    var _rsa = window.renderSpecialAwards;
+    window.renderSpecialAwards = function () { var r = _rsa.apply(this, arguments); GA.renderYashinHint(); return r; };
+  }
+  if (typeof window.openArchiveAwardsModal === 'function') {
+    var _oaa = window.openArchiveAwardsModal;
+    window.openArchiveAwardsModal = function (idx) {
+      var r = _oaa.apply(this, arguments);
+      try {
+        var old = document.querySelector('#gaYashinArc'); if (old && old.remove) old.remove();
+        var a = (state.archives || [])[Number(idx)], sel = $('archiveAwardYashin'), html = a ? yashinHtml(a.matches || [], 'archiveAwardYashin') : '';
+        if (sel && html) sel.parentElement.insertAdjacentHTML('beforeend', '<div id="gaYashinArc">' + html + '</div>');
+      } catch (e) { console.error(e); }
+      return r;
+    };
+  }
+  if (typeof window.renderRankingHighlights === 'function') {
+    var _rrh = window.renderRankingHighlights;
+    window.renderRankingHighlights = function () {
+      var r = _rrh.apply(this, arguments);
+      try {
+        var el = $('rankingHighlightStrip'); if (!el) return r;
+        var sf = (typeof getStatsSeasonFilter === 'function') ? getStatsSeasonFilter() : 'all', R = GA.collect(sf), add = '', names = {};
+        (arguments[0] || []).forEach(function (p) { names[p.name] = 1; });   // 표에 보이는(팀·포지션 필터 적용된) 선수만
+        var chip = function (label, name, shown, color, val) { return '<div class="rank-highlight-chip"><div class="rank-highlight-label">' + label + '</div><div class="rank-highlight-name clickable-player" data-n="' + esc(name) + '" onclick="showPlayerDetail(this.getAttribute(\'data-n\'))" style="color:' + color + ';">' + esc(shown) + '</div><div class="rank-highlight-val">' + val + '</div></div>'; };
+        var g = GA.gkRank(R).filter(function (x) { return names[x.name]; })[0]; if (g) add += chip('🧤 슈퍼세이브왕', g.name, g.name, tcol(g.teamId), g.ss + '회');
+        var d = GA.duos(R).filter(function (x) { return names[x.a] && names[x.b]; })[0]; if (d && d.n >= 2) add += chip('🤝 최고의 콤비', d.a, d.a + ' ⇄ ' + d.b, tcol(d.teamId), d.n + '합작골');
+        if (add) el.innerHTML += add;
+      } catch (e) { console.error('랭킹 하이라이트 오류', e); }
+      return r;
+    };
+  }
+  try { GA.renderYashinHint(); } catch (e) { }
+
+  try { GA.renderRankPanel(); } catch (e) { console.error(e); }
+})();
+
 </script>
 </body>
 </html>
