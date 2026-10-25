@@ -731,7 +731,7 @@
 
         /* 🎯 개인 기록 랭킹: 창이 좁아져도 카드형(2줄)으로 바꾸지 않고, 표 구조를 유지한 채 가로 스크롤 */
         #playerRankTable { min-width: 640px; }
-        /* v1.35: GK 보기에서만 🧤 슈퍼세이브 열 표시 */
+        /* v1.35: GK 보기에서만 🧤 세이브 열 표시 */
         #playerRankTable:not(.rank-gk-mode) .rank-gk-col { display: none !important; }
         #playerRankTable.rank-gk-mode { min-width: 820px; }
         #playerRankTable.rank-gk-mode:not(.rank-adv-hidden) { min-width: 1420px; }
@@ -1522,7 +1522,7 @@
                     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;">
                         <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:10px;">
                             <div id="modalGkSS" style="font-size:1.4rem; font-weight:800; color:#38bdf8; font-family:'Orbitron';">0</div>
-                            <div style="font-size:.68rem; color:var(--text-muted); margin-top:3px;">🧤 슈퍼세이브</div>
+                            <div style="font-size:.68rem; color:var(--text-muted); margin-top:3px;">🧤 세이브</div>
                         </div>
                         <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:10px;">
                             <div id="modalGkCleanSheets" style="font-size:1.4rem; font-weight:800; color:var(--success); font-family:'Orbitron';">0</div>
@@ -1600,7 +1600,7 @@
                 </div></div>
                 </div>
 
-                <!-- 선수 분석 탭 (v1.35: 득점 위치 · 도움 연결 · 슈퍼세이브 등 개인 기록 분석) -->
+                <!-- 선수 분석 탭 (v1.35: 득점 위치 · 도움 연결 · 세이브 등 개인 기록 분석) -->
                 <div id="playerTabContentAnalysis" class="pm-page"><div id="playerAnalysisBody"></div></div>
 
                 <!-- 성장 분석 탭 -->
@@ -2465,7 +2465,7 @@
 
             <!-- ③ 선수 기록 (골 시간·자책골 입력 포함) -->
             <div class="card" id="playerCard">
-                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">3</span> 선수 기록 <button type="button" class="tac-btn tac-help-btn" onclick="tacHelpToggle()" title="설명 문구를 보이거나 숨깁니다" style="margin-left:auto;">💡 설명 보기</button></h4>
+                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">3</span> 선수 기록 <button type="button" class="tac-btn" data-new="1.41" onclick="pfZeroOtherAssists()" title="모든 선수의 '기타도움' 입력칸을 한 번에 0으로 바꿉니다 (득점 줄에서 연결한 도움은 그대로 유지돼요)" style="margin-left:auto;">🅰️ 기타도움 전체 0</button> <button type="button" class="tac-btn tac-help-btn" onclick="tacHelpToggle()" title="설명 문구를 보이거나 숨깁니다">💡 설명 보기</button></h4>
                 <div class="pf-legend tac-help-txt">선수 카드 한 장 = 한 명. <b>⚽ + 득점</b>을 누르면 득점 줄이 생기고, 줄에서 <b>시간 · 도움 선수 · 📍위치</b>를 입력해요. 노란 카드 = 기록이 있는 선수 · 팀 이름 옆 배지는 입력한 득점 합계와 스코어가 맞는지 보여줘요. 부상 · 미출전 선수는 접혀 있고, 이름을 누르면 펼쳐져요.</div>
                 <div id="playerStatsForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:15px;">
                     <!-- 선수별 입력 폼 동적 생성 -->
@@ -2615,7 +2615,7 @@
             <div class="card" style="margin-top:15px;">
                 <h3 id="playerRankTitle">🎯 개인 기록 랭킹 (현재 시즌)</h3>
                 <div class="ranking-info">정렬 기준: 공격포인트 > 평균평점 > MOM > 경기수</div>
-                <div class="ranking-info" id="rankGkHint" style="display:none;">🧤 GK 보기 — 🧤 슈퍼세이브 · 경기당 열이 추가됐어요. 열 제목을 누르면 그 기준으로 정렬하고, '고급 통계 보기'를 켜면 한 경기 최다 · 실점 · 세이브 기여율도 볼 수 있어요.</div>
+                <div class="ranking-info" id="rankGkHint" style="display:none;">🧤 GK 보기 — 🧤 세이브 · 경기당 열이 추가됐어요. 열 제목을 누르면 그 기준으로 정렬하고, '고급 통계 보기'를 켜면 한 경기 최다 · 실점 · 세이브 기여율도 볼 수 있어요.</div>
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
                     <label style="display:flex; align-items:center; gap:6px; font-size:0.8rem; font-weight:800; color:var(--text-muted); cursor:pointer; margin-right:4px;">
                         <input type="checkbox" id="rankAdvancedToggle" onchange="toggleRankAdvancedView()"> 🔍 고급 통계 보기
@@ -2649,11 +2649,11 @@
                                 <th onclick="sortPlayerRank('avgRating')" style="cursor:pointer;">평균평점 ↕️</th>
                                 <th class="rank-adv-col" onclick="sortPlayerRank('yc')" style="cursor:pointer;" title="경고 횟수 (경기 기록의 🟨🟥 카드)">🟨 경고 ↕️</th>
                                 <th class="rank-adv-col" onclick="sortPlayerRank('rc')" style="cursor:pointer;" title="퇴장 횟수 (경고 2회 포함)">🟥 퇴장 ↕️</th>
-                                <th class="rank-gk-col" onclick="sortPlayerRank('ss')" style="cursor:pointer;" title="경기 기록의 GK 행에 입력한 결정적 선방(슈퍼세이브) 합계">🧤 슈퍼세이브 ↕️</th>
-                                <th class="rank-gk-col" onclick="sortPlayerRank('ssPerG')" style="cursor:pointer;" title="출전 경기 환산(교체·포지션 변경 반영) 대비 슈퍼세이브">경기당 ↕️</th>
+                                <th class="rank-gk-col" onclick="sortPlayerRank('ss')" style="cursor:pointer;" title="경기 기록의 GK 행에 입력한 결정적 선방(세이브) 합계">🧤 세이브 ↕️</th>
+                                <th class="rank-gk-col" onclick="sortPlayerRank('ssPerG')" style="cursor:pointer;" title="출전 경기 환산(교체·포지션 변경 반영) 대비 세이브">경기당 ↕️</th>
                                 <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssBest')" style="cursor:pointer;">한 경기 최다 ↕️</th>
                                 <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssGa')" style="cursor:pointer;" title="GK로 뛴 동안의 실점">실점 ↕️</th>
-                                <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssRate')" style="cursor:pointer;" title="슈퍼세이브 ÷ (슈퍼세이브 + 실점)">세이브 기여율 ↕️</th>
+                                <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssRate')" style="cursor:pointer;" title="세이브 ÷ (세이브 + 실점)">세이브 기여율 ↕️</th>
                                 <th onclick="sortPlayerRank('pwr')" style="cursor:pointer;" title="평균평점(정규화) + 경기영향력(GK/필드 그룹별 정규화) + 팀성과(정규화), 신뢰도 보정 포함 / 100점 만점 상대 지표">파워랭킹 🌟 ↕️</th>
                                 <th class="rank-adv-col" onclick="sortPlayerRank('awardsTotal')" style="cursor:pointer;" title="⚽️득점왕 · 🎯도움왕 · 👑MVP · ⭐평점왕 · 🌱신인상 · 🧤야신상 · 🏅골롱도르 (아카이브된 시즌 기준, 현재 시즌은 진행중 선두 기준)">수상기록 ↕️</th>
                             </tr>
@@ -19666,8 +19666,14 @@ function fmBestStyle(p, role) {
             if(!hSel || !aSel) return;
             const matchType = document.getElementById('matchType') ? document.getElementById('matchType').value : '';
             let teamsPool = state.teams;
+            // v1.41: 기존 경기를 수정하는 중에는 '현재 시즌' 8강·4강 진출팀으로 팀 목록을 제한하지 않는다.
+            //   (제한하면 지난 시즌/다른 대회의 4강·8강 경기를 수정할 때 그 경기의 팀이 목록에 없어 빈 칸이 되고,
+            //    현재 시즌의 4강 진출팀 정보와 섞여 수정 화면이 비어 보였음)
+            const _editingExisting = !!((document.getElementById('editingMatchId') || {}).value);
 
-            if(matchType === '8강' && state.seasonMode === 'tournament' && state.tournamentTeams.length) {
+            if(_editingExisting) {
+                // 전체 팀 표시
+            } else if(matchType === '8강' && state.seasonMode === 'tournament' && state.tournamentTeams.length) {
                 teamsPool = state.teams.filter(t => state.tournamentTeams.includes(String(t.id)));
             } else if(matchType === '4강') {
                 const restrict = getTournamentSemiTeamIds();
@@ -19870,7 +19876,7 @@ function fmBestStyle(p, role) {
             const aExtraPlayers = extraFor(aTeam, aSeasonRoster);
 
             const renderSide = (team, seasonRoster, extraPlayers) => {
-                let html = `<div class="card pf-team" data-team="${team.id}" style="margin-bottom:0; padding:10px;"><div class="pf-team-h"><h4 style="color:${team.color}">${team.name}</h4><span class="pf-tot" data-team="${team.id}"></span></div>`;
+                let html = `<div class="card pf-team" data-team="${team.id}" style="margin-bottom:0; padding:10px;"><div class="pf-team-h"><h4 style="color:${team.color}">${team.name}</h4><span class="pf-tot" data-team="${team.id}"></span><button type="button" class="tac-btn" onclick="pfZeroOtherAssists('${team.id}')" title="이 팀 선수들의 '기타도움'을 모두 0으로" style="margin-left:auto; font-size:0.66rem; padding:2px 6px;">🅰️ 기타도움 0</button></div>`;
                 const statusPriority = { 'starter': 1, 'substitute': 2, 'injured': 3, 'absent': 4 };
                 const posPriorityLocal = { 'FW': 1, 'MF': 2, 'DF': 3, 'GK': 4 };
                 const groupLabel = { starter: '⭐ 선발', substitute: '🔄 후보', injured: '🩹 부상 · 🪑 미출전', absent: '🩹 부상 · 🪑 미출전' };
@@ -19920,7 +19926,7 @@ function fmBestStyle(p, role) {
                                 </div>
                                 <div class="pf-sub">
                                     <label class="pf-f" title="골과 연결하지 않은 도움 수(옛 기록 · 직접 입력). 득점 줄의 도움 선택으로 연결하면 자동으로 더해집니다">🅰️ 기타도움 <input type="number" class="p-input assist" data-p="${p.name}" value="${d.a}" min="0"></label>
-                                    ${isGk ? `<label class="pf-f" title="슈퍼세이브(결정적 득점 선방) 횟수">🧤 슈퍼세이브 <input type="number" class="p-input ss-input" data-p="${p.name}" value="${d.ss || 0}" min="0"></label>` : `<span class="ss-ph" data-p="${p.name}" style="display:none;"></span>`}
+                                    ${isGk ? `<label class="pf-f" title="세이브(결정적 득점 선방) 횟수">🧤 세이브 <input type="number" class="p-input ss-input" data-p="${p.name}" value="${d.ss || 0}" min="0"></label>` : `<span class="ss-ph" data-p="${p.name}" style="display:none;"></span>`}
                                     ${cardSelectHtml(p.name, d)}
                                     <div class="pf-rot">
                                         <label class="rl" title="경기 도중 포지션이 바뀐 경우(예: 후반 9분부터 GK)에 체크하고, 바뀐 시점을 입력하세요"><input type="checkbox" class="split-pos-toggle" data-p="${p.name}" ${hasSplit ? 'checked' : ''} onchange="toggleSplitPos('${p.name}')" style="width:13px; height:13px; margin:0;">🔄 로테이션</label>
@@ -20076,7 +20082,7 @@ function fmBestStyle(p, role) {
         function gmClose() { const m = document.getElementById('gmModal'); if (m) m.remove(); gmRowRef = null; }
         function gmSave() { if (gmRowRef) { if (gmCur) gmRowRef.dataset.loc = JSON.stringify(gmCur); else delete gmRowRef.dataset.loc; gmUpdateBtn(gmRowRef); } gmClose(); }
 
-        // 경기 기록 카드: 이 경기의 득점 위치 지도 (홈 → 오른쪽 공격, 원정은 180° 뒤집어 왼쪽 공격) + 🧤 슈퍼세이브
+        // 경기 기록 카드: 이 경기의 득점 위치 지도 (홈 → 오른쪽 공격, 원정은 180° 뒤집어 왼쪽 공격) + 🧤 세이브
         function goalMapHtml(m, ht, at) {
             const items = []; let svg = '', n = 0; const uid = 'H' + m.id;
             (m.pStats || []).forEach(ps => (ps.goalTimes || []).forEach(gt => {
@@ -20093,7 +20099,7 @@ function fmBestStyle(p, role) {
                 <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:460px;display:block;border-radius:6px;">${gmPitchInner(uid)}${gmSideOverlay(ht, at)}${svg}</svg>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>` : ''}
                 ${cardList ? `<div style="margin-top:4px;">${cardList}<span style="font-size:.62rem;color:var(--text-muted);">카드 (경고 2회 = 퇴장)</span></div>` : ''}
-                ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">슈퍼세이브(결정적 득점 선방)</span></div>` : ''}
+                ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">세이브(결정적 득점 선방)</span></div>` : ''}
             </div>`;
         }
 
@@ -20161,6 +20167,37 @@ function fmBestStyle(p, role) {
         function cardChip(cs) { return cs ? `<span class="pf-chip ${cs === 'y1' ? 'cy' : 'cr'}">${{ y1: '🟨', y2: '🟨🟨🟥', r: '🟥', y1r: '🟨🟥' }[cs] || ''}</span>` : ''; }
 
         // ===== v1.34: 선수 카드 요약 칩 · 팀 득점 합계 배지 갱신 =====
+        // v1.41: 기타도움(골과 연결하지 않은 도움) 입력칸을 한 번에 0으로 — teamId를 주면 그 팀만
+        function pfZeroOtherAssists(teamId) {
+            const form = document.getElementById('playerStatsForm'); if (!form) return;
+            let n = 0;
+            form.querySelectorAll('.pf-card').forEach(card => {
+                if (teamId && String(card.dataset.team) !== String(teamId)) return;
+                const inp = card.querySelector('.assist');
+                if (inp && (parseInt(inp.value) || 0) !== 0) { inp.value = 0; n++; }
+            });
+            try { pfRefresh(); } catch (e) { }
+            const btns = teamId ? [] : [...document.querySelectorAll('[onclick="pfZeroOtherAssists()"]')];
+            btns.forEach(b => { const t = b.textContent; b.textContent = n ? `✔ ${n}명 0으로` : '✔ 이미 모두 0'; setTimeout(() => { b.textContent = t; }, 1600); });
+        }
+        // v1.41: 이 경기에서 GK로 뛴 선수(기본 포지션 · 로테이션 후 포지션 · 추가 로테이션 중 하나라도 GK)면 🧤 세이브 입력칸을 보여준다
+        function pfSyncSs(name) {
+            const q = s => document.querySelector(s.replace(/\{n\}/g, String(name).replace(/"/g, '\\"')));
+            const ph = q('.ss-ph[data-p="{n}"]'); if (!ph) return;   // 이미 입력칸이 있으면 할 일 없음
+            const ps1 = q('.pos-select[data-p="{n}"]'), ps2 = q('.pos2-select[data-p="{n}"]'), sp = q('.split-pos-toggle[data-p="{n}"]');
+            let gk = !!(ps1 && ps1.value === 'GK');
+            if (sp && sp.checked) {
+                if (ps2 && ps2.value === 'GK') gk = true;
+                document.querySelectorAll('.rot-more-wrap[data-p="' + String(name).replace(/"/g, '\\"') + '"] .rot-more-pos').forEach(x => { if (x.value === 'GK') gk = true; });
+            }
+            if (!gk) return;
+            ph.outerHTML = `<label class="pf-f" title="세이브(결정적 득점 선방) 횟수">🧤 세이브 <input type="number" class="p-input ss-input" data-p="${name}" value="0" min="0"></label>`;
+        }
+        function pfSyncSsAll() { document.querySelectorAll('#playerStatsForm .pf-card').forEach(c => { try { pfSyncSs(c.dataset.p); } catch (e) { } }); }
+        document.addEventListener('change', ev => {
+            const c = ev.target.closest && ev.target.closest('#playerStatsForm .pf-card'); if (!c) return;
+            if (ev.target.matches('.pos2-select, .split-pos-toggle, .rot-more-pos')) setTimeout(() => { try { pfSyncSs(c.dataset.p); } catch (e) { } }, 0);
+        });
         function pfRefresh() {
             const form = document.getElementById('playerStatsForm'); if (!form) return;
             const linked = {};
@@ -21683,7 +21720,15 @@ function fmBestStyle(p, role) {
 
         function saveMatch() {
             const type = document.getElementById('matchType').value;
-            const season = state.seasonName || document.getElementById('matchSeason').value;
+            let season = state.seasonName || document.getElementById('matchSeason').value;
+            // v1.41: 기존 경기를 수정할 때는 그 경기가 원래 속한 시즌 이름을 유지한다 (예전엔 항상 '현재 시즌' 이름으로 덮어써졌음)
+            try {
+                const _eid = document.getElementById('editingMatchId').value, _eai = parseInt(document.getElementById('editingArchiveIdx').value);
+                if (_eid) {
+                    if (currentEditingMatch && currentEditingMatch.season) season = currentEditingMatch.season;
+                    else if (!isNaN(_eai) && _eai >= 0 && state.archives[_eai]) season = state.archives[_eai].name || season;
+                }
+            } catch (e) { }
             const num = document.getElementById('matchNum').value;
             const hId = document.getElementById('hTeamSel').value;
             const aId = document.getElementById('aTeamSel').value;
@@ -21704,6 +21749,17 @@ function fmBestStyle(p, role) {
 
             if(!hId || !aId || !num) { alert("팀과 경기 번호를 입력해주세요."); return; }
             if(hScore === aScore && hPk === aPk) { alert("무승부인 경우 승부차기 결과를 입력해주세요."); return; }
+            // v1.41: 새 경기로 저장하려는데 같은 경기(유형 · 번호 · 두 팀)가 이미 있으면 확인 — 저장 버튼을 연달아 누르거나,
+            //   수정 저장 직후 다시 누르면 같은 경기가 현재 시즌에 복사되던 문제 방지
+            if(!editingId) {
+                const _same = m => m.type === type && String(m.num) === String(num) && ((String(m.hId) === String(hId) && String(m.aId) === String(aId)) || (String(m.hId) === String(aId) && String(m.aId) === String(hId)));
+                const _inCur = (state.matches || []).some(_same);
+                const _arc = _inCur ? null : (state.archives || []).find(a => (a.matches || []).some(_same));
+                if(_inCur || _arc) {
+                    const _where = _inCur ? '현재 시즌' : `지난 시즌 [${_arc.name}]`;
+                    if(!confirm(`${_where}에 같은 경기(${type} ${num}번 · 같은 두 팀)가 이미 있어요.\n\n이미 저장된 경기를 고치려는 거라면 히스토리에서 '수정'을 눌러 주세요.\n그래도 새 경기로 추가할까요?`)) return;
+                }
+            }
 
             const pStats = [];
             let rotErr = '';
@@ -21782,6 +21838,7 @@ function fmBestStyle(p, role) {
                     state.matches[idx] = matchData;
                 }
                 cancelEdit();
+                try { document.getElementById('playerStatsForm').innerHTML = ''; } catch (e) { }   // v1.41: 수정 저장 후 남은 입력값으로 또 저장되지 않도록 비움
             } else {
                 state.matches.push(matchData);
                 schedConsume(matchData); // 같은 대진의 예정 경기가 있으면 예정 목록에서 제거
@@ -22261,7 +22318,7 @@ function fmBestStyle(p, role) {
                 };
                     hist.innerHTML += `
                         <div class="history-item collapsed" id="histItem_${m.id}" style="${hiBg}" data-mom="${gEsc(m.mom || '')}">
-                            <div class="history-tag">${state.seasonName ? state.seasonName + ' · ' : ''}${m.type} No.${m.num}</div>
+                            <div class="history-tag">${(() => { const _sn = historyArchiveIdx !== -1 ? ((state.archives[historyArchiveIdx] || {}).name || '') : (state.seasonName || ''); return _sn ? gEsc(_sn) + ' · ' : ''; })()}${m.type} No.${m.num}</div>
                             <div class="history-main">
                                 <div class="team-box"><div class="team-name" style="${hiTeamStyle(hWin, aWin, ht.color)}">${hWin ? '🏆 ' : ''}${ht.name}</div></div>
                                 <div class="score-box">
@@ -22372,6 +22429,15 @@ function fmBestStyle(p, role) {
             } else {
                 toggleInterMatchUI();
             }
+            // v1.41: 목록이 다시 만들어지면서 이 경기의 팀 선택이 풀렸을 수 있으므로 항상 다시 지정 (없으면 옵션 추가)
+            [['hTeamSel', m.hId], ['aTeamSel', m.aId]].forEach(([sid, tid]) => {
+                const el = document.getElementById(sid); if (!el) return;
+                if (![...el.options].some(o => o.value === String(tid))) {
+                    const t = state.teams.find(x => String(x.id) === String(tid));
+                    const o = document.createElement('option'); o.value = String(tid); o.textContent = t ? t.name : '알 수 없음'; el.appendChild(o);
+                }
+                el.value = String(tid);
+            });
 
             checkPK();
             // loadPlayerForms()는 현재 폼(DOM)에 남아있는 득점 기록을 '입력 중이던 값'으로 간주해 보존한다.
@@ -22392,7 +22458,7 @@ function fmBestStyle(p, role) {
                     const assistInput = document.querySelector(`.assist[data-p="${ps.name}"]`);
                     if(assistInput) assistInput.value = Math.max((ps.a || 0) - (_linked[ps.name] || 0), 0);
                     let ssInput = document.querySelector(`.ss-input[data-p="${ps.name}"]`);
-                    if(!ssInput && ps.ss) { const ph = document.querySelector(`.ss-ph[data-p="${ps.name}"]`); if(ph) { ph.outerHTML = `<input type="number" class="p-input ss-input" data-p="${ps.name}" value="${ps.ss}" min="0" title="슈퍼세이브(결정적 득점 선방) 횟수" style="width:46px;">`; ssInput = document.querySelector(`.ss-input[data-p="${ps.name}"]`); } }
+                    if(!ssInput && ps.ss) { const ph = document.querySelector(`.ss-ph[data-p="${ps.name}"]`); if(ph) { ph.outerHTML = `<input type="number" class="p-input ss-input" data-p="${ps.name}" value="${ps.ss}" min="0" title="세이브(결정적 득점 선방) 횟수" style="width:46px;">`; ssInput = document.querySelector(`.ss-input[data-p="${ps.name}"]`); } }
                     if(ssInput) ssInput.value = ps.ss || 0;
                     { const _cs = document.querySelector(`.card-select[data-p="${ps.name}"]`); if(_cs) _cs.value = cardValueOf(ps); }
                     const ratingInput = document.querySelector(`.rating[data-p="${ps.name}"]`);
@@ -22421,6 +22487,7 @@ function fmBestStyle(p, role) {
                         if(momRadio) momRadio.checked = true;
                     }
                 });
+                try { pfSyncSsAll(); } catch (e) { }   // v1.41: 이 경기에서 GK로 뛴 선수는 세이브 칸 표시
                 try { pfRefresh(); } catch (e) { }
             }, 100);
         }
@@ -26667,11 +26734,11 @@ function fmBestStyle(p, role) {
                     mom: s.mom, rating: s.rating, avgRating: s.ratingCount > 0 ? (s.rating / s.ratingCount) : 0,
                     games: s.starter + s.substitute, starter: s.starter, substitute: s.substitute, absent: s.absent };
             }).filter(p => p.games > 0 || p.goals > 0 || p.assists > 0);
-            // v1.35: GK 슈퍼세이브 집계 (같은 경기 범위 기준)
+            // v1.35: GK 세이브 집계 (같은 경기 범위 기준)
             try {
                 const _rr = (window.GA && GA.collect) ? GA.collect(matchPool) : { gk: {}, cards: {} }, _gkR = _rr.gk;
                 data.forEach(p => { const _c = _rr.cards[p.name]; p.yc = _c ? _c.y : 0; p.rc = _c ? _c.r : 0; const g = _gkR[p.name]; p.ss = g ? g.ss : 0; p.ssPerG = (g && g.w > 0) ? Math.round(g.ss / g.w * 100) / 100 : 0; p.ssBest = g ? g.bestSS : 0; p.ssGa = g ? g.ga : 0; p.ssRate = (g && (g.ss + g.ga) > 0) ? Math.round(g.ss / (g.ss + g.ga) * 1000) / 10 : 0; });
-            } catch (e) { console.error('GK 슈퍼세이브 집계 오류', e); data.forEach(p => { p.yc = 0; p.rc = 0; p.ss = 0; p.ssPerG = 0; p.ssBest = 0; p.ssGa = 0; p.ssRate = 0; }); }
+            } catch (e) { console.error('GK 세이브 집계 오류', e); data.forEach(p => { p.yc = 0; p.rc = 0; p.ss = 0; p.ssPerG = 0; p.ssBest = 0; p.ssGa = 0; p.ssRate = 0; }); }
             // 수상기록(득점왕/도움왕/MVP/평점왕/신인상/야신상/골롱도르) 집계 — 🏆 리그 전체 개인 기록 표와 동일한 방식
             // (확정 수상 / 미확정(수상유력, 진행중인 현재 시즌 선두 후보)을 구분해서 보관)
             const rankAwards = computeAwardCountsForSeasonFilter(sf);
@@ -28438,7 +28505,7 @@ function fmBestStyle(p, role) {
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.40';
+        const G_HTML_VERSION = '1.41';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -31003,7 +31070,7 @@ window.pmExtRender = function(name){
 })();
 </script>
 <script>
-/* ===== v1.35 득점 위치 · 도움 연결 · 슈퍼세이브 상세 분석 (1단계: 분석 엔진 · 선수 분석 탭 · 랭킹 / 2단계: 팀 데이터센터 · 경기 카드) ===== */
+/* ===== v1.35 득점 위치 · 도움 연결 · 세이브 상세 분석 (1단계: 분석 엔진 · 선수 분석 탭 · 랭킹 / 2단계: 팀 데이터센터 · 경기 카드) ===== */
 (function () {
   'use strict';
   var GA = window.GA = window.GA || {};
@@ -31250,8 +31317,8 @@ window.pmExtRender = function(name){
       // 6) GK
       if (gk && (gk.ss || gk.w)) {
         var perG = gk.w > 0 ? r2(gk.ss / gk.w) : 0, lgG = GA.leagueGkPerGame(R);
-        h += sec('🧤 키퍼 분석', '슈퍼세이브 = 경기 기록의 GK 행에 입력한 결정적 선방 · 기여율 = 슈퍼세이브 ÷ (슈퍼세이브 + 실점)', cards([
-          card(gk.ss, '슈퍼세이브', '#38bdf8'), card(perG, '경기당 (리그 ' + lgG + ')', '#38bdf8'), card(gk.bestSS, '한 경기 최다', '#38bdf8'),
+        h += sec('🧤 키퍼 분석', '세이브 = 경기 기록의 GK 행에 입력한 결정적 선방 · 기여율 = 세이브 ÷ (세이브 + 실점)', cards([
+          card(gk.ss, '세이브', '#38bdf8'), card(perG, '경기당 (리그 ' + lgG + ')', '#38bdf8'), card(gk.bestSS, '한 경기 최다', '#38bdf8'),
           card(pct(gk.ss, gk.ss + gk.ga) + '%', '세이브 기여율', '#38bdf8'), card(gk.cs, '무실점 경기', '#22c55e'), card(gk.ga, '실점', '#f87171')
         ]), '#38bdf8');
       }
@@ -31277,7 +31344,7 @@ window.pmExtRender = function(name){
     window.showPlayerDetail = function (n) { var r = _sp2.apply(this, arguments); try { if (typeof PM_TABS !== 'undefined' && PM_TABS.player.cur === 'analysis') GA.renderAnalysis(); } catch (e) { console.error(e); } return r; };
   }
 
-  /* ---------- 🗂️ 팀 데이터센터 › 상세분석 › 득점·도움·슈퍼세이브 카드 ---------- */
+  /* ---------- 🗂️ 팀 데이터센터 › 상세분석 › 득점·도움·세이브 카드 ---------- */
   GA.setTeamSf = function (v) { GA.ui.teamSf = v; GA.renderTeamCard(); };
   GA.setTeamMin = function (v) { GA.ui.teamMin = parseInt(v) || 1; GA.renderTeamCard(); };
   GA.renderTeamCard = function (team) {
@@ -31289,7 +31356,7 @@ window.pmExtRender = function(name){
       if (seasonNames().indexOf(GA.ui.teamSf) < 0 && GA.ui.teamSf !== 'all') GA.ui.teamSf = 'all';
       var R = GA.collect(GA.ui.teamSf), goals = R.goals.filter(function (g) { return String(g.teamId) === id; });
       var z = { six: 0, box: 0, mid: 0, long: 0 }, loc = 0; goals.forEach(function (g) { if (g.zone) { z[g.zone]++; loc++; } });
-      var h = '<h3>🔬 득점 유형 · 콤비 · 슈퍼세이브</h3><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;"><span style="font-weight:800;font-size:.8rem;">📅 기간</span>' + seasonSelect(GA.ui.teamSf, 'GA.setTeamSf') + '<span style="font-size:.68rem;color:var(--text-muted);">경기 기록의 📍 득점 위치 · 🅰️ 도움 연결 · 🧤 슈퍼세이브 기준</span></div>';
+      var h = '<h3>🔬 득점 유형 · 콤비 · 세이브</h3><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;"><span style="font-weight:800;font-size:.8rem;">📅 기간</span>' + seasonSelect(GA.ui.teamSf, 'GA.setTeamSf') + '<span style="font-size:.68rem;color:var(--text-muted);">경기 기록의 📍 득점 위치 · 🅰️ 도움 연결 · 🧤 세이브 기준</span></div>';
 
       // 득점 유형
       var tb = '';
@@ -31340,23 +31407,23 @@ window.pmExtRender = function(name){
       } else cb = none('아직 카드 기록이 없어요. 경기 기록의 선수 카드에서 🟨🟥 카드를 고르면 쌓여요.');
       h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#facc15;font-size:.84rem;margin-bottom:6px;">🟨 팀 카드 기록 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">경고 2회는 퇴장으로 계산 · 카드 많은 선수 TOP5</span></div>' + cb + '</div>';
 
-      // 팀 슈퍼세이브
+      // 팀 세이브
       var gt = R.gkTeam[id], gb = '';
       if (gt && (gt.ss || gt.w)) {
         var by = Object.keys(gt.by).map(function (k) { return gt.by[k]; }).sort(function (a, b) { return b.ss - a.ss; });
-        gb += cards([card(gt.ss, '팀 슈퍼세이브', '#38bdf8'), card(gt.w > 0 ? r2(gt.ss / gt.w) : 0, '경기당 (리그 ' + GA.leagueGkPerGame(R) + ')', '#38bdf8'), card(pct(gt.ss, gt.ss + gt.ga) + '%', '세이브 기여율', '#38bdf8'), card(gt.ga, '실점', '#f87171')]);
+        gb += cards([card(gt.ss, '팀 세이브', '#38bdf8'), card(gt.w > 0 ? r2(gt.ss / gt.w) : 0, '경기당 (리그 ' + GA.leagueGkPerGame(R) + ')', '#38bdf8'), card(pct(gt.ss, gt.ss + gt.ga) + '%', '세이브 기여율', '#38bdf8'), card(gt.ga, '실점', '#f87171')]);
         gb += '<div style="font-size:.76rem;">' + by.map(function (b) { return plLink(b.name) + ' <b style="color:#38bdf8;">' + b.ss + '</b>' + (b.w > 0 ? ' <span style="color:var(--text-muted);">(경기당 ' + r2(b.ss / b.w) + ')</span>' : ''); }).join(' · ') + '</div>';
-      } else gb = none('아직 슈퍼세이브가 기록되지 않았어요. 경기 기록에서 GK 카드의 🧤 칸에 횟수를 입력해 주세요.');
-      h += '<div><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🧤 팀 슈퍼세이브</div>' + gb + '</div>';
+      } else gb = none('아직 세이브가 기록되지 않았어요. 경기 기록에서 GK 카드의 🧤 칸에 횟수를 입력해 주세요.');
+      h += '<div><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🧤 팀 세이브</div>' + gb + '</div>';
       host.innerHTML = h;
-    } catch (e) { console.error('팀 득점 유형 카드 오류', e); host.innerHTML = '<h3>🔬 득점 유형 · 콤비 · 슈퍼세이브</h3>' + none('계산 중 오류가 발생했습니다.'); }
+    } catch (e) { console.error('팀 득점 유형 카드 오류', e); host.innerHTML = '<h3>🔬 득점 유형 · 콤비 · 세이브</h3>' + none('계산 중 오류가 발생했습니다.'); }
   };
   if (typeof window.dcRenderDetailTab === 'function') {
     var _dcd = window.dcRenderDetailTab;
     window.dcRenderDetailTab = function (team) { var r = _dcd.apply(this, arguments); try { GA.renderTeamCard(team); } catch (e) { console.error(e); } return r; };
   }
 
-  /* ---------- ⚔️ 경기 카드(경기 분석) › 득점 유형 · 합작골 · 슈퍼세이브 요약 ---------- */
+  /* ---------- ⚔️ 경기 카드(경기 분석) › 득점 유형 · 합작골 · 세이브 요약 ---------- */
   GA.matchSummary = function (m) {
     var ai = -1; (state.archives || []).some(function (a, i) { if ((a.matches || []).indexOf(m) >= 0) { ai = i; return true; } return false; });
     var sides = {}, ids = [String(m.hId), String(m.aId)];
@@ -31380,14 +31447,14 @@ window.pmExtRender = function(name){
       if (sd.cards.length) parts.push(sd.cards.map(esc).join(', '));
       if (parts.length) out += '<div style="font-size:.76rem;line-height:1.7;margin-top:2px;"><b style="color:' + t.color + ';">' + esc(t.name) + '</b> ' + parts.join(' &nbsp;|&nbsp; ') + '</div>';
     });
-    return out ? '<div style="font-size:.78rem;font-weight:800;color:#38bdf8;margin:12px 0 4px;">🔬 득점 유형 · 합작골 · 슈퍼세이브 · 카드</div>' + out : '';
+    return out ? '<div style="font-size:.78rem;font-weight:800;color:#38bdf8;margin:12px 0 4px;">🔬 득점 유형 · 합작골 · 세이브 · 카드</div>' + out : '';
   };
   if (typeof window.maBuild === 'function') {
     var _mb = window.maBuild;
     window.maBuild = function (m) { var h = _mb.apply(this, arguments); try { h += GA.matchSummary(m); } catch (e) { console.error('경기 요약 오류', e); } return h; };
   }
 
-  /* ---------- 🏅 랭킹 탭 › 🤝 최고의 콤비 (득점 유형은 선수 분석 · 팀 데이터센터로 이동, 슈퍼세이브는 개인 기록 랭킹 GK 보기로 이동) ---------- */
+  /* ---------- 🏅 랭킹 탭 › 🤝 최고의 콤비 (득점 유형은 선수 분석 · 팀 데이터센터로 이동, 세이브는 개인 기록 랭킹 GK 보기로 이동) ---------- */
   GA.renderRankPanel = function () {
     var host = $('gaRankCard');
     if (!host) {
@@ -31399,7 +31466,7 @@ window.pmExtRender = function(name){
     var R = GA.collect(sf), h = '';
     var d = GA.duos(R).slice(0, 10), linkedGoals = R.goals.filter(function (g) { return g.ast; }).length;
     h += '<h3 data-new="1.35">🤝 최고의 콤비 <span style="font-size:.7rem;color:var(--text-muted);font-weight:600;">합작골 TOP10 · 위 🔍 시즌 필터 기준</span></h3>';
-    h += '<div class="ranking-info" style="margin-bottom:8px;">득점 줄에 도움 선수를 연결해 둔 골만 집계해요. (연결된 골 ' + linkedGoals + ' / 전체 ' + R.goals.length + '골) · 두 선수가 서로 도운 골은 합산해서 보여줘요. 🧤 슈퍼세이브는 개인 기록 랭킹의 GK 보기, 🎯 득점 유형은 선수 상세 › 🔬 선수 분석과 팀 데이터센터 › 🔍 상세분석에서 볼 수 있어요.</div>';
+    h += '<div class="ranking-info" style="margin-bottom:8px;">득점 줄에 도움 선수를 연결해 둔 골만 집계해요. (연결된 골 ' + linkedGoals + ' / 전체 ' + R.goals.length + '골) · 두 선수가 서로 도운 골은 합산해서 보여줘요. 🧤 세이브는 개인 기록 랭킹의 GK 보기, 🎯 득점 유형은 선수 상세 › 🔬 선수 분석과 팀 데이터센터 › 🔍 상세분석에서 볼 수 있어요.</div>';
     if (!d.length) h += none('아직 도움이 연결된 골이 없어요. 경기 기록에서 득점 줄의 🅰️ 도움 선수를 고르면 콤비 순위가 만들어져요.');
     else h += '<div class="scrollable-table"><table class="pattern-table no-stack" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '">순위</th><th style="' + thS() + '">콤비</th><th style="' + thS() + '">팀</th><th style="' + thS() + '">합작골</th><th style="' + thS() + '">방향</th><th style="' + thS() + '">팀 득점 대비</th></tr></thead><tbody>' + d.map(function (x, i) {
       var tg = R.teamGoals[x.teamId] || 0;
@@ -31492,7 +31559,7 @@ window.pmExtRender = function(name){
   function yashinHtml(matches, selId) {
     var R = GA.collect(matches), top = GA.gkRank(R).slice(0, 3); if (!top.length) return '';
     return '<div class="ga-yashin" style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.25);font-size:.74rem;line-height:1.8;">'
-      + '<b style="color:#38bdf8;">🧤 슈퍼세이브 기준 야신상 후보</b> <span style="color:var(--text-muted);">(참고용 · 슈퍼세이브 많은 순)</span><br>'
+      + '<b style="color:#38bdf8;">🧤 세이브 기준 야신상 후보</b> <span style="color:var(--text-muted);">(참고용 · 세이브 많은 순)</span><br>'
       + top.map(function (g, i) {
         return (i + 1) + '. <a style="cursor:pointer;color:var(--accent);font-weight:800;" onclick="GA.pickYashin(\'' + selId + '\',this.getAttribute(\'data-n\'))" data-n="' + esc(g.name) + '" title="누르면 선택 칸에 넣어요">' + esc(g.name) + '</a> 🧤 <b>' + g.ss + '</b>회 · 경기당 ' + (g.w > 0 ? r2(g.ss / g.w) : 0) + ' · 실점 ' + g.ga + ' · 무실점 ' + g.cs + '경기';
       }).join('<br>') + '</div>';
@@ -31531,7 +31598,7 @@ window.pmExtRender = function(name){
         var sf = (typeof getStatsSeasonFilter === 'function') ? getStatsSeasonFilter() : 'all', R = GA.collect(sf), add = '', names = {};
         (arguments[0] || []).forEach(function (p) { names[p.name] = 1; });   // 표에 보이는(팀·포지션 필터 적용된) 선수만
         var chip = function (label, name, shown, color, val) { return '<div class="rank-highlight-chip"><div class="rank-highlight-label">' + label + '</div><div class="rank-highlight-name clickable-player" data-n="' + esc(name) + '" onclick="showPlayerDetail(this.getAttribute(\'data-n\'))" style="color:' + color + ';">' + esc(shown) + '</div><div class="rank-highlight-val">' + val + '</div></div>'; };
-        var g = GA.gkRank(R).filter(function (x) { return names[x.name]; })[0]; if (g) add += chip('🧤 슈퍼세이브왕', g.name, g.name, tcol(g.teamId), g.ss + '회');
+        var g = GA.gkRank(R).filter(function (x) { return names[x.name]; })[0]; if (g) add += chip('🧤 세이브왕', g.name, g.name, tcol(g.teamId), g.ss + '회');
         var d = GA.duos(R).filter(function (x) { return names[x.a] && names[x.b]; })[0]; if (d && d.n >= 2) add += chip('🤝 최고의 콤비', d.a, d.a + ' ⇄ ' + d.b, tcol(d.teamId), d.n + '합작골');
         if (add) el.innerHTML += add;
       } catch (e) { console.error('랭킹 하이라이트 오류', e); }
