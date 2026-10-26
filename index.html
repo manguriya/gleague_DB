@@ -20574,22 +20574,36 @@ function fmBestStyle(p, role) {
         function gmClose() { const m = document.getElementById('gmModal'); if (m) m.remove(); gmRowRef = null; }
         function gmSave() { if (gmRowRef) { if (gmCur) gmRowRef.dataset.loc = JSON.stringify(gmCur); else delete gmRowRef.dataset.loc; gmUpdateBtn(gmRowRef); } gmClose(); }
 
-        // 경기 기록 카드: 이 경기의 득점 위치 지도 (홈 → 오른쪽 공격, 원정은 180° 뒤집어 왼쪽 공격) + 🧤 세이브
+        // v1.49: 경기 기록 카드 — 득점 위치 지도를 '팀별'로 따로 보여준다 (각 팀이 자기 골대 → 상대 골대 방향 공격) · 번호는 기록한 순서가 아니라 득점 시간순(전반 → 후반, 분 순)
         function goalMapHtml(m, ht, at) {
-            const items = []; let svg = '', n = 0; const uid = 'H' + m.id;
+            const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
+            const goals = []; let seq = 0;
             (m.pStats || []).forEach(ps => (ps.goalTimes || []).forEach(gt => {
                 if (!gt.loc) return;
-                const home = String(ps.teamId) === String(m.hId), tm = home ? ht : at; n++;
-                svg += gmGoalSvg(gt.loc, tm.color, uid, String(n), !home);
-                items.push(`<div style="font-size:.68rem;"><b style="color:${tm.color}">${n}</b> ${gt.half.charAt(0)}${gt.min}' ${ps.name}${gt.ast ? ` <span style="color:#fbbf24;">🅰️${gt.ast}</span>` : ''}</div>`);
+                goals.push({ ps, gt, home: String(ps.teamId) === String(m.hId), seq: seq++ });
             }));
+            goals.sort((a, b) => halfNo(a.gt.half) - halfNo(b.gt.half) || (Number(a.gt.min) || 0) - (Number(b.gt.min) || 0) || a.seq - b.seq);
+            const n = goals.length;
+            const sideHtml = (tm, op, isHome) => {
+                const gs = goals.filter(g => g.home === isHome); if (!gs.length) return '';
+                let svg = ''; const items = [];
+                gs.forEach((g, i) => {
+                    const no = i + 1;   // 팀별 득점 시간순 번호
+                    svg += gmGoalSvg(g.gt.loc, tm.color, uid, String(no), false);   // 저장 좌표 = 득점 팀이 → 공격 기준이라 뒤집지 않음
+                    items.push(`<div style="font-size:.68rem;"><b style="color:${tm.color}">${no}</b> ${(g.gt.half || '').charAt(0)}${g.gt.min}' ${g.ps.name}${g.gt.ast ? ` <span style="color:#fbbf24;">🅰️${g.gt.ast}</span>` : ''}</div>`);
+                });
+                return `<div style="min-width:0;">
+                    <div style="font-size:.7rem;font-weight:800;margin-bottom:3px;"><span style="color:${tm.color}">${tm.name}</span> 득점 <span style="font-weight:400;color:var(--text-muted);">${gs.length}골 · ▶▶ <span style="color:${op.color}">${op.name}</span> 골대 방향</span></div>
+                    <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:460px;display:block;border-radius:6px;">${gmPitchInner(uid)}${gmSideOverlay(tm, op, { lMark: '🛡️', rMark: '🎯' })}${svg}</svg>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>
+                </div>`;
+            };
             const cardList = (m.pStats || []).filter(ps => cardIcons(ps)).map(ps => `<span style="font-size:.68rem;margin-right:8px;">${cardIcons(ps)} ${ps.name}</span>`).join('');
             const ssList = (m.pStats || []).filter(ps => ps.ss > 0).map(ps => `<span style="font-size:.68rem;margin-right:8px;">🧤 ${ps.name} <b>${ps.ss}</b></span>`).join('');
             if (!n && !ssList && !cardList) return '';
             return `<div class="gm-card" style="margin:6px 0 8px;">
-                ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · <span style="color:${ht.color}">${ht.name}</span>은 →, <span style="color:${at.color}">${at.name}</span>은 ← 방향 공격)</span></div>
-                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:460px;display:block;border-radius:6px;">${gmPitchInner(uid)}${gmSideOverlay(ht, at)}${svg}</svg>
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>` : ''}
+                ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · 팀별로 따로 표시 · 번호 = 득점 시간순 · 🛡️ 왼쪽 = 자기 골대 · 🎯 오른쪽 = 상대 골대)</span></div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;">${sideHtml(ht, at, true)}${sideHtml(at, ht, false)}</div>` : ''}
                 ${cardList ? `<div style="margin-top:4px;">${cardList}<span style="font-size:.62rem;color:var(--text-muted);">카드 (경고 2회 = 퇴장)</span></div>` : ''}
                 ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">세이브(결정적 득점 선방)</span></div>` : ''}
             </div>`;
@@ -28997,7 +29011,7 @@ function fmBestStyle(p, role) {
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.48';
+        const G_HTML_VERSION = '1.49';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
