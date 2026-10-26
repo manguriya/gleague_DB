@@ -20484,7 +20484,7 @@ function fmBestStyle(p, role) {
                 s += `<line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="#000" stroke-width="5.5" stroke-linecap="round" opacity=".45"/><line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="${color}" stroke-width="3" stroke-linecap="round"/><polygon points="${ex},${ey} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}" fill="${color}" stroke="#000" stroke-width="1" stroke-opacity=".5"/>`;
             }
             s += `<circle cx="${bx}" cy="${by}" r="9" fill="#fff" stroke="#111" stroke-width="1.5"/><text x="${bx}" y="${by + 4.5}" font-size="13" text-anchor="middle">⚽</text>`;
-            if (label) s += `<text x="${bx}" y="${by - 12}" font-size="10" font-weight="800" text-anchor="middle" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${label}</text>`;
+            if (label) { const anc = label.length > 4 ? (bx < GM_W * 0.25 ? 'start' : bx > GM_W * 0.75 ? 'end' : 'middle') : 'middle', lx = anc === 'start' ? bx - 8 : anc === 'end' ? bx + 8 : bx, ly = by < 26 ? by + 22 : by - 12; s += `<text x="${lx}" y="${ly}" font-size="10" font-weight="800" text-anchor="${anc}" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${label}</text>`; }
             return s;
         }
         let gmRowRef = null, gmCur = null, gmStep = 0, gmCtx = null;
@@ -20574,7 +20574,7 @@ function fmBestStyle(p, role) {
         function gmClose() { const m = document.getElementById('gmModal'); if (m) m.remove(); gmRowRef = null; }
         function gmSave() { if (gmRowRef) { if (gmCur) gmRowRef.dataset.loc = JSON.stringify(gmCur); else delete gmRowRef.dataset.loc; gmUpdateBtn(gmRowRef); } gmClose(); }
 
-        // v1.49: 경기 기록 카드 — 득점 위치 지도를 '팀별'로 따로 보여준다 (각 팀이 자기 골대 → 상대 골대 방향 공격) · 번호는 기록한 순서가 아니라 득점 시간순(전반 → 후반, 분 순)
+        // v1.49: 경기 기록 카드 — 경기장 하나에 두 팀을 그리되 각 팀은 '자기 쪽 절반'만 사용 (홈 = 오른쪽 절반에서 → 공격, 원정 = 왼쪽 절반에서 ← 공격) · 번호 = 득점 시간순(두 팀 통합) · 번호 옆에 시간 · 득점자 표시
         function goalMapHtml(m, ht, at) {
             const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const goals = []; let seq = 0;
@@ -20584,26 +20584,24 @@ function fmBestStyle(p, role) {
             }));
             goals.sort((a, b) => halfNo(a.gt.half) - halfNo(b.gt.half) || (Number(a.gt.min) || 0) - (Number(b.gt.min) || 0) || a.seq - b.seq);
             const n = goals.length;
-            const sideHtml = (tm, op, isHome) => {
-                const gs = goals.filter(g => g.home === isHome); if (!gs.length) return '';
-                let svg = ''; const items = [];
-                gs.forEach((g, i) => {
-                    const no = i + 1;   // 팀별 득점 시간순 번호
-                    svg += gmGoalSvg(g.gt.loc, tm.color, uid, String(no), false);   // 저장 좌표 = 득점 팀이 → 공격 기준이라 뒤집지 않음
-                    items.push(`<div style="font-size:.68rem;"><b style="color:${tm.color}">${no}</b> ${(g.gt.half || '').charAt(0)}${g.gt.min}' ${g.ps.name}${g.gt.ast ? ` <span style="color:#fbbf24;">🅰️${g.gt.ast}</span>` : ''}</div>`);
-                });
-                return `<div style="min-width:0;">
-                    <div style="font-size:.7rem;font-weight:800;margin-bottom:3px;"><span style="color:${tm.color}">${tm.name}</span> 득점 <span style="font-weight:400;color:var(--text-muted);">${gs.length}골 · ▶▶ <span style="color:${op.color}">${op.name}</span> 골대 방향</span></div>
-                    <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:460px;display:block;border-radius:6px;">${gmPitchInner(uid)}${gmSideOverlay(tm, op, { lMark: '🛡️', rMark: '🎯' })}${svg}</svg>
-                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>
-                </div>`;
-            };
+            // 저장 좌표(득점 팀이 → 공격, 0~1)를 그 팀의 절반(0.5폭)에 눌러 담는다: 홈 → 오른쪽 절반, 원정 → 왼쪽 절반 (180° 뒤집기)
+            const sq = (v, home) => home ? { x: 0.5 + v.x * 0.5, y: v.y } : { x: 0.5 - v.x * 0.5, y: 1 - v.y };
+            let svg = ''; const items = [];
+            goals.forEach((g, i) => {
+                const no = i + 1, tm = g.home ? ht : at, L = g.gt.loc;
+                const p = sq(L, g.home), q = typeof L.tx === 'number' ? sq({ x: L.tx, y: L.ty }, g.home) : null;
+                const loc = q ? { x: p.x, y: p.y, tx: q.x, ty: q.y } : { x: p.x, y: p.y };
+                const when = `${(g.gt.half || '').charAt(0)}${g.gt.min}'`;
+                svg += gmGoalSvg(loc, tm.color, uid, `${no}. ${when} ${g.ps.name}`, false);
+                items.push(`<div style="font-size:.68rem;"><b style="color:${tm.color}">${no}</b> ${when} ${g.ps.name}${g.gt.ast ? ` <span style="color:#fbbf24;">🅰️${g.gt.ast}</span>` : ''}</div>`);
+            });
             const cardList = (m.pStats || []).filter(ps => cardIcons(ps)).map(ps => `<span style="font-size:.68rem;margin-right:8px;">${cardIcons(ps)} ${ps.name}</span>`).join('');
             const ssList = (m.pStats || []).filter(ps => ps.ss > 0).map(ps => `<span style="font-size:.68rem;margin-right:8px;">🧤 ${ps.name} <b>${ps.ss}</b></span>`).join('');
             if (!n && !ssList && !cardList) return '';
             return `<div class="gm-card" style="margin:6px 0 8px;">
-                ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · 팀별로 따로 표시 · 번호 = 득점 시간순 · 🛡️ 왼쪽 = 자기 골대 · 🎯 오른쪽 = 상대 골대)</span></div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;">${sideHtml(ht, at, true)}${sideHtml(at, ht, false)}</div>` : ''}
+                ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · 번호 = 득점 시간순 · <span style="color:${ht.color}">${ht.name}</span>은 오른쪽 절반(→), <span style="color:${at.color}">${at.name}</span>은 왼쪽 절반(←)만 사용 · 가로 거리는 절반으로 압축)</span></div>
+                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:6px;">${gmPitchInner(uid)}${gmSideOverlay(ht, at)}${svg}</svg>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>` : ''}
                 ${cardList ? `<div style="margin-top:4px;">${cardList}<span style="font-size:.62rem;color:var(--text-muted);">카드 (경고 2회 = 퇴장)</span></div>` : ''}
                 ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">세이브(결정적 득점 선방)</span></div>` : ''}
             </div>`;
