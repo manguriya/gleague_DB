@@ -20674,18 +20674,26 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const when = `${(g.gt.half || '').charAt(0)}${g.gt.min}'`;
                 const gp = gmGoalParts(loc, tm.color, false);
                 if (gp) parts.push({ gp, no, color: tm.color, when, name: g.ps.name });
-                items.push(`<div style="font-size:.68rem;"><b style="color:${tm.color}">${no}</b> ${when} ${g.ps.name}${g.gt.ast ? ` <span style="color:#fbbf24;">🅰️${g.gt.ast}</span>` : ''}</div>`);
+                items.push({ k: halfNo(g.gt.half) * 1000 + (Number(g.gt.min) || 0), o: 0, html: `<div style="font-size:.68rem;"><b style="color:${tm.color}">${no}</b> ${when} ${g.ps.name}${g.gt.ast ? ` <span style="color:#fbbf24;">🅰️${g.gt.ast}</span>` : ''}</div>` });
             });
+            // v1.49: 자책골도 득점 목록에 추가 — 자책한 선수의 상대 팀 득점 (위치 기록이 없어 지도에는 표시되지 않음) · 시간순으로 함께 정렬
+            let nOg = 0;
+            (m.pStats || []).forEach(ps => (ps.ogTimes || []).forEach(ot => {
+                const ownHome = String(ps.teamId) === String(m.hId), cr = ownHome ? at : ht;   // 득점으로 인정되는 팀 = 상대 팀
+                nOg++;
+                items.push({ k: halfNo(ot.half) * 1000 + (Number(ot.min) || 0), o: 1, html: `<div style="font-size:.68rem;" title="${gEsc(ps.name)}의 자책골 → ${gEsc(cr.name)} 득점"><b style="color:${cr.color}">💀</b> ${(ot.half || '').charAt(0)}${ot.min}' ${ps.name} <span style="color:var(--danger);">자책</span> <span style="color:var(--text-muted);">→ <span style="color:${cr.color}">${gEsc(cr.name)}</span> 득점</span></div>` });
+            }));
+            items.sort((x, y) => x.k - y.k || x.o - y.o);
             // v1.49: 글씨가 가려지거나 겹치지 않게 — 화살표 → 공 → 이름표 순으로 그리고, 이름표는 서로 · 공 · 화살표 · 골대 팀 표시를 피해 빈 곳에 자동 배치
             const svg = gmLabelLayer(parts, ht, at);
 
             const cardList = (m.pStats || []).filter(ps => cardIcons(ps)).map(ps => `<span style="font-size:.68rem;margin-right:8px;">${cardIcons(ps)} ${ps.name}</span>`).join('');
             const ssList = (m.pStats || []).filter(ps => ps.ss > 0).map(ps => `<span style="font-size:.68rem;margin-right:8px;">🧤 ${ps.name} <b>${ps.ss}</b></span>`).join('');
-            if (!n && !ssList && !cardList) return '';
+            if (!n && !nOg && !ssList && !cardList) return '';
             return `<div class="gm-card" style="margin:6px 0 8px;">
                 ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · 번호 = 득점 시간순 · <span style="color:${ht.color}">${ht.name}</span>은 오른쪽 절반(→), <span style="color:${at.color}">${at.name}</span>은 왼쪽 절반(←)만 사용 · 가로 거리는 절반으로 압축)</span></div>
-                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:10px;">${gmPitchInner(uid, { half: true })}${gmSideOverlay(ht, at)}${svg}</svg>
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>` : ''}
+                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:10px;">${gmPitchInner(uid, { half: true })}${gmSideOverlay(ht, at)}${svg}</svg>` : ''}
+                ${(n || nOg) ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.map(x => x.html).join('')}</div>` : ''}
                 ${cardList ? `<div style="margin-top:4px;">${cardList}<span style="font-size:.62rem;color:var(--text-muted);">카드 (경고 2회 = 퇴장)</span></div>` : ''}
                 ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">세이브(결정적 득점 선방)</span></div>` : ''}
             </div>`;
