@@ -20692,8 +20692,8 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (!n && !nOg && !ssList && !cardList) return '';
             return `<div class="gm-card" style="margin:6px 0 8px;">
                 ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · 번호 = 득점 시간순 · <span style="color:${ht.color}">${ht.name}</span>은 오른쪽 절반(→), <span style="color:${at.color}">${at.name}</span>은 왼쪽 절반(←)만 사용 · 가로 거리는 절반으로 압축)</span></div>
-                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:10px;">${gmPitchInner(uid, { half: true })}${gmSideOverlay(ht, at)}${svg}</svg>` : ''}
-                ${(n || nOg) ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.map(x => x.html).join('')}</div>` : ''}
+                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:400px;max-height:36vh;display:block;border-radius:10px;">${gmPitchInner(uid, { half: true })}${gmSideOverlay(ht, at)}${svg}</svg>` : ''}
+                ${(n || nOg) ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1px 8px;margin-top:3px;max-width:400px;">${items.map(x => x.html).join('')}</div>` : ''}
                 ${cardList ? `<div style="margin-top:4px;">${cardList}<span style="font-size:.62rem;color:var(--text-muted);">카드 (경고 2회 = 퇴장)</span></div>` : ''}
                 ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">세이브(결정적 득점 선방)</span></div>` : ''}
             </div>`;
@@ -22912,9 +22912,12 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     });
                     return html;
                 };
+                    const gmCardHtml = goalMapHtml(m, ht, at);
                     hist.innerHTML += `
                         <div class="history-item collapsed" id="histItem_${m.id}" style="${hiBg}" data-mom="${gEsc(m.mom || '')}">
                             <div class="history-tag">${(() => { const _sn = historyArchiveIdx !== -1 ? ((state.archives[historyArchiveIdx] || {}).name || '') : (state.seasonName || ''); return _sn ? gEsc(_sn) + ' · ' : ''; })()}${m.type} No.${m.num}</div>
+                            <div class="hi-grid">
+                            <div class="hi-top${gmCardHtml ? ' has-gm' : ''}"><div class="hi-top-l">
                             <div class="history-main">
                                 <div class="team-box"><div class="team-name" style="${hiTeamStyle(hWin, aWin, ht.color)}">${hWin ? '🏆 ' : ''}${ht.name}</div></div>
                                 <div class="score-box">
@@ -22932,7 +22935,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                                 </div>
                             </div>
                             ${tacHistoryHtml(m, ht, at, 'line')}
-                            ${goalMapHtml(m, ht, at)}
+                            </div>
+                            ${gmCardHtml ? `<div class="hi-top-r">${gmCardHtml}</div>` : ''}
+                            </div>
                             <div class="hi-panes">
                                 <section class="hi-pane hi-tac">
                                     <div class="hi-pane-t">🧭 경기 전술 · 포메이션 <span class="hi-pane-sub">카드 색 = 팀 유니폼 · 글씨 = 포지션 · ▲▼ = OVR 대비 변화</span></div>
@@ -22956,6 +22961,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                                     <div class="hi-pane-t">🧠 경기 분석</div>
                                     <div class="hi-ana-empty">분석을 아직 열지 않았어요.<br><button type="button" class="history-toggle-btn" onclick="maToggle(${m.id})">🧠 경기 분석 보기</button></div>
                                 </section>
+                            </div>
                             </div>
                             <div class="history-footer">
                                 <button class="history-toggle-btn" onclick="toggleHistoryCard(this)">🔽 상세보기</button>
@@ -31481,6 +31487,66 @@ body:not(.tac-help-open) .tac-help-txt { display: none !important; }
 .pam-subs label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pam-grid .pam-sub-input{height:26px !important;font-size:.84rem !important;padding:0 3px !important;text-align:center}
 .pam-bar{position:sticky;bottom:0;z-index:4;margin:10px -6px -4px;padding:8px 6px;background:rgba(15,23,42,.97);border-top:1px solid rgba(139,92,246,.35);border-radius:0 0 8px 8px}
+
+/* v1.49: 히스토리 카드 윗줄 — 왼쪽 = 스코어 · 경기 주도권 그래프, 오른쪽 = 득점 위치 지도 (한 줄을 나눠 씀) */
+.hi-top-l { min-width: 0; }
+.hi-top-r { min-width: 0; }
+.hi-top-r .gm-card { margin: 0 !important; }
+.history-item:not(.collapsed) .hi-top-l .history-momentum { max-width: 440px; margin: 2px auto 6px !important; }
+/* v1.49: 접힌 카드에서도 경기 주도권 그래프 표시 (작게) */
+.history-item.collapsed .history-momentum { display: block !important; margin: 3px 0 4px !important; }
+.history-item.collapsed .history-momentum svg { height: 40px; }
+.history-item.collapsed .history-momentum > div { display: none; }
+
+/* v1.49: 히스토리 상세보기 — 한눈에 보이도록 배치 · 크기 정리 (카드 폭 제한 · 윗줄 = 스코어/그래프 | 득점 지도 · 아래 = 전술 | 기록) */
+.history-item:not(.collapsed) { max-width: 1180px; width: 100%; justify-self: center; }
+.history-item:not(.collapsed) .hi-top { padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 8px; }
+.history-item:not(.collapsed) .hi-top-l .history-main { max-width: 460px; margin: 0 auto 4px; }
+.history-item:not(.collapsed) .hi-top-l .score-box { font-size: 2.1rem; }
+.history-item:not(.collapsed) .hi-top-l .team-name { font-size: 1.05rem; }
+.history-item:not(.collapsed) .hi-top-r .gm-card svg { max-width: 380px; max-height: 32vh; margin: 0 auto; }
+.history-item:not(.collapsed) .hi-top-r .gm-card > div:last-of-type { max-width: 380px; margin-left: auto; margin-right: auto; }
+.history-item:not(.collapsed) .hi-panes { gap: 10px; margin-top: 0; }
+.history-item:not(.collapsed) .hi-pane { padding: 8px 10px; }
+.history-item:not(.collapsed) .hi-pane-t { font-size: 0.8rem; margin-bottom: 6px; }
+
+
+/* v1.49: 히스토리 상세보기 배치 — [스코어 · 주도권 그래프(스코어 아래)] [⚽ 경기 기록 · 결과] [📍 득점 지도] 한 줄 / 아래 [🧭 경기 전술] [🧠 분석(기존 기록 자리)] */
+.history-item:not(.collapsed) { max-width: 1680px; width: 100%; justify-self: center; }
+.history-item:not(.collapsed) .hi-top, .history-item:not(.collapsed) .hi-panes { display: contents !important; }
+.history-item:not(.collapsed) .hi-top { border: 0; padding: 0; margin: 0; }
+.hi-grid { display: flex; flex-direction: column; gap: 8px; }
+.hi-grid > .hi-top-l, .hi-grid .hi-top-l { order: 1; } .hi-grid .hi-top-r { order: 2; } .hi-grid .hi-rec { order: 3; } .hi-grid .hi-tac { order: 4; } .hi-grid .hi-ana { order: 5; }
+.hi-grid .hi-top-l, .hi-grid .hi-top-r, .hi-grid .hi-pane { min-width: 0; }
+.hi-grid .hi-top-l { display: block; }
+.hi-grid .hi-top-l .history-main { max-width: 460px; margin: 0 auto 4px; }
+.hi-grid .hi-top-r .gm-card svg { max-width: 340px; margin: 0 auto; }
+.hi-grid .hi-top-r .gm-card > div:last-of-type { max-width: 340px; margin-left: auto; margin-right: auto; }
+@container hi (min-width: 640px) {
+  .hi-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "l l" "tac rec" "ana ana"; gap: 8px 12px; align-items: start; }
+  .hi-grid:has(.hi-top-r) { grid-template-areas: "l map" "tac rec" "ana ana"; }
+  .hi-grid .hi-top-l { grid-area: l; } .hi-grid .hi-top-r { grid-area: map; } .hi-grid .hi-rec { grid-area: rec; } .hi-grid .hi-tac { grid-area: tac; } .hi-grid .hi-ana { grid-area: ana; }
+}
+@container hi (min-width: 900px) {
+  .hi-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); grid-template-areas: "l rec" "tac tac"; }
+  .hi-grid:has(.hi-ana [id^="maBox_"]) { grid-template-areas: "l rec" "tac ana"; }
+  .hi-grid:has(.hi-top-r) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 340px); grid-template-areas: "l rec map" "tac tac tac"; }
+  .hi-grid:has(.hi-top-r):has(.hi-ana [id^="maBox_"]) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); grid-template-areas: "l rec map" "tac tac ana"; }
+  .hi-grid .hi-rec, .hi-grid .hi-top-l { align-self: start; }
+}
+
+/* v1.49: 경기 전술 포메이션 — 홈 · 원정 두 팀을 항상 가로(좌우)로 나란히 배치 */
+.history-item:not(.collapsed) .hi-tac .history-tac-full { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; gap: 10px; }
+.history-item:not(.collapsed) .hi-tac .tac-mb-main, .history-item:not(.collapsed) .hi-tac .tac-mb-side { max-width: 260px; }
+@container hi (min-width: 900px) {
+  .hi-grid:has(.hi-ana [id^="maBox_"]) { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-areas: "l rec" "tac ana"; }
+  .hi-grid:has(.hi-top-r):has(.hi-ana [id^="maBox_"]) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); grid-template-areas: "l rec map" "tac tac ana"; }
+}
+
+/* v1.49: 🧭 경기 전술 — 홈 · 원정 포메이션을 항상 가로로 나란히 (칸이 아주 좁을 때만 위아래) */
+.hi-tac .history-tac-full { grid-template-columns: 1fr 1fr !important; }
+@container (max-width: 359px) { .hi-tac .history-tac-full { grid-template-columns: 1fr !important; } }
+.hi-tac .history-tac-full > div { min-width: 0; }
 </style>
 <script id="pamCompactJs">
 (function(){
