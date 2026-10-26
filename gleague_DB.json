@@ -16,6 +16,13 @@
             "위치선정": 78,
             "스피드": 99,
             "체력": 67
+          },
+          "footL": 5,
+          "footR": 1,
+          "posProf": {
+            "AML": "n",
+            "ML": "c",
+            "AMR": "p"
           }
         },
         {
@@ -29,6 +36,10 @@
             "위치선정": 80,
             "스피드": 90,
             "체력": 80
+          },
+          "posProf": {
+            "AMC": "n",
+            "AML": "p"
           }
         },
         {
@@ -42,7 +53,9 @@
             "수비": 95,
             "체력": 95,
             "스피드": 90
-          }
+          },
+          "footL": 5,
+          "footR": 2
         },
         {
           "name": "박승희",
@@ -135,8 +148,8 @@
           "fgk": false
         },
         "set": true,
-        "autoGen": true,
-        "apply": true
+        "apply": true,
+        "autoGen": true
       }
     },
     {
@@ -175,12 +188,7 @@
             "적극성": 90
           },
           "roleMain": "FW:poacher",
-          "roleSub": "FW:presser",
-          "posProf": {
-            "AMC": "n",
-            "WBL": "a",
-            "WBR": "a"
-          }
+          "roleSub": "FW:presser"
         },
         {
           "name": "나티",
@@ -215,14 +223,8 @@
           },
           "roleMain": "DEF:builder",
           "roleSub": "DEF:overlap",
-          "posProf": {
-            "WBL": "n",
-            "WBR": "a",
-            "DR": "c",
-            "ML": "c",
-            "AML": "c",
-            "AMC": "c"
-          }
+          "footL": 5,
+          "footR": 2
         },
         {
           "name": "카라인",
@@ -256,14 +258,7 @@
             "적극성": 75
           },
           "roleMain": "DEF:stopper",
-          "roleSub": "DEF:builder",
-          "posProf": {
-            "DL": "a",
-            "WBL": "a",
-            "DM": "a",
-            "MC": "a",
-            "SW": "c"
-          }
+          "roleSub": "DEF:builder"
         },
         {
           "name": "케시",
@@ -325,13 +320,7 @@
             "적극성": 75
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "WBR": "a",
-            "WBL": "a",
-            "MC": "a",
-            "AMR": "c"
-          }
+          "roleSub": "WING:twoway"
         },
         {
           "name": "엘로디",
@@ -363,10 +352,7 @@
             "적극성": 76
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "MC": "a"
-          }
+          "roleSub": "WING:twoway"
         },
         {
           "name": "미초바",
@@ -395,14 +381,7 @@
             "적극성": 70
           },
           "roleMain": "WING:twoway",
-          "roleSub": "FW:presser",
-          "posProf": {
-            "WBR": "a",
-            "WBL": "a",
-            "ML": "a",
-            "MC": "a",
-            "MR": "a"
-          }
+          "roleSub": "FW:presser"
         }
       ],
       "manager": "김영광",
@@ -413,8 +392,8 @@
           "GK": "케시",
           "p0": "나티",
           "p1": "카라인",
-          "p2": "사오리",
-          "p3": "엘로디",
+          "p2": "엘로디",
+          "p3": "사오리",
           "s0": "아야카",
           "s1": "미초바"
         },
@@ -423,28 +402,28 @@
         "mv": {},
         "opt": {},
         "style": {
-          "build": "pass",
+          "build": "drib",
           "defense": "low",
           "attack": "balanced",
-          "lane": "center",
+          "lane": "wing",
           "won": "normal",
           "presstr": "rare",
           "trap": "none",
           "crossd": "invite",
           "tackle": "normal",
-          "dribble": "low",
-          "cross": "mixed",
-          "free": "normal",
-          "tempo": "normal",
-          "width": "narrow",
+          "dribble": "high",
+          "cross": "whipped",
+          "free": "expressive",
+          "tempo": "fast",
+          "width": "wide",
           "line": "deep",
           "trans": "retreat",
           "finish": "shot",
           "fgk": false
         },
         "set": true,
-        "autoGen": true,
-        "apply": true
+        "apply": true,
+        "autoGen": true
       }
     },
     {
@@ -484,15 +463,8 @@
           },
           "roleMain": "WING:crosser",
           "roleSub": "WING:winger",
-          "posProf": {
-            "ST": "a",
-            "ML": "n",
-            "MR": "n",
-            "AML": "c",
-            "AMR": "c",
-            "AMC": "a",
-            "MC": "a"
-          }
+          "footL": 5,
+          "footR": 1
         },
         {
           "name": "마시마유",
@@ -526,18 +498,15 @@
             "적극성": 98
           },
           "roleMain": "DEF:overlap",
+          "roleSub": "DEF:builder",
+          "footL": 4,
           "posProf": {
-            "WBR": "n",
             "DM": "n",
             "WBL": "n",
-            "MR": "c",
-            "ML": "c",
-            "MC": "n",
-            "AMR": "c",
-            "AMC": "c",
-            "AML": "c"
-          },
-          "roleSub": "DEF:builder"
+            "WBR": "n",
+            "ML": "p",
+            "MR": "p"
+          }
         },
         {
           "name": "소유미",
@@ -572,11 +541,7 @@
           },
           "roleMain": "DEF:builder",
           "roleSub": "DEF:stopper",
-          "posProf": {
-            "DM": "n",
-            "MR": "c",
-            "ML": "c"
-          }
+          "footL": 2
         },
         {
           "name": "키썸",
@@ -638,24 +603,19 @@
             "적극성": 79
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "MC": "a",
-            "WBL": "a",
-            "WBR": "a"
-          }
+          "roleSub": "WING:twoway"
         },
         {
           "name": "현진",
           "pos": "FW",
           "stats": {
-            "결정력": 69,
+            "결정력": 70,
             "드리블": 73,
             "패스": 75,
             "위치선정": 78,
             "수비": 74,
             "체력": 78,
-            "스피드": 77
+            "스피드": 78
           },
           "ext": {
             "중거리슛": 70,
@@ -664,20 +624,15 @@
             "수비위치": 75,
             "롱패스": 72,
             "피지컬": 74,
-            "판단력": 75,
+            "판단력": 77,
             "활동량": 80,
-            "침착성": 75,
-            "연계": 73,
+            "침착성": 77,
+            "연계": 75,
             "소통": 73,
-            "적극성": 80
+            "적극성": 83
           },
-          "posProf": {
-            "AMC": "n",
-            "WBR": "a",
-            "WBL": "a"
-          },
-          "roleMain": "FW:runner",
-          "roleSub": "FW:second"
+          "roleSub": "FW:runner",
+          "roleMain": "WING:insider"
         },
         {
           "name": "트루디",
@@ -706,15 +661,7 @@
             "적극성": 72
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "MC": "n",
-            "AMC": "c",
-            "ST": "a",
-            "AML": "n",
-            "AMR": "n",
-            "DM": "c"
-          }
+          "roleSub": "WING:twoway"
         }
       ],
       "manager": "김병지",
@@ -723,19 +670,80 @@
         "formation": "2-2",
         "slots": {
           "GK": "키썸",
-          "p0": "마시마유",
-          "p1": "소유미",
+          "p0": "소유미",
+          "p1": "김소희",
           "p2": "현진",
-          "p3": "김소희",
-          "s0": "목나경",
-          "s1": "트루디"
+          "p3": "목나경",
+          "s0": "트루디"
         },
         "roleStyle": {},
-        "pos": {},
-        "mv": {},
+        "pos": {
+          "p2": {
+            "x": 32.7,
+            "y": 23.6
+          },
+          "p3": {
+            "x": 67.7,
+            "y": 37.6
+          },
+          "p0": {
+            "x": 30,
+            "y": 60
+          },
+          "p1": {
+            "x": 70,
+            "y": 70
+          },
+          "GK": {
+            "x": 50,
+            "y": 80
+          }
+        },
+        "mv": {
+          "p0": {
+            "atk": {
+              "dx": 15.8,
+              "dy": -30.1,
+              "curve": 0
+            }
+          },
+          "p1": {
+            "atk": {
+              "dx": 5.4,
+              "dy": -16.3,
+              "curve": 0
+            }
+          },
+          "p2": {
+            "def": {
+              "dx": -2.7,
+              "dy": 21.4,
+              "curve": 0
+            }
+          },
+          "p3": {
+            "def": {
+              "dx": -9.4,
+              "dy": 19.9,
+              "curve": 0
+            }
+          },
+          "GK": {
+            "atk": {
+              "dx": -1.9,
+              "dy": -19,
+              "curve": 0
+            },
+            "def": {
+              "dx": 4.6,
+              "dy": -11.7,
+              "curve": 0
+            }
+          }
+        },
         "opt": {},
         "style": {
-          "build": "drib",
+          "build": "long",
           "defense": "low",
           "attack": "balanced",
           "lane": "mixed",
@@ -744,14 +752,14 @@
           "trap": "none",
           "crossd": "invite",
           "tackle": "normal",
-          "dribble": "high",
-          "cross": "whipped",
-          "free": "expressive",
+          "dribble": "normal",
+          "cross": "mixed",
+          "free": "normal",
           "tempo": "fast",
           "width": "narrow",
           "line": "deep",
           "trans": "retreat",
-          "finish": "shot",
+          "finish": "box",
           "fgk": false
         },
         "set": true,
@@ -782,12 +790,6 @@
           ],
           "roleMain": "WING:twoway",
           "roleSub": "FW:presser",
-          "posProf": {
-            "WBL": "a",
-            "ML": "a",
-            "AML": "c",
-            "MR": "n"
-          },
           "ext": {
             "중거리슛": 78,
             "공격위치": 80,
@@ -820,13 +822,6 @@
           ],
           "roleMain": "WING:insider",
           "roleSub": "FW:runner",
-          "posProf": {
-            "WBL": "a",
-            "ML": "a",
-            "AML": "c",
-            "MR": "n",
-            "MC": "a"
-          },
           "ext": {
             "중거리슛": 77,
             "공격위치": 78,
@@ -840,7 +835,8 @@
             "연계": 75,
             "소통": 73,
             "적극성": 78
-          }
+          },
+          "footL": 2
         },
         {
           "name": "허경희",
@@ -861,14 +857,6 @@
           ],
           "roleMain": "DEF:overlap",
           "roleSub": "MID:b2b",
-          "posProf": {
-            "ML": "c",
-            "MR": "c",
-            "ST": "c",
-            "MC": "a",
-            "WBL": "n",
-            "WBR": "n"
-          },
           "ext": {
             "중거리슛": 88,
             "공격위치": 92,
@@ -902,13 +890,6 @@
           ],
           "roleMain": "DEF:stopper",
           "roleSub": "DEF:builder",
-          "posProf": {
-            "WBL": "a",
-            "DL": "c",
-            "WBR": "n",
-            "MR": "c",
-            "MC": "a"
-          },
           "ext": {
             "중거리슛": 79,
             "공격위치": 76,
@@ -942,9 +923,6 @@
           ],
           "roleMain": "DEF:stopper",
           "roleSub": "DEF:marker",
-          "posProf": {
-            "MC": "c"
-          },
           "ext": {
             "중거리슛": 70,
             "공격위치": 80,
@@ -987,12 +965,6 @@
             "연계": 62,
             "소통": 62,
             "적극성": 68
-          },
-          "posProf": {
-            "ST": "a",
-            "AMC": "n",
-            "WBR": "a",
-            "WBL": "a"
           }
         },
         {
@@ -1163,12 +1135,13 @@
           },
           "roleMain": "DEF:overlap",
           "roleSub": "WING:insider",
+          "footL": 2,
           "posProf": {
-            "ML": "c",
-            "AML": "c",
+            "DL": "n",
             "WBL": "n",
+            "WBR": "c",
             "DM": "n",
-            "AMC": "c"
+            "ML": "p"
           }
         },
         {
@@ -1198,12 +1171,7 @@
             "적극성": 75
           },
           "roleMain": "DEF:stopper",
-          "roleSub": "DEF:marker",
-          "posProf": {
-            "DL": "c",
-            "WBL": "a",
-            "AMC": "c"
-          }
+          "roleSub": "DEF:marker"
         },
         {
           "name": "장은실",
@@ -1236,14 +1204,7 @@
             "적극성": 82
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "WBR": "a",
-            "WBL": "a",
-            "MR": "a",
-            "MC": "a",
-            "ML": "a"
-          }
+          "roleSub": "WING:twoway"
         },
         {
           "name": "일주어터",
@@ -1301,16 +1262,7 @@
             "적극성": 65
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "WBL": "a",
-            "WBR": "a",
-            "MC": "a",
-            "MR": "a",
-            "ML": "a",
-            "ST": "c",
-            "AMC": "n"
-          }
+          "roleSub": "WING:twoway"
         },
         {
           "name": "우덕배",
@@ -1343,9 +1295,13 @@
           },
           "roleMain": "FW:poacher",
           "roleSub": "WING:insider",
+          "footL": 3,
           "posProf": {
+            "AML": "n",
             "AMC": "n",
-            "AMR": "c"
+            "ML": "c",
+            "MC": "p",
+            "WBL": "p"
           }
         },
         {
@@ -1375,17 +1331,7 @@
             "적극성": 65
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "WBR": "a",
-            "WBL": "a",
-            "ML": "a",
-            "MR": "a",
-            "MC": "a",
-            "AML": "c",
-            "AMR": "c",
-            "ST": "n"
-          }
+          "roleSub": "WING:twoway"
         }
       ],
       "manager": "조재진",
@@ -1403,78 +1349,47 @@
         },
         "roleStyle": {},
         "pos": {
-          "p2": {
-            "x": 22.1,
-            "y": 34.1
-          },
           "p3": {
-            "x": 65.1,
-            "y": 26.7
-          },
-          "p0": {
-            "x": 34.2,
-            "y": 60.1
+            "x": 70,
+            "y": 40
           }
         },
         "mv": {
+          "p0": {
+            "atk": {
+              "dx": 22.3,
+              "dy": -24.6,
+              "curve": 0
+            }
+          },
           "p3": {
             "atk": {
-              "dx": -3.6,
-              "dy": -22.6,
+              "dx": -13.1,
+              "dy": -19.5,
+              "curve": 0
+            },
+            "def": {
+              "dx": -10,
+              "dy": 10,
               "curve": 0
             }
           },
           "p2": {
-            "def": {
-              "dx": -4.3,
-              "dy": 25.2,
-              "curve": 0
-            },
             "atk": {
-              "dx": 9,
-              "dy": -27.6,
-              "curve": 0
-            }
-          },
-          "p0": {
-            "atk": {
-              "dx": 11.8,
-              "dy": -28.4,
-              "curve": 0
-            },
-            "def": {
-              "dx": 0.9,
-              "dy": 22.9,
+              "dx": 15.3,
+              "dy": -21,
               "curve": 0
             }
           },
           "p1": {
             "atk": {
-              "dx": 0.9,
-              "dy": -8.7,
-              "curve": 0
-            },
-            "def": {
-              "dx": -2.9,
-              "dy": 16.6,
+              "dx": 14.7,
+              "dy": -13.2,
               "curve": 0
             }
           }
         },
-        "opt": {
-          "p3": {
-            "help": "high"
-          },
-          "p1": {
-            "roam": "low"
-          },
-          "p0": {
-            "roam": "high"
-          },
-          "p2": {
-            "help": "high"
-          }
-        },
+        "opt": {},
         "style": {
           "build": "drib",
           "defense": "low",
@@ -1496,8 +1411,8 @@
           "fgk": false
         },
         "set": true,
-        "autoGen": true,
-        "apply": true
+        "apply": true,
+        "autoGen": true
       }
     },
     {
@@ -1536,13 +1451,7 @@
             "적극성": 83
           },
           "roleMain": "DEF:marker",
-          "roleSub": "DEF:stopper",
-          "posProf": {
-            "ST": "c",
-            "MC": "a",
-            "DR": "c",
-            "DM": "n"
-          }
+          "roleSub": "DEF:stopper"
         },
         {
           "name": "박지안",
@@ -1576,16 +1485,7 @@
           },
           "roleMain": "DEF:overlap",
           "roleSub": "DEF:builder",
-          "posProf": {
-            "WBL": "n",
-            "MR": "c",
-            "AMR": "c",
-            "AML": "c",
-            "DC": "c",
-            "SW": "c",
-            "ML": "n",
-            "WBR": "n"
-          }
+          "footL": 2
         },
         {
           "name": "권이수",
@@ -1614,14 +1514,7 @@
             "적극성": 83
           },
           "roleMain": "FW:presser",
-          "roleSub": "MID:b2b",
-          "posProf": {
-            "AML": "c",
-            "AMC": "n",
-            "DR": "c",
-            "MR": "n",
-            "WBL": "a"
-          }
+          "roleSub": "MID:b2b"
         },
         {
           "name": "정혜인",
@@ -1656,15 +1549,7 @@
           },
           "roleMain": "MID:playmaker",
           "roleSub": "MID:regista",
-          "posProf": {
-            "ST": "c",
-            "DM": "n",
-            "MC": "n",
-            "ML": "n",
-            "MR": "n",
-            "AMC": "n",
-            "AMR": "n"
-          }
+          "footL": 3
         },
         {
           "name": "이영아",
@@ -1693,16 +1578,7 @@
             "적극성": 65
           },
           "roleMain": "FW:target",
-          "roleSub": "FW:presser",
-          "posProf": {
-            "WBR": "a",
-            "WBL": "a",
-            "ML": "a",
-            "MR": "a",
-            "MC": "a",
-            "AML": "c",
-            "AMR": "c"
-          }
+          "roleSub": "FW:presser"
         },
         {
           "name": "안혜경",
@@ -1757,14 +1633,7 @@
             "적극성": 66
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "AMR": "c",
-            "WBR": "a",
-            "WBL": "a",
-            "MC": "a",
-            "MR": "a"
-          }
+          "roleSub": "WING:twoway"
         }
       ],
       "manager": "최진철",
@@ -1775,14 +1644,77 @@
           "GK": "안혜경",
           "p0": "박지안",
           "p1": "주명",
-          "p2": "정혜인",
-          "p3": "권이수",
+          "p2": "권이수",
+          "p3": "정혜인",
           "s0": "김환희",
           "s1": "이영아"
         },
         "roleStyle": {},
-        "pos": {},
-        "mv": {},
+        "pos": {
+          "p1": {
+            "x": 70,
+            "y": 75
+          },
+          "p0": {
+            "x": 25,
+            "y": 65
+          },
+          "p3": {
+            "x": 65,
+            "y": 40
+          },
+          "p2": {
+            "x": 35,
+            "y": 25
+          }
+        },
+        "mv": {
+          "p0": {
+            "atk": {
+              "dx": -9,
+              "dy": -31.1,
+              "curve": 0
+            }
+          },
+          "p1": {
+            "atk": {
+              "dx": 4,
+              "dy": -16,
+              "curve": 0
+            }
+          },
+          "p3": {
+            "atk": {
+              "dx": 5,
+              "dy": -25,
+              "curve": 0
+            },
+            "def": {
+              "dx": -5,
+              "dy": 15,
+              "curve": 0
+            }
+          },
+          "p2": {
+            "atk": {
+              "dx": 15,
+              "dy": -20,
+              "curve": 0
+            },
+            "def": {
+              "dx": 5,
+              "dy": 20,
+              "curve": 0
+            }
+          },
+          "GK": {
+            "atk": {
+              "dx": 0,
+              "dy": -8,
+              "curve": 0
+            }
+          }
+        },
         "opt": {},
         "style": {
           "build": "long",
@@ -1805,8 +1737,8 @@
           "fgk": false
         },
         "set": true,
-        "autoGen": true,
-        "apply": true
+        "apply": true,
+        "autoGen": true
       }
     },
     {
@@ -1847,12 +1779,8 @@
           ],
           "roleMain": "MID:playmaker",
           "roleSub": "FW:false9",
-          "posProf": {
-            "DM": "c",
-            "AMC": "n",
-            "MC": "n",
-            "ML": "n"
-          }
+          "footL": 5,
+          "footR": 3
         },
         {
           "name": "민서",
@@ -1886,14 +1814,7 @@
             "aerial"
           ],
           "roleMain": "DEF:builder",
-          "roleSub": "DEF:libero",
-          "posProf": {
-            "DM": "n",
-            "DR": "c",
-            "WBR": "c",
-            "WBL": "c",
-            "ML": "c"
-          }
+          "roleSub": "DEF:libero"
         },
         {
           "name": "리사",
@@ -1952,12 +1873,7 @@
             "press"
           ],
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "WBL": "a",
-            "WBR": "a",
-            "MC": "a"
-          }
+          "roleSub": "WING:twoway"
         },
         {
           "name": "조하",
@@ -1988,12 +1904,7 @@
             "피지컬": 70
           },
           "roleMain": "FW:presser",
-          "roleSub": "WING:twoway",
-          "posProf": {
-            "MC": "a",
-            "WBR": "a",
-            "WBL": "a"
-          }
+          "roleSub": "WING:twoway"
         },
         {
           "name": "이보람",
@@ -2023,8 +1934,52 @@
           "s1": "이보람"
         },
         "roleStyle": {},
-        "pos": {},
-        "mv": {},
+        "pos": {
+          "p2": {
+            "x": 30,
+            "y": 35
+          }
+        },
+        "mv": {
+          "p1": {
+            "atk": {
+              "dx": 8.4,
+              "dy": -14.6,
+              "curve": 0
+            },
+            "def": {
+              "dx": -6.6,
+              "dy": 10.4,
+              "curve": 0
+            }
+          },
+          "p0": {
+            "atk": {
+              "dx": 16.6,
+              "dy": -26,
+              "curve": 0
+            },
+            "def": {
+              "dx": 11.6,
+              "dy": 4,
+              "curve": 0
+            }
+          },
+          "p3": {
+            "def": {
+              "dx": -1.3,
+              "dy": 18.3,
+              "curve": 0
+            }
+          },
+          "p2": {
+            "atk": {
+              "dx": 15,
+              "dy": -5,
+              "curve": 0
+            }
+          }
+        },
         "opt": {},
         "style": {
           "build": "pass",
@@ -2089,10 +2044,11 @@
           ],
           "roleMain": "WING:insider",
           "roleSub": "WING:sidemaker",
+          "footL": 2,
           "posProf": {
-            "ML": "n",
-            "MR": "n",
-            "AMC": "n"
+            "ST": "n",
+            "ML": "c",
+            "WBL": "p"
           }
         },
         {
@@ -2128,14 +2084,11 @@
           "roleMain": "FW:link",
           "roleSub": "FW:presser",
           "posProf": {
-            "DR": "n",
-            "DL": "c",
             "AMC": "n",
-            "WBR": "n",
-            "WBL": "c",
-            "ST": "n",
-            "AML": "n",
-            "MR": "n"
+            "AMR": "n",
+            "MR": "c",
+            "MC": "p",
+            "WBR": "p"
           }
         },
         {
@@ -2170,19 +2123,14 @@
           ],
           "roleMain": "DEF:overlap",
           "roleSub": "DEF:builder",
+          "footL": 2,
           "posProf": {
-            "DM": "a",
-            "DC": "a",
-            "WBL": "n",
-            "WBR": "c",
-            "ST": "n",
-            "MR": "c",
-            "AML": "n",
-            "AMR": "c",
-            "AMC": "c",
+            "DL": "n",
             "DR": "c",
-            "SW": "c",
-            "ML": "n"
+            "WBL": "n",
+            "ML": "c",
+            "AML": "p",
+            "ST": "p"
           }
         },
         {
@@ -2218,7 +2166,8 @@
           "roleMain": "DEF:stopper",
           "roleSub": "DEF:libero",
           "posProf": {
-            "DL": "c"
+            "DR": "n",
+            "WBR": "c"
           }
         },
         {
@@ -2277,16 +2226,7 @@
             "적극성": 75
           },
           "roleMain": "FW:target",
-          "roleSub": "FW:link",
-          "posProf": {
-            "AML": "c",
-            "AMR": "c",
-            "DR": "n",
-            "WBL": "a",
-            "ML": "a",
-            "MC": "a",
-            "WBR": "n"
-          }
+          "roleSub": "FW:link"
         },
         {
           "name": "루나",
@@ -2316,13 +2256,7 @@
           },
           "roleMain": "FW:presser",
           "roleSub": "FW:poacher",
-          "posProf": {
-            "WBL": "a",
-            "WBR": "a",
-            "MC": "a",
-            "AMR": "c",
-            "AML": "n"
-          }
+          "footL": 5
         }
       ],
       "manager": "백지훈",
@@ -2339,8 +2273,47 @@
           "s1": "루나"
         },
         "roleStyle": {},
-        "pos": {},
-        "mv": {},
+        "pos": {
+          "p3": {
+            "x": 70,
+            "y": 40
+          }
+        },
+        "mv": {
+          "p0": {
+            "atk": {
+              "dx": -10.5,
+              "dy": -29.8,
+              "curve": 0
+            }
+          },
+          "p1": {
+            "atk": {
+              "dx": 7.3,
+              "dy": -11,
+              "curve": 0
+            }
+          },
+          "p2": {
+            "atk": {
+              "dx": 17,
+              "dy": -21,
+              "curve": 0
+            },
+            "def": {
+              "dx": 2,
+              "dy": 14,
+              "curve": 0
+            }
+          },
+          "p3": {
+            "def": {
+              "dx": -5,
+              "dy": 15,
+              "curve": 0
+            }
+          }
+        },
         "opt": {},
         "style": {
           "build": "pass",
@@ -2447,6 +2420,7 @@
             "lpass"
           ],
           "ext": {
+            "중거리슛": 75,
             "공격위치": 75,
             "대인마크": 82,
             "수비위치": 78,
@@ -2457,9 +2431,9 @@
             "침착성": 80,
             "연계": 77,
             "소통": 80,
-            "중거리슛": 75,
             "적극성": 85
-          }
+          },
+          "footL": 2
         },
         {
           "name": "배혜지",
@@ -2584,62 +2558,9 @@
           "s1": "금채림"
         },
         "roleStyle": {},
-        "pos": {
-          "p2": {
-            "x": 29,
-            "y": 31.7
-          },
-          "p3": {
-            "x": 67.5,
-            "y": 24.6
-          },
-          "p0": {
-            "x": 30.7,
-            "y": 66.2
-          },
-          "p1": {
-            "x": 67.6,
-            "y": 70.4
-          }
-        },
-        "mv": {
-          "p0": {
-            "atk": {
-              "dx": 14.5,
-              "dy": -24.7,
-              "curve": 0
-            }
-          },
-          "p2": {
-            "def": {
-              "dx": 4.7,
-              "dy": 18.5,
-              "curve": 0
-            }
-          },
-          "p3": {
-            "def": {
-              "dx": -9.8,
-              "dy": 19,
-              "curve": 0
-            }
-          },
-          "p1": {
-            "atk": {
-              "dx": 1.2,
-              "dy": -11.5,
-              "curve": 0
-            }
-          }
-        },
-        "opt": {
-          "p0": {
-            "roam": "high"
-          },
-          "p3": {
-            "help": "high"
-          }
-        },
+        "pos": {},
+        "mv": {},
+        "opt": {},
         "style": {
           "build": "back",
           "defense": "low",
@@ -2908,53 +2829,120 @@
         "h": {
           "fm": "2-2",
           "st": {
-            "build": "drib",
+            "build": "back",
             "defense": "mid",
-            "attack": "balanced",
+            "attack": "possess",
             "lane": "wing",
-            "tempo": "fast",
+            "tempo": "normal",
             "width": "wide",
             "line": "normal",
             "trans": "normal",
             "finish": "shot",
-            "won": "normal",
+            "won": "hold",
             "presstr": "normal",
             "trap": "none",
             "crossd": "normal",
-            "tackle": "normal",
-            "dribble": "normal",
-            "cross": "mixed",
+            "tackle": "stay",
+            "dribble": "high",
+            "cross": "whipped",
             "free": "normal",
             "fgk": false
           },
           "mgr": "최진철",
           "lu": {
             "GK": "안혜경",
-            "p0": "주명",
-            "p1": "박지안",
-            "p2": "권이수",
-            "p3": "정혜인"
+            "p1": "주명",
+            "p2": "정혜인",
+            "p3": "권이수",
+            "p0": "박지안"
+          },
+          "pos": {
+            "p2": {
+              "x": 36.1,
+              "y": 44.3
+            },
+            "p3": {
+              "x": 67.1,
+              "y": 28.1
+            },
+            "p1": {
+              "x": 70,
+              "y": 71
+            },
+            "p0": {
+              "x": 31.8,
+              "y": 66.6
+            },
+            "GK": {
+              "x": 50,
+              "y": 91.9
+            }
+          },
+          "mv": {
+            "p2": {
+              "atk": {
+                "dx": -5.7,
+                "dy": -25.1,
+                "curve": 0
+              }
+            },
+            "p0": {
+              "atk": {
+                "dx": -14.9,
+                "dy": -23.5,
+                "curve": 0
+              },
+              "def": {
+                "dx": 5.9,
+                "dy": 10.1,
+                "curve": 0
+              }
+            },
+            "p1": {
+              "atk": {
+                "dx": 20.4,
+                "dy": -18.3,
+                "curve": 0
+              },
+              "def": {
+                "dx": -7.7,
+                "dy": 9.6,
+                "curve": 0
+              }
+            },
+            "p3": {
+              "atk": {
+                "dx": -17.3,
+                "dy": -19.5,
+                "curve": 0
+              },
+              "def": {
+                "dx": -0.7,
+                "dy": 24.1,
+                "curve": 0
+              }
+            }
           }
         },
         "a": {
           "fm": "2-2",
           "st": {
-            "build": "pass",
+            "build": "long",
             "defense": "mid",
-            "attack": "balanced",
-            "lane": "center",
+            "attack": "counter",
+            "lane": "wing",
             "tempo": "normal",
-            "width": "narrow",
+            "width": "wide",
             "line": "normal",
             "trans": "normal",
-            "finish": "box",
+            "finish": "cross",
             "won": "normal",
             "presstr": "normal",
-            "trap": "none",
+            "trap": "outside",
             "crossd": "normal",
             "tackle": "normal",
-            "dribble": "normal",
-            "cross": "mixed",
+            "dribble": "high",
+            "cross": "floated",
             "free": "normal",
             "fgk": false
           },
@@ -2963,8 +2951,53 @@
             "GK": "이유안",
             "p0": "허경희",
             "p1": "이혜정",
-            "p2": "이현이",
-            "p3": "송해나"
+            "p2": "송해나",
+            "p3": "이현이"
+          },
+          "mv": {
+            "p2": {
+              "atk": {
+                "dx": 20.3,
+                "dy": -17.6,
+                "curve": 0
+              }
+            },
+            "p0": {
+              "atk": {
+                "dx": 24.6,
+                "dy": -21.7,
+                "curve": 0
+              },
+              "def": {
+                "dx": 16.4,
+                "dy": 11.7,
+                "curve": 0
+              }
+            },
+            "p1": {
+              "atk": {
+                "dx": -8.7,
+                "dy": -14.8,
+                "curve": 0
+              },
+              "def": {
+                "dx": -17.6,
+                "dy": -9.2,
+                "curve": 0
+              }
+            },
+            "p3": {
+              "atk": {
+                "dx": 2,
+                "dy": -23.6,
+                "curve": 0
+              },
+              "def": {
+                "dx": -11,
+                "dy": 20.4,
+                "curve": 0
+              }
+            }
           }
         }
       }
@@ -3195,34 +3228,88 @@
       ],
       "tac": {
         "h": {
-          "fm": "1-2-1",
+          "fm": "2-2",
           "st": {
             "build": "pass",
-            "defense": "mid",
+            "defense": "press",
             "attack": "balanced",
-            "lane": "center",
+            "lane": "wing",
             "tempo": "normal",
-            "width": "narrow",
-            "line": "normal",
-            "trans": "normal",
+            "width": "wide",
+            "line": "high",
+            "trans": "press",
             "finish": "box",
-            "won": "normal",
-            "presstr": "normal",
-            "trap": "none",
-            "crossd": "normal",
-            "tackle": "normal",
-            "dribble": "normal",
-            "cross": "mixed",
-            "free": "normal",
+            "won": "counter",
+            "presstr": "often",
+            "trap": "outside",
+            "crossd": "stop",
+            "tackle": "stay",
+            "dribble": "high",
+            "cross": "whipped",
+            "free": "expressive",
             "fgk": false
           },
           "mgr": "백지훈",
           "lu": {
             "GK": "이채연",
-            "p0": "채리나",
-            "p1": "이유정",
-            "p2": "이승연",
-            "p3": "강보람"
+            "p0": "강보람",
+            "p1": "채리나",
+            "p2": "이유정",
+            "p3": "이승연"
+          },
+          "pos": {
+            "p1": {
+              "x": 66.2,
+              "y": 67.9
+            },
+            "p0": {
+              "x": 30.7,
+              "y": 55.7
+            },
+            "p3": {
+              "x": 71.7,
+              "y": 34.1
+            }
+          },
+          "mv": {
+            "p3": {
+              "atk": {
+                "dx": -21,
+                "dy": -5.7,
+                "curve": 0
+              }
+            },
+            "p2": {
+              "atk": {
+                "dx": 21.3,
+                "dy": -21.1,
+                "curve": 0
+              }
+            },
+            "p0": {
+              "atk": {
+                "dx": 4.8,
+                "dy": -26.6,
+                "curve": 0
+              },
+              "def": {
+                "dx": 14.1,
+                "dy": -13,
+                "curve": 0
+              }
+            },
+            "p1": {
+              "def": {
+                "dx": -19.1,
+                "dy": -0.9,
+                "curve": 0
+              },
+              "atk": {
+                "dx": 13.1,
+                "dy": -13.5,
+                "curve": 0
+              }
+            }
           }
         },
         "a": {
@@ -3230,22 +3317,22 @@
           "st": {
             "build": "long",
             "defense": "low",
-            "attack": "balanced",
+            "attack": "counter",
             "lane": "center",
-            "tempo": "fast",
+            "tempo": "slow",
             "width": "narrow",
             "line": "deep",
             "trans": "retreat",
-            "finish": "box",
-            "won": "normal",
+            "finish": "shot",
+            "won": "counter",
             "presstr": "normal",
-            "trap": "none",
-            "crossd": "normal",
+            "trap": "outside",
+            "crossd": "invite",
             "tackle": "normal",
             "dribble": "normal",
-            "cross": "mixed",
+            "cross": "whipped",
             "free": "normal",
-            "fgk": false
+            "fgk": true
           },
           "mgr": "김영광",
           "lu": {
@@ -3254,6 +3341,28 @@
             "p1": "카라인",
             "p2": "사오리",
             "p3": "엘로디"
+          },
+          "pos": {
+            "p0": {
+              "x": 27.8,
+              "y": 59.8
+            },
+            "GK": {
+              "x": 50.7,
+              "y": 88.4
+            },
+            "p1": {
+              "x": 73.3,
+              "y": 62.7
+            },
+            "p2": {
+              "x": 36.5,
+              "y": 31.3
+            },
+            "p3": {
+              "x": 67.6,
+              "y": 28.5
+            }
           }
         }
       }
@@ -3527,18 +3636,18 @@
             "attack": "balanced",
             "lane": "center",
             "tempo": "fast",
-            "width": "normal",
+            "width": "narrow",
             "line": "high",
             "trans": "press",
             "finish": "shot",
             "won": "normal",
-            "presstr": "normal",
+            "presstr": "often",
             "trap": "none",
             "crossd": "normal",
             "tackle": "normal",
-            "dribble": "normal",
+            "dribble": "high",
             "cross": "mixed",
-            "free": "normal",
+            "free": "expressive",
             "fgk": false
           },
           "mgr": "조재진",
@@ -3626,20 +3735,20 @@
             "build": "back",
             "defense": "mid",
             "attack": "possess",
-            "lane": "mixed",
+            "lane": "center",
             "tempo": "normal",
             "width": "normal",
             "line": "normal",
             "trans": "normal",
-            "finish": "box",
-            "won": "normal",
+            "finish": "shot",
+            "won": "hold",
             "presstr": "normal",
             "trap": "none",
             "crossd": "normal",
             "tackle": "normal",
-            "dribble": "normal",
+            "dribble": "high",
             "cross": "mixed",
-            "free": "normal",
+            "free": "expressive",
             "fgk": true
           },
           "mgr": "김병지",
@@ -12582,24 +12691,24 @@
             "h": {
               "fm": "2-2",
               "st": {
-                "build": "long",
-                "defense": "low",
-                "attack": "balanced",
+                "build": "pass",
+                "defense": "press",
+                "attack": "possess",
                 "lane": "center",
-                "tempo": "fast",
+                "tempo": "normal",
                 "width": "narrow",
                 "line": "deep",
                 "trans": "retreat",
-                "finish": "box",
+                "finish": "shot",
                 "won": "normal",
                 "presstr": "normal",
                 "trap": "none",
                 "crossd": "normal",
                 "tackle": "normal",
-                "dribble": "normal",
-                "cross": "mixed",
-                "free": "normal",
-                "fgk": false
+                "dribble": "high",
+                "cross": "floated",
+                "free": "expressive",
+                "fgk": true
               },
               "mgr": "김병지",
               "lu": {
@@ -12608,6 +12717,56 @@
                 "p1": "소유미",
                 "p2": "목나경",
                 "p3": "우희준"
+              },
+              "pos": {
+                "GK": {
+                  "x": 50.2,
+                  "y": 86
+                },
+                "p1": {
+                  "x": 70.2,
+                  "y": 70.2
+                },
+                "p0": {
+                  "x": 32.2,
+                  "y": 59.2
+                },
+                "p2": {
+                  "x": 13.5,
+                  "y": 33.2
+                },
+                "p3": {
+                  "x": 68,
+                  "y": 27.6
+                }
+              },
+              "mv": {
+                "p0": {
+                  "atk": {
+                    "dx": 13.5,
+                    "dy": -22.5,
+                    "curve": 0
+                  },
+                  "def": {
+                    "dx": -0.5,
+                    "dy": 16.1,
+                    "curve": 0
+                  }
+                },
+                "p1": {
+                  "atk": {
+                    "dx": -1.3,
+                    "dy": -19,
+                    "curve": 0
+                  }
+                },
+                "p3": {
+                  "def": {
+                    "dx": -8.8,
+                    "dy": 26.3,
+                    "curve": 0
+                  }
+                }
               }
             },
             "a": {
@@ -12615,7 +12774,7 @@
               "st": {
                 "build": "long",
                 "defense": "low",
-                "attack": "balanced",
+                "attack": "counter",
                 "lane": "center",
                 "tempo": "fast",
                 "width": "narrow",
@@ -12639,6 +12798,45 @@
                 "p1": "카라인",
                 "p2": "사오리",
                 "p3": "엘로디"
+              },
+              "pos": {
+                "p2": {
+                  "x": 33.4,
+                  "y": 41.1
+                },
+                "p3": {
+                  "x": 64.7,
+                  "y": 33.8
+                },
+                "p0": {
+                  "x": 25.1,
+                  "y": 69
+                },
+                "p1": {
+                  "x": 69.5,
+                  "y": 69.4
+                }
+              },
+              "mv": {
+                "p1": {
+                  "atk": {
+                    "dx": 9,
+                    "dy": -15.5,
+                    "curve": 0
+                  },
+                  "def": {
+                    "dx": 59.16,
+                    "dy": 7.58,
+                    "curve": 0
+                  }
+                },
+                "p0": {
+                  "atk": {
+                    "dx": 16.7,
+                    "dy": -19.8,
+                    "curve": 0
+                  }
+                }
               }
             }
           }
@@ -12887,16 +13085,16 @@
               "fm": "2-2",
               "st": {
                 "build": "drib",
-                "defense": "low",
+                "defense": "press",
                 "attack": "balanced",
-                "lane": "wing",
+                "lane": "center",
                 "tempo": "fast",
-                "width": "wide",
-                "line": "deep",
-                "trans": "retreat",
+                "width": "narrow",
+                "line": "normal",
+                "trans": "press",
                 "finish": "shot",
                 "won": "normal",
-                "presstr": "normal",
+                "presstr": "often",
                 "trap": "none",
                 "crossd": "normal",
                 "tackle": "normal",
@@ -12912,27 +13110,85 @@
                 "p1": "히밥",
                 "p2": "장은실",
                 "p3": "윤태진"
+              },
+              "pos": {
+                "p0": {
+                  "x": 28.7,
+                  "y": 57.1
+                },
+                "p2": {
+                  "x": 30.8,
+                  "y": 25.3
+                },
+                "p3": {
+                  "x": 58.6,
+                  "y": 40.4
+                },
+                "p1": {
+                  "x": 66.8,
+                  "y": 65.8
+                }
+              },
+              "mv": {
+                "p0": {
+                  "atk": {
+                    "dx": 15.3,
+                    "dy": -23.5,
+                    "curve": 0
+                  },
+                  "def": {
+                    "dx": 6.3,
+                    "dy": 15.4,
+                    "curve": 0
+                  }
+                },
+                "p3": {
+                  "atk": {
+                    "dx": 1.5,
+                    "dy": -17.4,
+                    "curve": 0
+                  }
+                },
+                "p2": {
+                  "atk": {
+                    "dx": 18.6,
+                    "dy": -21.7,
+                    "curve": 0
+                  }
+                },
+                "p1": {
+                  "def": {
+                    "dx": -6.3,
+                    "dy": 10,
+                    "curve": 0
+                  },
+                  "atk": {
+                    "dx": 0.4,
+                    "dy": -11.7,
+                    "curve": 0
+                  }
+                }
               }
             },
             "a": {
               "fm": "1-2-1",
               "st": {
                 "build": "drib",
-                "defense": "press",
+                "defense": "low",
                 "attack": "balanced",
                 "lane": "wing",
-                "tempo": "fast",
+                "tempo": "slow",
                 "width": "wide",
                 "line": "high",
                 "trans": "press",
                 "finish": "shot",
-                "won": "normal",
+                "won": "hold",
                 "presstr": "normal",
                 "trap": "none",
                 "crossd": "normal",
                 "tackle": "normal",
-                "dribble": "normal",
-                "cross": "mixed",
+                "dribble": "low",
+                "cross": "whipped",
                 "free": "normal",
                 "fgk": false
               },
@@ -12940,9 +13196,46 @@
               "lu": {
                 "GK": "안혜경",
                 "p0": "주명",
-                "p1": "권이수",
-                "p2": "정혜인",
-                "p3": "이영아"
+                "p2": "권이수",
+                "p3": "이영아",
+                "p1": "정혜인"
+              },
+              "pos": {
+                "p1": {
+                  "x": 25.9,
+                  "y": 54.3
+                },
+                "p0": {
+                  "x": 61.1,
+                  "y": 69.1
+                },
+                "p2": {
+                  "x": 74.5,
+                  "y": 47.3
+                }
+              },
+              "mv": {
+                "p1": {
+                  "atk": {
+                    "dx": 14.1,
+                    "dy": -21.1,
+                    "curve": 0
+                  }
+                },
+                "p2": {
+                  "atk": {
+                    "dx": 7,
+                    "dy": -21.8,
+                    "curve": 0
+                  }
+                },
+                "p3": {
+                  "atk": {
+                    "dx": 4.1,
+                    "dy": -19.2,
+                    "curve": 0
+                  }
+                }
               }
             }
           }
@@ -13180,32 +13473,55 @@
             "h": {
               "fm": "2-2",
               "st": {
-                "build": "pass",
+                "build": "long",
                 "defense": "mid",
                 "attack": "balanced",
                 "lane": "center",
                 "tempo": "normal",
-                "width": "narrow",
+                "width": "wide",
                 "line": "normal",
                 "trans": "normal",
                 "finish": "box",
                 "won": "normal",
                 "presstr": "normal",
-                "trap": "none",
+                "trap": "outside",
                 "crossd": "normal",
                 "tackle": "normal",
-                "dribble": "normal",
-                "cross": "mixed",
+                "dribble": "low",
+                "cross": "floated",
                 "free": "normal",
-                "fgk": false
+                "fgk": true
               },
               "mgr": "조원희",
               "lu": {
                 "GK": "허경희",
-                "p0": "김설희",
-                "p1": "이혜정",
+                "p1": "김설희",
                 "p2": "정의영",
-                "p3": "이현이"
+                "p3": "이현이",
+                "p0": "이혜정"
+              },
+              "mv": {
+                "p1": {
+                  "atk": {
+                    "dx": 5.9,
+                    "dy": -14,
+                    "curve": 0
+                  }
+                },
+                "p0": {
+                  "atk": {
+                    "dx": 9.8,
+                    "dy": -19.9,
+                    "curve": 0
+                  }
+                },
+                "p3": {
+                  "atk": {
+                    "dx": 9.2,
+                    "dy": -25.1,
+                    "curve": 0
+                  }
+                }
               }
             },
             "a": {
@@ -13213,19 +13529,19 @@
               "st": {
                 "build": "pass",
                 "defense": "mid",
-                "attack": "balanced",
+                "attack": "possess",
                 "lane": "center",
                 "tempo": "normal",
                 "width": "narrow",
                 "line": "normal",
                 "trans": "normal",
-                "finish": "box",
+                "finish": "cross",
                 "won": "normal",
                 "presstr": "normal",
                 "trap": "none",
                 "crossd": "normal",
                 "tackle": "normal",
-                "dribble": "normal",
+                "dribble": "low",
                 "cross": "mixed",
                 "free": "normal",
                 "fgk": false
@@ -13234,9 +13550,57 @@
               "lu": {
                 "GK": "리사",
                 "p0": "경서",
-                "p1": "정예원",
-                "p2": "김보경",
-                "p3": "서기"
+                "p2": "정예원",
+                "p3": "서기",
+                "p1": "김보경"
+              },
+              "pos": {
+                "p1": {
+                  "x": 19.8,
+                  "y": 59.7
+                },
+                "p0": {
+                  "x": 69.2,
+                  "y": 63.5
+                },
+                "p2": {
+                  "x": 69.5,
+                  "y": 43.8
+                },
+                "p3": {
+                  "x": 39.4,
+                  "y": 30.8
+                }
+              },
+              "mv": {
+                "p2": {
+                  "def": {
+                    "dx": 6.5,
+                    "dy": -13.6,
+                    "curve": 0
+                  }
+                },
+                "p3": {
+                  "def": {
+                    "dx": 4.9,
+                    "dy": 15.4,
+                    "curve": 0
+                  }
+                },
+                "p0": {
+                  "def": {
+                    "dx": -3.1,
+                    "dy": 17.2,
+                    "curve": 0
+                  }
+                },
+                "p1": {
+                  "def": {
+                    "dx": 17.4,
+                    "dy": 19.4,
+                    "curve": 0
+                  }
+                }
               }
             }
           }
@@ -13477,20 +13841,20 @@
               "fm": "2-2",
               "st": {
                 "build": "pass",
-                "defense": "mid",
-                "attack": "balanced",
+                "defense": "press",
+                "attack": "possess",
                 "lane": "center",
                 "tempo": "normal",
                 "width": "narrow",
                 "line": "normal",
                 "trans": "normal",
                 "finish": "box",
-                "won": "normal",
-                "presstr": "normal",
+                "won": "counter",
+                "presstr": "often",
                 "trap": "none",
                 "crossd": "normal",
                 "tackle": "normal",
-                "dribble": "normal",
+                "dribble": "high",
                 "cross": "mixed",
                 "free": "normal",
                 "fgk": false
@@ -13502,21 +13866,58 @@
                 "p1": "채리나",
                 "p2": "이유정",
                 "p3": "이승연"
+              },
+              "pos": {
+                "p2": {
+                  "x": 18.9,
+                  "y": 25.9
+                },
+                "p1": {
+                  "x": 68.4,
+                  "y": 73.2
+                },
+                "p0": {
+                  "x": 23.3,
+                  "y": 67.4
+                }
+              },
+              "mv": {
+                "p0": {
+                  "atk": {
+                    "dx": 13.2,
+                    "dy": -21.6,
+                    "curve": 0
+                  }
+                },
+                "p1": {
+                  "atk": {
+                    "dx": -0.2,
+                    "dy": -13.9,
+                    "curve": 0
+                  }
+                },
+                "p2": {
+                  "atk": {
+                    "dx": 21,
+                    "dy": -18.4,
+                    "curve": 0
+                  }
+                }
               }
             },
             "a": {
               "fm": "2-2",
               "st": {
                 "build": "long",
-                "defense": "press",
+                "defense": "low",
                 "attack": "counter",
                 "lane": "mixed",
-                "tempo": "fast",
+                "tempo": "slow",
                 "width": "normal",
-                "line": "high",
-                "trans": "press",
-                "finish": "box",
-                "won": "normal",
+                "line": "deep",
+                "trans": "retreat",
+                "finish": "shot",
+                "won": "hold",
                 "presstr": "normal",
                 "trap": "none",
                 "crossd": "normal",
@@ -13533,6 +13934,54 @@
                 "p1": "박승희",
                 "p2": "정재은",
                 "p3": "황희정"
+              },
+              "pos": {
+                "p1": {
+                  "x": 73,
+                  "y": 70.6
+                },
+                "p0": {
+                  "x": 29.9,
+                  "y": 68.2
+                },
+                "p3": {
+                  "x": 63.2,
+                  "y": 34.9
+                },
+                "p2": {
+                  "x": 21.2,
+                  "y": 30.7
+                }
+              },
+              "mv": {
+                "p0": {
+                  "atk": {
+                    "dx": 17.1,
+                    "dy": -28.3,
+                    "curve": 0
+                  }
+                },
+                "p2": {
+                  "atk": {
+                    "dx": -2.5,
+                    "dy": -18.6,
+                    "curve": 0
+                  }
+                },
+                "p3": {
+                  "atk": {
+                    "dx": -12.8,
+                    "dy": -25.1,
+                    "curve": 0
+                  }
+                },
+                "p1": {
+                  "def": {
+                    "dx": -4.8,
+                    "dy": 15.3,
+                    "curve": 0
+                  }
+                }
               }
             }
           }
@@ -19027,7 +19476,8 @@
         "위치선정": 95,
         "스피드": 96,
         "체력": 86
-      }
+      },
+      "footL": 5
     },
     {
       "name": "이채영",
@@ -20588,30 +21038,26 @@
       }
     },
     "현진": {
-      "prevOvr": 74,
-      "ovr": 75,
+      "prevOvr": 75,
+      "ovr": 76,
       "delta": 1,
-      "at": 1792913209774,
+      "at": 1792998667247,
       "statDeltas": {
-        "패스": 3,
-        "위치선정": 1,
-        "체력": 5,
-        "스피드": 2
+        "결정력": 1,
+        "스피드": 1
       },
       "mainDeltas": {
-        "기술": 1,
-        "피지컬": 2,
-        "멘탈": 2
+        "피지컬": 1,
+        "멘탈": 1,
+        "팀워크": 2
       },
       "subDeltas": {
-        "공격위치": 1,
-        "패스": 3,
-        "스피드": 2,
-        "체력": 5,
-        "피지컬": 1,
-        "판단력": 3,
-        "침착성": 1,
-        "적극성": 2
+        "결정력": 1,
+        "스피드": 1,
+        "판단력": 2,
+        "침착성": 2,
+        "연계": 2,
+        "적극성": 3
       }
     },
     "이예지": {
@@ -25988,6 +26434,33 @@
           "연계": 73,
           "소통": 73,
           "적극성": 80
+        }
+      },
+      {
+        "at": 1792998667247,
+        "pos": "FW",
+        "stats": {
+          "결정력": 70,
+          "드리블": 73,
+          "패스": 75,
+          "위치선정": 78,
+          "수비": 74,
+          "체력": 78,
+          "스피드": 78
+        },
+        "ext": {
+          "중거리슛": 70,
+          "공격위치": 80,
+          "대인마크": 75,
+          "수비위치": 75,
+          "롱패스": 72,
+          "피지컬": 74,
+          "판단력": 77,
+          "활동량": 80,
+          "침착성": 77,
+          "연계": 75,
+          "소통": 73,
+          "적극성": 83
         }
       }
     ],

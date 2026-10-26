@@ -83,15 +83,6 @@
         .fm-fbtn span { font-size:0.7rem; }
         .fm-code { display:inline-block; background:rgba(56,189,248,0.18); color:#7dd3fc; border:1px solid rgba(56,189,248,0.4); border-radius:5px; padding:0 4px; font-size:0.62rem; font-weight:900; letter-spacing:0.02em; line-height:1.35; vertical-align:middle; }
         .fm-bld { margin:8px 0 10px; padding:10px; border:1px dashed rgba(56,189,248,0.45); border-radius:10px; background:rgba(56,189,248,0.05); }
-        .fm-bld-pitch { position:relative; width:100%; max-width:430px; height:300px; margin:8px auto; border-radius:10px; background:linear-gradient(180deg,#14532d,#166534); border:2px solid rgba(255,255,255,0.35); overflow:hidden; }
-        .fm-zone { position:absolute; left:0; right:0; border-top:1px dashed rgba(255,255,255,0.35); box-sizing:border-box; }
-        .fm-zone:first-of-type { border-top:none; }
-        .fm-zone span { position:absolute; left:6px; top:3px; font-size:0.62rem; font-weight:800; color:rgba(255,255,255,0.55); }
-        .fm-bld-gk { position:absolute; left:50%; top:92%; transform:translate(-50%,-50%); font-size:0.66rem; font-weight:900; color:#facc15; background:rgba(0,0,0,0.35); border-radius:6px; padding:2px 8px; }
-        .fm-spot { position:absolute; transform:translate(-50%,-50%); min-width:40px; height:30px; border-radius:15px; border:2px solid rgba(255,255,255,0.45); background:rgba(15,23,42,0.55); color:#e2e8f0; font-size:0.72rem; font-weight:900; cursor:pointer; padding:0 8px; }
-        .fm-spot:hover { border-color:#fff; background:rgba(15,23,42,0.85); }
-        .fm-spot.on { background:#38bdf8; color:#0f172a; border-color:#fff; box-shadow:0 0 0 3px rgba(56,189,248,0.35); }
-        .fm-spot i { font-style:normal; margin-left:3px; font-size:0.62rem; }
         .fm-bld-bar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:0.78rem; }
         .fm-bld-pre { display:flex; align-items:center; gap:5px; flex-wrap:wrap; margin-top:8px; font-size:0.72rem; }
         .fm-profs { display:grid; grid-template-columns:repeat(auto-fill,minmax(74px,1fr)); gap:5px; margin:6px 0; }
@@ -102,15 +93,46 @@
         .fm-prof.a { border-color:#f97316; } .fm-prof.a b { color:#fb923c; }
         .fm-prof.auto { opacity:0.55; border-style:dashed; }
         .fm-prof.cur { box-shadow:0 0 0 2px rgba(56,189,248,0.7); opacity:1; }
-        .fm-prof-pitch { height:390px; }
-        .fm-prof-pitch .fm-zone span { left:auto; right:6px; top:auto; bottom:3px; }
-        .fm-pspot { position:absolute; transform:translate(-50%,-50%); min-width:52px; height:34px; border-radius:10px; border:2px solid; background:rgba(15,23,42,0.78); color:#e2e8f0; cursor:pointer; padding:1px 6px; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1; }
-        .fm-pspot b { font-size:0.74rem; } .fm-pspot i { font-style:normal; font-size:0.58rem; }
-        .fm-pspot.n { border-color:#22c55e; background:rgba(34,197,94,0.28); } .fm-pspot.c { border-color:#eab308; background:rgba(234,179,8,0.25); } .fm-pspot.a { border-color:#f97316; background:rgba(249,115,22,0.22); }
-        .fm-pspot.auto { opacity:0.55; border-style:dashed; } .fm-pspot:hover { opacity:1; }
-        .fm-pspot.cur { opacity:1; box-shadow:0 0 0 3px rgba(56,189,248,0.7); }
+        .fm-foot { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; font-size:.76rem; margin:4px 0 6px; } .fm-foot .fs { letter-spacing:1px; color:#facc15; font-size:.8rem; } .fm-foot .fb { display:inline-flex; gap:3px; } .fm-foot .fb button { width:26px; height:24px; border-radius:6px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.05); color:var(--text-muted); font-weight:800; font-size:.74rem; cursor:pointer; } .fm-foot .fb button.on { background:rgba(250,204,21,.28); border-color:#facc15; color:#fef9c3; }
         .fm-prof-leg { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; font-size:0.68rem; color:var(--text-muted); }
         .fm-prof-leg i { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:3px; vertical-align:-1px; } .fm-prof-leg i.dash { background:none; border:1px dashed #94a3b8; }
+        /* 🧩 구역 보드 5×7 칸 (v1.46) */
+        .fm-gwrap { max-width:470px; margin:8px auto; }
+        .fm-gdir { text-align:center; font-size:0.62rem; font-weight:800; color:var(--text-muted); margin-bottom:3px; letter-spacing:.02em; }
+        .fm-gside, .fm-grow { display:flex; gap:4px; }
+        .fm-gside { margin-bottom:4px; }
+        .fm-gside .sp, .fm-gutter { flex:0 0 34px; }
+        .fm-gsd { flex:1; display:grid; grid-template-columns:1fr 3fr 1fr; gap:3px; padding:0 3px; }
+        .fm-gsd > div { white-space:nowrap; overflow:hidden; border-radius:7px; padding:3px 2px; text-align:center; font-size:0.66rem; font-weight:800; color:#fff; border:1px solid rgba(255,255,255,0.2); line-height:1.3; text-shadow:0 1px 2px rgba(0,0,0,0.45); }
+        .fm-gsd > div b { font-size:0.8rem; margin-left:2px; }
+        .fm-gutter { display:grid; grid-template-rows:repeat(7,1fr); gap:3px; padding:3px 0; }
+        .fm-gutter span { display:flex; align-items:center; justify-content:flex-end; font-size:0.58rem; font-weight:800; color:var(--text-muted); text-align:right; line-height:1.1; }
+        .fm-bgrid { position:relative; flex:1; min-width:0; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(7,1fr); gap:3px; padding:3px; aspect-ratio:5/5.6; border-radius:10px; border:2px solid rgba(255,255,255,0.4); background:repeating-linear-gradient(180deg,#14532d 0 calc(100% / 7),#166534 calc(100% / 7) calc(200% / 7)); }
+        .fm-bgrid::before { content:''; position:absolute; left:20%; right:20%; bottom:0; height:28.6%; border:2px solid rgba(255,255,255,0.22); border-bottom:none; pointer-events:none; }
+        .fm-gc { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:0; padding:0; line-height:1.1; border-radius:8px; border:1px solid rgba(255,255,255,0.22); background:rgba(15,23,42,0.35); color:#f1f5f9; cursor:pointer; font-family:inherit; transition:transform .08s; }
+        .fm-gc b { font-size:0.8rem; font-weight:900; text-shadow:0 1px 2px rgba(0,0,0,0.5); } .fm-gc i { font-style:normal; font-size:0.58rem; opacity:0.85; margin-top:1px; }
+        .fm-gc:hover { border-color:#fff; transform:scale(1.04); z-index:2; }
+        .fm-gc:not(.on) { opacity:0.84; }
+        .fm-gc.on { opacity:1; border:2px solid #fff; box-shadow:0 0 0 2px #38bdf8, 0 0 12px rgba(56,189,248,0.65); z-index:2; }
+        .fm-gc.ghost { border-style:dashed; opacity:0.5; } .fm-gc .plus { font-size:0.95rem; opacity:0.75; }
+        .fm-gc.lock { background:rgba(0,0,0,0.22); border:1px dashed rgba(255,255,255,0.08); cursor:default; pointer-events:none; }
+        .fm-gc.gk { background:rgba(168,85,247,0.4); border-color:rgba(192,132,252,0.7); color:#f3e8ff; cursor:default; pointer-events:none; opacity:1; }
+        .fm-gc.auto { border-style:dashed; opacity:0.72; } .fm-gc.cur { opacity:1; box-shadow:0 0 0 3px rgba(56,189,248,0.7); z-index:2; }
+        .fm-gleg { display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; margin-top:6px; font-size:0.66rem; color:var(--text-muted); }
+        .fm-gleg .bar { width:84px; height:9px; border-radius:5px; border:1px solid rgba(255,255,255,0.2); background:linear-gradient(90deg,hsla(18,68%,38%,.75),hsla(79,68%,38%,.75),hsla(140,68%,38%,.75)); }
+        .fm-zov { position:absolute; inset:0; z-index:0; pointer-events:none; }
+        .fm-zc { position:absolute; box-sizing:border-box; border-radius:7px; border:1px solid rgba(255,255,255,0.14); }
+        .fm-zc.occ { border:2px solid rgba(255,255,255,0.75); box-shadow:inset 0 0 14px rgba(255,255,255,0.18); }
+        .fm-zc span { position:absolute; left:4px; top:2px; font-size:0.56rem; font-weight:900; color:rgba(255,255,255,0.62); text-shadow:0 1px 2px rgba(0,0,0,0.6); line-height:1; }
+        .fm-zc.occ span { color:#fff; }
+        .fm-zleg { display:inline-flex; align-items:center; gap:4px; margin-left:8px; font-size:0.64rem; color:var(--text-muted); } .fm-zleg .bar { width:56px; height:8px; border-radius:4px; border:1px solid rgba(255,255,255,0.2); background:linear-gradient(90deg,hsla(12,72%,36%,.85),hsla(76,72%,36%,.85),hsla(140,72%,36%,.85)); }
+        .fm-pmenu { position:fixed; z-index:100000; min-width:176px; background:#0f172a; border:1px solid rgba(255,255,255,0.3); border-radius:10px; padding:5px; box-shadow:0 10px 30px rgba(0,0,0,0.6); }
+        .fm-pmenu .h { font-size:0.62rem; font-weight:800; color:var(--text-muted); padding:2px 6px 4px; }
+        .fm-pmenu button { display:flex; align-items:center; gap:7px; width:100%; text-align:left; background:transparent; color:#e2e8f0; border:1px solid transparent; border-radius:7px; padding:6px 8px; font-size:0.78rem; font-weight:800; cursor:pointer; font-family:inherit; }
+        .fm-pmenu button:hover { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.25); }
+        .fm-pmenu button.on { border-color:#38bdf8; background:rgba(56,189,248,0.14); }
+        .fm-pmenu button i { width:11px; height:11px; border-radius:3px; flex:0 0 11px; } .fm-pmenu button em { margin-left:auto; font-style:normal; font-size:0.64rem; font-weight:700; color:var(--text-muted); }
+        .fm-gsum { margin-top:5px; font-size:0.7rem; line-height:1.55; text-align:center; }
         .fm-fbtn.on { border-color:var(--accent); background:rgba(56,189,248,0.15); }
         .fm-act { background:#1e293b; color:var(--text); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:5px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; }
         .fm-act:hover { border-color:var(--accent); }
@@ -157,6 +179,16 @@
         .fm-opt i { color:var(--gold); font-style:normal; }
         .fm-opt.on { border-color:var(--accent); background:rgba(56,189,248,0.18); }
         .fm-opt.wide { text-align:left; }
+/* v1.48: 단계형 전술 5단계 슬라이더 */
+.fm-sl .fm-dim-t em { font-style:normal; color:var(--accent); margin-left:6px; font-size:0.78rem; }
+.fm-rng { display:block; width:80%; margin:2px 10% 0; accent-color:var(--accent); cursor:pointer; }
+.fm-tks { display:grid; grid-template-columns:repeat(5,1fr); gap:3px; }
+.fm-tk { background:#1e293b; color:var(--text); border:1px solid rgba(255,255,255,0.12); border-radius:7px; padding:3px 2px; font-size:0.72rem; font-weight:800; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:1px; line-height:1.2; word-break:keep-all; text-align:center; }
+.fm-tk.on { border-color:var(--accent); background:rgba(56,189,248,0.18); }
+.fm-tk.ext { border-style:dashed; }
+.fm-tk i { color:var(--gold); font-style:normal; }
+.fm-tk b { font-size:0.72rem; }
+.fm-zmode { font-size:0.72rem; color:var(--text-muted); margin-left:6px; }
         /* v1.12: 수비 시 / 공격 시 전술 분리 */
         .fm-phases { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
         @media (max-width:900px) { .fm-phases { grid-template-columns:1fr; } }
@@ -1280,10 +1312,20 @@
     </style>
 <style id="pmSimplifyCss">
 /* 선수·감독 모달 간소화 */
-.pm-abrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.pm-abradar{flex:1 1 250px;min-width:0}
-.pm-abtrait{flex:1 1 150px;min-width:0;padding:8px 10px;border:1px dashed rgba(255,255,255,0.14);border-radius:10px;background:rgba(255,255,255,0.02)}
-.pm-abtrait .pt-t{margin-bottom:8px}
+.pm-abrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 16px;align-items:center}
+.pm-abradar{min-width:0}
+.pm-abtrait{min-width:0;padding:2px 0 2px 14px;border-left:2px solid rgba(139,92,246,0.35)}
+.pm-sec-t{font-size:.74rem;font-weight:800;color:var(--text-muted);margin:0 0 5px;letter-spacing:.2px}
+.pm-sec-t .mut{font-weight:600;font-size:.68rem;margin-left:3px}
+.pm-kv{display:flex;align-items:baseline;gap:8px;font-size:.84rem;line-height:1.55}
+.pm-kv .k{flex:none;width:1.3em;font-size:.7rem;font-weight:800;color:#a78bfa}
+.pm-kv .v{min-width:0}
+.pm-kv .v b{margin-left:3px;font-size:.78rem}
+.pm-auto{font-style:normal;font-size:.64rem;color:var(--text-muted);margin-left:3px}
+.pm-trs{display:flex;flex-direction:column;gap:1px;font-size:.84rem;line-height:1.6}
+.pm-trs span{cursor:default}
+.pm-posview{margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08)}
+.pm-posview .pt-t{margin-top:0 !important}
 .pm-chip{cursor:default}
 .pm-empty{font-size:.74rem;color:var(--text-muted);line-height:1.5}
 .pm-subbar{text-align:center;margin:8px 0 4px}
@@ -1575,6 +1617,7 @@
                         </div>
                     </div>
                     <div class="pm-abrow"><div id="modalPlayerRadar" class="pm-abradar"></div><div id="playerTraitView" class="pm-abtrait"></div></div>
+<div id="pmPosView" class="pm-posview"></div>
                     <div id="pmSubBar" class="pm-subbar"></div>
                     <div id="playerExtSection" class="pm-subbox" style="display:none;"></div>
                     <div id="modalPlayerLgCmp"></div>
@@ -8480,8 +8523,9 @@
         //   코드는 (1) 구역 보드에서 포메이션을 짜는 재료 (2) 선수별 숙련도(자연스러움 / 능숙 / 어색) 기준 (3) 기본 위치 좌표 로 쓰인다.
         // 저장: 포메이션 키 = 프리셋 키('1-2-1' …) 또는 구역 보드로 만든 'x:DC-AML-AMR-ST' (코드 4개를 뒤→앞 순서로 나열 — 키만으로 복원되므로 따로 저장할 것이 없다)
         //       선수 숙련도 = player.posProf = { 코드: 'n'|'c'|'a' } (직접 지정한 것만 저장 · 나머지는 본 포지션으로 자동 계산)
-        const FM_PROF = { n: { t: '자연스러움', pen: 0, col: '#22c55e' }, c: { t: '능숙', pen: 6, col: '#eab308' }, a: { t: '어색', pen: 12, col: '#f97316' } };
-        const FM_PROF_ORDER = ['n', 'c', 'a'];
+        // v1.43: 3단계 → 5단계 (자연스러움 · 능숙 · 가능 · 어색 · 불가). 예전 저장값 'n' · 'c' · 'a'는 그대로 읽힘
+        const FM_PROF = { n: { t: '자연스러움', pen: 0, col: '#22c55e', r: 6.2 }, c: { t: '능숙', pen: 4, col: '#a3e635', r: 5.2 }, p: { t: '가능', pen: 8, col: '#facc15', r: 4.4 }, a: { t: '어색', pen: 12, col: '#fb923c', r: 3.6 }, x: { t: '불가', pen: 22, col: '#ef4444', r: 0 } };
+        const FM_PROF_ORDER = ['n', 'c', 'p', 'a', 'x'];
         const FM_PCODES = {
             GK:  { n: '골키퍼',              r: 'GK',   gk: true, x: 50, y: 90, lv: { GK: 'n' }, d: '일반적인 방어형 골키퍼' },
             SK:  { n: '스위퍼 키퍼',          r: 'GK',   gk: true, x: 50, y: 86, lv: { GK: 'n' }, d: '박스 밖으로 나와 패스를 돌리고 빌드업에 관여 (골키퍼 세부 성향 \'스위퍼 키퍼\')' },
@@ -8502,7 +8546,114 @@
         };
         const FM_PCODE_ORDER = ['GK', 'SK', 'SW', 'DC', 'DL', 'DR', 'WBL', 'WBR', 'DM', 'MC', 'ML', 'MR', 'AML', 'AMR', 'AMC', 'ST'];
         const FM_FIELD_CODES = FM_PCODE_ORDER.filter(c => !FM_PCODES[c].gk);
+        // ======= 🧩 구역 보드 칸 배치 (v1.46) — 가로 5칸 × 세로 7칸 (맨 아래 줄 = 골키퍼 전용) =======
+        // 칸 하나 = 포지션 코드 하나. 가운데 3칸(왼쪽 안쪽 · 가운데 · 오른쪽 안쪽)은 같은 코드의 자리(ST · AMC · MC · DM · DC)로 최대 2명까지 — 1명은 가운데 칸, 2명은 좌우 안쪽 칸에 선다.
+        // 저장 형식은 그대로('x:DC-AML-AMR-ST') → 칸 위치는 코드만으로 항상 같은 칸으로 복원된다.
+        const FM_GRID = [
+            [null, 'ST', 'ST', 'ST', null],
+            ['AML', 'AMC', 'AMC', 'AMC', 'AMR'],
+            ['ML', 'MC', 'MC', 'MC', 'MR'],
+            ['WBL', 'DM', 'DM', 'DM', 'WBR'],
+            ['DL', 'DC', 'DC', 'DC', 'DR'],
+            [null, null, 'SW', null, null],
+            [null, null, 'GK', null, null]
+        ];
+        const FM_GRID_X = [12, 31, 50, 69, 88], FM_GRID_Y = [24, 36, 47, 57, 68, 78, 90];   // 전술판에서 칸 중심 좌표(%) — 카드는 이 중심에서 최소한만 벌려 표시
+        const FM_GRID_ROWLB = ['최전방', '공격형', '중원', '수비형', '수비', '후방', 'GK'];
+        const FM_CODE_CELL = {};
+        FM_GRID.forEach((row, ri) => row.forEach((c, ci) => { if (!c || c === 'GK') return; const e = FM_CODE_CELL[c] || (FM_CODE_CELL[c] = { row: ri, cols: [] }); e.cols.push(ci); }));
+        // 코드 c가 n명일 때 idx번째 사람이 서는 칸 중심 좌표 (1명 = 가운데 칸 · 2명 = 좌우 안쪽 칸)
+        function fmCellPos(c, n, idx) {
+            const e = FM_CODE_CELL[c], y = FM_GRID_Y[e.row];
+            if (e.cols.length === 1) return { x: FM_GRID_X[e.cols[0]], y };
+            return { x: n === 2 ? FM_GRID_X[idx === 0 ? 1 : 3] : FM_GRID_X[2], y };
+        }
         // 구역 보드용 커스텀 포메이션: 'x:DC-AML-AMR-ST' → 포메이션 객체 (프록시가 FM_FORMATIONS['x:…']로 불러올 때 만들어 캐시)
+        // ======= 🧲 카드 겹침 방지 · 한쪽 쏠림 완화 (v1.45) =======
+        // 자리 카드(가로 24 · 세로 17 %p)가 서로 겹치면 → 여유가 있는 방향(좌우 또는 앞뒤)으로 최소한만 벌린다. 골키퍼는 고정(가로 26 · 세로 19).
+        // 한쪽(왼쪽 또는 오른쪽)으로 치우친 구성은 무게중심이 가운데에 가까워지도록 통째로 살짝 이동한 뒤 다시 간격을 확보한다.
+        const FM_SP_Y = { GK: [74, 93], DEF: [54, 76], MID: [38, 64], WING: [26, 62], FW: [14, 42] };   // 자리별 앞뒤(y) 허용 범위 (자동 위치와 동일)
+        const FM_SP_PH = 1.32;
+        // items: [{ x, y, role, side(-1 왼 · 0 가운데 · 1 오른), fixed? }] — 직접 수정해서 돌려준다 · 반환: { crowd(간격 확보로 움직인 양), shift(쏠림 보정 이동), left(남은 겹침 수) }
+        function fmSpread(items, opt) {
+            opt = opt || {};
+            items.forEach(it => {
+                const ry = FM_SP_Y[it.role] || [3, 97];
+                it.x0 = it.x; it.y0 = it.y;
+                if (it.fixed) { it.xl = it.xh = it.x; it.yl = it.yh = it.y; return; }
+                it.xl = it.side < 0 ? 9 : it.side > 0 ? 40 : 14; it.xh = it.side < 0 ? 60 : it.side > 0 ? 91 : 86;
+                it.yl = Math.min(ry[0], it.y); it.yh = Math.max(ry[1], it.y);
+            });
+            const lo = (it, ax) => ax === 'x' ? it.xl : it.yl, hi = (it, ax) => ax === 'x' ? it.xh : it.yh;
+            const push = (a, b, ax, need) => {   // a를 − 방향 · b를 + 방향으로 벌린다 (a[ax] ≤ b[ax] 가정)
+                const ra = Math.max(0, a[ax] - lo(a, ax)), rb = Math.max(0, hi(b, ax) - b[ax]), take = Math.min(need, ra + rb);
+                let da = Math.min(ra, take / 2), db = Math.min(rb, take - da); da = Math.min(ra, take - db);
+                a[ax] -= da; b[ax] += db; return take;
+            };
+            // mode: 'mix' = 좌우 · 앞뒤 중 비용이 작은 쪽 / 'x' = 좌우 우선(체인으로 막힐 때) / 'y' = 앞뒤 우선
+            const pass1 = (mode) => {
+                let moved = false;
+                for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) {
+                    const a = items[i], b = items[j];
+                    if (a.fixed && b.fixed) continue;
+                    const gk = a.fixed || b.fixed, W = gk ? 26 : 24, H = gk ? 19 : 17;
+                    const ox = W - Math.abs(b.x - a.x), oy = H - Math.abs(b.y - a.y);
+                    if (ox <= 0.05 || oy <= 0.05) continue;
+                    // 왼쪽/위쪽에 있는 쪽을 u, 반대쪽을 v로 (같은 값이면 처음 위치 · 순서로 결정)
+                    const xs = (a.x !== b.x ? a.x < b.x : (a.x0 !== b.x0 ? a.x0 < b.x0 : true)), ys = (a.y !== b.y ? a.y < b.y : (a.y0 !== b.y0 ? a.y0 < b.y0 : true));
+                    const ux = xs ? a : b, vx = xs ? b : a, uy = ys ? a : b, vy = ys ? b : a;
+                    const rx = Math.max(0, ux.x - lo(ux, 'x')) + Math.max(0, hi(vx, 'x') - vx.x), ry = Math.max(0, uy.y - lo(uy, 'y')) + Math.max(0, hi(vy, 'y') - vy.y);
+                    const both = Math.abs(a.x - 50) < 10 && Math.abs(b.x - 50) < 10;   // 둘 다 가운데 줄이면 세로로 길게 늘어세우기보다 좌우로 엇갈리게
+                    const cx = ox, cy = oy * FM_SP_PH * (both ? 1.5 : 1), okx = rx >= ox - 0.05, oky = ry >= oy - 0.05;
+                    let useX = okx && oky ? cx <= cy : okx ? true : oky ? false : rx / ox >= ry / oy;
+                    if (mode === 'x' && rx > 0.05) useX = true; else if (mode === 'y' && ry > 0.05) useX = false;
+                    const m = useX ? push(ux, vx, 'x', ox) : push(uy, vy, 'y', oy);
+                    if (m > 0.01) moved = true;
+                }
+                return moved;
+            };
+            const count = () => { let n = 0; for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) { const a = items[i], b = items[j], gk = a.fixed || b.fixed; if (a.fixed && b.fixed) continue; if (Math.abs(b.x - a.x) < (gk ? 26 : 24) - 0.1 && Math.abs(b.y - a.y) < (gk ? 19 : 17) - 0.1) n++; } return n; };
+            const run = (mode, n) => { for (let i = 0; i < n; i++) if (!pass1(mode)) break; };
+            const resolve = () => {
+                run('mix', 60);
+                if (count()) run('x', 80);      // 체인으로 막혔으면 좌우로 엇갈려 벌림
+                if (count()) run('y', 80);
+                if (count()) {                   // 그래도 겹치면 앞뒤 허용 범위를 조금 넓혀서(±8) 다시
+                    items.forEach(it => { if (!it.fixed) { it.yl = Math.max(8, it.yl - 8); it.yh = Math.min(80, it.yh + 8); } });
+                    run('mix', 60); if (count()) run('x', 80);
+                }
+            };
+            resolve();
+            let crowd = 0; items.forEach(it => { crowd += Math.abs(it.x - it.x0) + Math.abs(it.y - it.y0) * FM_SP_PH; });
+            let shift = 0;
+            if (opt.balance !== false) {
+                const mv = items.filter(it => !it.fixed);
+                if (mv.length) {
+                    const cx = mv.reduce((s, it) => s + it.x, 0) / mv.length;
+                    if (Math.abs(cx - 50) > 12) {
+                        shift = fmClamp((50 - cx) * 0.5, -12, 12);
+                        mv.forEach(it => { it.x = fmClamp(it.x + shift, it.xl, it.xh); });
+                        resolve();
+                    }
+                }
+            }
+            return { crowd, shift, left: count() };
+        }
+
+        // ======= 📐 같은 줄 간격 고르게 (v1.48) =======
+        // 앞뒤 위치가 비슷한 선수들(한 줄)이 한쪽으로 몰리지 않게 좌우 간격을 균등하게 맞춘다 (자동 위치에만 적용 · 한 번에 최대 ±8%p · 직접 옮긴 위치는 그대로)
+        function fmEvenLines(items) {
+            const mv = items.filter(it => !it.fixed).sort((a, b) => a.y - b.y), lines = [];
+            mv.forEach(it => { const L = lines[lines.length - 1]; if (L && Math.abs(it.y - L[0].y) <= 7) L.push(it); else lines.push([it]); });
+            let moved = false;
+            lines.forEach(L => {
+                if (L.length < 2) return; L.sort((a, b) => a.x - b.x);
+                const n = L.length;
+                L.forEach((it, i) => { const ideal = 14 + 72 * (i + 0.5) / n, nx = fmClamp(it.x + fmClamp((ideal - it.x) * 0.45, -8, 8), it.xl, it.xh); if (Math.abs(nx - it.x) > 0.05) { it.x = nx; moved = true; } });
+            });
+            if (moved) fmSpread(items, { balance: false });
+            return moved;
+        }
         const FM_CUSTOM_CACHE = {};
         function fmCodesKey(codes) { return 'x:' + codes.slice().sort((a, b) => FM_PCODE_ORDER.indexOf(a) - FM_PCODE_ORDER.indexOf(b)).join('-'); }
         function fmCodesValid(codes) {
@@ -8516,12 +8667,16 @@
             let out = null;
             const codes = String(key).slice(2).split('-');
             if (fmCodesValid(codes) && fmCodesKey(codes) === key) {
-                const seen = {}, slots = codes.map(c => {
+                const seen = {}, slots = codes.map(c => {   // v1.46: 칸 중심 좌표 (5×7 구역 보드의 칸 그대로)
                     const d = FM_PCODES[c]; seen[c] = (seen[c] || 0) + 1;
-                    const two = codes.filter(z => z === c).length === 2;
-                    return { r: d.r, c, x: two ? (seen[c] === 1 ? Math.max(8, d.x - 16) : Math.min(92, d.x + 16)) : d.x, y: d.y };
+                    const n = codes.filter(z => z === c).length, ps = fmCellPos(c, n, seen[c] - 1);
+                    return { r: d.r, c, x: ps.x, y: ps.y };
                 });
-                out = { label: '🧩 ' + codes.join('·'), custom: true, desc: '구역 보드로 만든 포메이션 — ' + codes.map(c => FM_PCODES[c].n).join(' · '), slots };
+                // v1.45: 같은 쪽에 자리가 몰려 카드가 겹치던 구성은 기본 배치부터 간격을 벌리고, 한쪽 쏠림 정도(imb) · 붙어 있는 정도(crowd)를 기록 → 자동 추천 · 최적 세팅에서 감점
+                const sd = slots.map(s => (s.x < 42 ? -1 : s.x > 58 ? 1 : 0)), imb = Math.abs(sd.filter(v => v < 0).length - sd.filter(v => v > 0).length);
+                const items = slots.map((s, i) => ({ x: s.x, y: s.y, role: s.r, side: sd[i] })), sp = fmSpread(items);
+                slots.forEach((s, i) => { s.x = +items[i].x.toFixed(1); s.y = +items[i].y.toFixed(1); });
+                out = { label: '🧩 ' + codes.join('·'), custom: true, desc: '구역 보드로 만든 포메이션 — ' + codes.map(c => FM_PCODES[c].n).join(' · '), slots, shape: { imb, crowd: +sp.crowd.toFixed(1), shift: +sp.shift.toFixed(1) } };
             }
             FM_CUSTOM_CACHE[key] = out;
             return out;
@@ -8537,8 +8692,103 @@
             if (o && FM_PROF[o]) return { lv: o, auto: false };
             const d = FM_PCODES[code];
             if (!p || !d) return { lv: 'n', auto: true };
+            try { const A = fmAutoProf(p); if (A && A.lv[code]) return { lv: A.lv[code], auto: true }; } catch (e) { }
             return { lv: d.lv[p.pos] || 'a', auto: true };
         }
+        // ======= 🦶 사용하는 발 · 🤖 포지션 숙련도 자동 추천 (v1.43) =======
+        // 저장: player.footR / player.footL = 1~5 (기본 오른발 5 · 왼발 1 — 기본값이면 저장하지 않음)
+        const FM_FOOT_DEF = { R: 5, L: 1 };
+        function fmFoot(p) {
+            const g = (v, d) => (typeof v === 'number' && isFinite(v)) ? Math.max(1, Math.min(5, Math.round(v))) : d;
+            return { R: g(p && p.footR, FM_FOOT_DEF.R), L: g(p && p.footL, FM_FOOT_DEF.L) };
+        }
+        function fmMainFoot(p) {
+            const f = fmFoot(p), d = f.R - f.L;
+            if (Math.min(f.R, f.L) >= 4 && Math.abs(d) <= 1) return { k: 'both', t: '양발', ic: '🦶' };
+            return d > 0 ? { k: 'R', t: '오른발', ic: '🦶' } : d < 0 ? { k: 'L', t: '왼발', ic: '🦶' } : { k: 'both', t: '양발', ic: '🦶' };
+        }
+        const fmStars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+        // 각 포지션 코드의 능력치 가중치 (기존 7개 능력치 기준)
+        const FM_PCODE_W = {
+            SW:  { 수비: .35, 위치선정: .25, 패스: .20, 체력: .10, 스피드: .10 },
+            DC:  { 수비: .45, 위치선정: .25, 체력: .10, 스피드: .10, 패스: .10 },
+            DL:  { 수비: .35, 스피드: .20, 체력: .20, 위치선정: .15, 패스: .10 },
+            DR:  { 수비: .35, 스피드: .20, 체력: .20, 위치선정: .15, 패스: .10 },
+            WBL: { 체력: .30, 스피드: .25, 수비: .20, 패스: .15, 드리블: .10 },
+            WBR: { 체력: .30, 스피드: .25, 수비: .20, 패스: .15, 드리블: .10 },
+            DM:  { 수비: .35, 위치선정: .25, 패스: .20, 체력: .20 },
+            MC:  { 패스: .30, 체력: .25, 수비: .15, 위치선정: .15, 드리블: .15 },
+            ML:  { 체력: .25, 패스: .25, 드리블: .20, 스피드: .20, 수비: .10 },
+            MR:  { 체력: .25, 패스: .25, 드리블: .20, 스피드: .20, 수비: .10 },
+            AML: { 드리블: .30, 스피드: .25, 결정력: .20, 패스: .15, 위치선정: .10 },
+            AMR: { 드리블: .30, 스피드: .25, 결정력: .20, 패스: .15, 위치선정: .10 },
+            AMC: { 패스: .30, 드리블: .25, 결정력: .20, 위치선정: .15, 스피드: .10 },
+            ST:  { 결정력: .45, 위치선정: .25, 스피드: .15, 드리블: .15 }
+        };
+        // 본 포지션(DF · MF · FW)별 자리 친숙도 가산점
+        const FM_PCODE_PRI = {
+            DF: { SW: 4, DC: 6, DL: 5, DR: 5, WBL: 2, WBR: 2, DM: 2, MC: -1, ML: -3, MR: -3, AML: -6, AMR: -6, AMC: -6, ST: -8 },
+            MF: { SW: -3, DC: -2, DL: -2, DR: -2, WBL: 2, WBR: 2, DM: 4, MC: 6, ML: 3, MR: 3, AML: 3, AMR: 3, AMC: 4, ST: -1 },
+            FW: { SW: -9, DC: -8, DL: -8, DR: -8, WBL: -3, WBR: -3, DM: -5, MC: -2, ML: 0, MR: 0, AML: 4, AMR: 4, AMC: 3, ST: 6 }
+        };
+        // 역할 세부 성향 · 특성이 어울리는 자리 가산점 (주 역할은 그대로, 부 역할은 절반)
+        const FM_STYLE_CODE = {
+            'DEF:stopper': { DC: 3, SW: 1 }, 'DEF:builder': { DC: 2, SW: 2, DM: 1 }, 'DEF:overlap': { DL: 2, DR: 2, WBL: 4, WBR: 4 }, 'DEF:libero': { SW: 5, DC: 1 }, 'DEF:marker': { DC: 2, DL: 1, DR: 1 },
+            'MID:dm': { DM: 5 }, 'MID:playmaker': { MC: 3, AMC: 3, DM: 1 }, 'MID:b2b': { MC: 5, DM: 1 }, 'MID:am': { AMC: 5, MC: 1 }, 'MID:regista': { DM: 4, MC: 2 }, 'MID:winner': { DM: 4, MC: 2 },
+            'WING:winger': { AML: 4, AMR: 4, ML: 3, MR: 3 }, 'WING:insider': { AML: 4, AMR: 4, AMC: 2, ST: 1 }, 'WING:twoway': { ML: 3, MR: 3, WBL: 3, WBR: 3 }, 'WING:crosser': { ML: 3, MR: 3, WBL: 2, WBR: 2, AML: 2, AMR: 2 }, 'WING:sidemaker': { AML: 2, AMR: 2, ML: 2, MR: 2, AMC: 2 },
+            'FW:poacher': { ST: 5 }, 'FW:link': { ST: 3, AMC: 3 }, 'FW:target': { ST: 5 }, 'FW:presser': { ST: 3, AML: 1, AMR: 1 }, 'FW:second': { AMC: 4, ST: 3, AML: 1, AMR: 1 }, 'FW:runner': { ST: 4, AML: 2, AMR: 2 }, 'FW:false9': { AMC: 4, ST: 3 }
+        };
+        const FM_TRAIT_CODE = {
+            engine: { MC: 1.5, WBL: 1.5, WBR: 1.5, ML: 1, MR: 1, DM: 1 }, press: { MC: 1, DM: 1, ST: 1, ML: .5, MR: .5 }, overlap: { WBL: 3, WBR: 3, DL: 2, DR: 2 }, libero: { SW: 3, DC: 1.5, DM: 1 },
+            cover: { SW: 2, DC: 1.5 }, marker: { DC: 1.5, DM: 1.5 }, tackle: { DC: 1, DM: 2, MC: 1 }, aerial: { DC: 1.5, ST: 1.5 }, playmaker: { MC: 2, DM: 1.5, AMC: 2 }, ballwin: { DM: 3, MC: 2 },
+            thru: { AMC: 2, AML: 1.5, AMR: 1.5, MC: 1 }, escape: { MC: 1.5, AMC: 1, DM: 1 }, poacher: { ST: 3 }, target: { ST: 3 }, runner: { ST: 2, AML: 2, AMR: 2 }, linkfw: { ST: 2, AMC: 2 },
+            cutin: { AML: 3, AMR: 3, ML: 1.5, MR: 1.5 }, cross: { WBL: 1.5, WBR: 1.5, ML: 1.5, MR: 1.5, AML: 1, AMR: 1 }, drib: { AML: 2, AMR: 2, AMC: 1.5, ML: 1, MR: 1 }, lshot: { AMC: 1.5, MC: 1 },
+            onetwo: { MC: 1.5, AMC: 1 }, calm: { ST: 1, AMC: 1 }
+        };
+        const FM_LEFT_CODES = ['DL', 'WBL', 'ML', 'AML'], FM_RIGHT_CODES = ['DR', 'WBR', 'MR', 'AMR'];
+        // 사용하는 발 보정: 왼쪽 자리는 왼발, 오른쪽 자리는 오른발이 좋을수록 가산 (안쪽을 파고드는 반대발 윙어는 감점 없음) · 양발이면 모든 자리에서 유리
+        function fmFootCodeBonus(p, c) {
+            const f = fmFoot(p), both = Math.min(f.R, f.L), left = FM_LEFT_CODES.includes(c), right = FM_RIGHT_CODES.includes(c);
+            if (!left && !right) return both >= 4 ? 1.5 : both === 3 ? .5 : 0;
+            const s = left ? f.L : f.R, w = left ? f.R : f.L, inside = (c === 'AML' || c === 'AMR' || c === 'ML' || c === 'MR');
+            let b = (s - 3) * 1.5;
+            if (inside && s <= 2 && w >= 4) b = Math.max(b, .5);
+            if (s >= 4 && w >= 4) b += 1;
+            return b;
+        }
+        // 다재다능도(0~1): 활동량 · 전체 능력 · 고르게 잘함 → 클수록 가능 포지션이 많고, 작을수록 특정 자리 위주
+        function fmVersat(p) {
+            const keys = getAbilityStatKeys(p.pos), S = keys.map(k => fmStat(p, k)), mean = S.reduce((a, b) => a + b, 0) / (S.length || 1);
+            const work = (fmExt(p, '활동량') + fmStat(p, '체력')) / 2, ovr = (typeof calcPlayerOVR === 'function' && calcPlayerOVR(p)) || mean;
+            const w01 = fmClamp((work - 60) / 30, 0, 1), o01 = fmClamp((ovr - 60) / 30, 0, 1), b01 = S.filter(x => x >= 72).length / (S.length || 1);
+            const sp = Math.max(...S) - Math.min(...S), s01 = fmClamp(1 - (sp - 15) / 35, 0, 1);
+            let v = .35 * w01 + .25 * o01 + .2 * b01 + .2 * s01;
+            const tr = fmTraits(p); if (tr.includes('engine')) v += .12; if (tr.includes('press')) v += .04; if (tr.includes('escape')) v += .04;
+            return fmClamp(v, 0, 1);
+        }
+        function fmAutoSig(p) { return [p.pos, JSON.stringify(p.stats || ''), JSON.stringify(p.ext || ''), (p.traits || []).join(','), p.roleMain || '', p.roleSub || '', p.footR, p.footL].join('|'); }
+        const FM_AUTO_CACHE = new WeakMap();
+        const FM_AUTO_TH = [['n', 2], ['c', 5], ['p', 8.5], ['a', 13]];
+        function fmAutoProf(p) {
+            if (!p || p.pos === 'GK' || !p.stats) return null;
+            const sig = fmAutoSig(p), hit = FM_AUTO_CACHE.get(p);
+            if (hit && hit.sig === sig) return hit.v;
+            const R = fmRoleResolve(p), pri = FM_PCODE_PRI[p.pos] || FM_PCODE_PRI.MF, tr = fmTraits(p), F = {};
+            FM_FIELD_CODES.forEach(c => {
+                const d = FM_PCODES[c];
+                let f = fmWRating(p, FM_PCODE_W[c]) + (pri[c] || 0) + fmFootCodeBonus(p, c);
+                if (R.main) { if (R.main.role === d.r) f += 4; f += (FM_STYLE_CODE[R.main.role + ':' + R.main.style] || {})[c] || 0; }
+                if (R.sub) { if (R.sub.role === d.r) f += 2; f += ((FM_STYLE_CODE[R.sub.role + ':' + R.sub.style] || {})[c] || 0) * .5; }
+                tr.forEach(k => { f += (FM_TRAIT_CODE[k] || {})[c] || 0; });
+                F[c] = f;
+            });
+            const best = Math.max(...FM_FIELD_CODES.map(c => F[c])), v = fmVersat(p), ovr = (typeof calcPlayerOVR === 'function' && calcPlayerOVR(p)) || 0, o01 = fmClamp((ovr - 62) / 22, 0, 1), k = (.5 + .9 * v) * (1.05 + .13 * o01), lv = {};   // v1.45: 기본 범위 +5% · 전체 능력(OVR)이 높을수록 최대 +18%까지 가능 포지션이 넓어짐
+            FM_FIELD_CODES.forEach(c => { const dd = best - F[c]; let L = 'x'; for (const [key, th] of FM_AUTO_TH) { if (dd <= th * k + 1e-9) { L = key; break; } } lv[c] = L; });
+            const out = { lv, v, k, F };
+            FM_AUTO_CACHE.set(p, { sig, v: out });
+            return out;
+        }
+        function fmVersatLabel(v) { return v >= .75 ? '매우 높음' : v >= .6 ? '높음' : v >= .45 ? '보통' : v >= .3 ? '낮음' : '매우 낮음'; }
         const FM_ROLES = {
             GK:   { label: '골키퍼',   tip: '골키퍼 — 선방력·반사신경·순발력 중심', nat: ['GK'] },
             DEF:  { label: '수비수',   tip: '수비수(최후방) — 수비·위치선정 중심', nat: ['DF'] },
@@ -8691,6 +8941,50 @@
                 expressive: { n: '자율·창의', cx: 1, d: '선수 개인 판단과 즉흥 플레이 허용', parts: [['top2', '드리블', .30], ['max', '결정력', .30], ['avg', '패스', .20], ['avg', '위치선정', .20]] }
             } }
         };
+
+        // ======= 🎚️ 단계형 전술 10항목 5단계 (v1.48) =======
+        // 템포 · 공격 폭 · 수비 라인 · 공수 전환 · 공 탈취 시 · 압박 강도 · 태클 · 드리블 · 창의성 · 크로스 대응 = 매우 ← 보통 → 매우 (5단계 슬라이더)
+        // 기존 3단계 값(slow · normal · fast 등)은 그대로 2 · 3 · 4단계로 유지 → 예전 DB · 프리셋 · 경기 기록이 그대로 호환되고, 양 끝(1 · 5단계)만 새로 추가됨.
+        const FM_STEP_DEF = {
+            tempo:   { b: ['slow', 'normal', 'fast'],           x: [['vslow', '매우 느림', '한 템포씩 아주 천천히 — 최대한 조율하며 시간을 씀'], ['vfast', '매우 빠름', '쉬지 않고 전속으로 몰아치기 (체력 소모 매우 큼)']] },
+            width:   { b: ['narrow', 'normal', 'wide'],         x: [['vnarrow', '매우 좁게', '중앙에 바짝 모여 아주 짧은 패스로만 연결'], ['vwide', '매우 넓게', '터치라인 끝까지 최대한 벌려 수비 간격을 극단적으로 늘림']] },
+            line:    { b: ['deep', 'normal', 'high'],           x: [['vdeep', '매우 낮게', '골문 앞까지 내려앉아 뒷공간을 완전히 지움'], ['vhigh', '매우 높게', '하프라인 근처까지 라인을 올려 최대한 압축 (뒷공간 위험 큼)']] },
+            trans:   { b: ['retreat', 'normal', 'press'],       x: [['vretreat', '전원 후퇴', '볼을 잃으면 전원이 즉시 자기 진영으로 내려와 재정비'], ['vpress', '맹렬한 압박', '볼을 잃는 순간 전원이 달려들어 되찾기 (체력 소모 매우 큼)']] },
+            won:     { b: ['hold', 'normal', 'counter'],        x: [['vhold', '완전 점유', '공을 되찾으면 무조건 돌리며 공격 대형이 갖춰질 때까지 점유'], ['vcounter', '전원 역습', '공을 되찾자마자 전원이 한꺼번에 전진']] },
+            presstr: { b: ['rare', 'normal', 'often'],          x: [['vrare', '압박 안 함', '압박을 거의 하지 않고 자리를 지키며 체력 아끼기'], ['voften', '끝없는 압박', '쉬지 않고 강하게 압박 (체력 소모 매우 큼)']] },
+            tackle:  { b: ['stay', 'normal', 'hard'],           x: [['vstay', '절대 서서', '태클을 하지 않고 끝까지 자리를 지키며 수비'], ['vhard', '매우 거칠게', '몸을 던져 부딪침 (파울 · 카드 위험 큼)']] },
+            dribble: { b: ['low', 'normal', 'high'],            x: [['vlow', '패스 전용', '드리블 없이 패스로만 풀어나감'], ['vhigh', '돌파 올인', '가능하면 언제나 1:1 돌파']] },
+            free:    { b: ['strict', 'normal', 'expressive'],   x: [['vstrict', '완전 준수', '지시 이외의 플레이는 하지 않는 철저한 규율'], ['vexpr', '완전 자유', '선수 개인 판단에 전부 맡김']] },
+            crossd:  { b: ['invite', 'normal', 'stop'],         x: [['vinvite', '박스 방어 올인', '측면은 전부 내주고 문전만 사수'], ['vstop', '완전 차단', '측면에서 크로스 자체를 올리지 못하게 막음']] }
+        };
+        const FM_COL = {};   // 양 끝 키 → 가까운 기존 키 (3단계 계산식에 넘길 때 사용)
+        Object.keys(FM_STEP_DEF).forEach(dim => {
+            const D = FM_TACTICS[dim], S = FM_STEP_DEF[dim], o = D.opts, no = {};
+            const mk = (x, base) => ({ n: x[1], cx: Math.max(2, base.cx || 1), d: x[2], parts: base.parts.map(p => p.slice()), ext: true });
+            no[S.x[0][0]] = mk(S.x[0], o[S.b[0]]);
+            S.b.forEach(k => { no[k] = o[k]; });
+            no[S.x[1][0]] = mk(S.x[1], o[S.b[2]]);
+            D.opts = no; D.step = true; D.ord = Object.keys(no);
+            FM_COL[dim] = { [S.x[0][0]]: S.b[0], [S.x[1][0]]: S.b[2] };
+        });
+        function fmCol(st) { if (!st) return st; let o = st; Object.keys(FM_COL).forEach(d => { const m = FM_COL[d][st[d]]; if (m) { if (o === st) o = Object.assign({}, st); o[d] = m; } }); return o; }
+        function fmExtDims(st) { return st ? Object.keys(FM_COL).filter(d => FM_COL[d][st[d]]) : []; }
+        // 5단계 확장 래퍼: 핵심 계산은 3단계 키로 하고, 양 끝(매우 ~)은 그 항목이 만드는 효과를 +50% 더 반영 (si = st 인자 위치)
+        function fmFive(core, si, post) {
+            return function () {
+                const a = Array.prototype.slice.call(arguments), st = a[si], ex = fmExtDims(st);
+                a[si] = fmCol(st);
+                const r0 = core.apply(this, a);
+                if (!ex.length) return r0;
+                const num = typeof r0 === 'number'; let out = num ? r0 : Object.assign({}, r0);
+                ex.forEach(d => {
+                    const b = a.slice(); b[si] = Object.assign({}, a[si], { [d]: FM_STEP_DEF[d].b[1] });
+                    const r1 = core.apply(this, b);
+                    if (num) out += 0.5 * (r0 - r1); else Object.keys(r0).forEach(k => { if (typeof r0[k] === 'number' && typeof r1[k] === 'number') out[k] += 0.5 * (r0[k] - r1[k]); });
+                });
+                return post && num ? post(out) : out;
+            };
+        }
         const FM_FGK = { n: '🧤 GK 공격 가담 (플라잉 GK)', d: '골키퍼가 공격에 올라가 5:4 수적 우위를 만드는 승부수 — 빈 골문 역습에 주의', parts: [['gk', '배급', .30], ['gk', '판단력', .30], ['gk', '순발력', .20], ['gk', '체력', .20]] };
         const FM_POS_COLOR = { GK: '#eab308', DF: '#0ea5e9', MF: '#84cc16', FW: '#f97316' };
         // 👕 전술판 선수 카드 = 팀 유니폼 색. 배경은 팀 컬러 그라데이션, 글씨는 밝기에 따라 흰색/검정 자동 선택
@@ -8714,6 +9008,8 @@
         let fmLastTap = { name: null, t: 0 };   // v1.17: 선수 카드 더블클릭(두 번 누름) 판정
         let fmEdOpen = false, fmMvOpen = false;   // v1.16: 🎭 편집 패널 · 🧭 이동 예측 목록 접힘 상태 (다시 그려도 유지)
         let fmEditLoc = 'p0';       // 오른쪽 편집 패널에서 고른 자리 (GK / p0~p3)
+        let fmZoneOn = true;        // v1.47: 팀 전술판 구역 색(강점/약점) 표시
+        try { if (localStorage.getItem('gleague_fm_zone') === '0') fmZoneOn = false; } catch (e) { }
         let fmSnap = 0;             // 위치·화살표 끝점 격자(%): 0 = 자유
         let fmDrag = null, fmLastDragEnd = 0;   // 드래그 중인 대상 / 마지막 드래그가 끝난 시각 (직후 click 무시용)
         const FM_PH = 1.32;         // 필드 세로/가로 비율 (SVG 좌표: 가로 0~100, 세로 0~132)
@@ -8763,7 +9059,7 @@ function fmPosPenalty(p, role, team, code) {
     if (!p || !role) return 0;
     if (role === 'GK') return p.pos === 'GK' ? 0 : 20;
     if (p.pos === 'GK') return 20;
-    const base = (code && FM_PCODES[code] && !FM_PCODES[code].gk) ? FM_PROF[fmPosLevel(p, code).lv].pen : ((FM_POS_MISS[p.pos] || {})[role] || 0);   // v1.39: 포지션 코드가 있으면 숙련도(자연스러움 0 · 능숙 6 · 어색 12)로 계산
+    const base = (code && FM_PCODES[code] && !FM_PCODES[code].gk) ? FM_PROF[fmPosLevel(p, code).lv].pen : ((FM_POS_MISS[p.pos] || {})[role] || 0);   // v1.39/1.43: 포지션 코드가 있으면 5단계 숙련도(자연스러움 0 · 능숙 4 · 가능 8 · 어색 12 · 불가 22)로 계산
     if (!base) return 0;
     const m = fmRoleParse(p.roleMain), s = fmRoleParse(p.roleSub);
     if (m && m.role === role) return 0;
@@ -8886,8 +9182,12 @@ function fmBestStyle(p, role) {
             const n = F.slots.length;
             const R = cands.map(p => F.slots.map(s => fmRoleRating(p, s.r) - fmPosPenalty(p, s.r, team, s.c) + (FM_ROLES[s.r].nat.includes(p.pos) ? 1.5 : 0) + fmRoleBonus(p, s.r) + fmRoleExtBonus(p, s.r)));
             let best = -Infinity, bp = null;
+            // v1.48: 같은 역할의 '단독 임무' 성향(리베로 · 플레이메이커 · 타겟맨 등)이 두 명 겹치면 배치 효율이 떨어져 감점 — 역할이 서로 보완되도록
+            const UNI = { libero: 1, playmaker: 1, regista: 1, target: 1, false9: 1, link: 1, second: 1 };
+            const sty = cands.map(p => F.slots.map(s => fmBestStyle(p, s.r)));
+            const dupPen = pick => { let pen = 0; for (let a = 0; a < n; a++) for (let b = a + 1; b < n; b++) { if (pick[a] < 0 || pick[b] < 0 || F.slots[a].r !== F.slots[b].r) continue; const sa = sty[pick[a]][a], sb = sty[pick[b]][b]; if (sa === sb && UNI[sa]) pen += 1.5; } return pen; };
             (function rec(i, used, acc, pick) {
-                if (i === n) { if (acc > best) { best = acc; bp = pick.slice(); } return; }
+                if (i === n) { const tot = acc - dupPen(pick); if (tot > best) { best = tot; bp = pick.slice(); } return; }
                 for (let k = 0; k < cands.length; k++) { if (used & (1 << k)) continue; pick.push(k); rec(i + 1, used | (1 << k), acc + R[k][i], pick); pick.pop(); }
                 if (cands.length < n) { pick.push(-1); rec(i + 1, used, acc - 1000, pick); pick.pop(); }   // 선수가 모자라면 빈 자리 허용
             })(0, 0, 0, []);
@@ -8909,7 +9209,16 @@ function fmBestStyle(p, role) {
             let sum = 0, cnt = 0;
             if (gk) { slots.GK = gk.name; used.add(gk.name); sum += fmRoleRating(gk, 'GK'); cnt++; }
             pick.forEach((k, i) => { if (k >= 0) { slots['p' + i] = cands[k].name; used.add(cands[k].name); sum += fmRoleFit(cands[k], F.slots[i].r, undefined, team, F.slots[i].c); cnt++; } });
-            roster.filter(p => !used.has(p.name)).sort((a, b) => (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0)).slice(0, 3).forEach((p, i) => { slots['s' + i] = p.name; });
+            {   // v1.48: 교체 3명 — OVR 순서를 기본으로 하되, 선발에 적은 포지션 · 아직 교체 명단에 없는 포지션을 우선해 어느 자리가 비어도 바로 메울 수 있게
+                const rest = roster.filter(p => !used.has(p.name)).sort((a, b) => (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0)), bench = [], cnt = { GK: 0, DF: 0, MF: 0, FW: 0 };
+                used.forEach(nm => { const q = roster.find(p => p.name === nm); if (q && cnt[q.pos] !== undefined) cnt[q.pos]++; });
+                while (bench.length < 3 && rest.length) {
+                    let bi = 0, bv = -Infinity;
+                    rest.forEach((p, i) => { const v = (calcPlayerOVR(p) || 0) + (bench.some(b => b.pos === p.pos) ? 0 : 4) + (p.pos === 'GK' ? (gk && !bench.some(b => b.pos === 'GK') ? 1 : -6) : Math.max(0, 2 - (cnt[p.pos] || 0)) * 1.5); if (v > bv) { bv = v; bi = i; } });
+                    bench.push(rest.splice(bi, 1)[0]);
+                }
+                bench.sort((a, b) => (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0)).forEach((p, i) => { slots['s' + i] = p.name; });
+            }
             return { slots, score: cnt ? sum / cnt : 0 };
         }
 
@@ -8933,7 +9242,7 @@ function fmBestStyle(p, role) {
         };
         const FM_AP_RANGE = { GK: [74, 93], DEF: [54, 76], MID: [38, 64], WING: [26, 62], FW: [14, 42] };
         const FM_AP_MAXF = 9, FM_AP_MAXW = 12;   // 한 선수의 자동 이동량 상한(앞뒤 · 좌우 %p) — 한쪽 끝으로 몰리지 않게   // 자리별 앞뒤(y) 허용 범위
-        function fmApTactic(st, role) {   // 팀 전술이 이 자리에 주는 이동
+        function fmApTactic0(st, role) {   // 팀 전술이 이 자리에 주는 이동
             const D = role === 'DEF', M = role === 'MID', W = role === 'WING', F = role === 'FW', fwd = W || F;
             let f = 0, w = 0;
             if (st.line === 'high') f += D ? 5 : M ? 3 : W ? 1 : 0; else if (st.line === 'deep') f -= D ? 5 : M ? 3 : W ? 1 : 0;
@@ -8946,6 +9255,7 @@ function fmBestStyle(p, role) {
             if (st.finish === 'cross') w += W ? 3 : 0; else if (st.finish === 'shot') f -= M || W ? 1 : 0; else if (st.finish === 'box') f += F ? 1 : 0;
             return { f, w };
         }
+        const fmApTactic = fmFive(fmApTactic0, 0);
         function fmApMgr(team, tac) {   // 감독 능력치 → 전술 반영 강도(kT) · 선수 개성 반영 강도(kP) · 팀 공수 성향(lean)
             const out = { kT: 1, kP: 1, lean: 0, has: false };
             try {
@@ -8995,20 +9305,15 @@ function fmBestStyle(p, role) {
                 if (loc !== 'GK' && !central) { x = fmClamp(base.x + side * dw, side < 0 ? 9 : 54, side < 0 ? 46 : 91); }
                 out[loc] = { x: +x.toFixed(1), y: +y.toFixed(1), df: +(base.y - y).toFixed(1), dw: +((x - base.x) * (central ? 0 : side)).toFixed(1), parts, central };
             });
-            // 카드끼리 겹치지 않게 간격 확보 (좌우 24%p · 앞뒤 17%p 안에 있으면 옆으로 벌림)
+            // 카드끼리 겹치지 않게 간격 확보 + 한쪽으로 쏠린 구성은 가운데로 살짝 보정 (v1.45: 가운데 줄도 좌우로 엇갈려 벌리고, 같은 쪽에 몰린 자리도 반대편 여유 공간까지 사용)
             const ks = locs.map(l => l[0]).filter(l => l !== 'GK');
-            for (let pass = 0; pass < 4; pass++) {
-                for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) {
-                    const a = out[ks[i]], b = out[ks[j]], dx = b.x - a.x, dy = Math.abs(b.y - a.y);
-                    if (dy >= 17 || Math.abs(dx) >= 24) continue;
-                    const need = 24 - Math.abs(dx), dir = dx >= 0 ? 1 : -1;
-                    const mvA = a.central ? 0 : 1, mvB = b.central ? 0 : 1, tot = (mvA + mvB) || 1;
-                    a.x = fmClamp(a.x - dir * need * mvA / tot, 9, 91); b.x = fmClamp(b.x + dir * need * mvB / tot, 9, 91);
-                    if (a.central && b.central) b.y = fmClamp(b.y + (b.y >= a.y ? 1 : -1) * (17 - dy), 14, 74);
-                }
+            {
+                const items = ks.map(k => { const b = locs.find(l => l[0] === k)[1]; return { x: out[k].x, y: out[k].y, role: b.r, side: b.x < 42 ? -1 : b.x > 58 ? 1 : 0 }; });
+                items.push({ x: out.GK.x, y: out.GK.y, role: 'GK', side: 0, fixed: true });
+                fmSpread(items);
+                try { fmEvenLines(items); } catch (e) { }
+                ks.forEach((k, i) => { out[k].x = items[i].x; out[k].y = items[i].y; });
             }
-            const g = out.GK;   // 골키퍼와 너무 가까운 선수는 앞(위)으로 올린다 (앞뒤 19%p 이상 — 카드가 붙지 않게)
-            ks.forEach(k => { const a = out[k]; if (Math.abs(a.x - g.x) < 26 && g.y - a.y < 19) a.y = Math.max(FM_AP_RANGE[locs.find(l => l[0] === k)[1].r][0], g.y - 19); });
             locs.forEach(([k, base]) => {
                 const a = out[k]; a.x = +a.x.toFixed(1); a.y = +a.y.toFixed(1);
                 const df2 = +(base.y - a.y).toFixed(1), dw2 = +((a.x - base.x) * (a.central || k === 'GK' ? 0 : (base.x < 50 ? -1 : 1))).toFixed(1);
@@ -9052,7 +9357,7 @@ function fmBestStyle(p, role) {
         }
         function fmRatings(c) {
             const out = {};
-            Object.keys(FM_TACTICS).forEach(dim => { out[dim] = {}; Object.keys(FM_TACTICS[dim].opts).forEach(k => { out[dim][k] = fmMix(c, FM_TACTICS[dim].opts[k].parts); }); });
+            Object.keys(FM_TACTICS).forEach(dim => { out[dim] = {}; Object.keys(FM_TACTICS[dim].opts).forEach(k => { const o = FM_TACTICS[dim].opts[k], v = fmMix(c, o.parts); out[dim][k] = (o.ext && v !== null && v !== undefined) ? v - 2.5 : v; }); });
             out.fgk = fmMix(c, FM_FGK.parts);
             return out;
         }
@@ -9064,8 +9369,8 @@ function fmBestStyle(p, role) {
             if (dim === 'defense' && key === 'low' && cnt('DEF') < 2) return 4;
             if (dim === 'defense' && key === 'man' && cnt('DEF') < 2) return 3;
             if (dim === 'finish' && key === 'cross' && !has('WING')) return 4;
-            if (dim === 'width' && key === 'wide' && !has('WING')) return 3;
-            if (dim === 'line' && key === 'deep' && cnt('DEF') < 1) return 2;
+            if (dim === 'width' && (key === 'wide' || key === 'vwide') && !has('WING')) return 3;
+            if (dim === 'line' && (key === 'deep' || key === 'vdeep') && cnt('DEF') < 1) return 2;
             return 0;
         }
         function fmStyleName(s) {
@@ -9083,7 +9388,7 @@ function fmBestStyle(p, role) {
             return '⚖️ 균형형';
         }
         // 공수 성향(-1 수비적 ~ +1 공격적): 필드 선수들의 성향 + 전술 선택
-        function fmTilt(c, st) {
+        function fmTilt0(c, st) {
             let t = c.field.length ? fmMean(c.field.map(x => FM_STYLES[x.role][x.sk].b)) : 0;
             t += ({ low: -0.25, press: 0.2, man: 0, mid: 0 })[st.defense] || 0;
             t += (({ possess: 0.1, counter: -0.05 })[st.attack] || 0) + (({ wing: 0.1, half: 0.07, center: 0.05 })[st.lane] || 0);
@@ -9109,11 +9414,12 @@ function fmBestStyle(p, role) {
             }
             return fmClamp(t, -1, 1);
         }
+        const fmTilt = fmFive(fmTilt0, 1, v => fmClamp(v, -1, 1));
         const fmTiltLabel = t => t >= 0.45 ? '공격 지향' : t >= 0.15 ? '약간 공격적' : t > -0.15 ? '균형' : t > -0.45 ? '약간 수비적' : '수비 지향';
 
         // ----- 이동 예측 (화살표) -----
         // 반환 {f, w}: f = 전진(+)/후퇴(-) %p, w = 바깥(+)/안쪽(-) %p (필드 가로·세로 대비 퍼센트)
-        function fmMoveOf(role, sk, st, phase, opt) {
+        function fmMoveOf0(role, sk, st, phase, opt) {
             const base = FM_STYLES[role][sk].mv[phase]; let f = base.f, w = base.w;
             const fwdRole = role === 'FW' || role === 'WING';
             if (phase === 'atk') {
@@ -9156,6 +9462,7 @@ function fmBestStyle(p, role) {
             if (phase === 'def' && role !== 'GK') f += FM_OPT.help.opts[o.help].f;
             return { f, w };
         }
+        const fmMoveOf = fmFive(fmMoveOf0, 2);
         // 자동 이동 벡터: 끝점까지의 변위 {dx: 가로 %, dy: 세로 %(아래가 +)}  — 직접 그린 화살표와 같은 형식
         function fmAutoVec(slot, loc, role, sk, st, ph, opt, idx) {
             const m = fmMoveOf(role, sk, st, ph, opt);
@@ -9227,6 +9534,7 @@ function fmBestStyle(p, role) {
         // 전술판 구성이 팀 전력에 미치는 영향 (작게 가감 — 종합 ±3점 이내, 항목별 ±3점 안팎)
         function fmEffects(c, R, st) {
             const cats = { atk: 0, def: 0, pas: 0, dri: 0, spd: 0, sta: 0 }, F = c.F, tilt = fmTilt(c, st);
+            st = fmCol(st);
             cats.atk += tilt * 2.2; cats.def -= tilt * 2.2;
             switch (st.attack) { case 'counter': cats.spd += .8; cats.def += .4; break; case 'possess': cats.pas += 1; cats.sta -= .3; break; }
  cats.spd += ({ counter: .4, hold: -.1 })[st.won] || 0; cats.pas += ({ hold: .4 })[st.won] || 0; cats.sta += ({ often: .3, rare: -.2 })[st.presstr] || 0; cats.def += ({ often: .2, rare: .2 })[st.presstr] || 0; cats.dri += ({ high: .4, low: -.2 })[st.dribble] || 0; cats.pas += ({ low: .3 })[st.dribble] || 0; cats.atk += ({ expressive: .2, strict: -.1 })[st.free] || 0;
@@ -9322,8 +9630,20 @@ function fmBestStyle(p, role) {
         }
 
         function fmHints(team, tac, c, R) {
-            const h = [], st = tac.style, F = c.F;
+            const h = [], st = fmCol(tac.style), F = c.F;
             const add = (t, m) => h.push({ t, m });
+            try {   // v1.48: 공수 이동 경로가 한쪽 측면(왼쪽 · 오른쪽)을 거의 지나지 않으면 → 빈 공간(약점) 안내
+                if (c.field.length >= 3) {
+                    const Z = fmZonePath(team, c, 'both');
+                    if (Z && Z.cov) {
+                        const fl = { L: [], C: [], R: [] };
+                        Object.keys(Z.cov).forEach(k => { const [ri, ci] = k.split(':').map(Number); if (ri >= 1 && ri <= 4) fl[ci <= 1 ? 'L' : ci >= 3 ? 'R' : 'C'].push(Z.cov[k]); });
+                        const av = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0, L = av(fl.L), Rr = av(fl.R), C = av(fl.C);
+                        const weak = L < 0.2 && Rr >= 0.35 ? '왼쪽' : Rr < 0.2 && L >= 0.35 ? '오른쪽' : '';
+                        if (weak) add('info', `🗺️ 공격 · 수비 이동 경로가 ${weak} 측면(공격형 ~ 수비 구간)을 거의 지나지 않아 비어 있어요 — 상대가 그쪽 공간을 노릴 수 있습니다. 🎨 구역 색에서 갈색으로 보이는 곳이에요. 화살표 방향이나 자리 배치를 조정해 보세요.`);
+                    }
+                }
+            } catch (e) { }
             if (!c.gk) add('warn', 'GK가 배치되지 않았습니다. 골키퍼 자리를 채워 주세요.');
             else if (c.gk.pos !== 'GK') add('warn', `GK 자리에 필드 선수(${c.gk.name})가 배치돼 선방 관련 능력치가 반영되지 않습니다.`);
             if (c.field.length < F.slots.length) add('warn', `필드 자리 ${F.slots.length - c.field.length}곳이 비어 있어 전술 적합도가 부정확합니다.`);
@@ -9419,54 +9739,90 @@ function fmBestStyle(p, role) {
             try { dcRenderRosterPower(t); } catch (e) { }   // 전력분석 수치도 전술판에 맞춰 갱신
         }
         function fmCommit(tac) { tac.set = true; delete tac.autoGen; save(); fmRefresh(); }   // 직접 고치면 자동 세팅 표시 해제
-        // ======= 🧩 구역 보드 (v1.39) =======
+        // ======= 🧩 구역 보드 (v1.39 → v1.46: 5×7 칸 보드 · 팀 강점/약점 색) =======
         let fmBuildOpen = false, fmBuild = {};   // fmBuild = { 코드: 개수 }
-        const FM_ZONES = [{ n: '공격 구역', y0: 0, y1: 42 }, { n: '중원 구역', y0: 42, y1: 64 }, { n: '수비 구역', y0: 64, y1: 100 }];
         const fmBuildCodes = () => { const out = []; FM_FIELD_CODES.forEach(c => { for (let i = 0; i < (fmBuild[c] || 0); i++) out.push(c); }); return out; };
         function fmBuildToggle() { fmBuildOpen = !fmBuildOpen; if (fmBuildOpen && !fmBuildCodes().length) { const t = fmCurrentTeam(); if (t) fmBuildLoad(fmGet(t).formation, true); } fmRefresh(); }
         function fmBuildLoad(key, quiet) { const F = FM_FORMATIONS[key]; if (!F) return; fmBuild = {}; F.slots.forEach(s => { if (s.c) fmBuild[s.c] = (fmBuild[s.c] || 0) + 1; }); fmBuildOpen = true; if (!quiet) fmRefresh(); }
-        function fmBuildClick(code) {
+        // 칸 누르기: 켜진 칸을 누르면 한 명 빼기 · 꺼진 칸을 누르면 한 명 더하기 (가운데 3칸 코드는 1명 = 가운데 칸 · 2명 = 좌우 안쪽 칸)
+        function fmBuildClick(code, lit) {
             const d = FM_PCODES[code]; if (!d) return;
             const cur = fmBuild[code] || 0, max = d.dup ? 2 : 1, total = fmBuildCodes().length;
-            if (cur >= max) delete fmBuild[code];              // 최대 개수에서 다시 누르면 해제
-            else if (total >= 4) { alert('필드 자리는 4개까지예요. 다른 자리를 눌러 빼고 고르세요.'); return; }
+            if (cur > 0 && (lit || !d.dup)) { if (cur > 1) fmBuild[code] = cur - 1; else delete fmBuild[code]; }
+            else if (cur >= max) fmBuild[code] = 1;   // 2명일 때 꺼진 가운데 칸 = 1명(가운데)으로 합치기
+            else if (total >= 4) { alert('필드 자리는 4개까지예요. 켜진 칸을 눌러 빼고 다른 칸을 고르세요.'); return; }
             else fmBuild[code] = cur + 1;
             fmRefresh();
         }
         function fmBuildClear() { fmBuild = {}; fmRefresh(); }
         function fmBuildApply() { const codes = fmBuildCodes(); if (!fmCodesValid(codes)) return; fmSetFormation(fmCodesKey(codes)); }
+        // 칸 색: 팀 선수단이 그 자리에 얼마나 잘 맞는지(약함 = 갈색 · 주황 → 강함 = 초록) — 투명 배경이라 잔디 줄무늬가 비쳐 보인다
+        const fmHeat = z => `hsla(${Math.round(12 + 128 * z)},72%,36%,.62)`;
+        const fmHexA = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+        // 자리별 팀 적합도 = 그 자리에 가장 잘 맞는 두 선수의 평균 (감점 · 역할 · 능력치 반영 — 🤖 이 팀 추천과 같은 계산) + 왼쪽 · 가운데 · 오른쪽 평균
+        function fmCellStrength(team) {
+            const field = ((team && team.players) || []).filter(p => p.pos !== 'GK');
+            if (!field.length) return null;
+            const v = {}, who = {};
+            FM_FIELD_CODES.forEach(c => {
+                const r = FM_PCODES[c].r;
+                const arr = field.map(p => ({ n: p.name, v: fmRoleFit(p, r, undefined, team, c) + (FM_ROLES[r].nat.includes(p.pos) ? 1.5 : 0) + fmRoleBonus(p, r) + fmRoleExtBonus(p, r) })).sort((x, y) => y.v - x.v).slice(0, 2);
+                v[c] = arr.reduce((x, y) => x + y.v, 0) / arr.length; who[c] = arr.map(x => x.n);
+            });
+            const vals = FM_FIELD_CODES.map(c => v[c]), mean = cs => cs.reduce((x, c) => x + v[c], 0) / cs.length;
+            return { v, who, min: Math.min(...vals), max: Math.max(...vals), side: { L: mean(['AML', 'ML', 'WBL', 'DL']), C: mean(['ST', 'AMC', 'MC', 'DM', 'DC', 'SW']), R: mean(['AMR', 'MR', 'WBR', 'DR']) } };
+        }
+        const fmGutterHtml = () => `<div class="fm-gutter">${FM_GRID_ROWLB.map(t => `<span>${t}</span>`).join('')}</div>`;
         function fmBuilderPanel(team, tac) {
             const codes = fmBuildCodes(), ok = fmCodesValid(codes), key = ok ? fmCodesKey(codes) : null;
-            const spots = FM_FIELD_CODES.map(c => {
-                const d = FM_PCODES[c], n = fmBuild[c] || 0;
-                return `<button class="fm-spot r-${d.r}${n ? ' on' : ''}" style="left:${d.x}%;top:${d.y}%" onclick="fmBuildClick('${c}')" title="${gEsc(c + ' · ' + d.n + ' — ' + d.d + '  (' + FM_ROLES[d.r].label + ' 자리로 계산' + (d.dup ? ' · 두 번 누르면 2명' : '') + ')')}">${c}${n > 1 ? `<i>×${n}</i>` : ''}</button>`;
-            }).join('');
-            const zones = FM_ZONES.map(z => `<div class="fm-zone" style="top:${z.y0}%;height:${z.y1 - z.y0}%"><span>${z.n}</span></div>`).join('');
-            const score = ok ? fmAutoLineup(team, key).score : null;
+            const S = fmCellStrength(team), zOf = x => S ? (S.max > S.min ? (x - S.min) / (S.max - S.min) : .5) : null;
+            const tier = z => z === null ? '' : z >= .67 ? '💪 강점' : z <= .33 ? '⚠️ 약점' : '보통';
+            const cells = [];
+            FM_GRID.forEach((row, ri) => row.forEach((c, ci) => {
+                if (!c) { cells.push('<div class="fm-gc lock"></div>'); return; }
+                if (c === 'GK') { cells.push('<div class="fm-gc gk" title="골키퍼 전용 칸 — 골키퍼는 따로 고르고, 필드 자리는 이 칸 위의 4자리만 고릅니다">GK<i>전용</i></div>'); return; }
+                const d = FM_PCODES[c], n = fmBuild[c] || 0, multi = FM_CODE_CELL[c].cols.length > 1;
+                const lit = multi ? (n === 1 ? ci === 2 : n === 2 ? (ci === 1 || ci === 3) : false) : n >= 1, ghost = multi && !lit && ci !== 2;
+                const z = zOf(S ? S.v[c] : 0), bg = z === null ? '' : `background:${fmHeat(z)};`;
+                const tip = c + ' · ' + d.n + ' — ' + d.d + ' (' + FM_ROLES[d.r].label + ' 자리로 계산)' + (multi ? ' · 가운데 3칸 중 최대 2명 (1명 = 가운데 · 2명 = 좌우 안쪽)' : '') + (S ? '\n팀 적합도 ' + fmRound(S.v[c]) + ' (' + tier(z) + ') · 잘 맞는 선수: ' + S.who[c].join(' · ') : '');
+                cells.push(`<button type="button" class="fm-gc${lit ? ' on' : ''}${ghost ? ' ghost' : ''}" style="${bg}" onclick="fmBuildClick('${c}',${lit})" title="${gEsc(tip)}">${ghost ? '<b class="plus">＋</b>' : `<b>${c}</b>${S ? `<i>${Math.round(S.v[c])}</i>` : ''}`}</button>`);
+            }));
+            let side = '<div class="fm-gside"><div class="sp"></div><div class="fm-gsd"><div></div><div></div><div></div></div></div>', sum = '';
+            if (S) {
+                const sd = [['L', '왼쪽'], ['C', '가운데'], ['R', '오른쪽']], vs = sd.map(([k]) => S.side[k]), hi = Math.max(...vs), lo = Math.min(...vs), flag = hi - lo >= 1.5;
+                side = `<div class="fm-gside"><div class="sp"></div><div class="fm-gsd">${sd.map(([k, t]) => `<div style="background:${fmHeat(zOf(S.side[k]))}" title="${t} 쪽 자리들의 팀 적합도 평균">${flag && S.side[k] === hi ? '💪 ' : flag && S.side[k] === lo ? '⚠️ ' : ''}${t}<b>${Math.round(S.side[k])}</b></div>`).join('')}</div></div>`;
+                const ord = FM_FIELD_CODES.slice().sort((x, y) => S.v[y] - S.v[x]), fmt = c => `<b>${c}</b> ${Math.round(S.v[c])}`;
+                sum = `<div class="fm-gsum">💪 <span class="mut">강점 자리</span> ${ord.slice(0, 3).map(fmt).join(' · ')} &nbsp; ⚠️ <span class="mut">약점 자리</span> ${ord.slice(-3).reverse().map(fmt).join(' · ')}</div>`;
+            }
             const presets = Object.keys(FM_FORM_PRESETS).map(k => `<button class="fm-abtn" onclick="fmBuildLoad('${k}')" title="이 프리셋의 코드를 보드로 불러와 고칩니다">${FM_FORM_PRESETS[k].label}</button>`).join('');
             const recs = fmCustomTop(team, 6).map(k => { const a = fmAutoLineup(team, k).score; return `<button class="fm-abtn" onclick="fmSetFormation('${k}')" title="선수별 숙련도를 반영한 이 팀 추천 — 누르면 바로 적용">${FM_FORMATIONS[k].label.replace('🧩 ', '')} <b style="color:${ovrColor(Math.round(a))}">${fmRound(a)}</b></button>`; }).join('');
-            return `<div class="fm-bld"><div class="fm-bt">🧩 구역 보드 <span class="mut" style="font-weight:600;font-size:.7rem;">필드를 구역으로 나눠 포지션 코드 4자리를 고르세요 · 같은 자리를 다시 누르면 해제 (DC · DM · MC · AMC · ST는 두 번 = 2명) · 골키퍼는 별도</span></div>
-                <div class="fm-bld-pitch"><div class="fm-bld-gk">GK</div>${zones}${spots}</div>
+            const score = ok ? fmAutoLineup(team, key).score : null;
+            return `<div class="fm-bld"><div class="fm-bt" data-upd="1.46">🧩 구역 보드 <span class="mut" style="font-weight:600;font-size:.7rem;">가로 5 × 세로 7칸 · 칸을 눌러 포지션 4자리를 고르세요 · 켜진 칸을 다시 누르면 해제 (가운데 3칸은 최대 2명) · 맨 아래 줄은 골키퍼 전용</span></div>
+                <div class="fm-gwrap"><div class="fm-gdir">▲ 상대 골대 방향</div>${side}<div class="fm-grow">${fmGutterHtml()}<div class="fm-bgrid">${cells.join('')}</div></div>
+                    <div class="fm-gleg"><span>약함</span><span class="bar"></span><span>강함</span><span>· 칸 숫자 = 그 자리에 가장 잘 맞는 선수 2명의 평균 적합도 (위쪽 띠 = 왼쪽 · 가운데 · 오른쪽 평균)</span></div>${sum}</div>
                 <div class="fm-bld-bar"><span class="fm-bld-sel">${codes.length ? codes.map(c => `<b class="fm-code">${c}</b>`).join(' ') : '<span class="mut">아직 고른 자리가 없어요</span>'} <span class="mut">${codes.length}/4</span></span>
                     ${ok ? `<span class="mut">· 자동 배치 평균 적합도 <b style="color:${ovrColor(Math.round(score))}">${fmRound(score)}</b></span>` : ''}
+                    ${ok ? (() => { const sh = (FM_FORMATIONS[key] || {}).shape; return sh && (sh.imb >= 3 || sh.crowd >= 24) ? `<span class="mut" style="color:#f59e0b;" title="한쪽에 자리가 몰리거나 서로 가까운 구성이에요. 카드는 겹치지 않게 간격을 벌려 표시하고, 🤖 자동 추천 · 최적 세팅에서는 순위가 조금 밀려요.">⚠️ ${sh.imb >= 3 ? '한쪽으로 치우친 구성' : '자리가 붙어 있는 구성'}</span>` : ''; })() : ''}
                     <button class="fm-act" ${ok ? '' : 'disabled'} onclick="fmBuildApply()" title="이 4자리로 포메이션을 바꿉니다 (선발 선수는 어울리는 자리로 다시 배치)">✅ 이 포메이션 적용</button><button class="fm-act" onclick="fmBuildClear()">🧹 비우기</button><button class="fm-act" onclick="fmBuildToggle()">닫기</button></div>
                 <div class="fm-bld-pre" data-new="1.40"><span class="mut">🤖 이 팀 추천 (자동 배치 평균 적합도):</span> ${recs || '<span class="mut">선수가 부족해요</span>'}</div>
                 <div class="fm-bld-pre"><span class="mut">프리셋에서 불러오기:</span> ${presets}</div>
-                <div class="fm-ed-d">코드는 기존 5개 자리에 연결돼 전력 계산 · 시뮬레이션은 그대로 쓰입니다. 선수의 <b>자연스러움 · 능숙 · 어색</b> 숙련도는 🎭 편집 패널(또는 선수 상세)의 '가능 포지션'에서 설정하세요.</div></div>`;
+                <div class="fm-ed-d">코드는 기존 5개 자리에 연결돼 전력 계산 · 시뮬레이션은 그대로 쓰입니다. 전술판에서 카드는 고른 칸의 중심에 서고, 겹칠 때만 최소한으로 벌려요. 선수의 <b>자연스러움 · 능숙 · 가능 · 어색 · 불가</b> 숙련도는 🎭 편집 패널(또는 선수 상세)의 '가능 포지션'에서 설정하세요.</div></div>`;
         }
         // ----- 선수별 가능 포지션 · 숙련도 -----
         function fmProfHtml(p, hiCode) {
             if (!p) return `<div class="fm-bt">📍 가능 포지션 · 숙련도</div><div class="fm-ed-d">선수를 배치하면 이 선수의 가능 포지션을 설정할 수 있어요.</div>`;
             if (p.pos === 'GK') return `<div class="fm-bt">📍 가능 포지션 · 숙련도</div><div class="fm-ed-d">골키퍼는 GK · SK 전용이에요. (필드 자리에 서면 큰 감점)</div>`;
-            const zones = FM_ZONES.map(z => `<div class="fm-zone" style="top:${z.y0}%;height:${z.y1 - z.y0}%"><span>${z.n}</span></div>`).join('');
-            const btns = FM_FIELD_CODES.map(c => {
+            const cells = [];
+            FM_GRID.forEach((row, ri) => row.forEach((c, ci) => {
+                if (!c || c === 'GK' || (FM_CODE_CELL[c].cols.length > 1 && ci !== 2)) { cells.push(c === 'GK' ? '<div class="fm-gc gk">GK</div>' : '<div class="fm-gc lock"></div>'); return; }
                 const L = fmPosLevel(p, c), P = FM_PROF[L.lv], d = FM_PCODES[c];
-                return `<button class="fm-pspot ${L.lv}${L.auto ? ' auto' : ''}${c === hiCode ? ' cur' : ''}" style="left:${d.x}%;top:${d.y}%" data-n="${gEsc(p.name)}" data-c="${c}" onclick="fmProfCycle(this.dataset.n,this.dataset.c)" title="${gEsc(c + ' · ' + d.n + ' — ' + P.t + (L.auto ? ' (본 포지션 기준 자동)' : ' (직접 지정)') + ' · 누르면 자동 → 자연스러움 → 능숙 → 어색 순으로 바뀝니다')}"><b>${c}</b><i>${P.t}</i></button>`;
-            }).join('');
+                cells.push(`<button type="button" class="fm-gc${L.auto ? ' auto' : ''}${c === hiCode ? ' cur' : ''}" style="background:${fmHexA(P.col, L.lv === 'x' ? .22 : .36)};border-color:${P.col}" data-n="${gEsc(p.name)}" data-c="${c}" onclick="fmProfMenu(this)" title="${gEsc(c + ' · ' + d.n + ' — ' + P.t + (L.auto ? ' (자동 추천)' : ' (직접 지정)') + ' · 누르면 5단계 선택창이 떠요')}"><b>${c}</b><i>${P.t}</i></button>`);
+            }));
             const legend = FM_PROF_ORDER.map(k => `<span><i style="background:${FM_PROF[k].col}"></i>${FM_PROF[k].t}</span>`).join('') + '<span><i class="dash"></i>흐림 = 자동</span>';
             const nSet = p.posProf ? Object.keys(p.posProf).length : 0;
-            return `<div class="fm-bt" data-new="1.39">📍 가능 포지션 · 숙련도 <span class="mut" style="font-weight:600;font-size:.7rem;">필드의 자리를 누르면 숙련도가 바뀜 · 흐린 칸 = 본 포지션 기준 자동</span></div><div class="fm-bld-pitch fm-prof-pitch">${zones}${btns}</div><div class="fm-prof-leg">${legend}</div>
-                <div class="fm-ed-d">숙련도는 그 자리에 섰을 때의 감점으로 반영돼요 (자연스러움 0 · 능숙 −6 · 어색 −12).${nSet ? ` 직접 지정 ${nSet}곳` : ''} ${nSet ? `<a style="cursor:pointer;color:#38bdf8;font-weight:800;" data-n="${gEsc(p.name)}" onclick="fmProfReset(this.dataset.n)">자동으로 되돌리기</a>` : ''}</div>`;
+            const A = fmAutoProf(p), nPos = FM_FIELD_CODES.filter(c => fmPosLevel(p, c).lv !== 'x').length;
+            return fmFootEditHtml(p) + `<div class="fm-bt" data-new="1.39" data-upd="1.47">📍 가능 포지션 · 숙련도 <span class="mut" style="font-weight:600;font-size:.7rem;">자리를 누르면 5단계(+자동)가 한 번에 떠서 바로 고를 수 있어요 · 점선 · 흐린 칸 = 🤖 자동 추천</span></div><div class="fm-gwrap"><div class="fm-gdir">▲ 상대 골대 방향</div><div class="fm-grow">${fmGutterHtml()}<div class="fm-bgrid">${cells.join('')}</div></div></div><div class="fm-prof-leg">${legend}</div>
+                <div class="fm-ed-d">🤖 자동 추천은 능력치 · 역할 · 특성 · 사용하는 발 · 활동량(다재다능도 <b>${A ? fmVersatLabel(A.v) : '-'}</b>)을 보고 정해요 — 많이 뛰고 고르게 잘할수록 가능 포지션이 늘고, 그렇지 않으면 특정 자리 위주예요. 지금 뛸 수 있는 자리 ${nPos}곳.<br>숙련도는 그 자리에 섰을 때의 감점으로 반영돼요 (자연스러움 0 · 능숙 −4 · 가능 −8 · 어색 −12 · 불가 −22).${nSet ? ` 직접 지정 ${nSet}곳` : ''} ${nSet ? `<a style="cursor:pointer;color:#38bdf8;font-weight:800;" data-n="${gEsc(p.name)}" onclick="fmProfReset(this.dataset.n)">자동으로 되돌리기</a>` : ''}</div>`;
         }
         function fmProfRef(name) { let r = null; try { const t = fmCurrentTeam(); if (t) r = fmPlayer(t, name); } catch (e) { } if (!r) { try { r = findPlayerRefByName(name); } catch (e) { } } return r; }
         function fmProfAfter(name) {
@@ -9483,12 +9839,75 @@ function fmBestStyle(p, role) {
             if (!Object.keys(p.posProf).length) delete p.posProf;
             fmProfAfter(name);
         }
+        function fmProfMenuClose() { const m = document.getElementById('fmProfMenu'); if (m) m.remove(); document.removeEventListener('mousedown', fmProfMenuOut, true); document.removeEventListener('keydown', fmProfMenuKey, true); window.removeEventListener('scroll', fmProfMenuClose, true); }
+        function fmProfMenuOut(e) { const m = document.getElementById('fmProfMenu'); if (m && !m.contains(e.target)) fmProfMenuClose(); }
+        function fmProfMenuKey(e) { if (e.key === 'Escape') fmProfMenuClose(); }
+        // 자리를 누르면 자동 · 자연스러움 · 능숙 · 가능 · 어색 · 불가를 한 번에 보여주고 바로 고르게 한다
+        function fmProfMenu(btn) {
+            fmProfMenuClose();
+            const name = btn.dataset.n, code = btn.dataset.c, p = fmProfRef(name); if (!p || !FM_PCODES[code] || p.pos === 'GK') return;
+            const cur = p.posProf && p.posProf[code], A = fmAutoProf(p), autoLv = (A && A.lv[code]) || FM_PCODES[code].lv[p.pos] || 'a';
+            const item = (lv, label, col, tail, on) => `<button type="button" class="${on ? 'on' : ''}" data-lv="${lv}"><i style="background:${col}"></i>${label}<em>${tail}</em></button>`;
+            const html = `<div class="h">${gEsc(code)} · ${gEsc(FM_PCODES[code].n)}</div>` + item('', '🤖 자동', FM_PROF[autoLv].col, '현재 ' + FM_PROF[autoLv].t, !cur) + FM_PROF_ORDER.map(k => item(k, FM_PROF[k].t, FM_PROF[k].col, '감점 −' + FM_PROF[k].pen, cur === k)).join('');
+            const m = document.createElement('div'); m.id = 'fmProfMenu'; m.className = 'fm-pmenu'; m.innerHTML = html; document.body.appendChild(m);
+            m.querySelectorAll('button').forEach(b => b.onclick = () => { fmProfSet(name, code, b.dataset.lv); });
+            const r = btn.getBoundingClientRect(), mw = m.offsetWidth, mh = m.offsetHeight;
+            m.style.left = Math.max(6, Math.min(innerWidth - mw - 6, r.left + r.width / 2 - mw / 2)) + 'px';
+            m.style.top = (r.bottom + mh + 8 > innerHeight ? Math.max(6, r.top - mh - 4) : r.bottom + 4) + 'px';
+            setTimeout(() => { document.addEventListener('mousedown', fmProfMenuOut, true); document.addEventListener('keydown', fmProfMenuKey, true); window.addEventListener('scroll', fmProfMenuClose, true); }, 0);
+        }
+        function fmProfSet(name, code, lv) {
+            fmProfMenuClose();
+            const p = fmProfRef(name); if (!p || !FM_PCODES[code] || p.pos === 'GK') return;
+            if (lv && FM_PROF[lv]) { if (!p.posProf) p.posProf = {}; p.posProf[code] = lv; } else if (p.posProf) { delete p.posProf[code]; if (!Object.keys(p.posProf).length) delete p.posProf; }
+            fmProfAfter(name);
+        }
         function fmProfReset(name) { const p = fmProfRef(name); if (!p) return; delete p.posProf; fmProfAfter(name); }
-        function fmProfSummary(p) {   // 선수 상세(읽기용): 자연스러움 자리 + 직접 지정한 자리
+        // 🦶 사용하는 발 편집 (포지션 탭 맨 위) — 누르면 바로 저장
+        function fmFootEditHtml(p) {
             if (!p || p.pos === 'GK') return '';
-            const nat = [], man = [];
-            FM_FIELD_CODES.forEach(c => { const L = fmPosLevel(p, c); if (!L.auto) man.push(`${c} ${FM_PROF[L.lv].t}`); else if (L.lv === 'n') nat.push(c); });
-            return `<div class="pt-t" style="margin-top:10px;">📍 가능 포지션 <span class="mut" style="font-size:.7rem;font-weight:600;">자연스러움 · 능숙 · 어색</span></div><div class="pt-row"><span class="pt-b on pm-chip">자연스러움 ${nat.length ? nat.join(' · ') : '없음'}</span>${man.length ? `<span class="pt-b on pm-chip">직접 지정 ${gEsc(man.join(' · '))}</span>` : ''}</div>`;
+            const f = fmFoot(p), mf = fmMainFoot(p), nm = gEsc(p.name);
+            const row = (side, label) => `<span><b>${label}</b> <span class="fb">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="${f[side] === n ? 'on' : ''}" data-n="${nm}" data-s="${side}" data-v="${n}" onclick="fmFootSet(this.dataset.n,this.dataset.s,+this.dataset.v)" title="${label} ${n}단계">${n}</button>`).join('')}</span></span>`;
+            return `<div class="fm-bt" data-new="1.43">🦶 사용하는 발 <span class="mut" style="font-weight:600;font-size:.7rem;">1~5단계 · 기본 오른발 5 · 왼발 1 · 포지션 자동 추천에 반영</span></div>
+                <div class="fm-foot">${row('L', '왼발')}${row('R', '오른발')}<span>주사용발 <b style="color:#facc15">${mf.t}</b></span>${(p.footR !== undefined || p.footL !== undefined) ? `<a style="cursor:pointer;color:#38bdf8;font-weight:800;" data-n="${nm}" onclick="fmFootReset(this.dataset.n)">기본값(오른발 5 · 왼발 1)</a>` : ''}</div>`;
+        }
+        function fmFootSet(name, side, val) {
+            const p = fmProfRef(name); if (!p || p.pos === 'GK' || (side !== 'L' && side !== 'R')) return;
+            const key = side === 'L' ? 'footL' : 'footR', def = side === 'L' ? FM_FOOT_DEF.L : FM_FOOT_DEF.R;
+            val = Math.max(1, Math.min(5, Math.round(+val) || def));
+            if (val === def) delete p[key]; else p[key] = val;
+            fmProfAfter(name);
+        }
+        function fmFootReset(name) { const p = fmProfRef(name); if (!p) return; delete p.footR; delete p.footL; fmProfAfter(name); }
+        function fmProfSummary(p) {   // 선수 상세(읽기용): 작은 축구장 위에 5단계 숙련도 색 원 + 사용하는 발
+            if (!p || p.pos === 'GK') return '';
+            // 가로 축구장(왼쪽 = 우리 골대, 오른쪽 = 상대 골대) · 위쪽 = 왼쪽 측면. 보드 좌표(x 좌우 · y 앞뒤)를 돌려서 배치
+            const W = 200, H = 112, X0 = 24, X1 = 168, Y0 = 14, Y1 = 98;   // v1.44: 자리가 경기장 전체(수비 ~ 공격 · 좌 ~ 우)에 고르게 퍼지도록 좌표를 늘려 배치
+            const dots = [], by = { n: [], c: [], p: [], a: [] };
+            FM_FIELD_CODES.forEach(c => {
+                const L = fmPosLevel(p, c), d = FM_PCODES[c], P = FM_PROF[L.lv];
+                if (L.lv === 'x') return;   // 불가 = 그림에 표시하지 않음
+                by[L.lv].push(c);
+                const cx = X0 + (78 - d.y) / (78 - 24) * (X1 - X0), cy = Y0 + (d.x - 12) / (88 - 12) * (Y1 - Y0);
+                dots.push({ lv: L.lv, c, cx, cy, r: P.r, tip: `${c} · ${d.n} — ${P.t}${L.auto ? ' (자동 추천)' : ' (직접 지정)'}` });
+            });
+            const ord = { a: 0, p: 1, c: 2, n: 3 };   // 큰 원이 작은 원을 가리지 않도록 어색 → 자연스러움 순으로 그림
+            dots.sort((a, b) => ord[a.lv] - ord[b.lv]);
+            const ln = 'stroke="rgba(255,255,255,.55)" stroke-width=".9" fill="none"';
+            const pitch = `<rect x="3" y="3" width="${W - 6}" height="${H - 6}" ${ln}/>
+                <line x1="${W / 2}" y1="3" x2="${W / 2}" y2="${H - 3}" ${ln}/><circle cx="${W / 2}" cy="${H / 2}" r="12" ${ln}/>
+                <rect x="3" y="${H / 2 - 22}" width="26" height="44" ${ln}/><rect x="3" y="${H / 2 - 10}" width="9" height="20" ${ln}/>
+                <rect x="${W - 29}" y="${H / 2 - 22}" width="26" height="44" ${ln}/><rect x="${W - 12}" y="${H / 2 - 10}" width="9" height="20" ${ln}/>`;
+            const circles = dots.map(o => `<circle cx="${o.cx.toFixed(1)}" cy="${o.cy.toFixed(1)}" r="${o.r}" fill="${FM_PROF[o.lv].col}" stroke="${o.lv === 'n' ? '#fff' : 'rgba(0,0,0,.55)'}" stroke-width="${o.lv === 'n' ? 1.1 : .8}"><title>${gEsc(o.tip)}</title></circle>`).join('');
+            const leg = ['n', 'c', 'p', 'a'].map(k => `<span><i style="background:${FM_PROF[k].col}"></i>${FM_PROF[k].t}</span>`).join('') + `<span><i class="dash"></i>불가=표시 없음</span>`;
+            const txt = `<div style="font-size:.68rem;color:var(--text-muted);line-height:1.5;margin-top:3px;">${['n', 'c', 'p', 'a'].filter(k => by[k].length).map(k => `<b style="color:${FM_PROF[k].col}">${FM_PROF[k].t}</b> ${by[k].join(' · ')}`).join('<br>')}</div>`;
+            const f = fmFoot(p), mf = fmMainFoot(p), A = fmAutoProf(p);
+            const foot = `<div class="fm-foot" style="margin:2px 0 6px;"><span>🦶 <b>${mf.t}</b></span><span>왼발 <span class="fs">${fmStars(f.L)}</span></span><span>오른발 <span class="fs">${fmStars(f.R)}</span></span>${A ? `<span class="mut" title="활동량 · 전체 능력 · 고르게 잘하는 정도">다재다능 ${fmVersatLabel(A.v)}</span>` : ''}</div>`;
+            return `<div class="pt-t" style="margin-top:10px;" data-new="1.43">📍 가능 포지션 · 🦶 사용하는 발 <span class="mut" style="font-size:.7rem;font-weight:600;">원에 마우스를 올리면 포지션 이름</span></div>${foot}
+                <div class="pm-posmap" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                    <svg viewBox="0 0 ${W} ${H}" style="flex:none;width:280px;max-width:100%;height:auto;border-radius:6px;background:linear-gradient(180deg,#14532d,#166534);" role="img" aria-label="가능 포지션 필드 그림">${pitch}${circles}</svg>
+                    <div style="flex:1;min-width:140px;"><div class="fm-prof-leg" style="justify-content:flex-start;">${leg}</div>${txt}</div>
+                </div>`;
         }
         function fmSetFormation(key) {
             const team = fmCurrentTeam(); if (!team || !FM_FORMATIONS[key]) return;
@@ -9501,6 +9920,19 @@ function fmBestStyle(p, role) {
             tac.roleStyle = {}; tac.pos = {}; tac.mv = {}; tac.opt = {};   // 자리 역할이 달라지므로 성향·위치·화살표·개별 지시는 초기화
             fmSelName = null; fmCommit(tac);
         }
+
+        // ======= 🎚️ 5단계 슬라이더 (v1.48) =======
+        function fmSliderBlock(dim, D, R, st, best, c) {
+            const ord = D.ord, idx = Math.max(0, ord.indexOf(st[dim])), cur = D.opts[ord[idx]];
+            const ticks = ord.map((k, i) => { const o = D.opts[k], v = R[dim][k]; return `<button type="button" class="fm-tk${i === idx ? ' on' : ''}${o.ext ? ' ext' : ''}" onclick="fmSetStyleLv('${dim}',${i})" title="${gEsc(o.n + ' — ' + o.d)}${o.cx >= 2 ? ' (복잡한 전술)' : ''}${o.ext ? ' · 양 끝 단계: 효과가 더 크지만 적합도 −2.5(위험 부담)' : ''}"><span>${o.n}${k === best && c.field.length ? ' <i title="현재 선수단 기준 추천">★</i>' : ''}</span><b style="color:${ovrColor(v === null || v === undefined ? null : Math.round(v))}">${fmRound(v)}</b></button>`; }).join('');
+            return `<div class="fm-dim fm-sl" data-new="1.48"><div class="fm-dim-t">${D.label} <em class="fm-sl-cur" title="${gEsc(cur.d)}">${cur.n}</em></div><input type="range" class="fm-rng" min="0" max="4" step="1" value="${idx}" oninput="fmSlideLive(this,'${dim}')" onchange="fmSetStyleLv('${dim}',this.value)" title="${gEsc(cur.d)}"><div class="fm-tks">${ticks}</div></div>`;
+        }
+        function fmSlideLive(el, dim) {   // 끄는 동안은 글씨만 바꾸고, 놓았을 때 저장
+            const D = FM_TACTICS[dim], i = +el.value, o = D && D.opts[D.ord[i]], box = el.closest('.fm-sl'); if (!o || !box) return;
+            const t = box.querySelector('.fm-sl-cur'); if (t) { t.textContent = o.n; t.title = o.d; }
+            box.querySelectorAll('.fm-tk').forEach((b, j) => b.classList.toggle('on', j === i));
+        }
+        function fmSetStyleLv(dim, i) { const D = FM_TACTICS[dim], k = D && D.ord && D.ord[+i]; if (k) fmSetStyle(dim, k); }
         function fmSetStyle(dim, key) { const team = fmCurrentTeam(); if (!team) return; const tac = fmGet(team); tac.style[dim] = key; fmCommit(tac); }
         function fmToggleFgk() { const team = fmCurrentTeam(); if (!team) return; const tac = fmGet(team); tac.style.fgk = !tac.style.fgk; fmCommit(tac); }
         function fmSetRoleStyle(loc, key) { const team = fmCurrentTeam(); if (!team) return; const tac = fmGet(team); if (!tac.roleStyle) tac.roleStyle = {}; if (key) tac.roleStyle[loc] = key; else delete tac.roleStyle[loc]; fmNorm(team, tac); fmCommit(tac); }
@@ -9778,6 +10210,7 @@ function fmBestStyle(p, role) {
             return z;
         }
         function fmTraitEffects(c, st) {
+            st = fmCol(st);
             const cats = { atk: 0, def: 0, pas: 0, dri: 0, spd: 0, sta: 0 }, notes = []; let overall = 0;
             const add = o => { Object.keys(o).forEach(k => { cats[k] += o[k]; }); };
             // 🔬 세부 능력치: 직접 입력한 값이 기본 파생값과 다른 만큼만 보정 (이중 반영 방지) — 계산식은 abSubFx 공용
@@ -10050,7 +10483,7 @@ function fmBestStyle(p, role) {
             cands.sort((a, b) => (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0));
             const pool = cands.slice(0, 8); ['DF', 'MF', 'FW'].forEach(ps => cands.filter(p => p.pos === ps && !pool.includes(p)).slice(0, 2).forEach(p => pool.push(p)));
             cands = pool;
-            const sig = cands.map(p => p.name + ':' + (calcPlayerOVR(p) || 0) + ':' + JSON.stringify(p.stats || '') + JSON.stringify(p.posProf || '') + (p.roleMain || '') + (p.roleSub || '')).join('|') + '|' + fmRound(fmMgrPosScale(team) * 100);
+            const sig = cands.map(p => p.name + ':' + (calcPlayerOVR(p) || 0) + ':' + JSON.stringify(p.stats || '') + JSON.stringify(p.posProf || '') + (p.roleMain || '') + (p.roleSub || '') + fmAutoSig(p)).join('|') + '|' + fmRound(fmMgrPosScale(team) * 100);
             const ck = String(team.id), hit = FM_TOP_CACHE[ck];
             if (hit && hit.sig === sig && hit.list.length >= n) return hit.list.slice(0, n);
             const V = cands.map(p => { const o = {}; FM_FIELD_CODES.forEach(c => { const r = FM_PCODES[c].r; o[c] = fmRoleRating(p, r) - fmPosPenalty(p, r, team, c) + (FM_ROLES[r].nat.includes(p.pos) ? 1.5 : 0) + fmRoleBonus(p, r) + fmRoleExtBonus(p, r); }); return o; });
@@ -10062,7 +10495,7 @@ function fmBestStyle(p, role) {
                     if (i === 4) { if (acc > best) best = acc; return; }
                     for (const ci of tl[codes[i]]) { if (used.indexOf(ci) >= 0) continue; used.push(ci); rec(i + 1, used, acc + V[ci][codes[i]]); used.pop(); }
                 })(0, [], 0);
-                if (best > -Infinity) rows.push({ k, v: best - (codes.every(c => FM_PCODES[c].r !== 'DEF') ? 10 : 0) });
+                if (best > -Infinity) rows.push({ k, v: best - (codes.every(c => FM_PCODES[c].r !== 'DEF') ? 10 : 0) - fmShapeRisk(k) * 4 });   // v1.45: 한쪽 쏠림 · 붙은 자리 감점(합계 기준 ×4)
             });
             rows.sort((a, b) => b.v - a.v);
             const sigCnt = {}, list = [];   // 비슷한 조합만 줄줄이 나오지 않도록 같은 자리 구성(수비·미드·윙·공격 수)은 최대 2개
@@ -10077,7 +10510,9 @@ function fmBestStyle(p, role) {
             top.concat(extra || []).forEach(k => { if (k && !keys.includes(k) && FM_FORMATIONS[k]) keys.push(k); });
             return keys;
         }
-        const fmFormRisk = k => (FM_FORM_RISK[k] !== undefined ? FM_FORM_RISK[k] : ((FM_FORMATIONS[k] && FM_FORMATIONS[k].custom && !FM_FORMATIONS[k].slots.some(x => x.r === 'DEF')) ? 2.5 : 0));
+        // v1.45: 구역 보드 포메이션의 모양 감점 — 한쪽(왼/오른쪽)으로 치우친 정도(imb 2→1 · 3→2.5 · 4→4.5)와 자리가 붙어 카드를 많이 벌려야 하는 정도(crowd 12 초과분)
+        function fmShapeRisk(k) { const F = FM_FORMATIONS[k], sh = F && F.shape; return sh ? [0, 0, 1, 2.5, 4.5][Math.min(4, sh.imb)] + Math.max(0, sh.crowd - 12) * 0.04 : 0; }
+        const fmFormRisk = k => (FM_FORM_RISK[k] !== undefined ? FM_FORM_RISK[k] : ((FM_FORMATIONS[k] && FM_FORMATIONS[k].custom && !FM_FORMATIONS[k].slots.some(x => x.r === 'DEF')) ? 2.5 : 0)) + fmShapeRisk(k);
         function fmParseCodes(str) {   // 'DC AML AMR ST' → 'x:DC-AML-AMR-ST' (잘못된 입력은 null)
             const codes = String(str || '').toUpperCase().split(/[\s,\-·\/]+/).filter(Boolean);
             return fmCodesValid(codes) ? fmCodesKey(codes) : null;
@@ -10901,10 +11336,65 @@ function fmBestStyle(p, role) {
                 <div class="fm-ed-d">${mt.has ? '감독 선호 1~3순위와 맞을수록 🤖 최적 세팅 점수가 올라갑니다. (선호는 🧑‍💼 감독 모달 › 전술 성향)' : '전술 성향이 아직 정해지지 않았습니다. 🧑‍💼 감독 모달 › 전술 성향에서 1~3순위를 정해 보세요.'}</div></div>`;
         }
         // 필드(선수 카드 + 이동 화살표 + 감독 카드). o.ro = 읽기 전용(요약 화면), o.sm = 작게, o.mgr === false = 감독 카드 숨김
+        // 🎨 팀 전술판 구역 색 (v1.47): 5×7 칸 중 자리 코드가 있는 칸을 팀 적합도 색(갈색 약함 → 초록 강함)으로 칠하고, 현재 포메이션이 쓰는 칸은 굵은 테두리로 표시
+        const FM_ZEDGE_X = [0, 21.5, 40.5, 59.5, 78.5, 100], FM_ZEDGE_Y = [10, 30, 41.5, 52, 62.5, 73, 84];
+
+        // ======= 🎨 이동 경로를 반영한 구역 강약 (v1.48) =======
+        // 선수의 위치 + 공격 시 / 수비 시 이동 화살표(경로)가 지나는 구역일수록 그 선수의 적합도가 그 구역에 반영되고,
+        // 경로가 하나도 지나지 않는 구역은 비어 있는 약점이 된다 (여러 명이 겹쳐 지나면 소폭 가점). 이동 예측 모드를 따라간다:
+        //  ⚔️ 공격 시 = 공격 경로만 · 🛡️ 수비 시 = 수비 경로만 · 🔀 둘 다 = 평균 · 끄기 = 경로 없이 팀 잠재력(기존 방식)
+        const FM_ZSX = 15, FM_ZSY = 11;
+        function fmSegD2(px, py, ax, ay, bx, by) {
+            const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy; let t = l2 > 1e-9 ? ((px - ax) * dx + (py - ay) * dy) / l2 : 0; t = Math.max(0, Math.min(1, t));
+            const qx = ax + t * dx, qy = ay + t * dy; return (px - qx) * (px - qx) + (py - qy) * (py - qy);
+        }
+        function fmZonePath(team, c, mode) {
+            const S = fmCellStrength(team); if (!S) return null;
+            if (mode === 'off' || !c.field.length) return { S, cell: null, min: S.min, max: S.max, mode: 'off' };
+            const phases = mode === 'atk' ? ['atk'] : mode === 'def' ? ['def'] : ['atk', 'def'], fc = {};
+            const fitOf = (x, cd) => { const k = x.loc + '|' + cd; if (fc[k] === undefined) { const r = FM_PCODES[cd].r; fc[k] = fmRoleFit(x.p, r, undefined, team, cd) + (FM_ROLES[r].nat.includes(x.p.pos) ? 1.5 : 0) + fmRoleBonus(x.p, r) + fmRoleExtBonus(x.p, r); } return fc[k]; };
+            const paths = [];
+            c.field.forEach((x, idx) => phases.forEach(ph => {
+                const v = fmArrowVec(x.slot, x.loc, x.role, x.sk, c.tac ? c.tac.style : {}, ph, c.tac, idx), ax = x.slot.x, ay = x.slot.y;
+                let bx = ax, by = ay;
+                if (!v.hide && Math.hypot(v.dx, v.dy * FM_PH) >= 2.5) { bx = fmClamp(ax + v.dx, 3, 97); by = fmClamp(ay + v.dy, 2, 97); }
+                paths.push({ x, ph, ax: ax / FM_ZSX, ay: ay / FM_ZSY, bx: bx / FM_ZSX, by: by / FM_ZSY });
+            }));
+            const cell = {}, cov = {}; let mn = Infinity, mx = -Infinity;
+            FM_GRID.forEach((row, ri) => { if (ri > 5) return; row.forEach((cd, ci) => {
+                if (!cd) return;
+                const px = ((FM_ZEDGE_X[ci] + FM_ZEDGE_X[ci + 1]) / 2) / FM_ZSX, py = ((FM_ZEDGE_Y[ri] + FM_ZEDGE_Y[ri + 1]) / 2) / FM_ZSY;
+                let tot = 0, ctot = 0;
+                phases.forEach(ph => {
+                    let P = 0, Fw = 0;
+                    paths.forEach(p => { if (p.ph !== ph) return; const w = Math.exp(-0.5 * fmSegD2(px, py, p.ax, p.ay, p.bx, p.by)); P += w; Fw += w * fitOf(p.x, cd); });
+                    const F0 = P > 0.05 ? Fw / P : S.v[cd] - 6;
+                    tot += F0 - 10 * (1 - Math.min(1, P / 1.1)) + 2.5 * Math.min(1, Math.max(0, P - 1.1) / 1.2); ctot += P;
+                });
+                const v = tot / phases.length; cell[ri + ':' + ci] = v; cov[ri + ':' + ci] = ctot / phases.length;
+                if (v < mn) mn = v; if (v > mx) mx = v;
+            }); });
+            return { S, cell, cov, min: mn, max: mx, mode };
+        }
+        const FM_ZMODE_TXT = { atk: '⚔️ 공격 경로 반영', def: '🛡️ 수비 경로 반영', both: '🔀 공수 경로 반영', off: '경로 미반영(팀 잠재력)' };
+        function fmZoneOverlay(team, c) {
+            const Z = fmZonePath(team, c, fmArrowMode); if (!Z) return ''; const S = Z.S;
+            const cnt = {}; c.slots.forEach(sl => { if (sl.c) cnt[sl.c] = (cnt[sl.c] || 0) + 1; });
+            const occ = new Set(); Object.keys(cnt).forEach(k => { const e = FM_CODE_CELL[k]; if (!e) return; if (e.cols.length === 1) occ.add(e.row + ':' + e.cols[0]); else if (cnt[k] >= 2) { occ.add(e.row + ':1'); occ.add(e.row + ':3'); } else occ.add(e.row + ':2'); });
+            let h = '';
+            FM_GRID.forEach((row, ri) => { if (ri > 5) return; row.forEach((cd, ci) => {
+                if (!cd) return;
+                const val = Z.cell ? Z.cell[ri + ':' + ci] : S.v[cd], z = Z.max > Z.min ? (val - Z.min) / (Z.max - Z.min) : .5, o = occ.has(ri + ':' + ci);
+                const x0 = FM_ZEDGE_X[ci], x1 = FM_ZEDGE_X[ci + 1], y0 = FM_ZEDGE_Y[ri], y1 = FM_ZEDGE_Y[ri + 1];
+                h += `<div class="fm-zc${o ? ' occ' : ''}" style="left:${x0}%;top:${y0}%;width:${x1 - x0}%;height:${y1 - y0}%;background:hsla(${Math.round(12 + 128 * z)},72%,36%,${o ? .72 : .5});"><span>${cd}${o ? ' ' + Math.round(val) : ''}</span></div>`;
+            }); });
+            return `<div class="fm-zov" title="구역 색 = 이 팀이 그 구역에서 얼마나 강한지 (갈색 약함 → 초록 강함) · ${FM_ZMODE_TXT[Z.mode]} — 선수가 지나가는 구역은 그 선수의 적합도로, 아무도 지나가지 않는 구역은 약점으로 칠해요 · 굵은 테두리 = 현재 포메이션 자리">${h}</div>`;
+        }
+        function fmToggleZone() { fmZoneOn = !fmZoneOn; try { localStorage.setItem('gleague_fm_zone', fmZoneOn ? '1' : '0'); } catch (e) { } fmRefresh(); }
         function fmPitchHtml(team, tac, c, o) {
             o = o || {};
             const live = !o.ro && !o.sm, grid = live && fmSnap ? `<div class="fm-grid" style="background-size:${fmSnap}% ${fmSnap}%;"></div>` : '';
-            let pitch = `<div class="fm-pitch${o.sm ? ' fm-sm' : ''}${live ? ' fm-live' : ''}"><div class="fm-pl fm-pl-mid"></div><div class="fm-pl fm-pl-circle"></div><div class="fm-pl fm-pl-box t"></div><div class="fm-pl fm-pl-box b"></div>${grid}<div class="fm-dir">▲ 공격 방향</div>${fmArrowsSvg(c, tac.style, o.mode || fmArrowMode, live)}${o.mgr === false ? '' : fmMgrCardHtml(team, tac, o)}`;
+            let pitch = `<div class="fm-pitch${o.sm ? ' fm-sm' : ''}${live ? ' fm-live' : ''}"><div class="fm-pl fm-pl-mid"></div><div class="fm-pl fm-pl-circle"></div><div class="fm-pl fm-pl-box t"></div><div class="fm-pl fm-pl-box b"></div>${live && fmZoneOn ? fmZoneOverlay(team, c) : ''}${grid}<div class="fm-dir">▲ 공격 방향</div>${fmArrowsSvg(c, tac.style, o.mode || fmArrowMode, live)}${o.mgr === false ? '' : fmMgrCardHtml(team, tac, o)}`;
             c.slots.forEach((s, i) => { pitch += fmSlotHtml('p' + i, s, tac.slots['p' + i], team, tac, o); });
             pitch += fmSlotHtml('GK', c.gkSlot, tac.slots.GK, team, tac, o) + `</div>`;
             return pitch;
@@ -10987,6 +11477,7 @@ function fmBestStyle(p, role) {
             const modeCtl = `<div class="fm-tools">
                 <div class="fm-tgrp"><span class="fm-tl">🧭 이동 예측</span>${arBtn('atk', '⚔️ 공격 시')}${arBtn('def', '🛡️ 수비 시')}${arBtn('both', '🔀 둘 다')}${arBtn('off', '끄기')}</div>
                 <div class="fm-tgrp"><span class="fm-tl">📐 격자</span>${[0, 1, 2, 5].map(v => `<button class="fm-abtn${fmSnap === v ? ' on' : ''}" onclick="fmSetSnap(${v})">${v ? v + '%' : '자유'}</button>`).join('')}<button class="fm-abtn" onclick="fmMirror()" title="모든 위치·화살표를 좌우로 뒤집습니다">↔ 좌우 반전</button></div>
+                <div class="fm-tgrp" data-new="1.47" data-upd="1.48"><span class="fm-tl">🎨 구역 색</span><button class="fm-abtn${fmZoneOn ? ' on' : ''}" onclick="fmToggleZone()" title="전술판을 5×7 구역으로 나눠 이 팀의 강점 · 약점을 색으로 보여줍니다. 현재 포메이션이 쓰는 구역은 굵은 테두리로 표시돼요.">${fmZoneOn ? '켜짐' : '꺼짐'}</button>${fmZoneOn ? '<span class="fm-zleg">약<span class="bar"></span>강</span><span class="fm-zmode" title="이동 예측 버튼(공격 시 · 수비 시 · 둘 다 · 끄기)을 바꾸면 구역 색도 그 경로 기준으로 바뀌어요. 화살표를 끌어 조정해도 바로 반영됩니다.">' + FM_ZMODE_TXT[fmArrowMode] + '</span>' : ''}</div>
                 <div class="fm-tgrp" data-upd="1.38"><span class="fm-tl">🎯 자동 위치</span><button class="fm-abtn${tac.autoPos === false ? '' : ' on'}" onclick="fmToggleAutoPos()" title="켜면 선수 능력치·특성·역할 성향·팀 전술·감독 능력치에 따라 같은 포메이션에서도 선수 위치가 팀마다 다르게 배치됩니다. 직접 옮긴 위치는 그대로 우선합니다.">${tac.autoPos === false ? '꺼짐 (기본 좌표)' : '켜짐'}</button></div>
                 <div class="fm-tgrp"><span class="fm-tl">♻️ 초기화</span>${rBtn('pos', '📍 위치', nPos, '직접 옮긴 선수 위치만 자동 위치로 되돌립니다')}${rBtn('mv', '🧭 화살표 방향', nMv, '직접 그린 화살표만 자동값으로 되돌립니다')}${rBtn('all', '전체', nPos + nMv + nOpt, '위치 · 화살표 · 개별 지시를 모두 기본으로 되돌립니다')}</div></div>`;
             const pitch = fmPitchHtml(team, tac, c, {});
@@ -11011,6 +11502,7 @@ function fmBestStyle(p, role) {
             // 전술 선택 (기본 4항목 + 세부 4항목)
             const dimBlock = dim => {
                 const D = FM_TACTICS[dim], best = Object.keys(D.opts).reduce((m, k) => ((R[dim][k] ?? 0) - fmCompatPenalty(dim, k, F)) > ((R[dim][m] ?? 0) - fmCompatPenalty(dim, m, F)) ? k : m, Object.keys(D.opts)[0]);
+                if (D.step) return fmSliderBlock(dim, D, R, st, best, c);
                 return `<div class="fm-dim"><div class="fm-dim-t">${D.label}</div><div class="fm-opts">${Object.keys(D.opts).map(k => {
                     const o = D.opts[k], v = R[dim][k];
                     return `<button class="fm-opt${st[dim] === k ? ' on' : ''}" onclick="fmSetStyle('${dim}','${k}')" title="${gEsc(o.d)}${o.cx >= 2 ? ' (복잡한 전술)' : ''}"><span>${o.n}${k === best && c.field.length ? ' <i title="현재 선수단 기준 추천">★</i>' : ''}</span><b style="color:${ovrColor(v === null ? null : Math.round(v))}">${fmRound(v)}</b></button>`;
@@ -28505,7 +28997,7 @@ function fmBestStyle(p, role) {
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.41';
+        const G_HTML_VERSION = '1.48';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -30912,7 +31404,7 @@ body:not(.tac-help-open) .tac-help-txt { display: none !important; }
   // ---------- 선수 모달 ----------
   function pmApplyViewState(){
     var ed = window._pmEditing, show = function(id,v){ var e=$(id); if(e) e.style.display=v; };
-    show('playerTraitView', ed ? 'none' : '');
+    show('playerTraitView', ed ? 'none' : ''); show('pmPosView', ed ? 'none' : '');
     show('pmSubBar', ed ? 'none' : '');
     var ref = null; try { ref = findPlayerRefByName(_playerModalName); } catch(e){}
     show('playerExtSection', (!ed && window._pmSubsOpen && ref && ref.stats) ? '' : 'none');
@@ -30976,10 +31468,20 @@ save(); pmTraitRender(_playerModalName);
 try { if(currentTabId === 'datacenter' && currentDcTeamId){ var tm = state.teams.find(function(t){ return String(t.id) === String(currentDcTeamId); }); if(tm) dcRenderFormation(tm); } } catch(e){ console.error(e); }
 try { pamRefreshBackgroundViews(); } catch(e){}
 };
+window.pmProfileViewHtml = function(ref){
+var R = fmRoleResolve(ref), cur = fmTraits(ref);
+var role = function(lb, c, auto){
+return '<div class="pm-kv"><span class="k">'+lb+'</span><span class="v"'+(c ? ' title="'+gEsc(FM_STYLES[c.role][c.style].d)+'"' : '')+'>'
++ (c ? gEsc(FM_ROLES[c.role].label+' · '+FM_STYLES[c.role][c.style].n)+'<b style="color:'+ovrColor(Math.round(c.v))+'">'+fmRound(c.v)+'</b>'+(auto ? '<i class="pm-auto">자동</i>' : '') : '<span class="mut">없음</span>')
++ '</span></div>'; };
+return '<div class="pm-sec-t">🎯 역할 <span class="mut">주 · 부</span></div>' + role('주', R.main, R.mAuto) + role('부', R.sub, R.sAuto)
++ '<div class="pm-sec-t" style="margin-top:12px;">🧬 특성 <span class="mut">'+cur.length+'/'+FM_TRAIT_MAX+'</span></div>'
++ (cur.length ? '<div class="pm-trs">'+cur.map(function(k){ return '<span title="'+gEsc(FM_TRAITS[k].d)+'">'+FM_TRAITS[k].ic+' '+FM_TRAITS[k].n+'</span>'; }).join('')+'</div>' : '<div class="pm-empty">선택된 특성이 없습니다.<br>✏️ 편집에서 고를 수 있어요.</div>');
+};
 var _prb = window.pmRoleBlock;
 window.pmRoleBlock = function(name, edit){
 var h = _prb.apply(this, arguments);
-try { var ref = findPlayerRefByName(name); if(ref){ if(!edit) h += fmProfSummary(ref); } } catch(e){ console.error(e); }
+try { var ref = findPlayerRefByName(name); if(ref){  } } catch(e){ console.error(e); }
 return h;
 };
 var _ptr2 = window.pmTraitRender;
@@ -30988,7 +31490,8 @@ var r = _ptr2.apply(this, arguments);
 try {
 var ref = findPlayerRefByName(name); if(!ref) return r;
 var view = document.getElementById('playerTraitView'), ed = document.getElementById('pmEditTraits');
-if(view) view.insertAdjacentHTML('beforeend', pmRoleBlock(name, false));
+if(view) view.innerHTML = pmProfileViewHtml(ref);
+var pv = document.getElementById('pmPosView'); if(pv) pv.innerHTML = fmProfSummary(ref);
 var er = document.getElementById('pmEditRoles'), ep = document.getElementById('pmEditPos');
 if(er) er.innerHTML = pmRoleBlock(name, true);
 if(ep) ep.innerHTML = '<div class="fm-ed-sec">' + fmProfHtml(ref, '') + '</div>';
