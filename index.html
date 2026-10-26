@@ -107,8 +107,9 @@
         .fm-gsd > div b { font-size:0.8rem; margin-left:2px; }
         .fm-gutter { display:grid; grid-template-rows:repeat(7,1fr); gap:3px; padding:3px 0; }
         .fm-gutter span { display:flex; align-items:center; justify-content:flex-end; font-size:0.58rem; font-weight:800; color:var(--text-muted); text-align:right; line-height:1.1; }
-        .fm-bgrid { position:relative; flex:1; min-width:0; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(7,1fr); gap:3px; padding:3px; aspect-ratio:5/5.6; border-radius:10px; border:2px solid rgba(255,255,255,0.4); background:repeating-linear-gradient(180deg,#14532d 0 calc(100% / 7),#166534 calc(100% / 7) calc(200% / 7)); }
-        .fm-bgrid::before { content:''; position:absolute; left:20%; right:20%; bottom:0; height:28.6%; border:2px solid rgba(255,255,255,0.22); border-bottom:none; pointer-events:none; }
+        .fm-bgrid { position:relative; flex:1; min-width:0; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(7,1fr); gap:3px; padding:3px; aspect-ratio:5/5.6; border-radius:10px; border:2px solid rgba(255,255,255,0.55); background:radial-gradient(ellipse 11% 9.8% at 50% 50%, transparent calc(100% - 2px), rgba(255,255,255,0.35) calc(100% - 2px), rgba(255,255,255,0.35) 100%, transparent 100%), linear-gradient(rgba(255,255,255,0.35),rgba(255,255,255,0.35)) center / 100% 2px no-repeat, repeating-linear-gradient(0deg,#14532d 0 34px,#166534 34px 68px); }   /* v1.49: 전술판(풋살 코트)과 같은 잔디 · 중앙선 · 센터서클 */
+        .fm-bgrid::before { content:''; position:absolute; left:25%; right:25%; bottom:-2px; height:14%; border:2px solid rgba(255,255,255,0.35); border-bottom:none; border-radius:40px 40px 0 0; pointer-events:none; }
+        .fm-bgrid::after { content:''; position:absolute; left:25%; right:25%; top:-2px; height:14%; border:2px solid rgba(255,255,255,0.35); border-top:none; border-radius:0 0 40px 40px; pointer-events:none; }
         .fm-gc { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:0; padding:0; line-height:1.1; border-radius:8px; border:1px solid rgba(255,255,255,0.22); background:rgba(15,23,42,0.35); color:#f1f5f9; cursor:pointer; font-family:inherit; transition:transform .08s; }
         .fm-gc b { font-size:0.8rem; font-weight:900; text-shadow:0 1px 2px rgba(0,0,0,0.5); } .fm-gc i { font-style:normal; font-size:0.58rem; opacity:0.85; margin-top:1px; }
         .fm-gc:hover { border-color:#fff; transform:scale(1.04); z-index:2; }
@@ -9882,7 +9883,7 @@ function fmBestStyle(p, role) {
         function fmProfSummary(p) {   // 선수 상세(읽기용): 작은 축구장 위에 5단계 숙련도 색 원 + 사용하는 발
             if (!p || p.pos === 'GK') return '';
             // 가로 축구장(왼쪽 = 우리 골대, 오른쪽 = 상대 골대) · 위쪽 = 왼쪽 측면. 보드 좌표(x 좌우 · y 앞뒤)를 돌려서 배치
-            const W = 200, H = 112, X0 = 24, X1 = 168, Y0 = 14, Y1 = 98;   // v1.44: 자리가 경기장 전체(수비 ~ 공격 · 좌 ~ 우)에 고르게 퍼지도록 좌표를 늘려 배치
+            const W = 200, H = 150, X0 = 26, X1 = 166, Y0 = 20, Y1 = 130;   // v1.49: 전술판(풋살 코트)과 같은 비율 · 모양   // v1.44: 자리가 경기장 전체(수비 ~ 공격 · 좌 ~ 우)에 고르게 퍼지도록 좌표를 늘려 배치
             const dots = [], by = { n: [], c: [], p: [], a: [] };
             FM_FIELD_CODES.forEach(c => {
                 const L = fmPosLevel(p, c), d = FM_PCODES[c], P = FM_PROF[L.lv];
@@ -9893,11 +9894,7 @@ function fmBestStyle(p, role) {
             });
             const ord = { a: 0, p: 1, c: 2, n: 3 };   // 큰 원이 작은 원을 가리지 않도록 어색 → 자연스러움 순으로 그림
             dots.sort((a, b) => ord[a.lv] - ord[b.lv]);
-            const ln = 'stroke="rgba(255,255,255,.55)" stroke-width=".9" fill="none"';
-            const pitch = `<rect x="3" y="3" width="${W - 6}" height="${H - 6}" ${ln}/>
-                <line x1="${W / 2}" y1="3" x2="${W / 2}" y2="${H - 3}" ${ln}/><circle cx="${W / 2}" cy="${H / 2}" r="12" ${ln}/>
-                <rect x="3" y="${H / 2 - 22}" width="26" height="44" ${ln}/><rect x="3" y="${H / 2 - 10}" width="9" height="20" ${ln}/>
-                <rect x="${W - 29}" y="${H / 2 - 22}" width="26" height="44" ${ln}/><rect x="${W - 12}" y="${H / 2 - 10}" width="9" height="20" ${ln}/>`;
+            const pitch = gFutsalPitch(W, H, { m: 3 });
             const circles = dots.map(o => `<circle cx="${o.cx.toFixed(1)}" cy="${o.cy.toFixed(1)}" r="${o.r}" fill="${FM_PROF[o.lv].col}" stroke="${o.lv === 'n' ? '#fff' : 'rgba(0,0,0,.55)'}" stroke-width="${o.lv === 'n' ? 1.1 : .8}"><title>${gEsc(o.tip)}</title></circle>`).join('');
             const leg = ['n', 'c', 'p', 'a'].map(k => `<span><i style="background:${FM_PROF[k].col}"></i>${FM_PROF[k].t}</span>`).join('') + `<span><i class="dash"></i>불가=표시 없음</span>`;
             const txt = `<div style="font-size:.68rem;color:var(--text-muted);line-height:1.5;margin-top:3px;">${['n', 'c', 'p', 'a'].filter(k => by[k].length).map(k => `<b style="color:${FM_PROF[k].col}">${FM_PROF[k].t}</b> ${by[k].join(' · ')}`).join('<br>')}</div>`;
@@ -9905,7 +9902,7 @@ function fmBestStyle(p, role) {
             const foot = `<div class="fm-foot" style="margin:2px 0 6px;"><span>🦶 <b>${mf.t}</b></span><span>왼발 <span class="fs">${fmStars(f.L)}</span></span><span>오른발 <span class="fs">${fmStars(f.R)}</span></span>${A ? `<span class="mut" title="활동량 · 전체 능력 · 고르게 잘하는 정도">다재다능 ${fmVersatLabel(A.v)}</span>` : ''}</div>`;
             return `<div class="pt-t" style="margin-top:10px;" data-new="1.43">📍 가능 포지션 · 🦶 사용하는 발 <span class="mut" style="font-size:.7rem;font-weight:600;">원에 마우스를 올리면 포지션 이름</span></div>${foot}
                 <div class="pm-posmap" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-                    <svg viewBox="0 0 ${W} ${H}" style="flex:none;width:280px;max-width:100%;height:auto;border-radius:6px;background:linear-gradient(180deg,#14532d,#166534);" role="img" aria-label="가능 포지션 필드 그림">${pitch}${circles}</svg>
+                    <svg viewBox="0 0 ${W} ${H}" style="flex:none;width:280px;max-width:100%;height:auto;border-radius:10px;" role="img" aria-label="가능 포지션 필드 그림">${pitch}${circles}</svg>
                     <div style="flex:1;min-width:140px;"><div class="fm-prof-leg" style="justify-content:flex-start;">${leg}</div>${txt}</div>
                 </div>`;
         }
@@ -20459,34 +20456,115 @@ function fmBestStyle(p, role) {
         // ======= v1.34: 📍 득점 위치 (⚽ 슈팅 위치 + 마지막 슈팅 방향 화살표) =======
         // 좌표는 0~1 (x: 우리 팀이 공격하는 방향이 오른쪽 골대 = 1, y: 위 0 ~ 아래 1). loc = { x, y, tx, ty }  (tx,ty = 공이 향한 곳)
         const GM_W = 400, GM_H = 260;
-        function gmPitchInner(uid) {
-            const L = '#ffffff55';
-            return `<rect x="0" y="0" width="${GM_W}" height="${GM_H}" rx="6" fill="#166534"/>
-                <g fill="none" stroke="${L}" stroke-width="1.5">
-                    <rect x="6" y="6" width="${GM_W - 12}" height="${GM_H - 12}"/>
-                    <line x1="${GM_W / 2}" y1="6" x2="${GM_W / 2}" y2="${GM_H - 6}"/>
-                    <circle cx="${GM_W / 2}" cy="${GM_H / 2}" r="30"/>
-                    <rect x="6" y="${GM_H / 2 - 55}" width="55" height="110"/><rect x="${GM_W - 61}" y="${GM_H / 2 - 55}" width="55" height="110"/>
-                    <rect x="6" y="${GM_H / 2 - 25}" width="20" height="50"/><rect x="${GM_W - 26}" y="${GM_H / 2 - 25}" width="20" height="50"/>
+// v1.49: 경기장 그래픽 = 팀 데이터센터 전술판(풋살 코트)과 같은 모양 — 잔디 줄무늬 · 중앙선 · 센터서클 · 둥근 페널티 구역. 가로로 눕혀 그림 (→ = 전술판의 ▲ 공격 방향)
+        //  W × H 는 경기장 크기, o.m = 바깥 여백, o.span/o.d = 페널티 구역의 세로 폭 · 깊이 (기본은 전술판 비율: 폭 50% · 깊이 14%)
+        function gFutsalPitch(W, H, o) {
+            o = o || {};
+            const m = o.m != null ? o.m : 6, iw = W - 2 * m, ih = H - 2 * m, sw = o.sw || Math.max(1, +(W / 235).toFixed(2));
+            const bw = W * 0.0716, cy = H / 2;   // 전술판의 잔디 줄 폭(34px / 475px) 비율
+            let s = `<rect x="0" y="0" width="${W}" height="${H}" fill="#166534"/>`;
+            for (let i = 0; i * bw < W; i += 2) s += `<rect x="${(i * bw).toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${H}" fill="#14532d"/>`;
+            const hs = (o.span != null ? o.span : ih * 0.5) / 2, d = o.d != null ? o.d : iw * 0.14, rr = Math.min(ih * 0.11, hs, d);
+            const box = right => {
+                const x0 = right ? W - m : m, x1 = right ? W - m - d : m + d, k = right ? 1 : -1;
+                return `<path d="M${x0},${cy - hs} L${x1 + k * rr},${cy - hs} Q${x1},${cy - hs} ${x1},${cy - hs + rr} L${x1},${cy + hs - rr} Q${x1},${cy + hs} ${x1 + k * rr},${cy + hs} L${x0},${cy + hs}"/>`;
+            };
+            s += `<g fill="none" stroke="#ffffff59" stroke-width="${sw}">
+                    <line x1="${W / 2}" y1="${m}" x2="${W / 2}" y2="${H - m}"/>
+                    <circle cx="${W / 2}" cy="${cy}" r="${(H * 0.11).toFixed(1)}"/>
+                    ${box(false)}${box(true)}
                 </g>
-                <rect x="${GM_W - 6}" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/><rect x="1" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/>`;
-        }
-        // 한 골의 ⚽ + 화살표 SVG 조각 (flip = 180° 뒤집기: 원정팀 시점)
-        function gmGoalSvg(loc, color, uid, label, flip) {
-            if (!loc || typeof loc.x !== 'number') return '';
-            const fx = v => (flip ? 1 - v : v);
-            const bx = fx(loc.x) * GM_W, by = fx(loc.y) * GM_H;
-            let s = '';
-            if (typeof loc.tx === 'number') {
-                const ex = fx(loc.tx) * GM_W, ey = fx(loc.ty) * GM_H;
-                const ang = Math.atan2(ey - by, ex - bx), hl = 11, hw = 0.45;   // 화살표 머리를 직접 그림 (브라우저 호환)
-                const p1 = [ex - hl * Math.cos(ang - hw), ey - hl * Math.sin(ang - hw)], p2 = [ex - hl * Math.cos(ang + hw), ey - hl * Math.sin(ang + hw)];
-                s += `<line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="#000" stroke-width="5.5" stroke-linecap="round" opacity=".45"/><line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="${color}" stroke-width="3" stroke-linecap="round"/><polygon points="${ex},${ey} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}" fill="${color}" stroke="#000" stroke-width="1" stroke-opacity=".5"/>`;
-            }
-            s += `<circle cx="${bx}" cy="${by}" r="9" fill="#fff" stroke="#111" stroke-width="1.5"/><text x="${bx}" y="${by + 4.5}" font-size="13" text-anchor="middle">⚽</text>`;
-            if (label) { const anc = label.length > 4 ? (bx < GM_W * 0.25 ? 'start' : bx > GM_W * 0.75 ? 'end' : 'middle') : 'middle', lx = anc === 'start' ? bx - 8 : anc === 'end' ? bx + 8 : bx, ly = by < 26 ? by + 22 : by - 12; s += `<text x="${lx}" y="${ly}" font-size="10" font-weight="800" text-anchor="${anc}" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">${label}</text>`; }
+                <rect x="${m}" y="${m}" width="${iw}" height="${ih}" fill="none" stroke="#ffffff8c" stroke-width="${sw * 1.15}"/>`;
             return s;
         }
+        function gmPitchInner(uid) {
+            // 박스 크기는 득점 유형 분석(골에어리어 · 박스 안 · 중거리)의 구역 기준과 같게 유지: 세로 ±55 · 깊이 55
+            return gFutsalPitch(GM_W, GM_H, { m: 6, span: 110, d: 55 }) +
+                `<rect x="${GM_W - 6}" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/><rect x="1" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/>`;
+        }
+        // 한 골의 ⚽ + 화살표 조각 (flip = 180° 뒤집기: 원정팀 시점) — 화살표(arrow)와 공(ball)을 따로 돌려줘 이름표를 맨 위에 그릴 수 있다
+        function gmGoalParts(loc, color, flip) {
+            if (!loc || typeof loc.x !== 'number') return null;
+            const fx = v => (flip ? 1 - v : v);
+            const bx = fx(loc.x) * GM_W, by = fx(loc.y) * GM_H;
+            let arrow = '', ex = null, ey = null;
+            if (typeof loc.tx === 'number') {
+                ex = fx(loc.tx) * GM_W; ey = fx(loc.ty) * GM_H;
+                const ang = Math.atan2(ey - by, ex - bx), hl = 11, hw = 0.45;   // 화살표 머리를 직접 그림 (브라우저 호환)
+                const p1 = [ex - hl * Math.cos(ang - hw), ey - hl * Math.sin(ang - hw)], p2 = [ex - hl * Math.cos(ang + hw), ey - hl * Math.sin(ang + hw)];
+                arrow = `<line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="#000" stroke-width="5.5" stroke-linecap="round" opacity=".45"/><line x1="${bx}" y1="${by}" x2="${ex}" y2="${ey}" stroke="${color}" stroke-width="3" stroke-linecap="round"/><polygon points="${ex},${ey} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}" fill="${color}" stroke="#000" stroke-width="1" stroke-opacity=".5"/>`;
+            }
+            const ball = `<circle cx="${bx}" cy="${by}" r="9" fill="#fff" stroke="#111" stroke-width="1.5"/><text x="${bx}" y="${by + 4.5}" font-size="13" text-anchor="middle">⚽</text>`;
+            return { bx, by, ex, ey, arrow, ball };
+        }
+        function gmGoalSvg(loc, color, uid, label, flip) {
+            const g = gmGoalParts(loc, color, flip); if (!g) return '';
+            let s = g.arrow + g.ball;
+            if (label) { const tw = gmTextW(label, 10) + 8, lx = Math.min(Math.max(g.bx - tw / 2, 3), GM_W - tw - 3), ly = g.by < 30 ? g.by + 12 : g.by - 31; s += gmLabelBox(lx, ly, tw, 17, label, 10, color); }
+            return s;
+        }
+        // ---- v1.49: 득점 이름표 자동 배치 ----
+        function gmTextW(t, fs) { let w = 0; for (const ch of String(t)) w += (ch.charCodeAt(0) > 255 ? 1.02 : 0.6) * fs; return w; }
+        function gmLabelBox(x, y, w, h, text, fs, color) {
+            return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h}" rx="4" fill="#020617" fill-opacity=".86" stroke="${color}" stroke-width="1.3"/><text x="${(x + w / 2).toFixed(1)}" y="${(y + h / 2 + fs * 0.36).toFixed(1)}" font-size="${fs}" font-weight="800" text-anchor="middle" fill="#fff">${gEsc(text)}</text>`;
+        }
+        function gmLabelLayer(parts, ht, at) {
+            const W = GM_W, H = GM_H, M = 3;
+            const rectHit = (a, b, pad) => !(a.x + a.w + pad <= b.x || b.x + b.w + pad <= a.x || a.y + a.h + pad <= b.y || b.y + b.h + pad <= a.y);
+            const circHit = (r, cx, cy, rad) => { const nx = Math.min(Math.max(cx, r.x), r.x + r.w), ny = Math.min(Math.max(cy, r.y), r.y + r.h); return Math.hypot(nx - cx, ny - cy) < rad; };
+            const segHit = (r, x1, y1, x2, y2) => { for (let t = 0; t <= 1.0001; t += 0.05) { const x = x1 + (x2 - x1) * t, y = y1 + (y2 - y1) * t; if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return true; } return false; };
+            // 피해야 할 곳: 양쪽 골대 팀 표시 글씨
+            const sideW = t => gmTextW('🥅 ' + t.name + ' 골대', 11) + 4;
+            const obst = [{ x: 8, y: 6, w: sideW(ht), h: 17 }, { x: W - 8 - sideW(at), y: 6, w: sideW(at), h: 17 }];
+            const placed = [];   // 이미 놓인 이름표 상자
+            const out = new Array(parts.length);
+            const tiers = [
+                { fs: 10, txt: p => `${p.no}. ${p.when} ${p.name}` },
+                { fs: 9, txt: p => `${p.no}. ${p.when} ${p.name}` },
+                { fs: 9, txt: p => `${p.no}. ${p.name}` },
+                { fs: 10, txt: p => `${p.no}` }
+            ];
+            // 공이 몰려 있는(주변에 다른 공이 많은) 골부터 먼저 자리를 잡는다
+            const order = parts.map((p, i) => i).sort((a, b) => {
+                const cnt = i => parts.filter((q, j) => j !== i && Math.hypot(q.gp.bx - parts[i].gp.bx, q.gp.by - parts[i].gp.by) < 70).length;
+                return cnt(b) - cnt(a) || a - b;
+            });
+            order.forEach(i => {
+                const p = parts[i], g = p.gp, bx = g.bx, by = g.by;
+                let best = null;
+                for (const T of tiers) {
+                    const text = T.txt(p), h = T.fs + 8, w = Math.max(gmTextW(text, T.fs) + 9, 16), cands = [];
+                    [3, 12, 26, 44].forEach(gap => {
+                        const r = 9 + gap;
+                        [[-w / 2, -r - h], [-w / 2, r], [r, -h / 2], [-r - w, -h / 2], [r * 0.7, -r * 0.7 - h], [-r * 0.7 - w, -r * 0.7 - h], [r * 0.7, r * 0.7], [-r * 0.7 - w, r * 0.7]].forEach(([dx, dy]) => cands.push({ gap, x: bx + dx, y: by + dy }));
+                    });
+                    let cur = null;
+                    cands.forEach(c => {
+                        const x = Math.min(Math.max(c.x, M), W - w - M), y = Math.min(Math.max(c.y, M), H - h - M), box = { x, y, w, h };
+                        let hard = 0, soft = 0;
+                        placed.forEach(o => { if (rectHit(box, o, 2)) hard++; });
+                        obst.forEach(o => { if (rectHit(box, o, 1)) hard++; });
+                        parts.forEach((q, j) => { if (circHit(box, q.gp.bx, q.gp.by, 10)) { if (j === i) hard += 1; else soft += 6; } });
+                        parts.forEach((q, j) => { if (q.gp.ex !== null && segHit(box, q.gp.bx, q.gp.by, q.gp.ex, q.gp.ey)) soft += j === i ? 2 : 3; });
+                        const dist = Math.hypot(x + w / 2 - bx, y + h / 2 - by);
+                        const score = hard * 1000 + soft * 10 + dist * 0.15 + c.gap * 0.3;
+                        if (!cur || score < cur.score) cur = { score, hard, box, text, fs: T.fs };
+                    });
+                    if (!best || cur.hard < best.hard || (cur.hard === best.hard && cur.score < best.score && T === tiers[tiers.length - 1])) best = cur;
+                    if (cur.hard === 0) { best = cur; break; }
+                }
+                placed.push(best.box); out[i] = best;
+            });
+            let arrows = '', balls = '', lines = '', labels = '';
+            parts.forEach((p, i) => {
+                arrows += p.gp.arrow; balls += p.gp.ball;
+                const b = out[i].box, cx = Math.min(Math.max(p.gp.bx, b.x), b.x + b.w), cy = Math.min(Math.max(p.gp.by, b.y), b.y + b.h);
+                if (Math.hypot(cx - p.gp.bx, cy - p.gp.by) > 12) lines += `<line x1="${p.gp.bx}" y1="${p.gp.by}" x2="${cx.toFixed(1)}" y2="${cy.toFixed(1)}" stroke="${p.color}" stroke-width="1.2" stroke-dasharray="3 2" opacity=".9"/>`;
+                labels += gmLabelBox(b.x, b.y, b.w, b.h, out[i].text, out[i].fs, p.color);
+            });
+            return arrows + balls + lines + labels;
+        }
+        
         let gmRowRef = null, gmCur = null, gmStep = 0, gmCtx = null;
         function gmRowLoc(row) { try { return row && row.dataset.loc ? JSON.parse(row.dataset.loc) : null; } catch (e) { return null; } }
         function gmUpdateBtn(row) {
@@ -20533,7 +20611,7 @@ function fmBestStyle(p, role) {
                     <button type="button" class="btn-edit" onclick="gmSwapEnds()" title="전반에 홈이 왼쪽 골대를 지키는 경기라면 눌러서 반대로 바꾸세요 (기억해 둡니다)" style="margin-left:auto;font-size:.68rem;padding:2px 8px;">↔ 전반 진영 반대로</button>
                 </div>
                 <div id="gmHint" style="font-size:.75rem;color:#fbbf24;margin-bottom:8px;"></div>
-                <svg id="gmSvg" viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;display:block;cursor:crosshair;border-radius:6px;" onclick="gmClick(event)"></svg>
+                <svg id="gmSvg" viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;display:block;cursor:crosshair;border-radius:10px;" onclick="gmClick(event)"></svg>
                 <div id="gmNote" style="font-size:.65rem;color:var(--text-muted);margin:4px 0 8px;"></div>
                 <div style="display:flex;gap:6px;justify-content:flex-end;">
                     <button type="button" class="btn-edit" onclick="gmClear()">초기화</button>
@@ -20576,7 +20654,7 @@ function fmBestStyle(p, role) {
 
         // v1.49: 경기 기록 카드 — 경기장 하나에 두 팀을 그리되 각 팀은 '자기 쪽 절반'만 사용 (홈 = 오른쪽 절반에서 → 공격, 원정 = 왼쪽 절반에서 ← 공격) · 번호 = 득점 시간순(두 팀 통합) · 번호 옆에 시간 · 득점자 표시
         function goalMapHtml(m, ht, at) {
-            const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
+const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const goals = []; let seq = 0;
             (m.pStats || []).forEach(ps => (ps.goalTimes || []).forEach(gt => {
                 if (!gt.loc) return;
@@ -20586,21 +20664,25 @@ function fmBestStyle(p, role) {
             const n = goals.length;
             // 저장 좌표(득점 팀이 → 공격, 0~1)를 그 팀의 절반(0.5폭)에 눌러 담는다: 홈 → 오른쪽 절반, 원정 → 왼쪽 절반 (180° 뒤집기)
             const sq = (v, home) => home ? { x: 0.5 + v.x * 0.5, y: v.y } : { x: 0.5 - v.x * 0.5, y: 1 - v.y };
-            let svg = ''; const items = [];
+            const items = [], parts = [];
             goals.forEach((g, i) => {
                 const no = i + 1, tm = g.home ? ht : at, L = g.gt.loc;
                 const p = sq(L, g.home), q = typeof L.tx === 'number' ? sq({ x: L.tx, y: L.ty }, g.home) : null;
                 const loc = q ? { x: p.x, y: p.y, tx: q.x, ty: q.y } : { x: p.x, y: p.y };
                 const when = `${(g.gt.half || '').charAt(0)}${g.gt.min}'`;
-                svg += gmGoalSvg(loc, tm.color, uid, `${no}. ${when} ${g.ps.name}`, false);
+                const gp = gmGoalParts(loc, tm.color, false);
+                if (gp) parts.push({ gp, no, color: tm.color, when, name: g.ps.name });
                 items.push(`<div style="font-size:.68rem;"><b style="color:${tm.color}">${no}</b> ${when} ${g.ps.name}${g.gt.ast ? ` <span style="color:#fbbf24;">🅰️${g.gt.ast}</span>` : ''}</div>`);
             });
+            // v1.49: 글씨가 가려지거나 겹치지 않게 — 화살표 → 공 → 이름표 순으로 그리고, 이름표는 서로 · 공 · 화살표 · 골대 팀 표시를 피해 빈 곳에 자동 배치
+            const svg = gmLabelLayer(parts, ht, at);
+
             const cardList = (m.pStats || []).filter(ps => cardIcons(ps)).map(ps => `<span style="font-size:.68rem;margin-right:8px;">${cardIcons(ps)} ${ps.name}</span>`).join('');
             const ssList = (m.pStats || []).filter(ps => ps.ss > 0).map(ps => `<span style="font-size:.68rem;margin-right:8px;">🧤 ${ps.name} <b>${ps.ss}</b></span>`).join('');
             if (!n && !ssList && !cardList) return '';
             return `<div class="gm-card" style="margin:6px 0 8px;">
                 ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · 번호 = 득점 시간순 · <span style="color:${ht.color}">${ht.name}</span>은 오른쪽 절반(→), <span style="color:${at.color}">${at.name}</span>은 왼쪽 절반(←)만 사용 · 가로 거리는 절반으로 압축)</span></div>
-                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:6px;">${gmPitchInner(uid)}${gmSideOverlay(ht, at)}${svg}</svg>
+                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:10px;">${gmPitchInner(uid)}${gmSideOverlay(ht, at)}${svg}</svg>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>` : ''}
                 ${cardList ? `<div style="margin-top:4px;">${cardList}<span style="font-size:.62rem;color:var(--text-muted);">카드 (경고 2회 = 퇴장)</span></div>` : ''}
                 ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">세이브(결정적 득점 선방)</span></div>` : ''}
