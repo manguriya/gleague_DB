@@ -20477,9 +20477,11 @@ function fmBestStyle(p, role) {
                 <rect x="${m}" y="${m}" width="${iw}" height="${ih}" fill="none" stroke="#ffffff8c" stroke-width="${sw * 1.15}"/>`;
             return s;
         }
-        function gmPitchInner(uid) {
+        function gmPitchInner(uid, o) {
             // 박스 크기는 득점 유형 분석(골에어리어 · 박스 안 · 중거리)의 구역 기준과 같게 유지: 세로 ±55 · 깊이 55
-            return gFutsalPitch(GM_W, GM_H, { m: 6, span: 110, d: 55 }) +
+            // o.half = true (경기 카드 · 히스토리): 가로가 절반으로 압축돼 표시되므로 박스 깊이도 절반 비율로 맞춤 — 박스 선 = '박스 안' 판정 경계
+            const d = o && o.half ? (GM_W - 6) - GM_W * (0.5 + 0.5 * (GM_W - 61) / GM_W) : 55;
+            return gFutsalPitch(GM_W, GM_H, { m: 6, span: 110, d: d }) +
                 `<rect x="${GM_W - 6}" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/><rect x="1" y="${GM_H / 2 - 18}" width="5" height="36" fill="#fff"/>`;
         }
         // 한 골의 ⚽ + 화살표 조각 (flip = 180° 뒤집기: 원정팀 시점) — 화살표(arrow)와 공(ball)을 따로 돌려줘 이름표를 맨 위에 그릴 수 있다
@@ -20682,7 +20684,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (!n && !ssList && !cardList) return '';
             return `<div class="gm-card" style="margin:6px 0 8px;">
                 ${n ? `<div style="font-size:.7rem;font-weight:800;margin-bottom:3px;">📍 득점 위치 <span style="font-weight:400;color:var(--text-muted);">(⚽ 슈팅 위치 → 화살표 = 마지막 슈팅 방향 · 번호 = 득점 시간순 · <span style="color:${ht.color}">${ht.name}</span>은 오른쪽 절반(→), <span style="color:${at.color}">${at.name}</span>은 왼쪽 절반(←)만 사용 · 가로 거리는 절반으로 압축)</span></div>
-                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:10px;">${gmPitchInner(uid)}${gmSideOverlay(ht, at)}${svg}</svg>
+                <svg viewBox="0 0 ${GM_W} ${GM_H}" style="width:100%;max-width:560px;display:block;border-radius:10px;">${gmPitchInner(uid, { half: true })}${gmSideOverlay(ht, at)}${svg}</svg>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 8px;margin-top:4px;">${items.join('')}</div>` : ''}
                 ${cardList ? `<div style="margin-top:4px;">${cardList}<span style="font-size:.62rem;color:var(--text-muted);">카드 (경고 2회 = 퇴장)</span></div>` : ''}
                 ${ssList ? `<div style="margin-top:4px;">${ssList}<span style="font-size:.62rem;color:var(--text-muted);">세이브(결정적 득점 선방)</span></div>` : ''}
