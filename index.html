@@ -32699,6 +32699,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible,
 #dashHighlights .dhr-name, #dashOvrTop .dhr-name { flex: none; min-width: 0; }
 #dashHighlights .dhr-val { justify-self: end; }
 #dashOvrTop .dhr-val { justify-self: start; }
+/* 🏠 대시보드 접이식 카드: 높이가 달라도 빈 칸이 생기지 않도록 위에서부터 차곡차곡 쌓는 배치 (최대 3열) */
+.dash-folds { display: block; columns: 3 380px; column-gap: var(--g-gap); }
+.dash-folds > details.card { break-inside: avoid; display: block; margin-bottom: var(--g-gap) !important; }
+.dash-folds > details.dash-fold-wide { column-span: all; }
 </style>
 <script id="pamCompactJs">
 (function(){
