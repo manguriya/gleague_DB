@@ -11890,7 +11890,7 @@ function fmBestStyle(p, role) {
             const tm = tcTacticMatchup(pA, pB, tA.name, tB.name);
             const notes = tm.on ? (tm.notes.length ? tm.notes.map(n => `<div class="fm-h ${n.t}">${n.t === 'good' ? '✅' : '⚠️'} ${n.m}</div>`).join('') : '<div class="fm-h info">💡 두 팀 전술 사이에 뚜렷한 상성은 없습니다.</div>') : '<div class="fm-h info">💡 두 팀 모두 전술판이 적용돼 있을 때 전술 상성을 계산합니다.</div>';
             const unset = (state.teams || []).filter(t => !(t.tactic && t.tactic.set === true) && (t.players || []).length).length;
-            return `<div class="card dash-card-tight">
+            return `<div class="card dash-card-tight fm-link-card">
                 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div class="tc-sec-title" data-upd="1.07" style="margin:0;">🧠 전술판 연계</div>
                     ${unset ? `<button class="fm-act" onclick="fmAutoAllTeams()" title="전술판을 아직 구성하지 않은 ${unset}개 팀을 자동 배치 + 추천 전술로 설정합니다">🪄 미설정 ${unset}개 팀 자동 구성</button>` : ''}</div>
                 <div class="dk-hint" style="margin:4px 0 8px;">🗂️ 팀 데이터센터 › 선수단의 <b>전술판</b>(선발·교체·세부 성향·전술)이 전력 계산에 쓰입니다. 선발은 전술판 라인업, 종합 전력·공격·수비 등은 전술 적합도·공수 성향만큼 보정되고, 두 팀 전술의 <b>상성</b>(${tm.on ? `${gEsc(tA.name)} ${tm.a >= 0 ? '+' : ''}${tm.a.toFixed(1)} · ${gEsc(tB.name)} ${tm.b >= 0 ? '+' : ''}${tm.b.toFixed(1)}` : '미적용'})은 공격 보정으로 예측·시뮬레이션에 함께 들어갑니다. 🧭 경기에 기록한 전술이 쌓이면, 지금 전술 선택의 과거 성적도 공격·수비에 소폭(±1.5 이내) 더해집니다.</div>
@@ -16906,7 +16906,7 @@ function fmBestStyle(p, role) {
                 <div class="card dash-card-tight"><div class="tc-sec-title">⚔️ 역대 맞대결</div>${h2hHtml}</div>
                 <div class="card dash-card-tight"><div class="tc-sec-title">📈 통산 · 최근 5경기</div>${formBlock(tA, tA.id, cA, recA)}${formBlock(tB, tB.id, cB, recB)}</div>
             </div>
-            <div class="card dash-card-tight"><div class="tc-sec-title">🤝 상대 팀별 승률 <span style="font-size:0.62rem; color:var(--text-muted); font-weight:700;">(두 팀의 공통 상대 · 전 시즌 통합)</span></div>${commonHtml}</div>`;
+            <div class="card dash-card-tight ml-half"><div class="tc-sec-title">🤝 상대 팀별 승률 <span style="font-size:0.62rem; color:var(--text-muted); font-weight:700;">(두 팀의 공통 상대 · 전 시즌 통합)</span></div>${commonHtml}</div>`;
 
             // ---- 주목 선수 (구 경기 예측 화면에서 가져온 카드)
             try {
@@ -16915,7 +16915,7 @@ function fmBestStyle(p, role) {
                 const rows = f.top.map(q => `<div class="mp-lu-row"><span class="mp-pos ${gEsc(q.pos)}">${gEsc(q.pos)}</span><span class="clickable-player" style="font-weight:800;" onclick="${tcPlayerClick(q.name)}">${gEsc(q.name)}</span><span style="margin-left:auto; color:var(--text-muted); font-size:0.72rem;">${q.g}골 ${q.a}도움${q.avgR !== null ? ' · 평점 ' + q.avgR.toFixed(1) : ''}</span></div>`).join('');
                 return `<div style="margin-top:8px;"><div style="font-size:0.74rem; font-weight:800; color:${color}; margin-bottom:4px;">${gEsc(team.name)} 주목 선수</div>${rows || '<div style="color:var(--text-muted); font-size:0.74rem;">누적 기록 없음</div>'}</div>`;
             };
-                html += `<div class="card dash-card-tight"><div class="tc-sec-title">⭐ 주목 선수 <span style="font-size:0.62rem; color:var(--text-muted); font-weight:700;">(최근 폼 · 누적 기록)</span></div><div class="tc-grid2" style="gap:12px;">${keyList(tA, cA)}${keyList(tB, cB)}</div></div>`;
+                html += `<div class="card dash-card-tight ml-half"><div class="tc-sec-title">⭐ 주목 선수 <span style="font-size:0.62rem; color:var(--text-muted); font-weight:700;">(최근 폼 · 누적 기록)</span></div><div class="tc-grid2" style="gap:12px;">${keyList(tA, cA)}${keyList(tB, cB)}</div></div>`;
             } catch (e) { console.error('주목 선수 오류', e); }
 
             // ---- 종합 해석 (v2: 전력분석 · 기록실 · 팀 데이터센터 데이터 통합)
@@ -31479,9 +31479,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             }).join('');
             return `<div style="font-size:0.84rem;font-weight:900;margin-bottom:4px;">🏆 우승·진출 가능성 <span style="font-size:0.7rem;color:var(--text-muted);font-weight:700;">(시뮬레이션 ${n.toLocaleString()}회 중 비율)</span></div>
                 <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="${ssTh}">팀</th><th style="${ssTh}">4강 진출</th><th style="${ssTh}">결승 진출</th><th style="${ssTh}">우승</th><th style="${ssTh}"></th></tr></thead><tbody>${rows}</tbody></table></div>
-                <div style="margin-top:12px;font-size:0.84rem;font-weight:900;">🎯 가장 많이 나온 결승 대진</div>${fin || '<div style="color:var(--text-muted);font-size:0.78rem;">-</div>'}
-                ${imp.length ? `<div style="margin-top:12px;font-size:0.84rem;font-weight:900;">🔥 우승 판도가 갈리는 주요 경기 <span style="font-size:0.7rem;color:var(--text-muted);font-weight:700;">(대진이 확정된 남은 경기 · 영향도 = 이 경기에서 이길 때 늘어나는 두 팀의 우승 확률 합)</span></div>
-                <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="${ssTh}">경기</th><th style="${ssTh}">승리 비율</th><th style="${ssTh}">우승 확률 (현재 → 승리 시)</th><th style="${ssTh}">영향도</th></tr></thead><tbody>${impRows}</tbody></table></div>` : ''}`;
+                <div class="ss-pair"><div><div style="margin-top:12px;font-size:0.84rem;font-weight:900;">🎯 가장 많이 나온 결승 대진</div>${fin || '<div style="color:var(--text-muted);font-size:0.78rem;">-</div>'}</div>
+                ${imp.length ? `<div><div style="margin-top:12px;font-size:0.84rem;font-weight:900;">🔥 우승 판도가 갈리는 주요 경기 <span style="font-size:0.7rem;color:var(--text-muted);font-weight:700;">(대진이 확정된 남은 경기 · 영향도 = 이 경기에서 이길 때 늘어나는 두 팀의 우승 확률 합)</span></div>
+                <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="${ssTh}">경기</th><th style="${ssTh}">승리 비율</th><th style="${ssTh}">우승 확률 (현재 → 승리 시)</th><th style="${ssTh}">영향도</th></tr></thead><tbody>${impRows}</tbody></table></div></div>` : ''}</div>`;
         }
         function ssRenderTournamentManual(sc, doneMsg) {
             const { W, P } = ssRunTournament(sc, null, false);
@@ -32703,6 +32703,30 @@ input:focus-visible, select:focus-visible, textarea:focus-visible,
 .dash-folds { display: block; columns: 3 380px; column-gap: var(--g-gap); }
 .dash-folds > details.card { break-inside: avoid; display: block; margin-bottom: var(--g-gap) !important; }
 .dash-folds > details.dash-fold-wide { column-span: all; }
+/* ===== v1.69: 🧠 전력분석 · 컨테이너 공간 활용 ===== */
+/* 매치업 분석: 폭이 남는 카드(상대 팀별 승률 · 주목 선수)는 2열로 나란히, 나머지는 전체 폭 */
+#mxResult { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+#mxResult > * { grid-column: 1 / -1; margin-bottom: 0 !important; }
+#mxResult > .ml-half { grid-column: auto; }
+@media (max-width: 1100px) { #mxResult > .ml-half { grid-column: 1 / -1; } }
+#mxResult .ml-half .tc-grid2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+/* 시즌 시뮬레이션: 결승 대진 목록(좁음)과 판도가 갈리는 경기 표(넓음)를 한 줄에 */
+.ss-pair { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 2.2fr); gap: 4px 16px; align-items: start; }
+@media (max-width: 900px) { .ss-pair { grid-template-columns: minmax(0, 1fr); } }
+/* 🧑‍💼 감독 효과 표: 오른쪽 열이 카드 밖으로 잘리던 것을 칸 폭 고정 + 줄바꿈으로 정리 */
+#mxResult .tc-grid2 > * { min-width: 0; }
+#mxResult .tc-grid2 > table.pattern-table { table-layout: fixed; width: 100%; }
+#mxResult .tc-grid2 > table.pattern-table td { white-space: normal; overflow-wrap: anywhere; }
+#mxResult .tc-grid2 > table.pattern-table td > div { white-space: normal; overflow-wrap: anywhere; word-break: keep-all; line-height: 1.3; }
+/* 🧠 전술판 연계(왼쪽: 두 팀 전술판 · 상성) + 📑 전략 비교 · 공략 포인트(오른쪽)를 좌우로 배치 */
+@media (min-width: 1351px) {
+    .fm-link-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 8px 16px; align-items: start; }
+    .fm-link-card > :nth-child(1), .fm-link-card > .dk-hint { grid-column: 1 / -1; }
+    .fm-link-card > .tc-grid2 { grid-column: 1; grid-row: 3; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fm-link-card > .fm-hints { grid-column: 1; grid-row: 4; margin-top: 0 !important; }
+    .fm-link-card > .fm-duel { grid-column: 2; grid-row: 3 / span 2; margin-top: 0; padding: 0 0 0 16px; border-top: 0; border-left: 1px solid rgba(255,255,255,0.08); }
+    .fm-link-card > .fm-duel > .tc-grid2 { grid-template-columns: minmax(0, 1fr); }
+}
 </style>
 <script id="pamCompactJs">
 (function(){
