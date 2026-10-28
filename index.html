@@ -8969,6 +8969,15 @@
             if (s >= 4 && w >= 4) b += 1;
             return b;
         }
+        // v1.72: 자리 고를 때 좌·우 주발 보정 — 숙련도 단계(자연스러움 · 불가 등)가 같으면 왼쪽 자리와 오른쪽 자리가 똑같이 보여 주발이 무시되던 문제 (왼발 선수가 오른쪽에 서는 현상)
+        // 왼쪽 자리(DL · WBL · ML · AML)는 왼발, 오른쪽 자리(DR · WBR · MR · AMR)는 오른발이 더 좋을수록 가산 · 반대면 감산 (±3점 이내) · 양발(둘 다 4 이상)이면 0 · 안쪽을 파고드는 윙어 자리(ML · MR · AML · AMR)는 반대발 감산을 절반만
+        function fmFootSideAdj(p, c) {
+            const left = FM_LEFT_CODES.includes(c), right = FM_RIGHT_CODES.includes(c);
+            if (!p || (!left && !right)) return 0;
+            const f = fmFoot(p); if (Math.min(f.R, f.L) >= 4) return 0;
+            const d = (left ? f.L - f.R : f.R - f.L), inside = (c === 'AML' || c === 'AMR' || c === 'ML' || c === 'MR');
+            return fmClamp(d < 0 && inside ? d * .5 : d, -3, 3);
+        }
         // 다재다능도(0~1): 활동량 · 전체 능력 · 고르게 잘함 → 클수록 가능 포지션이 많고, 작을수록 특정 자리 위주
         function fmVersat(p) {
             const keys = getAbilityStatKeys(p.pos), S = keys.map(k => fmStat(p, k)), mean = S.reduce((a, b) => a + b, 0) / (S.length || 1);
@@ -9431,7 +9440,7 @@ function fmBestStyle(p, role) {
         // 후보 선수들을 슬롯에 배치하는 최적 조합 탐색 (자리 적합도 합계 − 포지션 불일치 감점 + 본 포지션 일치 1.5 + 지정한 주/부 역할 보너스 + 세부 능력치 보정)
         function fmBestAssign(cands, F, team) {
             const n = F.slots.length;
-            const R = cands.map(p => F.slots.map(s => fmRoleRating(p, s.r) - fmPosPenalty(p, s.r, team, s.c) + (FM_ROLES[s.r].nat.includes(p.pos) ? 1.5 : 0) + fmRoleBonus(p, s.r) + fmRoleExtBonus(p, s.r)));
+            const R = cands.map(p => F.slots.map(s => fmRoleRating(p, s.r) - fmPosPenalty(p, s.r, team, s.c) + (FM_ROLES[s.r].nat.includes(p.pos) ? 1.5 : 0) + fmRoleBonus(p, s.r) + fmRoleExtBonus(p, s.r) + fmFootSideAdj(p, s.c)));   // v1.72: 주발 좌우 보정
             let best = -Infinity, bp = null;
             // v1.48: 같은 역할의 '단독 임무' 성향(리베로 · 플레이메이커 · 타겟맨 등)이 두 명 겹치면 배치 효율이 떨어져 감점 — 역할이 서로 보완되도록
             const UNI = { libero: 1, playmaker: 1, regista: 1, target: 1, false9: 1, link: 1, second: 1 };
@@ -9459,7 +9468,7 @@ function fmBestStyle(p, role) {
             const pick = fmBestAssign(cands, F, team), slots = {}, used = new Set();
             let sum = 0, cnt = 0;
             if (gk) { slots.GK = gk.name; used.add(gk.name); sum += fmRoleRating(gk, 'GK'); cnt++; }
-            pick.forEach((k, i) => { if (k >= 0) { slots['p' + i] = cands[k].name; used.add(cands[k].name); sum += fmRoleFit(cands[k], F.slots[i].r, undefined, team, F.slots[i].c); cnt++; } });
+            pick.forEach((k, i) => { if (k >= 0) { slots['p' + i] = cands[k].name; used.add(cands[k].name); sum += fmRoleFit(cands[k], F.slots[i].r, undefined, team, F.slots[i].c) + fmFootSideAdj(cands[k], F.slots[i].c); cnt++; } });
             {   // v1.48: 교체 3명 — OVR 순서를 기본으로 하되, 선발에 적은 포지션 · 아직 교체 명단에 없는 포지션을 우선해 어느 자리가 비어도 바로 메울 수 있게
                 const rest = roster.filter(p => !used.has(p.name)).sort((a, b) => (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0)), bench = [], cnt = { GK: 0, DF: 0, MF: 0, FW: 0 };
                 used.forEach(nm => { const q = roster.find(p => p.name === nm); if (q && cnt[q.pos] !== undefined) cnt[q.pos]++; });
@@ -10755,10 +10764,10 @@ function fmBestStyle(p, role) {
             cands.sort((a, b) => (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0));
             const pool = cands.slice(0, 8); ['DF', 'MF', 'FW'].forEach(ps => cands.filter(p => p.pos === ps && !pool.includes(p)).slice(0, 2).forEach(p => pool.push(p)));
             cands = pool;
-            const sig = cands.map(p => p.name + ':' + (calcPlayerOVR(p) || 0) + ':' + JSON.stringify(p.stats || '') + JSON.stringify(p.posProf || '') + (p.roleMain || '') + (p.roleSub || '') + fmAutoSig(p)).join('|') + '|' + fmRound(fmMgrPosScale(team) * 100);
+            const sig = cands.map(p => p.name + ':' + (calcPlayerOVR(p) || 0) + ':' + JSON.stringify(p.stats || '') + JSON.stringify(p.posProf || '') + (p.roleMain || '') + (p.roleSub || '') + fmAutoSig(p) + '|' + p.footL + p.footR).join('|') + '|' + fmRound(fmMgrPosScale(team) * 100);
             const ck = String(team.id), hit = FM_TOP_CACHE[ck];
             if (hit && hit.sig === sig && hit.list.length >= n) return hit.list.slice(0, n);
-            const V = cands.map(p => { const o = {}; FM_FIELD_CODES.forEach(c => { const r = FM_PCODES[c].r; o[c] = fmRoleRating(p, r) - fmPosPenalty(p, r, team, c) + (FM_ROLES[r].nat.includes(p.pos) ? 1.5 : 0) + fmRoleBonus(p, r) + fmRoleExtBonus(p, r); }); return o; });
+            const V = cands.map(p => { const o = {}; FM_FIELD_CODES.forEach(c => { const r = FM_PCODES[c].r; o[c] = fmRoleRating(p, r) - fmPosPenalty(p, r, team, c) + (FM_ROLES[r].nat.includes(p.pos) ? 1.5 : 0) + fmRoleBonus(p, r) + fmRoleExtBonus(p, r) + fmFootSideAdj(p, c); }); return o; });   // v1.72: 주발 좌우 보정
             const tl = {}; FM_FIELD_CODES.forEach(c => { tl[c] = V.map((v, i) => i).sort((a, b) => V[b][c] - V[a][c]).slice(0, 4); });
             const rows = [];
             fmAllCustomKeys().forEach(k => {
@@ -29628,7 +29637,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.71';
+        const G_HTML_VERSION = '1.72';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29652,7 +29661,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.72': '수정', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
