@@ -2169,7 +2169,7 @@
                     <button class="pn-tab" id="gPnTabDb" onclick="gPnSwitch('db')">🗄️ DB 패치노트</button>
                 </div>
                 <div id="gPnStatus" style="font-size:0.72rem; color:var(--text-muted); margin-bottom:8px;"></div>
-                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:8px;">표시 구분: <span class="g-new" style="margin-left:0;">NEW</span> 새로 생긴 기능 (소수점 첫째 자리가 바뀔 때까지 표시 · 예: 1.7x → 1.80에서 사라짐) &nbsp;·&nbsp; <span class="g-upd g-upd-new" style="margin-left:0;">신규</span> <span class="g-upd g-upd-imp" style="margin-left:0;">개선</span> <span class="g-upd g-upd-fix" style="margin-left:0;">수정</span> <span class="g-upd g-upd-chg" style="margin-left:0;">변경</span> <span class="g-upd g-upd-del" style="margin-left:0;">삭제</span> 기존 기능이 바뀐 곳 — 해당 버전 패치노트의 라벨 이름으로 표시됩니다 (v1.50 이후 바뀐 곳 · 좌측 메뉴에도 같이 표시)</div>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:8px;">표시 구분: <span class="g-new" style="margin-left:0;">NEW</span> 새로 생긴 기능 (소수점 첫째 자리가 바뀔 때까지 표시 · 예: 1.7x → 1.80에서 사라짐) &nbsp;·&nbsp; <span class="g-upd g-upd-new" style="margin-left:0;">신규</span> <span class="g-upd g-upd-imp" style="margin-left:0;">개선</span> <span class="g-upd g-upd-fix" style="margin-left:0;">수정</span> <span class="g-upd g-upd-chg" style="margin-left:0;">변경</span> <span class="g-upd g-upd-del" style="margin-left:0;">삭제</span> 기존 기능이 바뀐 곳 — 해당 버전 패치노트의 라벨 이름으로 표시됩니다 (소수점 첫째 자리가 바뀔 때까지 표시 · 좌측 메뉴에도 같이 표시 · 패치노트 버전 제목에는 계속 표시)</div>
                 <div id="gPnBody"></div>
                 <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
                     <button class="btn btn-auto" onclick="gPnLoadAll(true)">🔄 패치노트 다시 불러오기</button>
@@ -29631,7 +29631,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
         //   🟢 NEW = 새로 생긴 기능 → data-new="버전" / gNewTag('버전')
-        //   🔵 UP = 이미 있던 기능이 개선·변경됨 (v1.50 이후 표시 유지) → data-upd="버전" / gUpdTag('버전')   (같은 요소에 둘 다 달 수도 있음)
+        //   🔵 UP = 이미 있던 기능이 개선·변경됨 (소수점 첫째 자리가 바뀔 때까지 표시 · v1.70~) → data-upd="버전" / gUpdTag('버전')   (같은 요소에 둘 다 달 수도 있음)
         // NEW 유지 구간: 정수부와 소수점 첫째 자리가 현재 버전과 같고, 현재 버전보다 높지 않을 때 (1.7x ↔ 1.7x)
         function gVerNew(ver) {
             const a = String(ver || '').split(':')[0].trim().replace(/^v/i, '').split('.'), b = String(G_HTML_VERSION).split('.');
@@ -29674,15 +29674,16 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             }
             return G_UP_FALLBACK[v] ? { label: G_UP_FALLBACK[v], counts: null, etc: null } : null;
         }
-        function gUpSpan(ver, noMargin) {
+        function gUpSpan(ver, noMargin, all) {
             const raw = String(ver || ''), parts = raw.split(':'), v = parts[0].trim();
-            if (!gVerUp(v)) return '';
+            // 메뉴·카드의 UP 표시는 NEW와 같은 구간(소수점 첫째 자리가 같은 버전)에서만 보인다. all=true(패치노트 버전 제목)는 v1.50 이후 전부 표시. (v1.70~)
+            if (!(all ? gVerUp(v) : (gVerUp(v) && gVerNew(v)))) return '';
             const info = gUpInfo(v), custom = (parts[1] || '').trim();
             const label = custom || (info ? info.label : 'UP');
             const key = G_UP_KEY[G_UP_GROUP[label] || label] || 'imp';
             let title = '업데이트된 곳 · v' + v + (custom || info ? ' · ' + label : '');
             if (info && info.counts) title = 'v' + v + ' 패치노트 · ' + Object.keys(info.counts).map(k => k + ' ' + info.counts[k]).concat(Object.keys(info.etc || {}).map(k => k + ' ' + info.etc[k])).join(' · ');
-            return `<span class="g-upd g-upd-${key}" data-upv="${gEsc(raw)}"${noMargin ? ' style="margin-left:0;"' : ''} title="${gEsc(title)}">${gEsc(label)}</span>`;
+            return `<span class="g-upd g-upd-${key}" data-upv="${gEsc(raw)}"${all ? ' data-upall="1"' : ''}${noMargin ? ' style="margin-left:0;"' : ''} title="${gEsc(title)}">${gEsc(label)}</span>`;
         }
         function gUpdTag(ver) { return gUpSpan(ver); }
         function gApplyNewBadges() {
@@ -29693,7 +29694,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             });
             // 이미 그려진 UP 표시(JS로 만든 것 · 패치노트 버전 제목)도 최신 패치노트 라벨로 갱신
             document.querySelectorAll('.g-upd[data-upv]').forEach(s => {
-                const h = gUpSpan(s.getAttribute('data-upv'), s.style.marginLeft === '0px'); if (!h) return;
+                const h = gUpSpan(s.getAttribute('data-upv'), s.style.marginLeft === '0px', s.hasAttribute('data-upall')); if (!h) return;
                 const tp = document.createElement('template'); tp.innerHTML = h; if (tp.content.firstChild) s.replaceWith(tp.content.firstChild);
             });
         }
@@ -29926,7 +29927,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 body = itemsHtml(rest) + `<div class="pn-cols">${COLS.map(([k, label]) => `<div class="pn-col pn-col-${k}"><div class="pn-col-head">${label}<span class="pn-cnt">${cols[k].length}</span></div>${cols[k].length ? colHtml(cols[k]) : '<div class="pn-col-empty">없음</div>'}</div>`).join('')}</div>`;
             } else body = itemsHtml(v.items);
             return `<details class="pn-ver${vi === 0 ? ' latest' : ''}" ${vi === 0 ? 'open' : ''}>
-                <summary><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}${(gPnTab === 'html' && typeof gVerUp === 'function') ? gUpSpan(String(v.name).replace(/^v/i, '').trim(), true) : ''}<span class="pn-chips">${chips}</span></summary>
+                <summary><span class="pn-ver-name">${gEsc(v.name || '(제목 없음)')}</span>${v.date ? `<span class="pn-ver-date">${gEsc(v.date)}</span>` : ''}${v.title ? `<span class="pn-ver-title">${gEsc(v.title)}</span>` : ''}${vi === 0 ? '<span class="pn-new">최신</span>' : ''}${(gPnTab === 'html' && typeof gVerUp === 'function') ? gUpSpan(String(v.name).replace(/^v/i, '').trim(), true, true) : ''}<span class="pn-chips">${chips}</span></summary>
                 ${bar}<div class="pn-ver-body">${body}</div></details>`;
         }
         function gPnRender() {
