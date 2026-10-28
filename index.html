@@ -1367,7 +1367,7 @@
             </header>
 
             <nav class="nav-tabs">
-                <button class="tab-btn active" data-upd="1.69" onclick="openTab('dashboard')" title="대시보드 — 개선(1.69): 시즌 주요 선수 · HOT 같은 줄 · 접이식 카드 기본 펼침 · 1.53: 핵심 현황 · 바로가기 · 접이식 카드"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
+                <button class="tab-btn active" data-upd="1.73" onclick="openTab('dashboard')" title="대시보드 — 개선(1.73): 빈 공간 없이 주요 선수 · HOT · 골대녀 · 명예의 전당 재배치 · 1.69: 접이식 카드 기본 펼침 · 1.53: 핵심 현황 · 바로가기 · 접이식 카드"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
                 <div class="nav-group" data-group="league" data-label="리그">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🏟️</span><span class="tab-label">리그</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
@@ -1926,6 +1926,18 @@
                         <button type="button" class="dash-sc" onclick="dashGo('hall')"><span class="dash-sc-t">🏆 역대 우승팀</span><span class="dash-sc-s" id="dashScHall">명예의 전당 · 역대 대회 기록</span></button>
                     </div>
                 </div>
+                <details class="card dash-card-tight dash-fold" data-fold="hl" open>
+                    <summary><h3 class="dash-section-title" data-upd="1.53">🌟 시즌 주요 선수</h3></summary>
+                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHighlights" class="dash-highlight-grid"></div></div>
+                </details>
+                <details class="card dash-card-tight dash-fold" data-fold="hot" open>
+                    <summary><h3 class="dash-section-title" data-upd="1.53">🔥 HOT 플레이어 <span class="dash-fold-hint">(최근 3경기)</span></h3></summary>
+                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHotPlayers" class="dash-hot-grid"></div></div>
+                </details>
+                <details class="card dash-card-tight dash-fold" data-fold="ovr" open>
+                    <summary><h3 class="dash-section-title" data-upd="1.53">🧬 골대녀 TOP 오버롤 <span class="dash-fold-hint">(포지션별 TOP3)</span></h3></summary>
+                    <div class="dash-fold-body dash-clickable" onclick="dashNav('datacenter', event)"><div id="dashOvrTop" class="dash-highlight-grid"></div></div>
+                </details>
                 </div>
                 <div class="dash-main-side">
                     <div class="card dash-card-tight dash-clickable" onclick="dashNav('history', event)">
@@ -1943,26 +1955,14 @@
                 </h3>
                 <div id="dashUpcomingMatches" class="dash-match-list"></div>
             </div>
-                </div>
-            </div>
-
-            <div class="dash-folds">
-                <details class="card dash-card-tight dash-fold" data-fold="hl" open>
-                    <summary><h3 class="dash-section-title" data-upd="1.53">🌟 시즌 주요 선수</h3></summary>
-                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHighlights" class="dash-highlight-grid"></div></div>
-                </details>
-                <details class="card dash-card-tight dash-fold" data-fold="hot" open>
-                    <summary><h3 class="dash-section-title" data-upd="1.53">🔥 HOT 플레이어 <span class="dash-fold-hint">(최근 3경기)</span></h3></summary>
-                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHotPlayers" class="dash-hot-grid"></div></div>
-                </details>
-                <details class="card dash-card-tight dash-fold" data-fold="ovr" open>
-                    <summary><h3 class="dash-section-title" data-upd="1.53">🧬 골대녀 TOP 오버롤 <span class="dash-fold-hint">(포지션별 TOP3)</span></h3></summary>
-                    <div class="dash-fold-body dash-clickable" onclick="dashNav('datacenter', event)"><div id="dashOvrTop" class="dash-highlight-grid"></div></div>
-                </details>
                 <details class="card dash-card-tight dash-fold" data-fold="hall" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">🏆 명예의 전당 <span class="dash-fold-hint">· 역대 대회 기록</span></h3></summary>
                     <div class="dash-fold-body dash-clickable" onclick="dashNavToHall(event)"><div id="dashHallSummary"></div></div>
                 </details>
+                </div>
+            </div>
+
+            <div class="dash-folds">
                 <details class="card dash-card-tight dash-fold dash-fold-wide" data-fold="gv" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">📊 리그 한눈에 보기</h3></summary>
                     <div class="dash-fold-body" id="dashGvSlot"></div>
@@ -29637,7 +29637,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.72';
+        const G_HTML_VERSION = '1.73';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29661,7 +29661,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.72': '수정', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.73': '개선', '1.72': '수정', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -32283,7 +32283,7 @@ table th, table td { padding: 6px 8px; }
 .dash-main > .card, .dash-main-side > .card { margin-bottom: 0 !important; }
 .dash-main-left { display: flex; flex-direction: column; gap: var(--g-gap); min-width: 0; }
 .dash-main-left > .card { margin-bottom: 0 !important; }
-@media (max-width: 1099px) { .dash-main-left, .dash-main-side { display: contents; } #dashRankCard { order: 1; } .dash-main-side > .card:nth-child(1) { order: 2; } .dash-main-side > .card:nth-child(2) { order: 3; } #dashShortcutCard { order: 4; } }
+@media (max-width: 1099px) { .dash-main-left, .dash-main-side { display: contents; } #dashRankCard { order: 1; } .dash-main-side > .card:nth-child(1) { order: 2; } .dash-main-side > .card:nth-child(2) { order: 3; } #dashShortcutCard { order: 4; } .dash-main-left > details[data-fold="hl"] { order: 5; } .dash-main-left > details[data-fold="hot"] { order: 6; } .dash-main-left > details[data-fold="ovr"] { order: 7; } .dash-main-side > details[data-fold="hall"] { order: 8; } }
 .dash-main-side { display: flex; flex-direction: column; gap: var(--g-gap); min-width: 0; }
 .dash-card-actions { margin-left: auto; display: inline-flex; gap: 6px; flex-wrap: wrap; }
 .dash-section-title .dash-card-actions .btn { min-height: var(--g-ctl-h-sm); padding: 0 8.1px; font-size: 0.72rem !important; }
@@ -32749,6 +32749,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible,
 .dash-folds { display: block; columns: 3 380px; column-gap: var(--g-gap); }
 .dash-folds > details.card { break-inside: avoid; display: block; margin-bottom: var(--g-gap) !important; }
 .dash-folds > details.dash-fold-wide { column-span: all; }
+/* v1.73: 순위 · 바로가기 아래 빈 공간을 🌟 시즌 주요 선수 · 🔥 HOT · 🧬 골대녀 카드가 채우고, 🏆 명예의 전당은 📅 예정 경기와 같은 폭(오른쪽 열)으로 배치 */
+.dash-main-left > details.card, .dash-main-side > details.card { margin-bottom: 0 !important; display: block; }
+/* 좁은 화면(1100px 미만): 기존에 보이던 순서(최근 경기 → 예정 경기 → 순위 → 바로가기)를 그대로 두고, 새로 옮긴 카드는 그 뒤에 이어서 표시 */
+@media (max-width: 1099px) { .dash-main-side { display: contents; } .dash-main-side > .card:nth-child(1) { order: 1; } .dash-main-side > .card:nth-child(2) { order: 2; } #dashRankCard { order: 3; } }
 /* ===== v1.69: 🧠 전력분석 · 컨테이너 공간 활용 ===== */
 /* 매치업 분석: 폭이 남는 카드(상대 팀별 승률 · 주목 선수)는 2열로 나란히, 나머지는 전체 폭 */
 #mxResult { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
