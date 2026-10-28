@@ -1367,13 +1367,13 @@
             </header>
 
             <nav class="nav-tabs">
-                <button class="tab-btn active" data-upd="1.53" onclick="openTab('dashboard')" title="대시보드 — UP(1.53): 핵심 현황 · 바로가기 · 접이식 카드"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
+                <button class="tab-btn active" data-upd="1.69" onclick="openTab('dashboard')" title="대시보드 — 개선(1.69): 시즌 주요 선수 · HOT 같은 줄 · 접이식 카드 기본 펼침 · 1.53: 핵심 현황 · 바로가기 · 접이식 카드"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
                 <div class="nav-group" data-group="league" data-label="리그">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🏟️</span><span class="tab-label">리그</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
-                        <button class="tab-btn" data-upd="1.58" onclick="openTab('stats')" title="순위표 — UP(1.58): 팀 이름 검색 · 필터 초기화 · 표 스타일 통일"><span class="tab-icon">📊</span><span class="tab-label">순위표</span></button>
+                        <button class="tab-btn" data-upd="1.69" onclick="openTab('stats')" title="순위표 — 삭제(1.69): 조별 순위표 최근 폼 열 · 1.58: 팀 이름 검색 · 필터 초기화 · 표 스타일 통일"><span class="tab-icon">📊</span><span class="tab-label">순위표</span></button>
                         <button class="tab-btn" data-upd="1.68" onclick="openTab('history')" title="히스토리 — 개선(1.68): 경기 전술 홈 · 원정 한 줄 배치 · 전술 목록 폭 축소 · 1.65: 경기 전술 필드 왼쪽 · 전술 내용 오른쪽 배치 · 1.63: 득점 위치 기본 접힘 · 1.58: 경기 종류 칩 필터"><span class="tab-icon">📜</span><span class="tab-label">히스토리</span></button>
-                        <button class="tab-btn" data-upd="1.23" onclick="openTab('match')" title="경기 기록 — UP: 전술 보드에서 포지션·화살표 드래그 · 교체/부상/미출전/감독 표시 · 모든 경기 출전 포지션 자동 채우기"><span class="tab-icon">⚽</span><span class="tab-label">경기 기록</span></button>
+                        <button class="tab-btn" data-upd="1.69" onclick="openTab('match')" title="경기 기록 — 수정(1.69): 득점 시간 입력칸 숫자 잘림 · 1.23: 전술 보드에서 포지션·화살표 드래그 · 교체/부상/미출전/감독 표시 · 모든 경기 출전 포지션 자동 채우기"><span class="tab-icon">⚽</span><span class="tab-label">경기 기록</span></button>
                     </div>
                 </div>
                 <div class="nav-group" data-group="people" data-label="팀·선수">
@@ -1947,23 +1947,23 @@
             </div>
 
             <div class="dash-folds">
-                <details class="card dash-card-tight dash-fold dash-fold-wide" data-fold="hl" open>
+                <details class="card dash-card-tight dash-fold" data-fold="hl" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">🌟 시즌 주요 선수</h3></summary>
                     <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHighlights" class="dash-highlight-grid"></div></div>
                 </details>
-                <details class="card dash-card-tight dash-fold" data-fold="hot">
+                <details class="card dash-card-tight dash-fold" data-fold="hot" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">🔥 HOT 플레이어 <span class="dash-fold-hint">(최근 3경기)</span></h3></summary>
                     <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHotPlayers" class="dash-hot-grid"></div></div>
                 </details>
-                <details class="card dash-card-tight dash-fold" data-fold="ovr">
+                <details class="card dash-card-tight dash-fold" data-fold="ovr" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">🧬 골대녀 TOP 오버롤 <span class="dash-fold-hint">(포지션별 TOP3)</span></h3></summary>
                     <div class="dash-fold-body dash-clickable" onclick="dashNav('datacenter', event)"><div id="dashOvrTop" class="dash-highlight-grid"></div></div>
                 </details>
-                <details class="card dash-card-tight dash-fold" data-fold="hall">
+                <details class="card dash-card-tight dash-fold" data-fold="hall" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">🏆 명예의 전당 <span class="dash-fold-hint">· 역대 대회 기록</span></h3></summary>
                     <div class="dash-fold-body dash-clickable" onclick="dashNavToHall(event)"><div id="dashHallSummary"></div></div>
                 </details>
-                <details class="card dash-card-tight dash-fold dash-fold-wide" data-fold="gv">
+                <details class="card dash-card-tight dash-fold dash-fold-wide" data-fold="gv" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">📊 리그 한눈에 보기</h3></summary>
                     <div class="dash-fold-body" id="dashGvSlot"></div>
                 </details>
@@ -2645,14 +2645,14 @@
                     <div class="card">
                         <h3>🅰️ A조 순위표</h3>
                         <table id="tableA" class="pattern-table">
-                            <thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th><th title="최근 5경기 결과 (오래된 순 → 최근 순)">최근 폼</th></tr></thead>
+                            <thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
                     <div class="card">
                         <h3>🅱️ B조 순위표</h3>
                         <table id="tableB" class="pattern-table">
-                            <thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th><th title="최근 5경기 결과 (오래된 순 → 최근 순)">최근 폼</th></tr></thead>
+                            <thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th></tr></thead>
                             <tbody></tbody>
                         </table>
                     </div>
@@ -17722,7 +17722,7 @@ function fmBestStyle(p, role) {
         // ═══════════════════════════════════════════
         // 🏠 v1.53: 대시보드 재구성 — 바로가기 · 접이식 카드
         // ═══════════════════════════════════════════
-        const G_DASH_FOLD_KEY = 'gleague_dash_folds_v1';
+        const G_DASH_FOLD_KEY = 'gleague_dash_folds_v2';
         function gDashFoldInit() {
             let saved = {};
             try { saved = JSON.parse(localStorage.getItem(G_DASH_FOLD_KEY) || '{}') || {}; } catch (e) { }
@@ -23814,7 +23814,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             rows.forEach((r, i) => {
                 let cls = ""; if(i < 2) cls = "rank-top"; else if(i === rows.length - 1) cls = "rank-bottom";
                 const rankLabel = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i+1)));
-                tbody.innerHTML += `<tr class="${cls}"><td>${rankLabel}</td><td class="clickable-team" onclick="showTeamDetail(${r.id})" style="color:${r.color}; font-weight:800;">${r.name}</td><td>${r.gms}</td><td>${r.w}</td><td>${r.l}</td><td>${r.gf}</td><td>${r.ga}</td><td class="${r.gd>0?'gd-plus':(r.gd<0?'gd-minus':'')}">${r.gd>0?'+'+r.gd:r.gd}</td><td><b>${r.pts}</b></td><td style="white-space:nowrap;">${r.formHtml}</td></tr>`;
+                tbody.innerHTML += `<tr class="${cls}"><td>${rankLabel}</td><td class="clickable-team" onclick="showTeamDetail(${r.id})" style="color:${r.color}; font-weight:800;">${r.name}</td><td>${r.gms}</td><td>${r.w}</td><td>${r.l}</td><td>${r.gf}</td><td>${r.ga}</td><td class="${r.gd>0?'gd-plus':(r.gd<0?'gd-minus':'')}">${r.gd>0?'+'+r.gd:r.gd}</td><td><b>${r.pts}</b></td></tr>`;
             });
             return rows;
         }
@@ -29599,7 +29599,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.68';
+        const G_HTML_VERSION = '1.69';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 같을 때만 초록색 NEW가 보이고, 다음 버전부터는 자동으로 사라진다.
         //   (JS로 그리는 곳은 gNewTag('버전')을 문자열에 붙이면 됩니다.)
@@ -29616,7 +29616,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -32678,6 +32678,27 @@ input:focus-visible, select:focus-visible, textarea:focus-visible,
 .g-upd.g-upd-fix { background: rgba(251,146,60,0.16); border-color: rgba(251,146,60,0.6); color: #fdba74; }
 .g-upd.g-upd-chg { background: rgba(167,139,250,0.18); border-color: rgba(167,139,250,0.65); color: #c4b5fd; }
 .g-upd.g-upd-del { background: rgba(239,68,68,0.16); border-color: rgba(239,68,68,0.6); color: #fca5a5; }
+
+/* ===== v1.69: 득점 시간 입력칸 · 접힌 좌측 메뉴 · 대시보드 정리 ===== */
+/* ⚽ 경기 기록 › 득점 시간: 공통 입력창 여백(좌우 9px)이 숫자 칸을 덮던 문제 — 칸 전용 여백으로 되돌림 */
+.tab-content input.goal-time-input, .modal-content input.goal-time-input { width: 52px; min-height: 24px; padding: 2px 0; font-size: 0.82rem; text-align: center; flex: none; }
+.tab-content select.goal-time-select, .modal-content select.goal-time-select { min-height: 24px; padding: 2px 4px; font-size: 0.75rem; }
+.tab-content select.goal-ast-select, .modal-content select.goal-ast-select { min-height: 24px; }
+/* ◀ 접힌 좌측 메뉴: 폭을 조금 넓히고 아이콘 아래에 UP · NEW 라벨을 세로로 배치 (라벨이 잘리지 않음) */
+@media (min-width: 901px) {
+    .sidebar.collapsed { width: 74px; }
+    .sidebar.collapsed .tab-btn, .sidebar.collapsed .nav-group-body .tab-btn { position: relative; flex-direction: column; justify-content: center; align-items: center; gap: 2px; padding: 7px 2px; }
+    .sidebar.collapsed .tab-btn .g-new, .sidebar.collapsed .tab-btn .g-upd { margin: 0 !important; padding: 0 4px; font-size: 0.54rem; line-height: 1.45; max-width: 100%; }
+    .sidebar.collapsed .nt-dot { top: 3px; right: 8px; }
+}
+/* 🌟 시즌 주요 선수 · 🧬 골대녀 TOP 오버롤: 이름 바로 옆에 기록을 붙이고, 카드 안에서 기록 열을 세로로 맞춤 */
+#dashHighlights.dash-highlight-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+#dashHighlights .dash-highlight-card-top3, #dashOvrTop .dash-highlight-card-top3 { display: grid; grid-template-columns: auto minmax(0, max-content) auto; column-gap: 5px; align-content: start; }
+#dashHighlights .dash-highlight-label, #dashOvrTop .dash-highlight-label { grid-column: 1 / -1; }
+#dashHighlights .dash-highlight-row, #dashOvrTop .dash-highlight-row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; column-gap: 5px; align-items: center; }
+#dashHighlights .dhr-name, #dashOvrTop .dhr-name { flex: none; min-width: 0; }
+#dashHighlights .dhr-val { justify-self: end; }
+#dashOvrTop .dhr-val { justify-self: start; }
 </style>
 <script id="pamCompactJs">
 (function(){
