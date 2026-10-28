@@ -8790,7 +8790,7 @@
                 const ry = FM_SP_Y[it.role] || [3, 97];
                 it.x0 = it.x; it.y0 = it.y;
                 if (it.fixed) { it.xl = it.xh = it.x; it.yl = it.yh = it.y; return; }
-                it.xl = it.side < 0 ? 9 : it.side > 0 ? 40 : 14; it.xh = it.side < 0 ? 60 : it.side > 0 ? 91 : 86;
+                it.xl = it.side < 0 ? 12 : it.side > 0 ? 40 : 14; it.xh = it.side < 0 ? 60 : it.side > 0 ? 88 : 86;   // v1.71: 양 끝 카드가 전술판 밖으로 잘리지 않게 중심 12~88
                 it.yl = Math.min(ry[0], it.y); it.yh = Math.max(ry[1], it.y);
             });
             const lo = (it, ax) => ax === 'x' ? it.xl : it.yl, hi = (it, ax) => ax === 'x' ? it.xh : it.yh;
@@ -9529,7 +9529,8 @@ function fmBestStyle(p, role) {
         }
         const fmApStyleTac = fmFive(fmApStyleTac0, 0);
         // v1.67: 공격 폭 → 팀 전체 가로 범위 (좁으면 측면이 안쪽 · 줄 간격 보정도 좁은 범위로 · 넓으면 줄 간격도 넓게)
-        function fmWidthSpan(st) { const m = { vnarrow: { x: [17, 83], ev: [30, 70] }, narrow: { x: [13, 87], ev: [24, 76] }, normal: { x: [9, 91], ev: [14, 86] }, wide: { x: [9, 91], ev: [11, 89] }, vwide: { x: [9, 91], ev: [9, 91] } }; return m[(st && st.width) || 'normal'] || m.normal; }
+        // v1.71: 가로 범위는 카드 반폭(12) 안쪽으로 — 양 끝 카드가 전술판 밖으로 잘리지 않게
+        function fmWidthSpan(st) { const m = { vnarrow: { x: [17, 83], ev: [30, 70] }, narrow: { x: [13, 87], ev: [24, 76] }, normal: { x: [12, 88], ev: [14, 86] }, wide: { x: [12, 88], ev: [12, 88] }, vwide: { x: [12, 88], ev: [12, 88] } }; return m[(st && st.width) || 'normal'] || m.normal; }
         const fmApTactic = fmFive(fmApTactic0, 0);
         function fmApMgr(team, tac) {   // 감독 능력치 → 전술 반영 강도(kT) · 선수 개성 반영 강도(kP) · 팀 공수 성향(lean)
             const out = { kT: 1, kP: 1, lean: 0, has: false };
@@ -10077,7 +10078,7 @@ function fmBestStyle(p, role) {
                     <div class="fm-gleg"><span>약함</span><span class="bar"></span><span>강함</span><span>· 칸 숫자 = 그 자리에 가장 잘 맞는 선수 2명의 평균 적합도 (위쪽 띠 = 왼쪽 · 가운데 · 오른쪽 평균)</span></div>${sum}</div>
                 <div class="fm-bld-bar"><span class="fm-bld-sel">${codes.length ? codes.map(c => `<b class="fm-code">${c}</b>`).join(' ') : '<span class="mut">아직 고른 자리가 없어요</span>'} <span class="mut">${codes.length}/4</span></span>
                     ${ok ? `<span class="mut">· 자동 배치 평균 적합도 <b style="color:${ovrColor(Math.round(score))}">${fmRound(score)}</b></span>` : ''}
-                    ${ok ? (() => { const sh = (FM_FORMATIONS[key] || {}).shape; return sh && (sh.imb >= 3 || sh.crowd >= 24) ? `<span class="mut" style="color:#f59e0b;" title="한쪽에 자리가 몰리거나 서로 가까운 구성이에요. 카드는 겹치지 않게 간격을 벌려 표시하고, 🤖 자동 추천 · 최적 세팅에서는 순위가 조금 밀려요.">⚠️ ${sh.imb >= 3 ? '한쪽으로 치우친 구성' : '자리가 붙어 있는 구성'}</span>` : ''; })() : ''}
+                    ${ok ? (() => { const sh = (FM_FORMATIONS[key] || {}).shape; const lo = fmLatOff(FM_FORMATIONS[key]); return sh && (sh.imb >= 3 || lo >= 8 || sh.crowd >= 24) ? `<span class="mut" style="color:#f59e0b;" title="한쪽에 자리가 몰리거나 서로 가까운 구성이에요. 카드는 겹치지 않게 간격을 벌려 표시하고, 🤖 자동 추천 · 최적 세팅에서는 순위가 조금 밀려요.">⚠️ ${(sh.imb >= 3 || lo >= 8) ? '한쪽으로 치우친 구성' : '자리가 붙어 있는 구성'}</span>` : ''; })() : ''}
                     <button class="fm-act" ${ok ? '' : 'disabled'} onclick="fmBuildApply()" title="이 4자리로 포메이션을 바꿉니다 (선발 선수는 어울리는 자리로 다시 배치)">✅ 이 포메이션 적용</button><button class="fm-act" onclick="fmBuildClear()">🧹 비우기</button><button class="fm-act" onclick="fmBuildToggle()">닫기</button></div>
                 <div class="fm-bld-pre" data-new="1.40"><span class="mut">🤖 이 팀 추천 (자동 배치 평균 적합도):</span> ${recs || '<span class="mut">선수가 부족해요</span>'}</div>
                 <div class="fm-bld-pre"><span class="mut">프리셋에서 불러오기:</span> ${presets}</div>
@@ -10782,7 +10783,9 @@ function fmBestStyle(p, role) {
             return keys;
         }
         // v1.45: 구역 보드 포메이션의 모양 감점 — 한쪽(왼/오른쪽)으로 치우친 정도(imb 2→1 · 3→2.5 · 4→4.5)와 자리가 붙어 카드를 많이 벌려야 하는 정도(crowd 12 초과분)
-        function fmShapeRisk(k) { const F = FM_FORMATIONS[k], sh = F && F.shape; return sh ? [0, 0, 1, 2.5, 4.5][Math.min(4, sh.imb)] + Math.max(0, sh.crowd - 12) * 0.04 : 0; }
+        // v1.71: 필드 선수 자리의 좌우 무게중심이 가운데(50)에서 벗어난 정도 — 가운데 줄에 몰리고 한쪽 측면에만 선수가 있는 구성(예: SW·DC·WBL·ST)은 imb가 1이라 감점이 없어 자동 세팅이 계속 골랐음
+        function fmLatOff(F) { const f = F && F.slots ? F.slots.filter(s => s.r !== 'GK') : []; return f.length ? Math.abs(f.reduce((a, s) => a + s.x, 0) / f.length - 50) : 0; }
+        function fmShapeRisk(k) { const F = FM_FORMATIONS[k], sh = F && F.shape; return (sh ? [0, 0, 1, 2.5, 4.5][Math.min(4, sh.imb)] + Math.max(0, sh.crowd - 12) * 0.04 : 0) + Math.max(0, fmLatOff(F) - 3) * 0.3; }
         const fmFormRisk = k => (FM_FORM_RISK[k] !== undefined ? FM_FORM_RISK[k] : ((FM_FORMATIONS[k] && FM_FORMATIONS[k].custom && !FM_FORMATIONS[k].slots.some(x => x.r === 'DEF')) ? 2.5 : 0)) + fmShapeRisk(k);
         function fmParseCodes(str) {   // 'DC AML AMR ST' → 'x:DC-AML-AMR-ST' (잘못된 입력은 null)
             const codes = String(str || '').toUpperCase().split(/[\s,\-·\/]+/).filter(Boolean);
@@ -29625,7 +29628,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.70';
+        const G_HTML_VERSION = '1.71';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29649,7 +29652,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
