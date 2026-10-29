@@ -3986,7 +3986,7 @@
       "aScore": 1,
       "hPk": 0,
       "aPk": 0,
-      "mom": "서기",
+      "mom": "민서",
       "pStats": [
         {
           "name": "서기",
@@ -4314,6 +4314,12 @@
                 "curve": 0
               }
             }
+          },
+          "rs": {
+            "민서": "overlap",
+            "벤": "presser",
+            "서기": "false9",
+            "조하": "invfb"
           }
         },
         "a": {
@@ -4410,6 +4416,11 @@
                 "curve": 0
               }
             }
+          },
+          "rs": {
+            "배혜지": "twoway",
+            "육소정": "builder",
+            "박지혜": "marker"
           }
         }
       }
@@ -19447,7 +19458,7 @@
       "assists": 0,
       "rating": 8.8,
       "ratingCount": 1,
-      "mom": 1,
+      "mom": 0,
       "teamId": "7",
       "pos": "FW",
       "starter": 1,
@@ -19459,7 +19470,7 @@
       "assists": 0,
       "rating": 8.5,
       "ratingCount": 1,
-      "mom": 0,
+      "mom": 1,
       "teamId": "7",
       "pos": "DF",
       "starter": 1,

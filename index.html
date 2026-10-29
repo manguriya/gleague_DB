@@ -973,7 +973,7 @@
         .pf-btns .btn-add-goal, .pf-btns .btn-add-og { margin: 0; padding: 3px 10px; font-size: .7rem; }
         .pf-sub { display: contents; font-size: .65rem; color: var(--text-muted); }
         .pf-sub label.pf-f { display: inline-flex; align-items: center; gap: 3px; }
-        .pf-sub input.assist, .pf-sub input.ss-input { width: 44px !important; padding: 3px 2px; text-align: center; margin: 0 !important; }
+        .pf-sub input.ss-input { width: 44px !important; padding: 3px 2px; text-align: center; margin: 0 !important; }
         .pf-rot { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; flex: 1 1 auto; }
         .pf-sub > label.pf-f { font-size: .65rem; color: var(--text-muted); }
         .pf-rot label.rl { display: inline-flex; align-items: center; gap: 3px; cursor: pointer; font-size: .68rem; }
@@ -994,13 +994,6 @@
         #matchSideGrid #playerStatsForm > .pf-team:nth-child(1) { grid-column: 1; grid-row: 5; }
         #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-column: 2; grid-row: 5; }
         #matchSideGrid .tac-panel, #matchSideGrid .pf-team { background: var(--bg-card); }
-        @media (max-width: 900px) {
-            #matchSideGrid { grid-template-columns: minmax(0, 1fr); }
-            #matchSideGrid #tacPanel_h, #matchSideGrid #tacPanel_a, #matchSideGrid #playerStatsForm > .pf-team { grid-column: 1; }
-            #matchSideGrid #tacPanel_a { grid-row: 3; }
-            #matchSideGrid > #playerCard > h4 { grid-row: 4; } #matchSideGrid > #playerCard > .pf-legend { grid-row: 5; }
-            #matchSideGrid #playerStatsForm > .pf-team:nth-child(1) { grid-column: 1; grid-row: 6; } #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-column: 1; grid-row: 7; }
-        }
 
         /* 모달 스타일 */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
@@ -1367,7 +1360,7 @@
             </header>
 
             <nav class="nav-tabs">
-                <button class="tab-btn active" data-upd="1.73" onclick="openTab('dashboard')" title="대시보드 — 개선(1.73): 빈 공간 없이 주요 선수 · HOT · 골대녀 · 명예의 전당 재배치 · 1.69: 접이식 카드 기본 펼침 · 1.53: 핵심 현황 · 바로가기 · 접이식 카드"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
+                <button class="tab-btn active" data-upd="1.69" onclick="openTab('dashboard')" title="대시보드 — 개선(1.69): 시즌 주요 선수 · HOT 같은 줄 · 접이식 카드 기본 펼침 · 1.53: 핵심 현황 · 바로가기 · 접이식 카드"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
                 <div class="nav-group" data-group="league" data-label="리그">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🏟️</span><span class="tab-label">리그</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
@@ -1926,18 +1919,6 @@
                         <button type="button" class="dash-sc" onclick="dashGo('hall')"><span class="dash-sc-t">🏆 역대 우승팀</span><span class="dash-sc-s" id="dashScHall">명예의 전당 · 역대 대회 기록</span></button>
                     </div>
                 </div>
-                <details class="card dash-card-tight dash-fold" data-fold="hl" open>
-                    <summary><h3 class="dash-section-title" data-upd="1.53">🌟 시즌 주요 선수</h3></summary>
-                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHighlights" class="dash-highlight-grid"></div></div>
-                </details>
-                <details class="card dash-card-tight dash-fold" data-fold="hot" open>
-                    <summary><h3 class="dash-section-title" data-upd="1.53">🔥 HOT 플레이어 <span class="dash-fold-hint">(최근 3경기)</span></h3></summary>
-                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHotPlayers" class="dash-hot-grid"></div></div>
-                </details>
-                <details class="card dash-card-tight dash-fold" data-fold="ovr" open>
-                    <summary><h3 class="dash-section-title" data-upd="1.53">🧬 골대녀 TOP 오버롤 <span class="dash-fold-hint">(포지션별 TOP3)</span></h3></summary>
-                    <div class="dash-fold-body dash-clickable" onclick="dashNav('datacenter', event)"><div id="dashOvrTop" class="dash-highlight-grid"></div></div>
-                </details>
                 </div>
                 <div class="dash-main-side">
                     <div class="card dash-card-tight dash-clickable" onclick="dashNav('history', event)">
@@ -1955,14 +1936,26 @@
                 </h3>
                 <div id="dashUpcomingMatches" class="dash-match-list"></div>
             </div>
-                <details class="card dash-card-tight dash-fold" data-fold="hall" open>
-                    <summary><h3 class="dash-section-title" data-upd="1.53">🏆 명예의 전당 <span class="dash-fold-hint">· 역대 대회 기록</span></h3></summary>
-                    <div class="dash-fold-body dash-clickable" onclick="dashNavToHall(event)"><div id="dashHallSummary"></div></div>
-                </details>
                 </div>
             </div>
 
             <div class="dash-folds">
+                <details class="card dash-card-tight dash-fold" data-fold="hl" open>
+                    <summary><h3 class="dash-section-title" data-upd="1.53">🌟 시즌 주요 선수</h3></summary>
+                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHighlights" class="dash-highlight-grid"></div></div>
+                </details>
+                <details class="card dash-card-tight dash-fold" data-fold="hot" open>
+                    <summary><h3 class="dash-section-title" data-upd="1.53">🔥 HOT 플레이어 <span class="dash-fold-hint">(최근 3경기)</span></h3></summary>
+                    <div class="dash-fold-body dash-clickable" onclick="dashNav('ranking', event)"><div id="dashHotPlayers" class="dash-hot-grid"></div></div>
+                </details>
+                <details class="card dash-card-tight dash-fold" data-fold="ovr" open>
+                    <summary><h3 class="dash-section-title" data-upd="1.53">🧬 골대녀 TOP 오버롤 <span class="dash-fold-hint">(포지션별 TOP3)</span></h3></summary>
+                    <div class="dash-fold-body dash-clickable" onclick="dashNav('datacenter', event)"><div id="dashOvrTop" class="dash-highlight-grid"></div></div>
+                </details>
+                <details class="card dash-card-tight dash-fold" data-fold="hall" open>
+                    <summary><h3 class="dash-section-title" data-upd="1.53">🏆 명예의 전당 <span class="dash-fold-hint">· 역대 대회 기록</span></h3></summary>
+                    <div class="dash-fold-body dash-clickable" onclick="dashNavToHall(event)"><div id="dashHallSummary"></div></div>
+                </details>
                 <details class="card dash-card-tight dash-fold dash-fold-wide" data-fold="gv" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">📊 리그 한눈에 보기</h3></summary>
                     <div class="dash-fold-body" id="dashGvSlot"></div>
@@ -2584,7 +2577,7 @@
 
             <!-- ③ 선수 기록 (골 시간·자책골 입력 포함) -->
             <div class="card" id="playerCard">
-                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">3</span> 선수 기록 <button type="button" class="tac-btn" data-new="1.41" onclick="pfZeroOtherAssists()" title="모든 선수의 '기타도움' 입력칸을 한 번에 0으로 바꿉니다 (득점 줄에서 연결한 도움은 그대로 유지돼요)" style="margin-left:auto;">🅰️ 기타도움 전체 0</button> <button type="button" class="tac-btn tac-help-btn" onclick="tacHelpToggle()" title="설명 문구를 보이거나 숨깁니다">💡 설명 보기</button></h4>
+                <h4 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span style="background:var(--accent); color:#111; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:800;">3</span> 선수 기록 <button type="button" class="tac-btn tac-help-btn" onclick="tacHelpToggle()" title="설명 문구를 보이거나 숨깁니다">💡 설명 보기</button></h4>
                 <div class="pf-legend tac-help-txt">선수 카드 한 장 = 한 명. <b>⚽ + 득점</b>을 누르면 득점 줄이 생기고, 줄에서 <b>시간 · 도움 선수 · 📍위치</b>를 입력해요. 노란 카드 = 기록이 있는 선수 · 팀 이름 옆 배지는 입력한 득점 합계와 스코어가 맞는지 보여줘요. 부상 · 미출전 선수는 접혀 있고, 이름을 누르면 펼쳐져요.</div>
                 <div id="playerStatsForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:15px;">
                     <!-- 선수별 입력 폼 동적 생성 -->
@@ -20832,7 +20825,6 @@ function fmBestStyle(p, role) {
                     if(type === 'og') ogTimes.push({ half, min });
                     else { const _as = row.querySelector('.goal-ast-select'); goalTimes.push({ half, min, ast: _as ? _as.value : '', loc: gmRowLoc(row) }); }
                 });
-                const assistInput = document.querySelector(`.assist[data-p="${name}"]`);
                 const ratingInput = document.querySelector(`.rating[data-p="${name}"]`);
                 const statusSelect = document.querySelector(`.status[data-p="${name}"]`);
                 const posSelect = document.querySelector(`.pos-select[data-p="${name}"]`);
@@ -20843,7 +20835,6 @@ function fmBestStyle(p, role) {
                 currentData[name] = {
                     goalTimes,
                     ogTimes,
-                    a: assistInput ? assistInput.value : 0,
                     ss: (document.querySelector(`.ss-input[data-p="${name}"]`) || {}).value || 0,
                     card: (document.querySelector(`.card-select[data-p="${name}"]`) || {}).value || '',
                     r: ratingInput ? ratingInput.value : 6.0,
@@ -20888,7 +20879,7 @@ function fmBestStyle(p, role) {
             const aExtraPlayers = extraFor(aTeam, aSeasonRoster);
 
             const renderSide = (team, seasonRoster, extraPlayers) => {
-                let html = `<div class="card pf-team" data-team="${team.id}" style="margin-bottom:0; padding:10px;"><div class="pf-team-h"><h4 style="color:${team.color}">${team.name}</h4><span class="pf-tot" data-team="${team.id}"></span><button type="button" class="tac-btn" onclick="pfZeroOtherAssists('${team.id}')" title="이 팀 선수들의 '기타도움'을 모두 0으로" style="margin-left:auto; font-size:0.66rem; padding:2px 6px;">🅰️ 기타도움 0</button></div>`;
+                let html = `<div class="card pf-team" data-team="${team.id}" style="margin-bottom:0; padding:10px;"><div class="pf-team-h"><h4 style="color:${team.color}">${team.name}</h4><span class="pf-tot" data-team="${team.id}"></span></div>`;
                 const statusPriority = { 'starter': 1, 'substitute': 2, 'injured': 3, 'absent': 4 };
                 const posPriorityLocal = { 'FW': 1, 'MF': 2, 'DF': 3, 'GK': 4 };
                 const groupLabel = { starter: '⭐ 선발', substitute: '🔄 후보', injured: '🩹 부상 · 🪑 미출전', absent: '🩹 부상 · 🪑 미출전' };
@@ -20937,7 +20928,6 @@ function fmBestStyle(p, role) {
                                     </div>
                                 </div>
                                 <div class="pf-sub">
-                                    <label class="pf-f" title="골과 연결하지 않은 도움 수(옛 기록 · 직접 입력). 득점 줄의 도움 선택으로 연결하면 자동으로 더해집니다">🅰️ 기타도움 <input type="number" class="p-input assist" data-p="${p.name}" value="${d.a}" min="0"></label>
                                     ${isGk ? `<label class="pf-f" title="세이브(결정적 득점 선방) 횟수">🧤 세이브 <input type="number" class="p-input ss-input" data-p="${p.name}" value="${d.ss || 0}" min="0"></label>` : `<span class="ss-ph" data-p="${p.name}" style="display:none;"></span>`}
                                     ${cardSelectHtml(p.name, d)}
                                     <div class="pf-rot">
@@ -21286,19 +21276,6 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         function cardChip(cs) { return cs ? `<span class="pf-chip ${cs === 'y1' ? 'cy' : 'cr'}">${{ y1: '🟨', y2: '🟨🟨🟥', r: '🟥', y1r: '🟨🟥' }[cs] || ''}</span>` : ''; }
 
         // ===== v1.34: 선수 카드 요약 칩 · 팀 득점 합계 배지 갱신 =====
-        // v1.41: 기타도움(골과 연결하지 않은 도움) 입력칸을 한 번에 0으로 — teamId를 주면 그 팀만
-        function pfZeroOtherAssists(teamId) {
-            const form = document.getElementById('playerStatsForm'); if (!form) return;
-            let n = 0;
-            form.querySelectorAll('.pf-card').forEach(card => {
-                if (teamId && String(card.dataset.team) !== String(teamId)) return;
-                const inp = card.querySelector('.assist');
-                if (inp && (parseInt(inp.value) || 0) !== 0) { inp.value = 0; n++; }
-            });
-            try { pfRefresh(); } catch (e) { }
-            const btns = teamId ? [] : [...document.querySelectorAll('[onclick="pfZeroOtherAssists()"]')];
-            btns.forEach(b => { const t = b.textContent; b.textContent = n ? `✔ ${n}명 0으로` : '✔ 이미 모두 0'; setTimeout(() => { b.textContent = t; }, 1600); });
-        }
         // v1.41: 이 경기에서 GK로 뛴 선수(기본 포지션 · 로테이션 후 포지션 · 추가 로테이션 중 하나라도 GK)면 🧤 세이브 입력칸을 보여준다
         function pfSyncSs(name) {
             const q = s => document.querySelector(s.replace(/\{n\}/g, String(name).replace(/"/g, '\\"')));
@@ -21326,7 +21303,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const n = card.dataset.p, tid = card.dataset.team;
                 let g = 0, og = 0;
                 card.querySelectorAll('.goal-time-row .goal-time-select').forEach(s => { if (s.getAttribute('data-type') === 'og') og++; else g++; });
-                const a = (parseInt((card.querySelector('.assist') || {}).value) || 0) + (linked[n] || 0);
+                const a = (linked[n] || 0);
                 const ss = parseInt((card.querySelector('.ss-input') || {}).value) || 0;
                 const cs = (card.querySelector('.card-select') || {}).value || '';
                 const chips = card.querySelector('.pf-chips');
@@ -22339,7 +22316,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const TAC_ROLE_COL = { GK: '#a78bfa', DEF: '#38bdf8', MID: '#a3e635', WING: '#f59e0b', FW: '#ef4444' };
         const TAC_ROLE_AB = { GK: 'GK', DEF: '수', MID: '미', WING: '윙', FW: '공' };
         // ======= 🧭 경기 전술 보드 (v1.21 → v1.23) =======
-        //  match.tac[side] = { fm, st, mgr, lu?, pos?, mv?, luEst?, est? }
+        //  match.tac[side] = { fm, st, mgr, lu?, pos?, mv?, rs?(v1.73 선수 역할), luEst?, est? }
         //   · lu  = { p0~p3: 선수명, GK: 선수명 }  어느 자리에 누가 뛰었는지 (v1.22)
         //   · pos = { 자리: {x,y} }                 직접 옮긴 자리 위치 (v1.23, 전술판 tactic.pos 와 같은 형식)
         //   · mv  = { 자리: { atk:{dx,dy,curve}, def:{...} } }  직접 그린 이동 화살표 (v1.23, 전술판 tactic.mv 와 같은 형식)
@@ -22349,25 +22326,26 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const TAC_MB_GROUPS = [['starter', '⭐ 선발 · 자리 미지정'], ['substitute', '🔄 교체'], ['injured', '🩹 부상'], ['absent', '🪑 미출전']];
         function tacJget(p, k) { try { const o = JSON.parse((p && p.dataset[k]) || '{}'); return (o && typeof o === 'object') ? o : {}; } catch (e) { return {}; } }
         function tacJput(p, k, o) { if (p) p.dataset[k] = JSON.stringify(o || {}); }
-        function tacMbCtx(team, key, S, pos, mv, lu, mgrName) {   // 보드용 컨텍스트: 자리 위치(직접 조정 포함) + 화살표 계산용 가짜 필드
+        function tacMbCtx(team, key, S, pos, mv, lu, mgrName, rs) {   // 보드용 컨텍스트: 자리 위치(직접 조정 포함) + 화살표 계산용 가짜 필드
+            const rsK = (loc, role) => { const nm = (lu || {})[loc], k = (nm && rs) ? rs[nm] : null; return (k && FM_STYLES[role] && FM_STYLES[role][k]) ? k : null; };   // v1.73: 직접 고른 선수 역할(세부 성향)
             const tac = { formation: key, slots: {}, roleStyle: {}, pos: pos || {}, mv: mv || {}, opt: {}, style: S };
             // 🎯 자동 위치 (v1.38): 이 경기에 실제로 뛴 선수(lu) · 그 경기 감독 · 그 경기 전술 기준으로 자리 위치를 옮긴다
             try {
                 const F0 = FM_FORMATIONS[key], pls = {}, sks = {}; let gk0 = null;
-                F0.slots.forEach((s, i) => { const nm = (lu || {})['p' + i], pp = nm ? tacFindPlayer(nm) : null; pls['p' + i] = pp; sks['p' + i] = pp ? fmBestStyle(pp, s.r) : Object.keys(FM_STYLES[s.r])[0]; });
-                const gn = (lu || {}).GK; gk0 = gn ? tacFindPlayer(gn) : null; sks.GK = gk0 ? fmBestStyle(gk0, 'GK') : (S.fgk ? 'sweeper' : 'safe');
+                F0.slots.forEach((s, i) => { const nm = (lu || {})['p' + i], pp = nm ? tacFindPlayer(nm) : null; pls['p' + i] = pp; sks['p' + i] = rsK('p' + i, s.r) || (pp ? fmBestStyle(pp, s.r) : Object.keys(FM_STYLES[s.r])[0]); });
+                const gn = (lu || {}).GK; gk0 = gn ? tacFindPlayer(gn) : null; sks.GK = rsK('GK', 'GK') || (gk0 ? fmBestStyle(gk0, 'GK') : (S.fgk ? 'sweeper' : 'safe'));
                 let m0 = null; if (mgrName) { try { m0 = findManagerRef(mgrName); } catch (e) { } }
                 tac._mgrSet = true; tac._mgrObj = m0;
                 const ap = fmAutoPositions(team || { players: [] }, tac, F0, pls, sks, gk0);
                 tac._ap = ap; tac._apPre = true;
             } catch (e) { console.error('경기 보드 자동 위치 오류', e); }
             const c = fmContext(team || { players: [] }, tac);
-            c.field = c.slots.map((s, i) => ({ p: null, role: s.r, loc: 'p' + i, slot: s, sk: Object.keys(FM_STYLES[s.r])[0], fit: null }));
-            c.gsk = S.fgk ? 'sweeper' : 'safe';
+            c.field = c.slots.map((s, i) => ({ p: null, role: s.r, loc: 'p' + i, slot: s, sk: rsK('p' + i, s.r) || Object.keys(FM_STYLES[s.r])[0], fit: null }));
+            c.gsk = rsK('GK', 'GK') || (S.fgk ? 'sweeper' : 'safe');
             return c;
         }
         function tacMbSlotOf(s, loc) {   // 드래그·반전용: 이 보드에서 지금 보이는 자리 위치(직접 조정 > 자동 위치)
-            const c = tacMbCtx(s.team, s.fm, s.S, s.pos, s.mv, s.lu, s.mgr);
+            const c = tacMbCtx(s.team, s.fm, s.S, s.pos, s.mv, s.lu, s.mgr, s.rs);
             return loc === 'GK' ? c.gkSlot : c.slots[+loc[1]];
         }
         function tacMbChip(name, role, sel, tc, posOv, code) {   // 필드 위 선수 카드 (전술판 카드와 같은 모양)
@@ -22405,16 +22383,16 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         function tacBoardHtml(team, fm, st, lu, o) {
             o = o || {}; lu = lu || {};
             const key = FM_FORMATIONS[fm] ? fm : '1-2-1', F = FM_FORMATIONS[key], S = Object.assign({}, FM_DEFAULT_STYLE, st || {});
-            const live = !!o.live, pos = o.pos || {}, mv = o.mv || {};
+            const live = !!o.live, pos = o.pos || {}, mv = o.mv || {}, rs = o.rs || {};
             const tbc = team && team.color, tbPos = {}; (o.cands || []).forEach(c => { if (c.pos) tbPos[c.name] = c.pos; });
             let arrows = '', slots = F.slots, gk = FM_GK_SLOT;
-            try { const c = tacMbCtx(team, key, S, pos, mv, lu, o.mgr); slots = c.slots; gk = c.gkSlot; arrows = fmArrowsSvg(c, S, live ? fmArrowMode : 'both', live); } catch (e) { console.error('전술 보드 화살표 오류', e); }
+            try { const c = tacMbCtx(team, key, S, pos, mv, lu, o.mgr, rs); slots = c.slots; gk = c.gkSlot; arrows = fmArrowsSvg(c, S, live ? fmArrowMode : 'both', live); } catch (e) { console.error('전술 보드 화살표 오류', e); }
             const dot = (s, role, ab, lb, loc) => {
-                const nm = lu[loc], cu = (pos[loc] || mv[loc]) ? ' <span title="위치·화살표를 직접 조정함">✏️</span>' : '';
+                const nm = lu[loc], sk0 = (nm && rs[nm] && FM_STYLES[role] && FM_STYLES[role][rs[nm]]) ? FM_STYLES[role][rs[nm]] : null, cu = (pos[loc] || mv[loc]) ? ' <span title="위치·화살표를 직접 조정함">✏️</span>' : '';
                 const inner = nm ? tacMbChip(nm, role, o.sel === nm, tbc, tbPos[nm], s && s.c)
                     : live ? `<div class="fm-empty" title="${gEsc(FM_ROLES[role].tip)}">+</div>`
                     : `<div class="tac-dot" style="--rc:${TAC_ROLE_COL[role]};" title="${gEsc(FM_ROLES[role].tip)}">${ab}</div>`;
-                return `<div class="fm-slot" data-loc="${loc}" style="left:${s.x}%;top:${s.y}%">${inner}<div class="fm-role${nm ? ' has' : ''}">${lb}${cu}</div></div>`;
+                return `<div class="fm-slot" data-loc="${loc}" style="left:${s.x}%;top:${s.y}%">${inner}<div class="fm-role${nm ? ' has' : ''}">${sk0 ? '🎭' + gEsc(sk0.n) : lb}${cu}</div></div>`;
             };
             const grid = live && fmSnap ? `<div class="fm-grid" style="background-size:${fmSnap}% ${fmSnap}%;"></div>` : '';
             let pitch = `<div class="fm-pitch${live ? ' fm-live' : ''}"><div class="fm-pl fm-pl-mid"></div><div class="fm-pl fm-pl-circle"></div><div class="fm-pl fm-pl-box t"></div><div class="fm-pl fm-pl-box b"></div>${grid}<div class="fm-dir">▲ 공격 방향</div>${arrows}`;
@@ -22432,7 +22410,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const p = document.getElementById('tacPanel_' + side), f = document.getElementById('tacFm_' + side); if (!p || !f) return null;
             const S = {}; FM_DIMS.forEach(d => { const e = document.getElementById(`tacD_${side}_${d}`); if (e) S[d] = e.value; });
             const g = document.getElementById('tacFgk_' + side); S.fgk = !!(g && g.checked);
-            return { p, fm: FM_FORMATIONS[f.value] ? f.value : '1-2-1', S: Object.assign({}, FM_DEFAULT_STYLE, S), lu: tacLuGet(side), pos: tacJget(p, 'pos'), mv: tacJget(p, 'mv'), mgr: p.dataset.mgr || '', team: (state.teams || []).find(x => String(x.id) === String(p.dataset.team)) };
+            return { p, fm: FM_FORMATIONS[f.value] ? f.value : '1-2-1', S: Object.assign({}, FM_DEFAULT_STYLE, S), lu: tacLuGet(side), pos: tacJget(p, 'pos'), mv: tacJget(p, 'mv'), mgr: p.dataset.mgr || '', rs: tacJget(p, 'rs'), team: (state.teams || []).find(x => String(x.id) === String(p.dataset.team)) };
         }
         // 입력 화면: 지금 고른 값으로 보드를 다시 그린다
         function tacBoardRefresh(side) {
@@ -22445,13 +22423,36 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 p.dataset.luFm = f.value; tacLuRender(side);
             }
             const s = tacMbState(side);
-            box.innerHTML = tacBoardHtml(s.team, s.fm, s.S, s.lu, { live: true, side, pos: s.pos, mv: s.mv, cands: tacLuCands(p.dataset.team), mgr: s.mgr, sel: (tacMbSel && tacMbSel.side === side) ? tacMbSel.name : null });
+            box.innerHTML = tacBoardHtml(s.team, s.fm, s.S, s.lu, { live: true, side, pos: s.pos, mv: s.mv, rs: s.rs, cands: tacLuCands(p.dataset.team), mgr: s.mgr, sel: (tacMbSel && tacMbSel.side === side) ? tacMbSel.name : null });
             try { tacSumRefresh(); } catch (e) { }
+            try { tacRsRender(side); } catch (e) { console.error(e); }
         }
+        // ---- 🎭 v1.73: 선수 역할(세부 성향) — match.tac[side].rs = { 선수이름: 성향키 } (예: 윙어 → 인사이드 침투형). 없으면 능력치 기준 자동
+        function tacRsRender(side) {
+            const box = document.getElementById('tacRs_' + side), p = document.getElementById('tacPanel_' + side), f = document.getElementById('tacFm_' + side);
+            if (!box || !p || !f) return;
+            const F = FM_FORMATIONS[f.value] || FM_FORMATIONS['1-2-1'], lu = tacLuGet(side), rs = tacJget(p, 'rs');
+            const slots = F.slots.map((s, i) => ({ loc: 'p' + i, r: s.r, x: s.x, y: s.y })).sort((a, b) => a.y - b.y || a.x - b.x).concat([{ loc: 'GK', r: 'GK', x: 50, y: 99 }]);
+            const rows = slots.filter(s => lu[s.loc]).map(s => {
+                const nm = lu[s.loc], cur = (rs[nm] && FM_STYLES[s.r][rs[nm]]) ? rs[nm] : '';
+                let auto = ''; try { auto = FM_STYLES[s.r][fmBestStyle(tacFindPlayer(nm), s.r)].n; } catch (e) { }
+                const sd = s.r !== 'GK' ? (s.x < 40 ? ' (좌)' : s.x > 60 ? ' (우)' : '') : '';
+                return `<label class="tac-lu-r"><span style="color:${TAC_ROLE_COL[s.r]};">${FM_ROLES[s.r].label}${sd} · ${gEsc(nm)}</span><select data-n="${gEsc(nm)}" onchange="tacRsPick('${side}',this.dataset.n,this.value)"><option value="">🤖 자동${auto ? ' — ' + gEsc(auto) : ''}</option>${Object.keys(FM_STYLES[s.r]).map(k => `<option value="${k}"${k === cur ? ' selected' : ''} title="${gEsc(FM_STYLES[s.r][k].d)}">${gEsc(FM_STYLES[s.r][k].n)}</option>`).join('')}</select></label>`;
+            });
+            box.innerHTML = rows.length
+                ? `<div class="tac-rs-h">🎭 선수 역할 (세부 성향) ${gNewTag('1.73')}<button type="button" class="tac-btn" onclick="tacRsClear('${side}')" title="모든 선수 역할을 능력치 기준 자동으로 되돌립니다">↺ 모두 자동</button></div><div class="tac-lu-grid">${rows.join('')}</div>`
+                : `<div class="tac-rs-h" style="font-weight:600;color:var(--text-muted);">🎭 선수 역할 — 선수를 자리에 배치하면 인사이드 포워드 · 사이드 윙어 같은 역할을 고를 수 있어요.</div>`;
+        }
+        function tacRsPick(side, name, key) {
+            const p = document.getElementById('tacPanel_' + side); if (!p) return;
+            const rs = tacJget(p, 'rs'); if (key) rs[name] = key; else delete rs[name];
+            tacJput(p, 'rs', rs); tacBoardRefresh(side);
+        }
+        function tacRsClear(side) { const p = document.getElementById('tacPanel_' + side); if (!p) return; tacJput(p, 'rs', {}); tacBoardRefresh(side); }
         function tacMbLive(side) {   // 드래그 중에는 카드 위치와 화살표만 갱신
             const s = tacMbState(side), mb = document.querySelector(`#tacticForm .tac-mb[data-side="${side}"]`); if (!s || !mb) return;
             const pitch = mb.querySelector('.fm-pitch'); if (!pitch) return;
-            const c = tacMbCtx(s.team, s.fm, s.S, s.pos, s.mv, s.lu, s.mgr);
+            const c = tacMbCtx(s.team, s.fm, s.S, s.pos, s.mv, s.lu, s.mgr, s.rs);
             [['GK', c.gkSlot]].concat(c.slots.map((sl, i) => ['p' + i, sl])).forEach(([l, sl]) => { const el = pitch.querySelector(`.fm-slot[data-loc="${l}"]`); if (el) { el.style.left = sl.x + '%'; el.style.top = sl.y + '%'; } });
             const old = pitch.querySelector('svg.fm-arrows'), html = fmArrowsSvg(c, s.S, fmArrowMode, true);
             if (old) old.outerHTML = html; else if (html) pitch.insertAdjacentHTML('beforeend', html);
@@ -22518,7 +22519,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             tacMbSel = null; tacLuPut(side, lu); tacLuRender(side); tacBoardRefresh(side);
         }
         function tacLuClear(side) { tacMbSel = null; tacLuPut(side, {}); tacLuRender(side); tacBoardRefresh(side); }
-        function tacLuSet(side, lu, fm, pos, mv) { const p = document.getElementById('tacPanel_' + side); if (!p) return; tacLuPut(side, lu || {}); tacJput(p, 'pos', pos || {}); tacJput(p, 'mv', mv || {}); p.dataset.luFm = fm || (document.getElementById('tacFm_' + side) || {}).value || ''; tacMbSel = null; tacLuRender(side); tacBoardRefresh(side); }
+        function tacLuSet(side, lu, fm, pos, mv, rs) { const p = document.getElementById('tacPanel_' + side); if (!p) return; tacLuPut(side, lu || {}); tacJput(p, 'rs', rs || {}); tacJput(p, 'pos', pos || {}); tacJput(p, 'mv', mv || {}); p.dataset.luFm = fm || (document.getElementById('tacFm_' + side) || {}).value || ''; tacMbSel = null; tacLuRender(side); tacBoardRefresh(side); }
         // ⭐선발 선수(이 경기에 기록된 포지션 GK/DF/MF/FW + 선수 능력치)를 포메이션 자리에 배치 — 입력 화면 · 과거 경기 자동 채우기 공용
         //   recs = [{ name, pos }]  (pos = 그 경기에 기록된 포지션)
         function tacLuFromRecs(recs, fKey) {
@@ -22722,6 +22723,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     <div class="tac-bd-r">
                     <label class="tac-f tac-wide">📐 포메이션<select id="tacFm_${side}" onchange="tacFmChange('${side}',this)">${fmOpts}<option value="__build__">🧩 코드로 직접 만들기…</option></select></label>
                     <div class="tac-wide" id="tacLu_${side}"></div>
+                    <div class="tac-wide" id="tacRs_${side}"></div>
                     ${FM_DIMS.map(d => tacSelHtml(side, d, st[d])).join('')}
                     <label class="tac-f tac-wide" style="flex-direction:row; align-items:center; gap:6px;"><input type="checkbox" id="tacFgk_${side}" ${st.fgk ? 'checked' : ''} onchange="tacBoardRefresh('${side}')"> 🧤 플라잉 GK(골키퍼 공격 가담) 사용</label>
                     </div></div></div>`;
@@ -22808,6 +22810,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if ((p.dataset.luFm || '') === out.fm) {   // v1.22: 출전 포지션 · v1.23: 직접 조정한 위치 · 화살표
                 const lu = tacLuGet(side), pos = tacJget(p, 'pos'), mv = tacJget(p, 'mv');
                 if (Object.keys(lu).length) out.lu = lu; if (Object.keys(pos).length) out.pos = pos; if (Object.keys(mv).length) out.mv = mv;
+                const rsAll = tacJget(p, 'rs'), FF = FM_FORMATIONS[out.fm], rsOut = {};   // v1.73: 지금 배치된 선수 · 그 자리에 맞는 역할만 저장
+                if (FF) Object.keys(lu).forEach(loc => { const role = loc === 'GK' ? 'GK' : (FF.slots[+loc[1]] || {}).r, k = rsAll[lu[loc]]; if (role && k && FM_STYLES[role][k]) rsOut[lu[loc]] = k; });
+                if (Object.keys(rsOut).length) out.rs = rsOut;
             }
             return out;
         }
@@ -22817,7 +22822,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             ['h', 'a'].forEach(sd => {
                 const p = document.getElementById('tacPanel_' + sd); if (!p) return;
                 const t = m.tac && m.tac[sd];
-                if (t) { tacSetValues(sd, t.fm, t.st, true); p.dataset.mgr = t.mgr || ''; tacLuSet(sd, t.lu || {}, t.fm, t.pos || {}, t.mv || {}); const meta = p.querySelector('.tac-meta'); if (meta) meta.textContent = (t.est ? '🪄 자동 추정값입니다(그 시절 선수·감독 기준 최적 세팅) · 실제와 다르면 고쳐서 저장하세요.' : '💾 저장된 이 경기의 전술입니다.') + (t.luEst ? ' 👥 출전 포지션도 🪄 자동 추정값이에요 (선발 기록·포지션 기준).' : ''); }
+                if (t) { tacSetValues(sd, t.fm, t.st, true); p.dataset.mgr = t.mgr || ''; tacLuSet(sd, t.lu || {}, t.fm, t.pos || {}, t.mv || {}, t.rs || {}); const meta = p.querySelector('.tac-meta'); if (meta) meta.textContent = (t.est ? '🪄 자동 추정값입니다(그 시절 선수·감독 기준 최적 세팅) · 실제와 다르면 고쳐서 저장하세요.' : '💾 저장된 이 경기의 전술입니다.') + (t.luEst ? ' 👥 출전 포지션도 🪄 자동 추정값이에요 (선발 기록·포지션 기준).' : ''); }
                 else { tacSetValues(sd, '1-2-1', null, false); p.dataset.mgr = tacMgrFor(p.dataset.team); tacLuSet(sd, {}, '1-2-1'); const meta = p.querySelector('.tac-meta'); if (meta) meta.textContent = '이 경기에는 전술이 기록되지 않았습니다 · 체크하고 직접 입력하거나, ↻로 현재 전술판 값을 가져올 수 있어요.'; }
             });
         }
@@ -22830,7 +22835,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const one = (t, team) => t ? `<b style="color:${team.color};">${gEsc(team.name)}</b> ${gEsc(tacShort(t))}${t.st && t.st.fgk ? ' 🧤' : ''}${t.lu ? ' 👥' : ''}` : `<b style="color:${team.color};">${gEsc(team.name)}</b> <span style="opacity:.6;">미기록</span>`;
             const line = `<div class="history-tac-line">🧭 ${one(m.tac.h, ht)} <span style="opacity:.5;"> vs </span> ${one(m.tac.a, at)}</div>`;
             const full = (t, team) => !t ? `<div><div class="tt" style="color:${team.color};">🧭 ${gEsc(team.name)}</div><div style="color:var(--text-muted);">전술 미기록</div></div>`
-                : `<div><div class="tt" style="color:${team.color};">🧭 ${gEsc(team.name)} · ${gEsc(tacShort(t))}${t.mgr ? ` <span style="font-weight:600; color:var(--text-muted);">감독 ${gEsc(t.mgr)}</span>` : ''}</div><div class="tac-board">${tacBoardHtml(team, t.fm, t.st, t.lu, { pos: t.pos, mv: t.mv, mgr: t.mgr, cands: tacMbCandsOf(m, team) })}</div><div class="tac-ti-col"><div class="tac-ti-h">🎛️ 전술 설정</div>${FM_DIMS.map(d => `<div class="ti"><span>${FM_TACTICS[d].label}</span><b>${gEsc(tacDimName(d, (t.st || {})[d]))}</b></div>`).join('')}${t.st && t.st.fgk ? '<div class="ti"><span>🧤 플라잉 GK</span><b>사용</b></div>' : ''}</div></div>`;
+                : `<div><div class="tt" style="color:${team.color};">🧭 ${gEsc(team.name)} · ${gEsc(tacShort(t))}${t.mgr ? ` <span style="font-weight:600; color:var(--text-muted);">감독 ${gEsc(t.mgr)}</span>` : ''}</div><div class="tac-board">${tacBoardHtml(team, t.fm, t.st, t.lu, { pos: t.pos, mv: t.mv, rs: t.rs, mgr: t.mgr, cands: tacMbCandsOf(m, team) })}</div><div class="tac-ti-col"><div class="tac-ti-h">🎛️ 전술 설정</div>${FM_DIMS.map(d => `<div class="ti"><span>${FM_TACTICS[d].label}</span><b>${gEsc(tacDimName(d, (t.st || {})[d]))}</b></div>`).join('')}${t.st && t.st.fgk ? '<div class="ti"><span>🧤 플라잉 GK</span><b>사용</b></div>' : ''}</div></div>`;
             const fullHtml = `<div class="history-tac-full">${full(m.tac.h, ht)}${full(m.tac.a, at)}</div>`;
             if (part === 'line') return line;
             if (part === 'full') return fullHtml;
@@ -22900,7 +22905,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 });
                 const g = goalTimes.length;
                 const og = ogTimes.length;
-                const a = (parseInt(document.querySelector(`.assist[data-p="${name}"]`).value) || 0) + (linkedAst[name] || 0);   // 미연결 도움 + 골에 연결된 도움
+                const a = (linkedAst[name] || 0);   // 골 줄에서 연결한 도움 (v1.73: 기타도움 입력은 삭제)
                 const ssEl = document.querySelector(`.ss-input[data-p="${name}"]`);
                 const ss = ssEl ? Math.max(parseInt(ssEl.value) || 0, 0) : 0;
                 const _cardV = ((document.querySelector(`.card-select[data-p="${name}"]`) || {}).value) || '';
@@ -23587,8 +23592,6 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 m.pStats.forEach(ps => {
                     if(ps.goalTimes) ps.goalTimes.forEach(gt => addGoalTime(ps.name, gt.half, gt.min, gt.ast || '', gt.loc || null));
                     if(ps.ogTimes) ps.ogTimes.forEach(ot => addOGTime(ps.name, ot.half, ot.min));
-                    const assistInput = document.querySelector(`.assist[data-p="${ps.name}"]`);
-                    if(assistInput) assistInput.value = Math.max((ps.a || 0) - (_linked[ps.name] || 0), 0);
                     let ssInput = document.querySelector(`.ss-input[data-p="${ps.name}"]`);
                     if(!ssInput && ps.ss) { const ph = document.querySelector(`.ss-ph[data-p="${ps.name}"]`); if(ph) { ph.outerHTML = `<input type="number" class="p-input ss-input" data-p="${ps.name}" value="${ps.ss}" min="0" title="세이브(결정적 득점 선방) 횟수" style="width:46px;">`; ssInput = document.querySelector(`.ss-input[data-p="${ps.name}"]`); } }
                     if(ssInput) ssInput.value = ps.ss || 0;
@@ -29661,7 +29664,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.73': '개선', '1.72': '수정', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.73': '신규', '1.72': '수정', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -32139,22 +32142,24 @@ all();
 .tac-sum { font-size: .76rem; font-weight: 700; margin-left: 2px; }
 body:not(.tac-help-open) .tac-help-txt { display: none !important; }
 #matchSideGrid #tacticCard.tac-fold #tacticForm { display: none !important; }
-#matchSideGrid #tacPanel_h { grid-column: 1 / -1; grid-row: 2; }
-#matchSideGrid #tacPanel_a { grid-column: 1 / -1; grid-row: 3; }
-@media (min-width: 901px) {
-    #matchSideGrid > #playerCard > h4 { grid-row: 4; }
-    #matchSideGrid > #playerCard > .pf-legend { grid-row: 5; }
-    #matchSideGrid #playerStatsForm > .pf-team:nth-child(1), #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-row: 6; }
-    #matchSideGrid.tac-folded > #playerCard > h4 { grid-row: 2; }
-    #matchSideGrid.tac-folded > #playerCard > .pf-legend { grid-row: 3; }
-    #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(1), #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(2) { grid-row: 4; }
+/* v1.73: 전술 기록 — 홈(왼쪽) · 원정(오른쪽) 팀을 가로로 나란히. 칸이 정말 좁을 때(640px 이하)만 위아래로 */
+#matchSideGrid { container-type: inline-size; container-name: msg; }
+#matchSideGrid #tacPanel_h { grid-column: 1; grid-row: 2; }
+#matchSideGrid #tacPanel_a { grid-column: 2; grid-row: 2; }
+#matchSideGrid > #playerCard > h4 { grid-row: 3; }
+#matchSideGrid > #playerCard > .pf-legend { grid-row: 4; }
+#matchSideGrid #playerStatsForm > .pf-team:nth-child(1), #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-row: 5; }
+#matchSideGrid.tac-folded > #playerCard > h4 { grid-row: 2; }
+#matchSideGrid.tac-folded > #playerCard > .pf-legend { grid-row: 3; }
+#matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(1), #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(2) { grid-row: 4; }
+@container msg (max-width: 640px) {
+    #matchSideGrid #tacPanel_h, #matchSideGrid #tacPanel_a, #matchSideGrid #playerStatsForm > .pf-team { grid-column: 1 / -1; }
+    #matchSideGrid #tacPanel_a { grid-row: 3; }
+    #matchSideGrid > #playerCard > h4 { grid-row: 4; } #matchSideGrid > #playerCard > .pf-legend { grid-row: 5; }
+    #matchSideGrid #playerStatsForm > .pf-team:nth-child(1) { grid-row: 6; } #matchSideGrid #playerStatsForm > .pf-team:nth-child(2) { grid-row: 7; }
+    #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(1) { grid-row: 4; } #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(2) { grid-row: 5; }
 }
-@media (max-width: 900px) {
-    #matchSideGrid.tac-folded > #playerCard > h4 { grid-row: 2; }
-    #matchSideGrid.tac-folded > #playerCard > .pf-legend { grid-row: 3; }
-    #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(1) { grid-row: 4; }
-    #matchSideGrid.tac-folded #playerStatsForm > .pf-team:nth-child(2) { grid-row: 5; }
-}
+.tac-rs-h { font-size: .74rem; font-weight: 800; margin: 4px 0 3px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 /* 한 팀 = 한 줄: 왼쪽 전술판 · 가운데 감독/교체 카드 · 오른쪽 조작 줄과 전술 설정 */
 #matchSideGrid .tac-panel { container-type: inline-size; }
 #matchSideGrid .tac-body { display: grid; grid-template-columns: minmax(220px, 330px) minmax(130px, 170px) minmax(0, 1fr); grid-template-areas: "pitch side ctl" "pitch side set" "below side set"; gap: 8px 14px; align-items: start; }
@@ -32283,7 +32288,7 @@ table th, table td { padding: 6px 8px; }
 .dash-main > .card, .dash-main-side > .card { margin-bottom: 0 !important; }
 .dash-main-left { display: flex; flex-direction: column; gap: var(--g-gap); min-width: 0; }
 .dash-main-left > .card { margin-bottom: 0 !important; }
-@media (max-width: 1099px) { .dash-main-left, .dash-main-side { display: contents; } #dashRankCard { order: 1; } .dash-main-side > .card:nth-child(1) { order: 2; } .dash-main-side > .card:nth-child(2) { order: 3; } #dashShortcutCard { order: 4; } .dash-main-left > details[data-fold="hl"] { order: 5; } .dash-main-left > details[data-fold="hot"] { order: 6; } .dash-main-left > details[data-fold="ovr"] { order: 7; } .dash-main-side > details[data-fold="hall"] { order: 8; } }
+@media (max-width: 1099px) { .dash-main-left, .dash-main-side { display: contents; } #dashRankCard { order: 1; } .dash-main-side > .card:nth-child(1) { order: 2; } .dash-main-side > .card:nth-child(2) { order: 3; } #dashShortcutCard { order: 4; } }
 .dash-main-side { display: flex; flex-direction: column; gap: var(--g-gap); min-width: 0; }
 .dash-card-actions { margin-left: auto; display: inline-flex; gap: 6px; flex-wrap: wrap; }
 .dash-section-title .dash-card-actions .btn { min-height: var(--g-ctl-h-sm); padding: 0 8.1px; font-size: 0.72rem !important; }
@@ -32749,10 +32754,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible,
 .dash-folds { display: block; columns: 3 380px; column-gap: var(--g-gap); }
 .dash-folds > details.card { break-inside: avoid; display: block; margin-bottom: var(--g-gap) !important; }
 .dash-folds > details.dash-fold-wide { column-span: all; }
-/* v1.73: 순위 · 바로가기 아래 빈 공간을 🌟 시즌 주요 선수 · 🔥 HOT · 🧬 골대녀 카드가 채우고, 🏆 명예의 전당은 📅 예정 경기와 같은 폭(오른쪽 열)으로 배치 */
-.dash-main-left > details.card, .dash-main-side > details.card { margin-bottom: 0 !important; display: block; }
-/* 좁은 화면(1100px 미만): 기존에 보이던 순서(최근 경기 → 예정 경기 → 순위 → 바로가기)를 그대로 두고, 새로 옮긴 카드는 그 뒤에 이어서 표시 */
-@media (max-width: 1099px) { .dash-main-side { display: contents; } .dash-main-side > .card:nth-child(1) { order: 1; } .dash-main-side > .card:nth-child(2) { order: 2; } #dashRankCard { order: 3; } }
 /* ===== v1.69: 🧠 전력분석 · 컨테이너 공간 활용 ===== */
 /* 매치업 분석: 폭이 남는 카드(상대 팀별 승률 · 주목 선수)는 2열로 나란히, 나머지는 전체 폭 */
 #mxResult { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
