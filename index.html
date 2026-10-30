@@ -1570,6 +1570,117 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 #playerRankTbody td:nth-child(3) > .g-av { width: 1.5em; height: 1.5em; margin-right: 0.45em; border-radius: 4px; }
 #tableA .g-teamcell, #tableB .g-teamcell, #teamRankTbody .g-teamcell { align-items: center; }
 </style>
+<style id="g182Css">
+/* ===== v1.82 ===== */
+/* 🎨 팀 모달 · 팀 데이터센터: 팀 색상 + 중앙 대형 로고 배경 */
+.g-tbgHost { position: relative; isolation: isolate; }
+.g-tbg { position: sticky; top: 0; height: 0; z-index: -1; pointer-events: none; }
+.g-tbg-in { position: absolute; top: -24px; left: -60px; right: -60px; height: calc(var(--tbgh, 80vh) + 24px); overflow: hidden; background: color-mix(in srgb, var(--tc, #38bdf8) 13%, transparent); }
+.g-tbg-tint { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, color-mix(in srgb, var(--tc, #38bdf8) 34%, transparent), color-mix(in srgb, var(--tc, #38bdf8) 12%, transparent) 55%, transparent 88%); }
+.g-tbg-logo { position: absolute; left: 50%; top: 50%; width: min(72%, 640px); aspect-ratio: 1 / 1; max-height: 92%; transform: translate(-50%, -50%); background: center / contain no-repeat; opacity: .11; filter: saturate(1.1); }
+#teamModalContent.g-tbgHost .card, #dcTeamPanel.g-tbgHost .card { background: rgba(15, 23, 42, .6); }
+/* 📅 시즌 기록: 시즌 넘겨보기 */
+.sr-nav { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+.sr-mid { flex: 1; min-width: 0; text-align: center; }
+.sr-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.sr-ttl { font-weight: 900; font-size: .88rem; color: var(--gold); }
+.sr-cnt { font-size: .72rem; color: var(--text-muted); font-weight: 800; }
+.sr-hint { font-size: .64rem; color: var(--text-muted); margin-top: 4px; }
+.sr-b { padding: 12px 16px; font-size: 1rem; line-height: 1; flex: none; }
+.sr-b:disabled { opacity: .3; cursor: default; }
+@keyframes srInL { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+@keyframes srInR { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+.sr-l { animation: srInL .32s ease; }
+.sr-r { animation: srInR .32s ease; }
+/* 🌟 수상 선수 카드 크게 */
+.season-award-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+@media (min-width: 720px) { .season-award-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1500px) { .season-award-grid { grid-template-columns: repeat(4, 1fr); } }
+#specialAwardsDisplay { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.aw-card h3 { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
+.aw-card.aw-sp { border: 1px solid color-mix(in srgb, var(--awc, #fbbf24) 35%, transparent); }
+.aw-card.aw-sp h3 { color: var(--awc, var(--gold)); }
+.aw-pls { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 8px 0 4px; }
+.aw-pl { flex: 1 1 200px; max-width: 360px; cursor: pointer; padding: 10px; border-radius: 14px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc, #64748b) 20%, transparent), transparent 72%); border: 1px solid color-mix(in srgb, var(--pc, #64748b) 42%, transparent); transition: transform .18s ease, box-shadow .18s ease; }
+.aw-pl:hover { transform: translateY(-2px); box-shadow: 0 8px 22px color-mix(in srgb, var(--pc, #64748b) 28%, transparent); }
+.aw-pl .g-ph.on { margin: 0 0 10px; }
+.aw-name { font-size: 1.3rem; font-weight: 900; line-height: 1.25; }
+.aw-team { font-size: .82rem; font-weight: 800; margin-top: 2px; }
+.aw-val { font-size: 1.2rem; font-weight: 900; color: var(--gold); font-family: 'Orbitron', sans-serif; margin-top: 6px; }
+.aw-none { padding: 18px 6px; font-size: 1rem; color: var(--text-muted); font-weight: 800; }
+/* 🏅 개인 수상 트로피 이미지 (awards 폴더) + 은은한 빛 */
+.g-awi { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }
+img.g-awimg { display: block; height: 30px; width: auto; object-fit: contain; pointer-events: none; animation: gAwGlow 3.4s ease-in-out infinite; }
+img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awimg.s-md { height: 46px; } img.g-awimg.s-lg { height: 72px; } img.g-awimg.s-hero { height: 96px; }
+@keyframes gAwGlow { 0%, 100% { filter: drop-shadow(0 0 1px rgba(251, 191, 36, .08)); } 50% { filter: drop-shadow(0 0 4px rgba(251, 191, 36, .22)); } }
+.tc-aw-ic .g-awi { min-width: 1em; }
+@media (prefers-reduced-motion: reduce) { img.g-awimg { animation: none; filter: drop-shadow(0 0 2px rgba(251, 191, 36, .16)); } .sr-l, .sr-r { animation: none; } }
+</style>
+<style id="g183Css">
+/* ===== v1.83 ===== */
+/* 📅 시즌 기록: 선수 카드는 작게 · 트로피와 상 이름은 크게 */
+.aw-card h3 { flex-direction: column; gap: 4px; font-size: 1.5rem; font-weight: 900; line-height: 1.2; margin-bottom: 6px; }
+.aw-card h3 .g-awi { font-size: 3.8rem; line-height: 1; }
+.aw-card h3 img.g-awimg.s-hero { height: 108px; }
+.aw-pls { gap: 8px; margin: 6px 0 2px; }
+.aw-pl { flex: 0 1 148px; max-width: 168px; padding: 7px 7px 8px; border-radius: 11px; }
+.aw-pl .g-ph.on { margin: 0 0 6px; border-radius: 8px; }
+.aw-name { font-size: 1rem; }
+.aw-team { font-size: .72rem; }
+.aw-val { font-size: 1rem; margin-top: 4px; }
+.aw-none { padding: 12px 6px; font-size: .9rem; }
+@media (max-width: 700px) { .aw-card h3 { font-size: 1.3rem; } .aw-card h3 .g-awi { font-size: 3rem; } .aw-card h3 img.g-awimg.s-hero { height: 84px; } .aw-pl { flex-basis: 132px; max-width: 150px; } }
+/* 🏆 팀 수상 진열장 › 🌟 선수 개인 수상: 트로피를 크게 (세로 카드형) */
+.tc-aw { flex-direction: column; align-items: center; text-align: center; gap: 4px; width: 114px; min-width: 0; padding: 10px 8px 8px; position: relative;
+    background: radial-gradient(ellipse at 50% 34%, color-mix(in srgb, var(--awc, #fbbf24) 10%, transparent), rgba(0,0,0,.3) 74%); }
+.tc-aw-ic { width: auto; height: auto; min-height: 76px; border-radius: 0; background: none; border: 0; box-shadow: none; font-size: 2.6rem; line-height: 1; align-items: flex-end; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5)); }
+.tc-aw-ic img.g-awimg { height: 76px; }
+.tc-aw-tx { align-items: center; gap: 3px; }
+.tc-aw-l { font-size: .78rem; }
+.tc-aw-n { font-size: .84rem; justify-content: center; text-align: center; }
+@media (max-width: 600px) { .tc-aw { width: 100px; } .tc-aw-ic { min-height: 62px; font-size: 2.2rem; } .tc-aw-ic img.g-awimg { height: 62px; } }
+/* 🧩 선수 상세 창 › 🏆 트로피 진열대 */
+#playerAwardBadges { display: none !important; }
+#playerTrophyCabinet { margin-bottom: 12px; }
+#playerTrophyCabinet .tc-it { width: 96px; padding: 6px 4px; }
+#playerTrophyCabinet .tc-ico { min-height: 78px; font-size: 2.5rem; }
+#playerTrophyCabinet img.g-tr.s-hero { height: 78px; margin-bottom: 0; }
+#playerTrophyCabinet img.g-awimg { height: 67px; }
+#playerTrophyCabinet .tc-nm { font-size: .68rem; }
+#playerTrophyCabinet .tc-sub { font-size: .58rem; }
+.tc-it.pc-live { opacity: .85; }
+.tc-it.pc-live .tc-ico { filter: drop-shadow(0 6px 10px rgba(0,0,0,.55)) saturate(.8); }
+.tc-it.pc-live .tc-sub { color: var(--gold); }
+#playerTrophyCabinet .tc-cab { padding-left: 12px; padding-right: 12px; }
+#playerTrophyCabinet .tc-cab { padding-bottom: 2px; }
+.tc-it.pc-aw::before { background: radial-gradient(ellipse at 50% 38%, color-mix(in srgb, var(--awc, #fbbf24) 11%, transparent), transparent 72%); }
+.tc-it.pc-aw .tc-nm { color: var(--awc, var(--gold)); }
+.tc-it .tc-sub i { font-style: normal; font-weight: 800; }
+/* 🌟 시즌 기록 · 📜 시즌 아카이브: 시즌 챔피언 가로 배치 (트로피 | 로고 + 팀명) */
+.season-champion-hero { display: grid; grid-template-columns: auto auto; grid-template-areas: "tr lb" "tr nm"; justify-content: center; align-items: center; column-gap: 16px; row-gap: 0; text-align: left; padding: 10px 20px; margin-bottom: 8px; }
+.season-champion-hero .hero-trophy { grid-area: tr; margin: 0; }
+.season-champion-hero .hero-trophy:has(img.g-tr) { line-height: 0; }
+.season-champion-hero img.g-tr.s-hero { height: 76px; margin: 0; }
+.season-champion-hero .hero-label { grid-area: lb; align-self: end; }
+.season-champion-hero .hero-team-name { grid-area: nm; align-self: start; display: flex; align-items: center; gap: 10px; margin-top: 0; font-size: 1.6rem; line-height: 1.15; }
+.season-champion-hero .hero-team-name .g-av { width: 48px; height: 48px; margin: 0; }
+.season-champion-hero .hero-team-name .g-av.s-lg.block { display: block; margin: 0; }
+.card:has(> .season-champion-hero), .card:has(> #teamAwardsGrid) { padding: 12px 16px; }
+.card:has(> #teamAwardsGrid) { margin-bottom: 10px; }
+.season-runner-pills { margin-top: 0; }
+@media (max-width: 520px) { .season-champion-hero { column-gap: 10px; padding: 8px 12px; } .season-champion-hero img.g-tr.s-hero { height: 58px; } .season-champion-hero .hero-team-name { font-size: 1.2rem; } .season-champion-hero .hero-team-name .g-av { width: 36px; height: 36px; } }
+/* 개인 수상 컨테이너: 빈 공간 없이 타이트하게 */
+.season-award-grid, #specialAwardsDisplay { grid-template-columns: repeat(auto-fit, minmax(190px, 230px)) !important; justify-content: center; gap: 8px !important; margin-top: 8px; }
+.aw-card { padding: 8px 8px 10px; }
+.aw-card > h3 { margin: 0 0 2px; }
+.aw-card > div[style*="0.65rem"] { margin-bottom: 3px !important; }
+.aw-card h3 .g-trw { font-size: 3.8rem; line-height: 1; }
+.aw-card h3 img.g-tr.s-hero { height: 96px; margin: 0 auto; }
+.aw-champ-nm { font-size: 1.1rem; margin-top: 2px; }
+.aw-card .award-rank { font-size: .72rem; }
+.card:has(> .season-award-grid) { padding: 12px 14px; }
+.pc-empty { display: flex; align-items: center; min-height: 64px; padding: 0 6px; }
+</style>
 </head>
 <body>
     <div class="app-shell">
@@ -1856,6 +1967,8 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
                     <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🌟 수상 기록</div>
                     <div id="playerAwardBadgeList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
                 </div>
+                <!-- v1.83: 🌟 수상 기록 → 🏆 트로피 진열대로 교체 -->
+                <div id="playerTrophyCabinet"></div>
                 
                 </div><div class="pm-col">
 <!-- 능력치(오버롤) -->
@@ -3076,6 +3189,16 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 
         <!-- 시즌 요약 탭 -->
         <div id="awards" class="tab-content">
+            <div class="card sr-nav" id="srNav">
+                <button type="button" class="btn btn-auto sr-b" id="srPrev" onclick="gSrGo(-1)" title="이전 시즌">◀</button>
+                <div class="sr-mid">
+                    <div class="sr-row"><span class="sr-ttl" data-new="1.82">📅 시즌별 기록 보기</span><select id="srSel" class="archive-select" style="margin:0;width:auto;min-width:200px;" onchange="gSrSel(this.value)"></select><span id="srCnt" class="sr-cnt"></span></div>
+                    <div class="sr-hint">◀ ▶ 버튼 · 키보드 ← → · 화면을 좌우로 밀어서 시즌을 넘겨볼 수 있어요</div>
+                </div>
+                <button type="button" class="btn btn-auto sr-b" id="srNext" onclick="gSrGo(1)" title="다음 시즌">▶</button>
+            </div>
+            <div id="srPast" style="display:none;"></div>
+            <div id="srCur">
             <div class="card">
                 <div id="teamAwardsGrid"></div>
             </div>
@@ -3111,6 +3234,8 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
                     </div>
                 </div>
             </div>
+
+            </div><!-- /srCur -->
 
             <!-- 선수기록/팀기록 서브탭 -->
             <div style="display:flex; gap:8px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px; flex-wrap:wrap;">
@@ -4007,6 +4132,9 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
     window.gTrophy = (name, size) => W(name, size, '');
     window.gTrophyOr = (name, fallback, size) => W(name, size, fallback);
     window.gTrophyIcons = (names, fallback, size) => W((names || []).join('||'), size || 'xs', fallback);
+    const AWID = { goals: 1, topScorer: 1, assists: 2, topAssistant: 2, mom: 3, mvp: 3, avgRating: 4, topRating: 4, rookie: 5, yashin: 6, ballon: 7 };
+    window.G_AWARDS = [[1, '득점왕'], [2, '도움왕'], [3, 'MVP (MOM)'], [4, '최고평균평점'], [5, '신인상'], [6, '야신상'], [7, '시즌 골롱도르']];
+    window.gAwardImg = (key, fb, size) => { const id = AWID[key]; return id ? '<span class="g-awi" data-gai="' + id + '" data-gsz="' + (SZ[size] ? size : 'sm') + '" data-fb="' + esc(fb || '') + '">' + esc(fb || '') + '</span>' : esc(fb || ''); };
     window.gTrophyBracket = function (html, name) {
         return html ? String(html).replace('<div class="tb-champ">🏆', '<div class="tb-champ">' + W(name, 'sm', '🏆')) : html;
     };
@@ -27117,6 +27245,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 { emoji: '🧤', title: '야신상',        key: 'yashin' },
                 { emoji: '🏅', title: '시즌 골롱도르', key: 'ballon' },
             ];
+            if (window.gAwSpecialHtml) { display.innerHTML = gAwSpecialHtml(sa); return; }
             display.innerHTML = awardDefs.map(a => {
                 const name = sa[a.key] || '';
                 const team = name ? state.teams.find(t => t.players.some(p => p.name === name)) : null;
@@ -27184,7 +27313,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             // 동일한 기록(값)을 가진 선수는 같은 순위 컨테이너 안에 함께 묶어서 "공동 N위"로 표시한다.
             const renderAward = (title, data, unit, key, info) => {
                 const fmtVal = (v) => key === 'avgRating' ? v.toFixed(2) : v;
-                let html = `<div class="summary-card"><h3>${title}</h3><div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:8px;">${info}</div>`;
+                let html = `<div class="summary-card aw-card"><h3>${window.gAwTitle ? gAwTitle(title, key) : title}</h3><div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:8px;">${info}</div>`;
                 if(data.length > 0) {
                     // 값이 같은 선수끼리 그룹으로 묶고, 그룹의 순위는 그 그룹 첫 선수의 인덱스+1로 매긴다.
                     const groups = [];
@@ -27199,7 +27328,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     }
                     const first = groups[0];
                     const tiedTag = first.names.length > 1 ? ` <small style="font-size:0.68rem; color:var(--accent); font-weight:700;">(공동 ${first.names.length}명)</small>` : '';
-                    html += `<div class="summary-val">${first.names.map(n => `<span class="g-nm" data-gk="p" data-gs="sm">${n}</span>`).join(', ')} <small style="font-size:0.8rem; color:var(--gold);">${fmtVal(first.val)}${unit}</small></div>${tiedTag}`;
+                    html += (window.gAwBig ? gAwBig(first.names, fmtVal(first.val) + unit) : (`<div class="summary-val">${first.names.map(n => `<span class="g-nm" data-gk="p" data-gs="sm">${n}</span>`).join(', ')} <small style="font-size:0.8rem; color:var(--gold);">${fmtVal(first.val)}${unit}</small></div>${tiedTag}`)) + (window.gAwBig ? tiedTag : '');
                     if(groups.length > 1) {
                         html += `<div style="text-align:left; margin-top:10px; border-top:1px solid rgba(255,255,255,0.05); padding-top:5px;">`;
                         groups.slice(1).forEach(g => {
@@ -27362,7 +27491,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             });
 
             const rawPoints = calcPlayerRankHistory(playerName, metric, scope);
-            container.innerHTML = renderRankTrendSVG(aggregateTrendPoints(rawPoints, group), color, metric === 'pwr' ? 'PWR' : undefined, true, { baseW: 560, plotH: 230, fs: 1.3 });
+            container.innerHTML = renderRankTrendSVG(aggregateTrendPoints(rawPoints, group), color, metric === 'pwr' ? 'PWR' : undefined, true, { baseW: 560, plotH: 130, fs: 1.3 });
         }
 
         function nextSeason() {
@@ -27975,21 +28104,14 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 <div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);">
                     <h4 style="color:var(--gold); display:flex; align-items:center; gap:8px; flex-wrap:wrap;">🌟 특별 수상 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openArchiveAwardsModal('${idx}')">✏️ 수정</button></h4>
                     ${(sa.rookie || sa.yashin || sa.ballon) ? `
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
-                        ${sa.rookie ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🌱 신인상</h4><div style="font-weight:800;"><span class="g-nm" data-gk="p" data-gs="sm">${sa.rookie}</span></div></div>` : ''}
-                        ${sa.yashin ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🧤 야신상</h4><div style="font-weight:800;"><span class="g-nm" data-gk="p" data-gs="sm">${sa.yashin}</span></div></div>` : ''}
-                        ${sa.ballon ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🏅 시즌 골롱도르</h4><div style="font-weight:800;"><span class="g-nm" data-gk="p" data-gs="sm">${sa.ballon}</span></div></div>` : ''}
-                    </div>` : `<div style="color:var(--text-muted); font-size:0.8rem; padding:6px 0;">아직 지정된 특별 수상이 없습니다. '수정' 버튼을 눌러 지정해주세요.</div>`}
+                    <div class="summary-grid season-award-grid" style="margin-top:6px;">${gArcSpecialCards(a)}</div>` : `<div style="color:var(--text-muted); font-size:0.8rem; padding:6px 0;">아직 지정된 특별 수상이 없습니다. '수정' 버튼을 눌러 지정해주세요.</div>`}
                 </div>`;
             let html = `
                 <div class="card" style="background:rgba(56, 189, 248, 0.05); border:1px solid var(--accent);">
                     <h3 style="margin-bottom:15px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">${window.gTrophyOr ? gTrophyOr(a.name, '🏆', 'md') : '🏆'} ${a.name} 최종 결과 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openSeasonRenameModal('${idx}')">✏️ 이름 수정</button></h3>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
-                        <div class="summary-card"><h4>🥇 우승</h4><div style="font-weight:800; color:var(--gold);"><span class="g-nm" data-gk="t" data-gs="sm">${a.winner}</span></div>${window.gTrophy ? gTrophy(a.name, 'lg') : ''}</div>
-                        <div class="summary-card"><h4>⚽️ 득점왕</h4><div style="font-weight:800;">${(window.gNames||String)(a.topScorer)}</div></div>
-                        <div class="summary-card"><h4>🎯 도움왕</h4><div style="font-weight:800;">${(window.gNames||String)(a.topAssistant)}</div></div>
-                        <div class="summary-card"><h4>👑 MVP</h4><div style="font-weight:800;">${(window.gNames||String)(a.mvp)}</div></div>
-                        <div class="summary-card"><h4>⭐ 최고평점</h4><div style="font-weight:800;">${(window.gNames||String)(a.topRating)}</div></div>
+                    <div class="summary-grid season-award-grid" style="margin-top:6px;">
+                        <div class="summary-card aw-card aw-champ"><h3>${gTrophyOr(a.name, '🏆', 'hero')}<span>우승</span></h3><div class="aw-champ-nm" style="font-weight:900; color:var(--gold);"><span class="g-nm" data-gk="t" data-gs="sm">${a.winner}</span></div></div>
+                        ${gArcAwardCards(a)}
                     </div>
                 </div>
                 ${specialBlock}
@@ -30025,7 +30147,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.81';
+        const G_HTML_VERSION = '1.83';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -30049,7 +30171,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.81': '개선', '1.80': '신규', '1.79': '신규', '1.78': '신규', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.83': '신규', '1.82': '신규', '1.81': '개선', '1.80': '신규', '1.79': '신규', '1.78': '신규', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -34506,7 +34628,17 @@ window.pmExtRender = function(name){
             if (!any && fb) w.textContent = fb;
         });
     }
-    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); decorate2(); alignTeamCells(); fillTrophies(); }, 150); };
+    function fillAwardImgs() {          // v1.82: 개인 수상 트로피 (awards/001.png = 수상 ID 001)
+        document.querySelectorAll('.g-awi').forEach(w => {
+            const id = parseInt(w.dataset.gai, 10), fb = w.dataset.fb || '', sz = w.dataset.gsz || 'sm', u = IMG['award:' + id], key = (u ? 'y' : 'n') + id;
+            if (w.dataset.gk === key) return; w.dataset.gk = key; w.textContent = ''; w.classList.remove('has-img');
+            if (!u) { if (fb) w.textContent = fb; return; }
+            const im = document.createElement('img'); im.className = 'g-awimg s-' + sz; im.src = u; im.alt = fb; im.draggable = false;
+            im.onerror = () => { im.remove(); w.dataset.gk = 'x' + id; w.classList.remove('has-img'); if (fb) w.textContent = fb; };
+            w.appendChild(im); w.classList.add('has-img');
+        });
+    }
+    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); decorate2(); alignTeamCells(); fillTrophies(); fillAwardImgs(); }, 150); };
     new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('click', later); window.addEventListener('resize', later);
 
@@ -34564,7 +34696,7 @@ window.pmExtRender = function(name){
         const next = {}, jobs = [];
         ent.forEach(f => {
             const path = f.path;
-            const m = path.replace(/\\/g, '/').match(/(?:^|\/)(teams?|players?|managers?|trophies|trophy)\/0*(\d+)\.(png|jpe?g|webp|gif)$/i); if (!m) return;
+            const m = path.replace(/\\/g, '/').match(/(?:^|\/)(teams?|players?|managers?|trophies|trophy|awards?)\/0*(\d+)\.(png|jpe?g|webp|gif)$/i); if (!m) return;
             const kind = m[1].toLowerCase().replace(/^trophies$/, 'trophy').replace(/s$/, ''), ext = m[3].toLowerCase();
             jobs.push(f.buf().then(async b => { let bl = new Blob([b], { type: MIME[ext] }); if (ext !== 'jpg' && ext !== 'jpeg') bl = await trimBlob(bl); next[kind + ':' + parseInt(m[2], 10)] = URL.createObjectURL(bl); }));
         });
@@ -34576,8 +34708,8 @@ window.pmExtRender = function(name){
         document.querySelectorAll('.g-ph.on').forEach(e => { e.classList.remove('on'); e.textContent = ''; }); document.querySelectorAll('[data-gav]').forEach(e => delete e.dataset.gav); document.querySelectorAll('.dc-tcard-badge[data-gtxt]').forEach(b => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; });
         document.querySelectorAll('td.clickable-team > .g-teamcell').forEach(w => { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); document.querySelectorAll('img.g-av,.g-av-sp').forEach(e => e.remove()); document.querySelectorAll('.g-teamcell').forEach(e => { e.classList.remove('g-teamcell'); e.style.width = ''; });
         document.querySelectorAll('[data-gimg="y"]').forEach(e => delete e.dataset.gimg);
-        document.querySelectorAll('.g-trw').forEach(e => { delete e.dataset.gk; });
-        decorate(); decorate2(); fillTrophies();
+        document.querySelectorAll('.g-trw,.g-awi').forEach(e => { delete e.dataset.gk; });
+        decorate(); decorate2(); fillTrophies(); fillAwardImgs(); try { window.gTeamBgRefresh && gTeamBgRefresh(); } catch (e) { }
         return Object.keys(next).length;
     }
     window.gImgPick = async function (inp) {
@@ -34586,10 +34718,11 @@ window.pmExtRender = function(name){
             const n = (fs.length === 1 && /\.zip$/i.test(fs[0].name)) ? await loadZip(await fs[0].arrayBuffer())
                 : await applyEntries(fs.map(f => ({ path: f.webkitRelativePath || f.name, buf: () => f.arrayBuffer() })));
             alert(n ? '이미지 ' + n + '개를 적용했습니다.\n(이 브라우저에서만 보이며, 새로고침하면 GitHub의 images.zip 기준으로 돌아갑니다.)'
-                : '적용할 이미지를 찾지 못했습니다.\nteams/001.png · players/0001.jpg · managers/001.jpg 형태의 폴더 구조인지 확인해 주세요.');
+                : '적용할 이미지를 찾지 못했습니다.\nteams/001.png · players/0001.jpg · managers/001.jpg · trophies/001.png · awards/001.png 형태의 폴더 구조인지 확인해 주세요.');
         } catch (e) { alert('이미지를 읽지 못했습니다. (zip 파일이 맞는지, 인터넷이 연결되어 있는지 확인해 주세요)'); }
         inp.value = '';
     };
+    window.gTeamLogoUrl = function (tid) { try { gEnsureIds(); return urlOf('team', ident('team', tid)) || ''; } catch (e) { return ''; } };
     window.gImgExportIds = function () {
         gEnsureIds(); const s = state, rows = [['종류', 'ID', '이름', '소속', '이미지 파일명(확장자 제외)']];
         s.teams.forEach(t => { const i = ident('team', t.id); rows.push(['팀', i.label, t.name, '', i.file]); });
@@ -34598,6 +34731,7 @@ window.pmExtRender = function(name){
         (s.managers || []).forEach(m => { const i = ident('manager', m.name); rows.push(['감독', i.label, m.name, '', i.file]); });
         (s.archives || []).forEach(a => rows.push(['대회', pad(a.sid, 3), a.name, '종료', 'trophies/' + pad(a.sid, 3)]));
         if (s.idMap && s.idMap.curS) rows.push(['대회', pad(s.idMap.curS, 3), s.seasonName || '현재 시즌', '진행 중', 'trophies/' + pad(s.idMap.curS, 3)]);
+        (window.G_AWARDS || []).forEach(a => rows.push(['수상', pad(a[0], 3), a[1], '개인 수상 트로피', 'awards/' + pad(a[0], 3)]));
         const csv = '\ufeff' + rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\r\n');
         const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'G리그_ID목록.csv'; document.body.appendChild(a); a.click(); a.remove();
     };
@@ -34696,7 +34830,7 @@ window.pmExtRender = function(name){
                 const nm = special ? sa[key] : a[key];
                 if (!nm) return;
                 if (String(dcFindPlayerTeamIdInArchive(a, nm)) !== tid) return;
-                H.awards.push({ season: a.name, idx: i, name: nm, label, emoji, color });
+                H.awards.push({ season: a.name, idx: i, name: nm, label, emoji, color, key });
             });
         }
         return H;
@@ -34748,7 +34882,7 @@ window.pmExtRender = function(name){
             <div class="tc-cab-t">${gTrophyOr(g.season, '🗓️', 'xs')}${E(g.season)}<small>${g.list.length}개 수상</small></div>
             <div class="tc-shelf" style="min-height:0;padding-top:10px;">${g.list.map(a => `
                 <div class="tc-aw" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}">
-                    <div class="tc-aw-ic">${a.emoji}</div>
+                    <div class="tc-aw-ic">${window.gAwardImg ? gAwardImg(a.key, a.emoji, 'hero') : a.emoji}</div>
                     <div class="tc-aw-tx"><span class="tc-aw-l">${E(a.label)}</span>${pn(a.name)}</div>
                 </div>`).join('')}</div>
             <div class="tc-board"></div>`).join('')
@@ -34774,10 +34908,259 @@ window.pmExtRender = function(name){
                 ${awardShelves}
             </div>
             ${pNames.length ? `<div><div class="tc-cab-t" style="margin:0 0 8px;">👤 선수별 수상 현황</div>${playerChips}</div>` : ''}
-            <div class="tc-note">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다. 진행 중인 시즌(${E(state.seasonName || '현재 시즌')})의 우승·수상은 시즌 종료 후 추가됩니다. 트로피 이미지는 images.zip › trophies 폴더(대회 ID)로 자동 적용됩니다.</div>
+            <div class="tc-note">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다. 진행 중인 시즌(${E(state.seasonName || '현재 시즌')})의 우승·수상은 시즌 종료 후 추가됩니다. 트로피 이미지는 images.zip › trophies 폴더(대회 ID), 개인 수상 트로피는 awards 폴더(수상 ID)로 자동 적용됩니다.</div>
         </div>`;
         if (typeof gApplyNewBadges === 'function') { try { gApplyNewBadges(); } catch (e) { } }
     };
+})();
+</script>
+<script id="g182Core">
+/* ================================================================
+   v1.82 — 📅 시즌 기록 시즌 넘겨보기 · 🌟 수상 선수 큰 카드 · 🎨 팀 배경(색상 + 로고)
+   ================================================================ */
+(function () {
+    const $ = id => document.getElementById(id);
+    const E = s => (typeof gEsc === 'function') ? gEsc(s) : String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const teamOfPlayer = n => { const ts = (typeof state !== 'undefined' && state.teams) || []; return ts.find(t => (t.players || []).some(p => p.name === n)) || null; };
+
+    /* ----- 🌟 수상 선수 큰 카드 ----- */
+    window.gAwTitle = function (title, key) {
+        const m = String(title).match(/^(\S+)\s+([\s\S]*)$/);
+        return m ? gAwardImg(key, m[1], 'hero') + '<span>' + m[2] + '</span>' : title;
+    };
+    window.gAwBig = function (names, val, opt) {
+        opt = opt || {};
+        const arr = Array.isArray(names) ? names : String(names || '').split(/,\s*/).filter(Boolean);
+        if (!arr.length) return '<div class="aw-none">' + E(opt.empty || '미정') + '</div>';
+        return '<div class="aw-pls">' + arr.map(n => {
+            const t = (opt.team && opt.team[n]) || teamOfPlayer(n), c = t ? (t.color || 'var(--text-muted)') : 'var(--text-muted)', tn = t ? t.name : '';
+            const v = (opt.vals && opt.vals[n] !== undefined) ? opt.vals[n] : val;
+            return '<div class="aw-pl" data-pn="' + E(n) + '" onclick="showPlayerDetail(this.dataset.pn)" style="--pc:' + c + ';"><div class="g-ph" data-gp="' + E(n) + '"></div><div class="aw-name">' + E(n) + '</div>'
+                + (tn ? '<div class="aw-team" style="color:' + c + ';">' + E(tn) + '</div>' : '') + (v ? '<div class="aw-val">' + E(v) + '</div>' : '') + '</div>';
+        }).join('') + '</div>';
+    };
+    const SP = [['rookie', '신인상', '🌱', '#86efac'], ['yashin', '야신상', '🧤', '#93c5fd'], ['ballon', '시즌 골롱도르', '🏅', '#fbbf24']];
+    window.gAwSpecialHtml = function (sa) {
+        sa = sa || {};
+        return SP.map(d => '<div class="summary-card aw-card aw-sp" style="--awc:' + d[3] + ';"><h3>' + gAwardImg(d[0], d[2], 'hero') + '<span>' + d[1] + '</span></h3>' + gAwBig(sa[d[0]] ? [sa[d[0]]] : [], '', { empty: '미정' }) + '</div>').join('');
+    };
+
+    /* ----- 📅 시즌 넘겨보기 ----- */
+    let cur = -1, lastLen = 0;
+    const seasons = () => { const a = ((typeof state !== 'undefined' && state.archives) || []).map((x, i) => ({ kind: 'arc', idx: i, name: x.name })); a.push({ kind: 'cur', name: (typeof state !== 'undefined' && state.seasonName) || '현재 시즌' }); return a; };
+    function renderNav() {
+        const sel = $('srSel'); if (!sel) return;
+        const S = seasons(), wasLast = lastLen > 0 && cur === lastLen - 1;
+        if (cur < 0 || cur >= S.length || (wasLast && S.length !== lastLen)) cur = S.length - 1;
+        lastLen = S.length;
+        sel.innerHTML = S.map((s, i) => '<option value="' + i + '"' + (i === cur ? ' selected' : '') + '>' + E(s.name) + (s.kind === 'cur' ? ' (진행 중)' : '') + '</option>').join('');
+        $('srPrev').disabled = cur <= 0; $('srNext').disabled = cur >= S.length - 1;
+        $('srCnt').textContent = (cur + 1) + ' / ' + S.length;
+    }
+    function buildPast(a) {
+        const pr = a.playerRank || [], by = {}; pr.forEach(r => { by[r.name] = r; });
+        const defs = [['topScorer', '⚽️', '득점왕', r => (r.goals || 0) + '골'], ['topAssistant', '🎯', '도움왕', r => (r.assists || 0) + '도움'], ['mvp', '👑', 'MVP (MOM)', r => (r.mom || 0) + '회'], ['topRating', '⭐', '최고평균평점', r => (Number(r.avgRating) || 0).toFixed(2) + '점']];
+        const grid = defs.map(d => {
+            const names = String(a[d[0]] || '').split(/,\s*/).filter(n => n && !/^[-—–]+$/.test(n) && n !== '없음' && n !== '기록 없음');
+            const vals = {}, team = {}; names.forEach(n => { const r = by[n]; if (r) { vals[n] = d[3](r); team[n] = { name: r.teamName, color: r.color }; } });
+            return '<div class="summary-card aw-card"><h3>' + gAwardImg(d[0], d[1], 'hero') + '<span>' + d[2] + '</span></h3>' + gAwBig(names, '', { vals, team, empty: '기록 없음' }) + '</div>';
+        }).join('');
+        const tr = id => (a.teamRank || []).find(t => String(t.id) === String(id)) || ((state.teams || []).find(t => String(t.id) === String(id))) || { name: 'TBD', color: '#fff' };
+        const ms = a.matches || [], fin = ms.find(m => m.type === '결승'), lp = ms.find(m => m.type === '꼴찌결정전');
+        const wr = (a.teamRank || []).find(t => t.name === a.winner) || { name: a.winner || 'TBD', color: '' };
+        let ru = { name: 'TBD', color: '#fff' }, lo = { name: 'TBD', color: '#fff' };
+        if (fin) { const hw = fin.hScore > fin.aScore || (fin.hScore === fin.aScore && (fin.hPk || 0) > (fin.aPk || 0)); ru = tr(hw ? fin.aId : fin.hId); }
+        if (lp) { const hw = lp.hScore > lp.aScore || (lp.hScore === lp.aScore && (lp.hPk || 0) > (lp.aPk || 0)); lo = tr(hw ? lp.aId : lp.hId); }
+        const hc = wr.color || '#fbbf24';
+        const hero = '<div class="card"><div class="season-champion-hero" style="background: linear-gradient(135deg, ' + hc + '22, transparent); border: 1px solid ' + hc + '55;"><div class="hero-trophy">' + gTrophyOr(a.name, '🏆', 'hero') + '</div><div class="hero-label">시즌 챔피언</div><div class="hero-team-name" data-gs="lg" style="color:' + hc + ';">' + E(wr.name) + '</div></div>'
+            + '<div class="season-runner-pills"><div class="runner-pill">🥈 준우승 <b style="color:' + ru.color + ';">' + E(ru.name) + '</b></div><div class="runner-pill">💀 꼴찌 <b style="color:' + lo.color + ';">' + E(lo.name) + '</b></div></div></div>';
+        const sp = '<div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);"><h3 style="color:var(--gold);">🌟 특별 수상</h3><div class="summary-grid season-award-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">' + gAwSpecialHtml(a.specialAwards) + '</div></div>';
+        return hero + '<div class="summary-grid season-award-grid">' + grid + '</div>' + sp
+            + '<div style="font-size:.7rem;color:var(--text-muted);text-align:center;margin:-4px 0 14px;">※ 종료된 시즌의 전체 순위 · 개인 기록 표는 🏛️ 역사관 › 시즌 아카이브에서 볼 수 있어요.</div>';
+    }
+    function show(i, dir) {
+        const S = seasons(); if (i < 0 || i >= S.length) return;
+        cur = i; renderNav();
+        const c = $('srCur'), p = $('srPast'), s = S[i], box = s.kind === 'cur' ? c : p;
+        if (s.kind === 'cur') { c.style.display = ''; p.style.display = 'none'; }
+        else { c.style.display = 'none'; p.style.display = ''; try { p.innerHTML = buildPast(state.archives[s.idx]); } catch (e) { console.error(e); p.innerHTML = '<div class="card">시즌 기록을 불러오지 못했어요.</div>'; } }
+        box.classList.remove('sr-l', 'sr-r'); if (dir) { void box.offsetWidth; box.classList.add(dir > 0 ? 'sr-r' : 'sr-l'); }
+        try { if (typeof gApplyNewBadges === 'function') gApplyNewBadges(); } catch (e) { }
+    }
+    window.gSrGo = d => show(cur + d, d);
+    window.gSrSel = v => { const i = parseInt(v, 10); show(i, i > cur ? 1 : -1); };
+    if (typeof window.renderSeasonSummary === 'function') {
+        const o = window.renderSeasonSummary;
+        window.renderSeasonSummary = function () {
+            const r = o.apply(this, arguments);
+            try { renderNav(); const S = seasons(); if (S[cur] && S[cur].kind === 'arc') show(cur, 0); else if ($('srCur')) { $('srCur').style.display = ''; $('srPast').style.display = 'none'; } } catch (e) { console.error(e); }
+            return r;
+        };
+    }
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        const aw = $('awards'); if (!aw || !aw.classList.contains('active')) return;
+        if (e.target && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+        if (Array.from(document.querySelectorAll('.modal')).some(m => getComputedStyle(m).display !== 'none')) return;
+        window.gSrGo(e.key === 'ArrowRight' ? 1 : -1);
+    });
+    let tx = 0, ty = 0, tOk = false;
+    document.addEventListener('touchstart', e => { const aw = $('awards'); tOk = !!(aw && aw.classList.contains('active') && e.target.closest && e.target.closest('#srCur,#srPast,#srNav') && !e.target.closest('.scrollable-table,.horizontal-bracket,select,input,canvas,svg')); if (tOk) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; } }, { passive: true });
+    document.addEventListener('touchend', e => { if (!tOk) return; tOk = false; const t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) window.gSrGo(dx < 0 ? 1 : -1); }, { passive: true });
+
+    /* ----- 🎨 팀 배경 (팀 색상 + 중앙 대형 로고) ----- */
+    function ensure(host) {
+        let el = host.querySelector(':scope > .g-tbg');
+        if (!el) { el = document.createElement('div'); el.className = 'g-tbg'; el.innerHTML = '<div class="g-tbg-in"><i class="g-tbg-tint"></i><i class="g-tbg-logo"></i></div>'; host.insertBefore(el, host.firstChild); }
+        host.classList.add('g-tbgHost'); return el;
+    }
+    function sizeIt(host) {
+        const el = host.querySelector(':scope > .g-tbg'); if (!el) return;
+        const h = host.id === 'dcTeamPanel' ? Math.min(window.innerHeight, host.offsetHeight || window.innerHeight) : (host.clientHeight || window.innerHeight * .8);
+        el.style.setProperty('--tbgh', Math.round(h) + 'px');
+    }
+    const ro = (typeof ResizeObserver === 'function') ? new ResizeObserver(es => es.forEach(en => sizeIt(en.target))) : null;
+    const seen = new WeakSet();
+    function apply(hostId, teamId) {
+        const host = $(hostId); if (!host || teamId == null) return;
+        const team = (state.teams || []).find(t => String(t.id) === String(teamId)); if (!team) return;
+        const el = ensure(host), u = (window.gTeamLogoUrl && gTeamLogoUrl(team.id)) || '', lg = el.querySelector('.g-tbg-logo');
+        el.style.setProperty('--tc', team.color || '#38bdf8');
+        lg.style.backgroundImage = u ? 'url("' + u + '")' : 'none'; lg.style.display = u ? '' : 'none';
+        sizeIt(host); if (ro && !seen.has(host)) { seen.add(host); ro.observe(host); }
+        requestAnimationFrame(() => sizeIt(host));
+    }
+    window.gTeamBgRefresh = function () {
+        try { if (typeof currentModalTeamId !== 'undefined' && currentModalTeamId != null) apply('teamModalContent', currentModalTeamId); } catch (e) { }
+        try { if (typeof currentDcTeamId !== 'undefined' && currentDcTeamId != null) apply('dcTeamPanel', currentDcTeamId); } catch (e) { }
+    };
+    if (typeof window.showTeamDetail === 'function') {
+        const o = window.showTeamDetail;
+        window.showTeamDetail = function (id) { const r = o.apply(this, arguments); try { apply('teamModalContent', id); } catch (e) { console.error(e); } return r; };
+    }
+    if (typeof window.dcSelectTeam === 'function') {
+        const o = window.dcSelectTeam;
+        window.dcSelectTeam = function (id) { const r = o.apply(this, arguments); try { apply('dcTeamPanel', id); } catch (e) { console.error(e); } return r; };
+    }
+    window.addEventListener('resize', () => { ['teamModalContent', 'dcTeamPanel'].forEach(id => { const h = $(id); if (h) sizeIt(h); }); });
+})();
+</script>
+<script id="g183Core">
+/* ================================================================
+   v1.83 — 🧩 선수 상세 창 › 🏆 트로피 진열대 (우승컵 + 개인 수상 트로피)
+   - 종료되어 아카이브에 저장된 시즌 기준 (팀 수상 진열장과 같은 기준)
+   - 우승컵: 그 시즌 출전 기록이 있는 팀이 우승한 시즌 / 개인 수상: 득점왕 · 도움왕 · MVP · 최고평균평점 · 신인상 · 야신상 · 시즌 골롱도르
+   ================================================================ */
+(function () {
+    const E = v => (typeof gEsc === 'function') ? gEsc(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        /* ----- 📜 시즌 아카이브: 개인 수상 카드 (🌟 시즌 기록과 같은 큰 트로피 + 작은 선수 카드) ----- */
+    const arcTeam = (a, nm) => {
+        const tid = (typeof dcFindPlayerTeamIdInArchive === 'function') ? dcFindPlayerTeamIdInArchive(a, nm) : null;
+        const t = tid != null && ((a.teamRank || []).find(x => String(x.id) === String(tid)) || (state.teams || []).find(x => String(x.id) === String(tid)));
+        return t ? { name: t.name, color: t.color } : null;
+    };
+    window.gArcAwardCards = function (a) {
+        const pr = a.playerRank || [], by = {}; pr.forEach(r => { by[r.name] = r; });
+        const defs = [['topScorer', '⚽️', '득점왕', r => (r.goals || 0) + '골'], ['topAssistant', '🎯', '도움왕', r => (r.assists || 0) + '도움'], ['mvp', '👑', 'MVP (MOM)', r => (r.mom || 0) + '회'], ['topRating', '⭐', '최고평균평점', r => (Number(r.avgRating) || 0).toFixed(2) + '점']];
+        return defs.map(d => {
+            const ns = String(a[d[0]] || '').split(/,\s*/).filter(n => n && !/^[-—–]+$/.test(n) && n !== '없음' && n !== '기록 없음' && n !== 'N/A');
+            const vals = {}, team = {};
+            ns.forEach(n => { const r = by[n]; if (r) { vals[n] = d[3](r); team[n] = { name: r.teamName, color: r.color }; } else { const t = arcTeam(a, n); if (t) team[n] = t; } });
+            return '<div class="summary-card aw-card"><h3>' + gAwardImg(d[0], d[1], 'hero') + '<span>' + d[2] + '</span></h3>' + gAwBig(ns, '', { vals, team, empty: '기록 없음' }) + '</div>';
+        }).join('');
+    };
+    window.gArcSpecialCards = function (a) {
+        const sa = a.specialAwards || {};
+        const SPD = [['rookie', '신인상', '🌱', '#86efac'], ['yashin', '야신상', '🧤', '#93c5fd'], ['ballon', '시즌 골롱도르', '🏅', '#fbbf24']];
+        return SPD.filter(d => sa[d[0]]).map(d => {
+            const t = arcTeam(a, sa[d[0]]), team = {}; if (t) team[sa[d[0]]] = t;
+            return '<div class="summary-card aw-card aw-sp" style="--awc:' + d[3] + ';"><h3>' + gAwardImg(d[0], d[2], 'hero') + '<span>' + d[1] + '</span></h3>' + gAwBig([sa[d[0]]], '', { team, empty: '미정' }) + '</div>';
+        }).join('');
+    };
+
+    const AW = [
+        ['topScorer', '득점왕', '⚽️', '#fb923c', false],
+        ['topAssistant', '도움왕', '🎯', '#38bdf8', false],
+        ['mvp', 'MVP (MOM)', '👑', '#facc15', false],
+        ['topRating', '최고평균평점', '⭐', '#a78bfa', false],
+        ['rookie', '신인상', '🌱', '#86efac', true],
+        ['yashin', '야신상', '🧤', '#93c5fd', true],
+        ['ballon', '시즌 골롱도르', '🏅', '#fbbf24', true]
+    ];
+    const names = v => String(v == null ? '' : v).split(/,\s*/).map(x => x.trim()).filter(Boolean);
+
+    function pcHonors(name) {
+        const H = { titles: [], awards: [] };
+        const arcs = (typeof state !== 'undefined' && state.archives) || [];
+        for (let i = arcs.length - 1; i >= 0; i--) {                    // 최근 시즌이 먼저
+            const a = arcs[i]; if (!a) continue;
+            const tids = new Set();
+            (a.matches || []).forEach(m => (m.pStats || []).forEach(ps => { if (ps.name === name && ps.teamId != null) tids.add(String(ps.teamId)); }));
+            if (a.winner && tids.size) {
+                for (const tid of tids) {
+                    const t = (a.teamRank || []).find(x => String(x.id) === tid) || ((state.teams || []).find(x => String(x.id) === tid));
+                    if (t && t.name === a.winner) { H.titles.push({ season: a.name, team: t.name, color: t.color || '#fbbf24' }); break; }
+                }
+            }
+            const sa = a.specialAwards || {};
+            AW.forEach(([key, label, emoji, color, special]) => {
+                if (names(special ? sa[key] : a[key]).includes(name)) H.awards.push({ season: a.name, key, label, emoji, color });
+            });
+        }
+        return H;
+    }
+
+    function pcLive(name) {          // 진행 중인 시즌: 지금 이대로 끝난다면 1위인 항목 (유력)
+        const out = [];
+        try {
+            if (!((state.matches || []).length)) return out;
+            const ps = Object.entries(state.playerStats || {}).map(([n, s]) => ({ name: n, goals: s.goals || 0, assists: s.assists || 0, mom: s.mom || 0,
+                avgRating: s.ratingCount > 0 ? s.rating / s.ratingCount : 0, games: (s.starter || 0) + (s.substitute || 0) }));
+            const pts = p => p.goals + p.assists;
+            const top = (f, c) => [...ps].filter(f).sort(c)[0];
+            const lead = {
+                topScorer: top(p => p.goals > 0, (a, b) => (b.goals - a.goals) || (b.avgRating - a.avgRating) || (b.assists - a.assists)),
+                topAssistant: top(p => p.assists > 0, (a, b) => (b.assists - a.assists) || (b.avgRating - a.avgRating) || (b.goals - a.goals)),
+                mvp: top(p => p.mom > 0, (a, b) => (b.mom - a.mom) || (b.avgRating - a.avgRating) || (pts(b) - pts(a))),
+                topRating: top(p => p.games > 0, (a, b) => (b.avgRating - a.avgRating) || (pts(b) - pts(a)) || (b.mom - a.mom))
+            };
+            const sa = state.specialAwards || {};
+            AW.forEach(([key, label, emoji, color, special]) => {
+                const who = special ? sa[key] : (lead[key] && lead[key].name);
+                if (who === name) out.push({ season: state.seasonName || '현재 시즌', key, label, emoji, color });
+            });
+        } catch (e) { }
+        return out;
+    }
+
+    window.renderPlayerTrophyCabinet = function (name) {
+        const box = document.getElementById('playerTrophyCabinet'); if (!box) return;
+        let H;
+        try { H = pcHonors(name); } catch (e) { console.error(e); box.innerHTML = ''; return; }
+        const tTitle = H.titles.map(t => `<div class="tc-it" title="${E(t.season)} 우승 · ${E(t.team)}"><div class="tc-ico">${gTrophyOr(t.season, '🏆', 'hero')}</div><div class="tc-nm">${E(t.season)}</div><div class="tc-sub"><i style="color:${E(t.color)};">${E(t.team)}</i> 우승</div></div>`).join('');
+        const live = pcLive(name);
+        const tLive = live.map(a => `<div class="tc-it pc-aw pc-live" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)} (진행 중 · 유력)"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.label)}</div><div class="tc-sub">${E(a.season)} · 유력</div></div>`).join('');
+        const tAward = tLive + H.awards.map(a => `<div class="tc-it pc-aw" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.label)}</div><div class="tc-sub">${E(a.season)}</div></div>`).join('');
+        const empty = msg => `<div class="pc-empty"><span class="tc-note">${msg}</span></div>`;
+        box.innerHTML = `<div class="tc-cab">
+            <div class="tc-cab-t">🏆 트로피 진열대 ${typeof gNewTag === 'function' ? gNewTag('1.83') : ''}<small>우승컵 ${H.titles.length}개 · 개인 수상 ${H.awards.length}개${live.length ? ' · 진행 중 유력 ' + live.length + '개' : ''}</small></div>
+            <div class="tc-cab-t" style="margin-top:2px;">🏆 우승컵 <small>소속팀이 우승한 시즌</small></div>
+            <div class="tc-shelf" style="min-height:0;">${tTitle || empty('아직 우승컵이 없어요.')}</div><div class="tc-board"></div>
+            <div class="tc-cab-t">🌟 개인 수상 트로피 <small>득점왕 · 도움왕 · MVP · 평점 · 신인상 · 야신상 · 골롱도르</small></div>
+            <div class="tc-shelf" style="min-height:0;">${tAward || empty('아직 개인 수상 트로피가 없어요.')}</div><div class="tc-board"></div>
+        </div>
+        <div class="tc-note" style="margin-top:6px;">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다 (우승컵은 그 시즌 출전 기록이 있는 선수 기준). 진행 중인 시즌의 1위 항목은 흐리게 '유력'으로 먼저 표시되고, 시즌이 끝나면 확정됩니다.</div>`;
+        try { if (typeof gApplyNewBadges === 'function') gApplyNewBadges(); } catch (e) { }
+    };
+
+    if (typeof window.showPlayerDetail === 'function') {
+        const o = window.showPlayerDetail;
+        window.showPlayerDetail = function (n) {
+            const r = o.apply(this, arguments);
+            try { renderPlayerTrophyCabinet(n); } catch (e) { console.error(e); }
+            return r;
+        };
+    }
 })();
 </script>
 </body>
