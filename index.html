@@ -144,10 +144,7 @@
         #modalPlayerLgCmp > div, #modalPlayerStatDeltas > div, #modalStatTrend > div { margin-top: 6px !important; padding-top: 6px !important; }
         @media (min-width: 1000px) {
             body #playerDetailModal .modal-content { max-height: 94vh; margin: 2% auto; }
-            #playerTabContentOverview .pm-cols { align-items: stretch; }
-            #playerTabContentOverview .pm-col:first-child { display: flex; flex-direction: column; }
-            #playerTabContentOverview .pm-col:first-child > div:last-child { flex: 1 1 auto; display: flex; flex-direction: column; margin-bottom: 0 !important; }
-            #playerTabContentOverview #playerRankTrendChart { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+            #playerTabContentOverview .pm-cols { align-items: start; }
         }
         /* v1.76: 역사관 개인 타이틀 랭킹 — 큰 사진 카드형 */
         .gt-row { display: flex; align-items: stretch; gap: 10px; padding: 0 8px 0 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; }
@@ -1465,6 +1462,106 @@
         select.g-teamsel { border-left: 4px solid var(--g-sel-c, transparent) !important; }
         .g-aw-hint { font-weight: 500; color: var(--text-muted); font-size: 0.66rem; margin-left: 4px; }
     </style>
+<style id="g178Css">
+/* ===== v1.78: 🏆 시즌 트로피 이미지 ===== */
+.g-trw { display: contents; }
+img.g-tr { display: inline-block; vertical-align: middle; object-fit: contain; flex: none; margin-right: 5px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.45)); background: transparent; pointer-events: auto; }
+img.g-tr.s-xs { height: 18px; width: auto; margin-right: 4px; }
+img.g-tr.s-sm { height: 26px; width: auto; }
+img.g-tr.s-md { height: 38px; width: auto; margin-right: 7px; }
+img.g-tr.s-lg { height: 64px; width: auto; margin: 8px auto 0; display: block; }
+img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px; filter: drop-shadow(0 6px 14px rgba(251,191,36,.35)); }
+.hero-trophy:has(img.g-tr) { font-size: 0; line-height: 0; }
+.tb-champ img.g-tr { height: 26px; margin-right: 6px; }
+@media (max-width: 700px) { img.g-tr.s-hero { height: 84px; } img.g-tr.s-lg { height: 52px; } img.g-tr.s-md { height: 32px; } }
+</style>
+
+<style id="g180Css">
+/* ===== v1.80 ===== */
+/* 🖼️ 좌측 메뉴 최상단 로고 */
+.sidebar-logo { flex-shrink: 0; display: flex; justify-content: center; align-items: center; padding: 16px 14px 0; cursor: pointer; }
+.sidebar-logo img { width: 112px; height: auto; display: block; filter: drop-shadow(0 4px 12px rgba(0,0,0,.55)); transition: transform .2s ease, filter .2s ease; user-select: none; }
+.sidebar-logo:hover img { transform: translateY(-1px) scale(1.03); filter: drop-shadow(0 6px 16px rgba(56,189,248,.35)); }
+.sidebar.collapsed .sidebar-logo { padding: 12px 6px 0; }
+.sidebar.collapsed .sidebar-logo img { width: 46px; }
+.sidebar-logo + .sidebar-header { padding-top: 10px; }
+
+/* 🏠 팀 정보 탭: 왼쪽 포메이션 / 오른쪽 시즌별 성적 · 팀 히스토리 */
+.dc-info-split { display: grid; grid-template-columns: minmax(300px, 360px) minmax(0, 1fr); gap: 16px; align-items: start; margin-bottom: 15px; }
+.dc-info-left, .dc-info-right { min-width: 0; }
+.dc-info-right { display: flex; flex-direction: column; gap: 16px; }
+.dc-info-left > div > .card, .dc-info-right > .card { margin-bottom: 0; }
+.dc-fm-lite .dc-fm-name { text-align: center; font-size: 1rem; margin-bottom: 8px; }
+.dc-fm-lite .dc-fm-name b { color: var(--gold); font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+.dc-fm-lite .dc-fm-name .mut { margin-left: 8px; font-size: .68rem; color: var(--text-muted); font-weight: 700; }
+.dc-fm-lite .dc-fm-pitch { flex: none; width: 100%; max-width: 300px; margin: 0 auto; }
+@media (max-width: 980px) { .dc-info-split { grid-template-columns: minmax(0, 1fr); } .dc-fm-lite .dc-fm-pitch { max-width: 320px; } }
+
+/* 📊 전적 요약 7칸 — 작은 박스 1열 */
+.h2h-row { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+.h2h-b { border: 1px solid; border-radius: 9px; padding: 6px 4px 5px; text-align: center; min-width: 0; }
+.h2h-n { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 1.1rem; line-height: 1.2; white-space: nowrap; }
+.h2h-l { font-size: .64rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 560px) { .h2h-row { gap: 4px; } .h2h-n { font-size: .92rem; } .h2h-l { font-size: .54rem; } }
+
+/* 🧩 선수 모달: 순위 변동 그래프가 위아래로 늘어나지 않게 */
+#playerTabContentOverview .pm-cols { align-items: start !important; }
+#playerTabContentOverview .pm-col:first-child { display: block !important; }
+#playerTabContentOverview #playerRankTrendChart { display: block !important; flex: none !important; height: auto !important; }
+#playerRankTrendChart > svg { max-width: 640px; margin-inline: auto; }
+
+/* 🏆 트로피 띠 (팀 상세 창) */
+.tcs-strip { margin: 0 0 12px; }
+.tcs-strip.tcs-hide { display: none !important; }
+.tcs-in { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 6px 12px; border-radius: 10px; cursor: pointer; background: linear-gradient(90deg, rgba(251,191,36,.14), rgba(251,191,36,.03)); border: 1px solid rgba(251,191,36,.3); }
+.tcs-in:hover { border-color: rgba(251,191,36,.6); }
+.tcs-icons { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; min-height: 38px; font-size: 1.6rem; }
+.tcs-icons img.g-tr { margin: 0 !important; }
+.tcs-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.tcs-txt b { color: var(--gold); font-size: .82rem; }
+.tcs-txt span { color: var(--text-muted); font-size: .72rem; font-weight: 700; }
+.tcs-go { margin-left: auto; font-size: .72rem; font-weight: 800; color: var(--accent); }
+
+/* 🏆 팀 수상 진열장 */
+.tc-wrap { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+.tc-sum { display: flex; gap: 8px; flex-wrap: wrap; }
+.tc-chip { display: inline-flex; align-items: center; gap: 7px; padding: 6px 13px; border-radius: 999px; font-weight: 800; font-size: .78rem; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: var(--text-muted); }
+.tc-chip b { font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--tcc, var(--gold)); }
+.tc-cab { position: relative; border-radius: 14px; padding: 12px 20px 4px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(30,41,59,.9), rgba(8,12,24,.97));
+    box-shadow: inset 0 0 0 6px #5b3a1a, inset 0 0 0 7px rgba(251,191,36,.28), inset 0 0 60px rgba(0,0,0,.55), 0 8px 24px rgba(0,0,0,.35); }
+.tc-cab::after { content: ''; position: absolute; inset: 7px; border-radius: 9px; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 28%, rgba(255,255,255,0) 62%, rgba(255,255,255,.04) 100%); }
+.tc-cab-t { position: relative; z-index: 1; font-size: .82rem; font-weight: 900; color: var(--gold); margin: 6px 4px 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tc-cab-t small { font-weight: 700; color: var(--text-muted); font-size: .66rem; }
+.tc-shelf { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: flex-end; padding: 8px 4px 0; min-height: 96px; }
+.tc-board { position: relative; z-index: 1; height: 12px; margin: 0 -8px 14px; border-radius: 3px; background: linear-gradient(180deg, #b27a34, #6b4423 55%, #3f2812); box-shadow: 0 7px 12px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+.tc-it { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; width: 132px; padding: 8px 6px 8px; border-radius: 10px; }
+.tc-it::before { content: ''; position: absolute; inset: 0; border-radius: 10px; pointer-events: none; background: radial-gradient(ellipse at 50% 38%, rgba(251,191,36,.24), transparent 72%); }
+.tc-ico { position: relative; min-height: 112px; display: flex; align-items: flex-end; justify-content: center; font-size: 3.6rem; line-height: 1; filter: drop-shadow(0 6px 10px rgba(0,0,0,.55)); }
+.tc-ico img.g-tr { margin: 0 !important; }
+.tc-it.silver::before { background: radial-gradient(ellipse at 50% 38%, rgba(203,213,225,.2), transparent 72%); }
+.tc-it.silver .tc-ico { min-height: 64px; font-size: 2.8rem; }
+.tc-nm { position: relative; font-size: .74rem; font-weight: 900; color: var(--gold); margin-top: 6px; line-height: 1.25; word-break: keep-all; }
+.tc-it.silver .tc-nm { color: #cbd5e1; }
+.tc-sub { position: relative; font-size: .62rem; color: var(--text-muted); margin-top: 2px; font-weight: 700; }
+.tc-it.ghost { opacity: .4; }
+.tc-it.ghost::before { display: none; }
+.tc-it.ghost .tc-ico { filter: grayscale(1) brightness(.7); }
+.tc-aw { position: relative; display: flex; align-items: center; gap: 9px; min-width: 168px; padding: 8px 12px 8px 8px; border-radius: 10px; margin-bottom: 4px; background: rgba(0,0,0,.34); border: 1px solid var(--awc, rgba(255,255,255,.2)); }
+.tc-aw-ic { flex: none; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.2), rgba(0,0,0,.35)); border: 2px solid var(--awc, #fbbf24); box-shadow: 0 0 10px rgba(0,0,0,.4); }
+.tc-aw-tx { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.tc-aw-l { font-size: .66rem; font-weight: 900; color: var(--awc, #fbbf24); }
+.tc-aw-n { font-size: .84rem; font-weight: 800; color: var(--text); cursor: pointer; display: inline-flex; align-items: center; }
+.tc-aw-n:hover { color: var(--accent); }
+.tc-aw-n .g-av { margin-right: 5px; }
+.tc-ps { display: flex; flex-wrap: wrap; gap: 6px; }
+.tc-p { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px; font-size: .74rem; font-weight: 800; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); cursor: pointer; }
+.tc-p:hover { border-color: var(--accent); }
+.tc-p i { font-style: normal; letter-spacing: 1px; }
+.tc-p em { font-style: normal; color: var(--gold); font-family: 'Orbitron', sans-serif; font-size: .72rem; }
+.tc-note { font-size: .68rem; color: var(--text-muted); }
+@media (max-width: 600px) { .tc-cab { padding: 10px 12px 4px; } .tc-it { width: 108px; } .tc-ico { min-height: 92px; font-size: 3rem; } }
+</style>
 </head>
 <body>
     <div class="app-shell">
@@ -1472,6 +1569,9 @@
         <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
 
         <aside class="sidebar" id="appSidebar">
+            <div class="sidebar-logo" id="sidebarLogo" onclick="try{openTab('dashboard')}catch(e){}" title="G.LEAGUE">
+                <img src="data:image/png;base64,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" alt="G.LEAGUE — Back to the classic" draggable="false">
+            </div>
             <header class="sidebar-header">
                 <div class="sidebar-header-top">
                     <h1>G-LEAGUE<br>REBOOT</h1>
@@ -1587,17 +1687,20 @@
                     <button id="teamTabH2H" onclick="switchTeamModalTab('h2h')" style="padding:6px 14px; border:none; border-radius:6px; background:var(--accent); color:#000; font-weight:800; font-size:0.8rem; cursor:pointer;">⚔️ 경기 기록</button>
                     <button id="teamTabSeason" onclick="switchTeamModalTab('season')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">📅 시즌별 기록</button>
                     <button id="teamTabAbility" onclick="switchTeamModalTab('ability')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">🧬 능력치 비교</button>
+                    <button id="teamTabTrophy" data-new="1.80" onclick="switchTeamModalTab('trophy')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">🏆 진열장</button>
                 </div>
             </div>
             <div id="modalContent">
+                <!-- 🏆 트로피 띠 (v1.80) — 우승 트로피가 있으면 모든 탭 위에 표시, 누르면 진열장 탭으로 -->
+                <div id="teamModalTrophyStrip" class="tcs-strip" style="display:none;"></div>
 
                 <!-- 경기 기록 탭 -->
                 <div id="teamTabContentH2H">
-                    <!-- 전적 요약 카드 4개 -->
-                    <div id="h2hSummary" style="display:grid; grid-template-columns: repeat(4,1fr); gap:10px; margin-bottom:16px;"></div>
-
-                    <!-- 추가 팀 스탯 행 -->
-                    <div id="teamExtraStats" style="display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-bottom:16px;"></div>
+                    <!-- v1.80: 전적 요약 7칸(총 경기 · 승리 · 패배 · 승률 · 득점 · 실점 · 득실차)을 작게 줄여 1열로 -->
+                    <div class="h2h-row">
+                        <div id="h2hSummary" style="display:contents;"></div>
+                        <div id="teamExtraStats" style="display:contents;"></div>
+                    </div>
 
                     <!-- 순위 변동 그래프 -->
                     <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 14px; margin-bottom:16px;">
@@ -1642,6 +1745,9 @@
                 </div>
                 <div id="teamTabContentAbility" style="display:none;">
                     <div id="teamAbilityCompare"></div>
+                </div>
+                <div id="teamTabContentTrophy" style="display:none;">
+                    <div id="teamTrophyCase"></div>
                 </div>
             </div>
         </div>
@@ -1718,12 +1824,6 @@
                     </div>
                 </div>
 
-                <!-- 특별 수상 배지 -->
-                <div id="playerAwardBadges" style="display:none; background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(251,191,36,0.02)); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:14px; margin-bottom:12px;">
-                    <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🌟 수상 기록</div>
-                    <div id="playerAwardBadgeList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-                </div>
-
                 <!-- 순위 변동 그래프 -->
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 6px; margin-bottom:12px;">
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:8px; padding:0 8px;">
@@ -1741,6 +1841,12 @@
                         </div>
                     </div>
                     <div id="playerRankTrendChart"></div>
+                </div>
+
+                <!-- 특별 수상 배지 -->
+                <div id="playerAwardBadges" style="display:none; background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(251,191,36,0.02)); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:14px; margin-bottom:12px;">
+                    <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🌟 수상 기록</div>
+                    <div id="playerAwardBadgeList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
                 </div>
                 
                 </div><div class="pm-col">
@@ -3283,16 +3389,31 @@
                             <div id="dcTeamInfoKeyPlayers" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;"></div>
                         </div>
                     </div>
-                    <!-- 📋 포메이션 & 전술 요약 (v1.04 / 위치 이동 v1.54) -->
-                    <div id="dcTeamInfoFormation"></div>
-                    <div class="card">
-                        <h3>📅 시즌별 성적 & 순위</h3>
-                        <div class="ranking-info">과거 아카이브 전체 + 현재 시즌의 시즌별 최종 성적을 한눈에 볼 수 있습니다. 더 자세한 경기별 내용은 📅 시즌별 기록 탭에서 확인하세요.</div>
-                        <div id="dcTeamInfoSeasonSummary" style="margin-top:8px;"></div>
+                    <!-- v1.80: 왼쪽 = 포메이션(간단히) / 오른쪽 = 시즌별 성적 & 순위 + 팀 히스토리 -->
+                    <div class="dc-info-split">
+                        <div class="dc-info-left">
+                            <div id="dcTeamInfoFormation"></div>
+                        </div>
+                        <div class="dc-info-right">
+                            <div class="card">
+                                <h3>📅 시즌별 성적 & 순위</h3>
+                                <div class="ranking-info">과거 아카이브 전체 + 현재 시즌의 시즌별 최종 성적을 한눈에 볼 수 있습니다. 더 자세한 경기별 내용은 📅 시즌별 기록 탭에서 확인하세요.</div>
+                                <div id="dcTeamInfoSeasonSummary" style="margin-top:8px;"></div>
+                            </div>
+                            <div class="card">
+                                <h3>🏆 팀 히스토리 (수상 · 우승 기록)</h3>
+                                <div id="dcTeamHistory"></div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- 🏆 팀 수상 진열장 탭 (v1.80) -->
+                <div id="dcTabContent_trophy" class="dc-tab-content">
                     <div class="card">
-                        <h3>🏆 팀 히스토리 (수상 · 우승 기록)</h3>
-                        <div id="dcTeamHistory"></div>
+                        <h3 data-new="1.80">🏆 팀 수상 진열장</h3>
+                        <div class="ranking-info">이 팀이 따낸 우승 트로피와 소속 선수들이 이 팀에서 받은 개인 수상(득점왕 · 도움왕 · MVP · 평점왕 · 신인상 · 야신상 · 골롱도르)을 한곳에 모았습니다. 시즌이 종료되어 아카이브에 저장된 기록 기준입니다.</div>
+                        <div id="dcTrophyCase"></div>
                     </div>
                 </div>
 
@@ -3471,11 +3592,11 @@
                             </div>
                         </div>
 
-                        <!-- 전적 요약 카드 4개 -->
-                        <div id="dcH2hSummary" style="display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-bottom:16px;"></div>
-
-                        <!-- 추가 팀 스탯 행 -->
-                        <div id="dcTeamExtraStats" style="display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-bottom:16px;"></div>
+                        <!-- v1.80: 전적 요약 7칸을 작게 줄여 1열로 -->
+                        <div class="h2h-row">
+                            <div id="dcH2hSummary" style="display:contents;"></div>
+                            <div id="dcTeamExtraStats" style="display:contents;"></div>
+                        </div>
 
                         <!-- 순위 변동 그래프 -->
                         <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 14px; margin-bottom:16px;">
@@ -3862,6 +3983,24 @@
         var out = '<div class="tb-wrap"><div class="tb' + (r1 && r1.length ? ' has-r1' : '') + '">' + html + '</div></div>';
         if (opts.loser) out += '<div class="tb-loser"><div class="tb-loser-t">💀 꼴찌 결정전</div>' + C(opts.loser) + '</div>';
         return out;
+    };
+})();
+</script>
+<script id="g178Core">
+/* ================================================================
+   🏆 시즌 트로피 (v1.79) — images.zip 안의 trophies/001.png 처럼 '대회(시즌) 고유 ID' 파일명으로 적용
+   - 여기서는 화면에 '자리표시'만 만들고, 실제 이미지는 images.zip 을 불러온 뒤 아래쪽 이미지 스크립트가 채운다.
+   - 이미지가 없는 시즌은 기존 이모지(🏆 등) 그대로 · 이미지를 빼면 자동으로 이모지로 돌아간다.
+   ================================================================ */
+(function () {
+    const esc = v => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    const SZ = { xs: 1, sm: 1, md: 1, lg: 1, hero: 1 };
+    const W = (names, size, fb) => '<span class="g-trw" data-gtn="' + esc(names) + '" data-gsz="' + (SZ[size] ? size : 'sm') + '" data-fb="' + esc(fb) + '">' + esc(fb) + '</span>';
+    window.gTrophy = (name, size) => W(name, size, '');
+    window.gTrophyOr = (name, fallback, size) => W(name, size, fallback);
+    window.gTrophyIcons = (names, fallback, size) => W((names || []).join('||'), size || 'xs', fallback);
+    window.gTrophyBracket = function (html, name) {
+        return html ? String(html).replace('<div class="tb-champ">🏆', '<div class="tb-champ">' + W(name, 'sm', '🏆')) : html;
     };
 })();
 </script>
@@ -8640,6 +8779,7 @@
             { id: 'tactic', label: '📋 전술', tabs: [['tactic', '📋 전술']] },
             { id: 'games', label: '⚔️ 경기 · 시즌', tabs: [['match', '⚔️ 경기기록&순위'], ['season', '📅 시즌별 기록']] },
             { id: 'records', label: '📊 기록실', tabs: [['records', '📊 기록실']] },
+            { id: 'trophy', label: '🏆 팀 수상 진열장', tabs: [['trophy', '🏆 팀 수상 진열장']] },
             { id: 'mgr', label: '🧑‍💼 감독 · 이적', tabs: [['manager', '🧑‍💼 감독실'], ['transfer', '🔁 이적기록']] },
             { id: 'analysis', label: '🔍 상세분석', tabs: [['detail', '🔍 상세분석']] }
         ];
@@ -8655,7 +8795,7 @@
         const dcLastTab = {};
         function dcLastTabOf(gid) { const g = DC_GROUPS.find(x => x.id === gid); return dcLastTab[gid] || (g ? g.tabs[0][0] : 'teaminfo'); }
         function switchDcTab(tab) {
-            ['teaminfo', 'roster', 'tactic', 'records', 'match', 'season', 'transfer', 'manager', 'detail'].forEach(t => {
+            ['teaminfo', 'roster', 'tactic', 'records', 'match', 'season', 'transfer', 'manager', 'detail', 'trophy'].forEach(t => {
                 const content = document.getElementById('dcTabContent_' + t);
                 const btn = document.getElementById('dcTabBtn_' + t);
                 if (content) content.classList.toggle('active', t === tab);
@@ -8663,6 +8803,7 @@
             });
             dcLastTab[dcGroupOf(tab).id] = tab;
             dcRenderTabNav(tab);
+            if (tab === 'trophy') { try { tcRenderCabinet(currentDcTeamId, 'dcTrophyCase'); } catch (e) { console.error('진열장 렌더 오류', e); } }
         }
 
         // 🏛️ 역사관 내부 탭 전환 (시즌 아카이브 / 명예의 전당 / 통산 기록)
@@ -8804,6 +8945,7 @@
             let badges = `<span style="background:rgba(56,189,248,0.12); color:var(--accent); padding:4px 10px; border-radius:6px; font-size:0.78rem; font-weight:800;">${state.seasonName || '현재 시즌'} · ${curStats.gms}경기 ${curStats.w}승 ${curStats.l}패</span>`;
             if (rank) badges += `<span style="background:rgba(251,191,36,0.12); color:var(--gold); padding:4px 10px; border-radius:6px; font-size:0.78rem; font-weight:800;" title="전체 시즌(과거 아카이브 전체 + 현재 시즌) 누적 Elo 기준 순위">통산 Elo 순위 ${rank}위</span>`;
             if (elo !== null && elo !== undefined) badges += `<span style="background:rgba(148,163,184,0.12); color:var(--text-muted); padding:4px 10px; border-radius:6px; font-size:0.78rem; font-weight:800;">⚡ 통산 Elo ${Math.round(elo)}</span>`;
+            try { if (typeof tcQuickBadge === 'function') badges += tcQuickBadge(team); } catch (e) { }
             document.getElementById('dcQuickBadges').innerHTML = badges;
         }
 
@@ -12043,34 +12185,20 @@ function fmBestStyle(p, role) {
             try { tacRenderTeamCard(team); } catch (e) { console.error(e); }   // v1.19: 🧭 전술 기록 분석
         }
 
-        // 🏠 팀 정보 탭: 포메이션·전술 요약 (읽기 전용)
+        // 🏠 팀 정보 탭: 포메이션 (읽기 전용 · v1.80 간단히 — 포메이션 이름 + 필드 배치만 표시)
         function dcRenderTeamInfoFormation(team) {
             const box = document.getElementById('dcTeamInfoFormation'); if (!box || !team) return;
             if (!(team.players || []).length) { box.innerHTML = ''; return; }
-            const tac = fmGetRO(team), c = fmContext(team, tac), R = fmRatings(c), st = tac.style, F = c.F;
-            const isSet = team.tactic && team.tactic.set === true, on = fmApplied(team);
-            const strat0 = fmStrategy(team, tac, c, R, fmEffects(c, R, st));
-            const chipOf = d => `<span class="fm-tchip" title="${gEsc(FM_TACTICS[d].label)}"><i>${FM_TACTICS[d].label}</i>${FM_TACTICS[d].opts[st[d]].n}</span>`;
-            const chips = ['def', 'atk'].map(ph => `<div class="fm-tphase"><b>${FM_PHASES[ph].ic} ${FM_PHASES[ph].n}</b><em>${fmPhaseLabel(st, ph)}</em><div class="fm-tchips">${FM_PHASES[ph].dims.filter(d => FM_DIMS_CORE.includes(d) || st[d] !== FM_DEFAULT_STYLE[d]).map(chipOf).join('')}${ph === 'atk' && st.fgk ? '<span class="fm-tchip" style="border-color:#fbbf24;"><i>🧤</i>플라잉 GK</span>' : ''}</div></div>`).join('');
-            const lineup = c.field.map(x => ({ x, o: x.slot.y })).sort((a, b) => a.o - b.o).map(({ x }) => {
-                const S = FM_STYLES[x.role][x.sk], td = fmTend(S.b);
-                return `<div class="fm-li"><span class="fm-li-r">${FM_ROLES[x.role].label}</span><b>${gEsc(x.p.name)}</b><span style="color:${td.c};" title="${gEsc(S.d)}">${td.ic} ${S.n}</span><em style="color:${ovrColor(Math.round(x.fit))};">${fmRound(x.fit)}</em></div>`;
-            }).join('') + (c.gk ? `<div class="fm-li"><span class="fm-li-r">골키퍼</span><b>${gEsc(c.gk.name)}</b><span style="color:${fmTend(FM_STYLES.GK[c.gsk].b).c};" title="${gEsc(FM_STYLES.GK[c.gsk].d)}">${fmTend(FM_STYLES.GK[c.gsk].b).ic} ${FM_STYLES.GK[c.gsk].n}</span><em style="color:${ovrColor(Math.round(c.gkFit))};">${fmRound(c.gkFit)}</em></div>` : '');
-            const subs = c.subs.length ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">🔄 교체: ${c.subs.map(p => gEsc(p.name)).join(' · ')}</div>` : '';
-            box.innerHTML = `<div class="card fm-card">
-                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><h3 style="margin:0;" data-upd="1.07">📋 포메이션 & 전술 요약</h3>
-                    <button class="fm-act" onclick="switchDcTab('tactic');setTimeout(()=>{const e=document.getElementById('dcFormation');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});},50)">✏️ 전술 보드에서 수정</button></div>
-                <div class="ranking-info" style="margin-bottom:6px;">${isSet ? (on ? '직접 구성한 전술판입니다. 🧠 전력분석 · 시뮬레이션에 반영 중입니다.' : '직접 구성한 전술판이지만 분석·시뮬레이션 반영이 꺼져 있습니다.') : '아직 전술판을 직접 구성하지 않아 <b>자동 배치·기본 전술</b>을 보여 줍니다. (분석·시뮬레이션에는 반영되지 않음)'}</div>
-                <div class="fm-info-wrap">
-                    <div class="fm-info-pitch">${fmPitchHtml(team, tac, c, { ro: true, sm: true, mode: 'both' })}${fmArrowLegend('both')}</div>
-                    <div class="fm-info-side">
-                        <div class="fm-style">${fmStyleName(st)} <span style="font-size:0.74rem;color:var(--text-muted);font-weight:800;">· ${F.label}</span></div>
-                        <div class="fm-tphases">${chips}</div>
-                        <div class="fm-pills" style="margin:8px 0;">${fmSummaryPills(c, R, st)}</div>${fmShapeText(c)}
-                        <div class="fm-bt">선발 라인업 · 세부 성향 · 적합</div>${lineup}${subs}
-                        <div class="fm-bt" data-new="1.07" style="margin-top:10px;">📑 전략 분석</div>${fmStrategyHtml(strat0, { compact: true })}
-                    </div>
-                </div></div>`;
+            const tac = fmGetRO(team), c = fmContext(team, tac), F = c.F;
+            const isSet = team.tactic && team.tactic.set === true;
+            box.innerHTML = `<div class="card fm-card dc-fm-lite">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+                    <h3 style="margin:0;" data-upd="1.80">📋 포메이션</h3>
+                    <button class="fm-act" onclick="switchDcTab('tactic');setTimeout(()=>{const e=document.getElementById('dcFormation');if(e)e.scrollIntoView({behavior:'smooth',block:'start'});},50)">✏️ 전술 보드에서 수정</button>
+                </div>
+                <div class="dc-fm-name"><b>${F.label}</b>${isSet ? '' : '<span class="mut">자동 배치</span>'}</div>
+                <div class="fm-info-pitch dc-fm-pitch">${fmPitchHtml(team, tac, c, { ro: true, sm: true, mode: 'off' })}</div>
+            </div>`;
             if (typeof gApplyNewBadges === 'function') gApplyNewBadges();
         }
 
@@ -12363,7 +12491,7 @@ function fmBestStyle(p, role) {
                 const rankText = stats.finalRank ? `🏆 ${stats.finalRank}` : (stats.groupRank ? `📊 조별 ${stats.groupLabel ? stats.groupLabel + ' ' : ''}${stats.groupRank}위` : '-');
                 const isChamp = stats.finalRank && stats.finalRank.includes('우승') && !stats.finalRank.includes('준우승');
                 rows.push(`<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-left:3px solid ${c}; border-radius:8px; padding:8px 12px;">
-                    <span style="font-weight:800; color:${c}; min-width:110px;">${label}${isCurrent ? ' <span style="font-size:0.62rem; color:var(--accent); border:1px solid rgba(56,189,248,0.4); padding:1px 6px; border-radius:10px;">진행중</span>' : ''}</span>
+                    <span style="font-weight:800; color:${c}; min-width:110px;">${(isChamp && window.gTrophy) ? gTrophy(label, 'xs') : ''}${label}${isCurrent ? ' <span style="font-size:0.62rem; color:var(--accent); border:1px solid rgba(56,189,248,0.4); padding:1px 6px; border-radius:10px;">진행중</span>' : ''}</span>
                     <span style="font-size:0.78rem; color:var(--text-muted);">${stats.gms}경기 ${stats.w}승 ${stats.l}패</span>
                     <span style="font-size:0.78rem; color:var(--text-muted);">득실 ${gdStr}</span>
                     <span style="font-size:0.78rem; font-weight:800; color:${isChamp ? 'var(--gold)' : 'var(--text-muted)'};">${rankText}</span>
@@ -17799,7 +17927,7 @@ function fmBestStyle(p, role) {
 
         function renderDashboard() {
             const seasonLabelEl = document.getElementById('dashSeasonLabel');
-            if (seasonLabelEl) seasonLabelEl.textContent = state.seasonName || '시즌 1';
+            if (seasonLabelEl) { seasonLabelEl.textContent = state.seasonName || '시즌 1'; try { const _tr = window.gTrophy && gTrophy(state.seasonName, 'xs'); if (_tr) seasonLabelEl.insertAdjacentHTML('afterbegin', _tr); } catch (e) { } }
 
             // 🎛️ 리그 현황 요약 카드 (클릭 이동 · 사용자 설정)
             try { renderDashKpi(); } catch (e) { console.error('대시보드 요약 카드 오류', e); }
@@ -18009,13 +18137,13 @@ function fmBestStyle(p, role) {
             const list = computeHallTimelineData();
             const rowsHtml = list.map(item => {
                 const winnerHtml = item.winner
-                    ? `<span class="clickable-team" onclick="${item.winnerTeam ? `showTeamDetail(${item.winnerTeam.id})` : ''}" style="color:${item.winnerTeam ? item.winnerTeam.color : 'var(--text)'}; font-weight:800; cursor:${item.winnerTeam ? 'pointer' : 'default'};">🏆 ${item.winner}</span>`
+                    ? `<span class="clickable-team" onclick="${item.winnerTeam ? `showTeamDetail(${item.winnerTeam.id})` : ''}" style="color:${item.winnerTeam ? item.winnerTeam.color : 'var(--text)'}; font-weight:800; cursor:${item.winnerTeam ? 'pointer' : 'default'};">${window.gTrophyOr ? gTrophyOr(item.label, '🏆', 'xs') : '🏆'} ${item.winner}</span>`
                     : `<span style="color:var(--text-muted);">진행 중</span>`;
                 const runnerUpHtml = item.runnerUpTeam ? `<span class="clickable-team" onclick="showTeamDetail(${item.runnerUpTeam.id})" style="color:${item.runnerUpTeam.color}; font-weight:800; cursor:pointer;">🥈 ${item.runnerUpTeam.name}</span>` : '';
                 const mvpHtml = item.mvp ? `<span class="clickable-player" onclick="showPlayerDetail('${item.mvp.replace(/'/g, "\\'")}')" style="cursor:pointer; font-weight:800; color:var(--gold);">👑 ${item.mvp}</span>` : '';
                 return `
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:7px 10px; border:1px solid rgba(255,255,255,0.06); border-radius:7px; ${item.isCurrent ? 'border-color:rgba(56,189,248,0.35); background:rgba(56,189,248,0.05);' : 'background:rgba(0,0,0,0.15);'}">
-                        <div style="min-width:100px; font-weight:800; color:var(--gold); font-size:0.72rem;">${item.label}${item.isCurrent ? ' <span style="font-size:0.58rem; color:var(--accent); border:1px solid rgba(56,189,248,0.4); padding:0px 5px; border-radius:8px;">진행중</span>' : ''}</div>
+                        <div style="min-width:100px; font-weight:800; color:var(--gold); font-size:0.72rem;">${window.gTrophy ? gTrophy(item.label, 'xs') : ''}${item.label}${item.isCurrent ? ' <span style="font-size:0.58rem; color:var(--accent); border:1px solid rgba(56,189,248,0.4); padding:0px 5px; border-radius:8px;">진행중</span>' : ''}</div>
                         <div style="flex:1; display:flex; flex-wrap:wrap; gap:10px; font-size:0.7rem;">${winnerHtml}${runnerUpHtml}${mvpHtml}</div>
                     </div>`;
             }).join('');
@@ -18023,7 +18151,7 @@ function fmBestStyle(p, role) {
             el.innerHTML = `
                 <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;">
                     <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:10px;">
-                        <div style="font-size:0.62rem; color:var(--text-muted); margin-bottom:4px;">🏆 최근 우승${s.latestSeasonLabel ? ` (${s.latestSeasonLabel})` : ''}</div>
+                        <div style="font-size:0.62rem; color:var(--text-muted); margin-bottom:4px;">${window.gTrophyOr ? gTrophyOr(s.latestSeasonLabel, '🏆', 'xs') : '🏆'} 최근 우승${s.latestSeasonLabel ? ` (${s.latestSeasonLabel})` : ''}</div>
                         <div style="font-size:0.92rem; font-weight:900; color:${champTeam ? champTeam.color : 'var(--gold)'};">${s.latestChamp || '-'}</div>
                     </div>
                     <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:10px;">
@@ -18507,6 +18635,7 @@ function fmBestStyle(p, role) {
 
             updateTeamH2H('modal');
             switchTeamModalTab('h2h');
+            try { tcRenderModalStrip(team); } catch (e) { console.error('트로피 띠 오류', e); }
             teamRankTrendState.modal = { scope: 'all', group: 1 };
             renderTeamRankTrend(teamId, 'modal');
             document.getElementById('teamDetailModal').style.display = 'block';
@@ -18610,51 +18739,18 @@ function fmBestStyle(p, role) {
             const wr = gms ? (w/gms*100).toFixed(1) : 0;
             const gd = gf - ga;
 
-            // 전적 요약 카드 (컬러 테마)
-            document.getElementById(ids.summary).innerHTML = `
-                <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; font-family:'Orbitron'; color:${c};">${gms}</div>
-                    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">총 경기</div>
-                </div>
-                <div style="background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; font-family:'Orbitron'; color:var(--success);">${w}</div>
-                    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">승리</div>
-                </div>
-                <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; font-family:'Orbitron'; color:var(--danger);">${l}</div>
-                    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">패배</div>
-                </div>
-                <div style="background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:12px; text-align:center;">
-                    <div style="font-size:1.5rem; font-weight:800; font-family:'Orbitron'; color:var(--gold);">${wr}%</div>
-                    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">승률</div>
-                </div>
-            `;
-
-            // 추가 스탯 (득점/실점/득실차)
+            // 전적 요약 (v1.80: 7개 박스를 작게 줄여 한 줄로 표시)
             const gdColor = gd > 0 ? '#60a5fa' : gd < 0 ? '#f87171' : '#94a3b8';
-            document.getElementById(ids.extra).innerHTML = `
-                <div style="background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.25); border-radius:10px; padding:12px; display:flex; align-items:center; gap:10px;">
-                    <span style="font-size:1.4rem;">⚽️</span>
-                    <div>
-                        <div style="font-size:1.3rem; font-weight:800; font-family:'Orbitron'; color:#fb923c;">${gf}</div>
-                        <div style="font-size:0.68rem; color:var(--text-muted);">총 득점</div>
-                    </div>
-                </div>
-                <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:10px; padding:12px; display:flex; align-items:center; gap:10px;">
-                    <span style="font-size:1.4rem;">🥅</span>
-                    <div>
-                        <div style="font-size:1.3rem; font-weight:800; font-family:'Orbitron'; color:#f87171;">${ga}</div>
-                        <div style="font-size:0.68rem; color:var(--text-muted);">총 실점</div>
-                    </div>
-                </div>
-                <div style="background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.25); border-radius:10px; padding:12px; display:flex; align-items:center; gap:10px;">
-                    <span style="font-size:1.4rem;">📊</span>
-                    <div>
-                        <div style="font-size:1.3rem; font-weight:800; font-family:'Orbitron'; color:${gdColor};">${gd > 0 ? '+' + gd : gd}</div>
-                        <div style="font-size:0.68rem; color:var(--text-muted);">득실차</div>
-                    </div>
-                </div>
-            `;
+            const hb = (bg, bd, col, val, label) => `<div class="h2h-b" style="background:${bg}; border-color:${bd};"><div class="h2h-n" style="color:${col};">${val}</div><div class="h2h-l">${label}</div></div>`;
+            document.getElementById(ids.summary).innerHTML =
+                hb('rgba(255,255,255,0.04)', 'rgba(255,255,255,0.08)', c, gms, '총 경기') +
+                hb('rgba(34,197,94,0.1)', 'rgba(34,197,94,0.3)', 'var(--success)', w, '승리') +
+                hb('rgba(239,68,68,0.1)', 'rgba(239,68,68,0.3)', 'var(--danger)', l, '패배') +
+                hb('rgba(251,191,36,0.1)', 'rgba(251,191,36,0.3)', 'var(--gold)', wr + '%', '승률');
+            document.getElementById(ids.extra).innerHTML =
+                hb('rgba(249,115,22,0.08)', 'rgba(249,115,22,0.25)', '#fb923c', gf, '⚽️ 총 득점') +
+                hb('rgba(239,68,68,0.08)', 'rgba(239,68,68,0.25)', '#f87171', ga, '🥅 총 실점') +
+                hb('rgba(96,165,250,0.08)', 'rgba(96,165,250,0.25)', gdColor, (gd > 0 ? '+' + gd : gd), '📊 득실차');
 
             const historyTbody = document.getElementById(ids.historyBody);
             let lastTeamHistorySeason = null;
@@ -19290,7 +19386,7 @@ function fmBestStyle(p, role) {
             const badgeSection = document.getElementById('managerAwardBadges');
             const badgeList = document.getElementById('managerAwardBadgeList');
             const badges = [];
-            detail.champSeasons.forEach(s => badges.push({ emoji: '🏆', label: `우승: ${s.season} (${s.teamName})`, color: 'var(--gold)' }));
+            detail.champSeasons.forEach(s => badges.push({ emoji: (window.gTrophyOr ? gTrophyOr(s.season, '🏆', 'sm') : '🏆'), label: `우승: ${s.season} (${s.teamName})`, color: 'var(--gold)' }));
             detail.runnerUpSeasons.forEach(s => badges.push({ emoji: '🥈', label: `준우승: ${s.season} (${s.teamName})`, color: '#cbd5e1' }));
             detail.lastPlaceSeasons.forEach(s => badges.push({ emoji: '💀', label: `꼴찌: ${s.season} (${s.teamName})`, color: 'var(--danger)' }));
             if (badges.length) {
@@ -19434,8 +19530,8 @@ function fmBestStyle(p, role) {
 
         // ======= 모달 탭 전환 =======
         function switchTeamModalTab(tab) {
-            const tabMap = { 'h2h': 'H2H', 'season': 'Season', 'ability': 'Ability' };
-            ['h2h','season','ability'].forEach(t => {
+            const tabMap = { 'h2h': 'H2H', 'season': 'Season', 'ability': 'Ability', 'trophy': 'Trophy' };
+            ['h2h','season','ability','trophy'].forEach(t => {
                 const contentEl = document.getElementById('teamTabContent' + tabMap[t]);
                 const btnEl = document.getElementById('teamTab' + tabMap[t]);
                 if(contentEl) contentEl.style.display = t === tab ? 'block' : 'none';
@@ -19446,6 +19542,8 @@ function fmBestStyle(p, role) {
             });
             if(tab === 'season') renderTeamSeasonRecords();
             if(tab === 'ability') { try { lgRenderTeamCompare(currentModalTeamId); } catch(e) { console.error(e); } }
+            if(tab === 'trophy') { try { tcRenderCabinet(currentModalTeamId, 'teamTrophyCase'); } catch(e) { console.error('진열장 렌더 오류', e); } }
+            { const st = document.getElementById('teamModalTrophyStrip'); if(st) st.classList.toggle('tcs-hide', tab === 'trophy'); }
         }
 
 
@@ -19711,7 +19809,7 @@ function fmBestStyle(p, role) {
                 return `
                 <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px; margin-bottom:12px; border-left:3px solid ${c};">
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
-                        <div style="font-weight:800; color:${c}; font-size:0.95rem;">${seasonName}</div>
+                        <div style="font-weight:800; color:${c}; font-size:0.95rem; display:flex; align-items:center;">${(isChampion && window.gTrophy) ? gTrophy(seasonName, 'sm') : ''}<span>${seasonName}</span></div>
                         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
                             <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
                                 ${stats.groupRank ? `<span style="background:rgba(56,189,248,0.15); color:var(--accent); padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:800;">📊 조별리그 ${stats.groupLabel ? stats.groupLabel + ' ' : ''}${stats.groupRank}위</span>` : '<span style="background:rgba(148,163,184,0.1); color:var(--text-muted); padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:800;">📊 조별리그 -</span>'}
@@ -26224,7 +26322,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         // 경기 기록 테이블(선수/감독/팀 모달 공용)에서 시즌이 바뀌는 지점에 삽입하는 구분선 행.
         function seasonDividerRow(label, colspan) {
             return `<tr class="season-divider-row"><td colspan="${colspan}" style="padding:6px 10px; background:rgba(251,191,36,0.06); border-top:1px solid rgba(251,191,36,0.25); border-bottom:1px solid rgba(251,191,36,0.25);">
-                <span style="font-size:0.72rem; font-weight:900; color:var(--gold);">🗓️ ${label}</span>
+                <span style="font-size:0.72rem; font-weight:900; color:var(--gold);">🗓️ ${window.gTrophy ? gTrophy(label, 'xs') : ''}${label}</span>
             </td></tr>`;
         }
 
@@ -26457,7 +26555,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const champTitle = (r.champSeasons && r.champSeasons.length) ? `🏆 우승: ${r.champSeasons.join(', ')}` : '';
                 const runnerUpTitle = (r.runnerUpSeasons && r.runnerUpSeasons.length) ? `🥈 준우승: ${r.runnerUpSeasons.join(', ')}` : '';
                 const lastPlaceTitle = (r.lastPlaceSeasons && r.lastPlaceSeasons.length) ? `💀 꼴찌: ${r.lastPlaceSeasons.join(', ')}` : '';
-                const champStr = r.champs > 0 ? `<span title="${escAttr(champTitle)}" style="cursor:help; border-bottom:1px dashed var(--gold);">🏆×${r.champs}</span>` : '';
+                const champStr = r.champs > 0 ? `<span title="${escAttr(champTitle)}" style="cursor:help; border-bottom:1px dashed var(--gold);">${window.gTrophyIcons ? gTrophyIcons(r.champSeasons, '🏆', 'xs') : '🏆'}×${r.champs}</span>` : '';
                 const runnerUpStr = r.runnerUps > 0 ? `<span title="${escAttr(runnerUpTitle)}" style="cursor:help; border-bottom:1px dashed var(--gold);">🥈×${r.runnerUps}</span>` : '';
                 const lastPlaceStr = r.lastPlaces > 0 ? `<span title="${escAttr(lastPlaceTitle)}" style="cursor:help; border-bottom:1px dashed var(--danger);">💀×${r.lastPlaces}</span>` : '';
                 const awardStr = [champStr, runnerUpStr, lastPlaceStr].filter(Boolean).join(' &nbsp;') || '<span style="color:var(--text-muted);">-</span>';
@@ -26569,7 +26667,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                                 const seasonBadges = [...t.seasons[cat.key]].reverse().map(seasonLabel => `
                                     <div style="display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">
                                         <span style="font-size: 0.64rem; font-weight: 700; color: var(--text-muted);">${seasonLabel}</span>
-                                        <span>${cat.emoji}</span>
+                                        <span>${(cat.key === 'w' && window.gTrophyOr) ? gTrophyOr(seasonLabel, cat.emoji, 'sm') : cat.emoji}</span>
                                     </div>
                                 `).join('');
                                 return `
@@ -27043,7 +27141,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const heroColor = winner.color && winner.color !== '#fff' ? winner.color : 'var(--gold)';
             teamAwards.innerHTML = `
                 <div class="season-champion-hero" style="background: linear-gradient(135deg, ${heroColor}22, transparent); border: 1px solid ${heroColor}55;">
-                    <div class="hero-trophy">🏆</div>
+                    <div class="hero-trophy">${window.gTrophyOr ? gTrophyOr(state.seasonName, '🏆', 'hero') : '🏆'}</div>
                     <div class="hero-label">시즌 챔피언</div>
                     <div class="hero-team-name" data-gs="lg" style="color:${heroColor};">${winner.name}</div>
                 </div>
@@ -27291,7 +27389,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 return { hName: ht.name, hColor: ht.color, aName: at.name, aColor: at.color, hScore: m.hScore, aScore: m.aScore, hPk: m.hPk, aPk: m.aPk };
             });
             
-            state.archives.push({ 
+            state.archives.push({ sid: (window.gSeasonSid ? gSeasonSid() : undefined), 
                 name: seasonName, winner, topScorer, topAssistant, mvp, topRating, 
                 seasonMode: state.seasonMode, tournamentTeams: [...(state.tournamentTeams || [])],
                 specialAwards: { ...(state.specialAwards || {}) },
@@ -27779,7 +27877,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     return `
                         <div style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:8px 10px; flex-wrap:wrap;">
                             <span style="width:24px; text-align:center; font-weight:900; color:var(--text-muted); font-family:'Orbitron';">${i + 1}</span>
-                            <span style="flex:1; min-width:120px; font-weight:800;">${a.name}</span>
+                            <span style="flex:1; min-width:120px; font-weight:800; display:flex; align-items:center;">${window.gTrophy ? gTrophy(a.name, 'sm') : ''}<span>${a.name}</span></span>
                             <span style="font-size:0.72rem; color:var(--gold);">🏆 ${a.winner || '-'}</span>
                             <div style="display:flex; gap:4px;">
                                 ${btn('⏫', '맨 앞으로 이동', `moveArchive(${i}, 0)`, isFirst)}
@@ -27877,9 +27975,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 </div>`;
             let html = `
                 <div class="card" style="background:rgba(56, 189, 248, 0.05); border:1px solid var(--accent);">
-                    <h3 style="margin-bottom:15px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">🏆 ${a.name} 최종 결과 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openSeasonRenameModal('${idx}')">✏️ 이름 수정</button></h3>
+                    <h3 style="margin-bottom:15px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">${window.gTrophyOr ? gTrophyOr(a.name, '🏆', 'md') : '🏆'} ${a.name} 최종 결과 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openSeasonRenameModal('${idx}')">✏️ 이름 수정</button></h3>
                     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
-                        <div class="summary-card"><h4>🥇 우승</h4><div style="font-weight:800; color:var(--gold);"><span class="g-nm" data-gk="t" data-gs="sm">${a.winner}</span></div></div>
+                        <div class="summary-card"><h4>🥇 우승</h4><div style="font-weight:800; color:var(--gold);"><span class="g-nm" data-gk="t" data-gs="sm">${a.winner}</span></div>${window.gTrophy ? gTrophy(a.name, 'lg') : ''}</div>
                         <div class="summary-card"><h4>⚽️ 득점왕</h4><div style="font-weight:800;">${(window.gNames||String)(a.topScorer)}</div></div>
                         <div class="summary-card"><h4>🎯 도움왕</h4><div style="font-weight:800;">${(window.gNames||String)(a.topAssistant)}</div></div>
                         <div class="summary-card"><h4>👑 MVP</h4><div style="font-weight:800;">${(window.gNames||String)(a.mvp)}</div></div>
@@ -27889,7 +27987,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 ${specialBlock}
                 <div class="card">
                     <h4>🏆 토너먼트 결과</h4>
-                    <div class="horizontal-bracket">${a.bracketHTML}</div>
+                    <div class="horizontal-bracket">${window.gTrophyBracket ? gTrophyBracket(a.bracketHTML, a.name) : a.bracketHTML}</div>
                 </div>
                 <div class="card">
                     <h4>📈 최종 팀 랭킹</h4>
@@ -27937,7 +28035,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                             if(!mgrData.length) return `<tr><td colspan="12" style="color:var(--text-muted); text-align:center;">이 시즌에 감독이 지정된 경기 기록이 없습니다. 팀 데이터센터 &gt; 이적기록 탭에서 이 시즌 감독을 지정해주세요.</td></tr>`;
                             return mgrData.map((r,i) => {
                                 const gdStr = r.gd > 0 ? `+${r.gd}` : `${r.gd}`;
-                                const awardStr = [r.champs>0?`🏆×${r.champs}`:'', r.runnerUps>0?`🥈×${r.runnerUps}`:'', r.lastPlaces>0?`💀×${r.lastPlaces}`:''].filter(Boolean).join(' ') || '<span style="color:var(--text-muted);">-</span>';
+                                const awardStr = [r.champs>0?`${window.gTrophyOr ? gTrophyOr(a.name, '🏆', 'xs') : '🏆'}×${r.champs}`:'', r.runnerUps>0?`🥈×${r.runnerUps}`:'', r.lastPlaces>0?`💀×${r.lastPlaces}`:''].filter(Boolean).join(' ') || '<span style="color:var(--text-muted);">-</span>';
                                 const teamCell = r.teamId ? `<span class="clickable-team" onclick="showTeamDetail(${r.teamId})" style="color:${r.teamColor}; font-weight:800;">${r.teamName}</span>` : `<span style="color:var(--text-muted);">${r.teamName}</span>`;
                                 return `<tr><td>${i+1}</td><td style="font-weight:800;"><span class="clickable-manager" onclick="showManagerDetail('${r.name.replace(/'/g,"\\'")}')" style="color:var(--gold);">🧑‍💼 ${r.name}</span></td><td>${teamCell}</td><td>${r.games}</td><td>${r.w}</td><td>${r.l}</td><td>${r.gf}</td><td>${r.ga}</td><td class="${r.gd>0?'gd-plus':(r.gd<0?'gd-minus':'')}">${gdStr}</td><td class="wr-text"><b>${r.wr.toFixed(1)}%</b></td><td style="font-size:0.75rem; white-space:nowrap;">최다${r.maxWinStreak}연승·최다${r.maxLoseStreak}연패</td><td style="font-size:0.78rem; color:var(--gold); font-weight:800; white-space:nowrap;">${awardStr}</td></tr>`;
                             }).join('');
@@ -29919,7 +30017,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.77';
+        const G_HTML_VERSION = '1.80';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29943,7 +30041,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.80': '신규', '1.79': '신규', '1.78': '신규', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -34245,6 +34343,13 @@ window.pmExtRender = function(name){
         pl.forEach(p => { if (!p || !p.name) return; if (!p.pid) p.pid = M.p[p.name] || np++; M.p[p.name] = p.pid; });
         mg.forEach(m => { if (!m || !m.name) return; if (!m.mid) m.mid = M.m[m.name] || nm++; M.m[m.name] = m.mid; });
         M.nextP = np; M.nextM = nm;
+        // v1.79: 대회(시즌) 고유 ID — 종료된 시즌은 a.sid, 진행 중인 시즌은 idMap.curS (이름을 바꿔도 유지)
+        M.s = M.s || {};
+        let ns = Math.max(Number(M.nextS) || 1, (s.archives || []).reduce((x, a) => Math.max(x, Number(a && a.sid) || 0), 0) + 1, Number(M.curS) + 1 || 1);
+        (s.archives || []).forEach(a => { if (!a || a.sid) return; a.sid = M.s[a.name] || ns++; });
+        (s.archives || []).forEach(a => { if (a && a.name) M.s[a.name] = a.sid; });
+        if (!M.curS) M.curS = ns++;
+        M.nextS = Math.max(ns, M.curS + 1);
     };
     if (typeof save === 'function') { const o = save; save = function () { try { gEnsureIds(); } catch (e) { } return o.apply(this, arguments); }; }
 
@@ -34361,7 +34466,31 @@ window.pmExtRender = function(name){
             else { const rest = k ? n.splitText(k) : n; el.insertBefore(im, rest); }
         }));
     }
-    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); decorate2(); alignTeamCells(); }, 150); };
+    // ===== v1.79: 🏆 대회 트로피 (trophies/001.png = 대회 고유 ID 001) =====
+    const nrm = v => String(v == null ? '' : v).replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ').toLowerCase();
+    window.gSeasonSid = function () {              // 지금 진행 중인 시즌이 종료되어 아카이브에 들어갈 때 그 시즌의 ID를 넘겨주고, 다음 시즌은 새 ID를 받음
+        gEnsureIds(); const M = state.idMap, id = M.curS; M.curS = 0; M.s = M.s || {}; M.nextS = Math.max(Number(M.nextS) || 1, id + 1); return id;
+    };
+    function fillTrophies() {
+        try { gEnsureIds(); } catch (e) { return; }
+        const map = {}, M = state.idMap || {};
+        (state.archives || []).forEach(a => { if (a && a.sid) map[nrm(a.name)] = a.sid; });
+        if (state.seasonName && M.curS && !map[nrm(state.seasonName)]) map[nrm(state.seasonName)] = M.curS;
+        document.querySelectorAll('.g-trw').forEach(w => {
+            const names = (w.dataset.gtn || '').split('||'), fb = w.dataset.fb || '', sz = w.dataset.gsz || 'sm';
+            const key = names.map(n => { const id = map[nrm(n)]; return id + ':' + (id && IMG['trophy:' + id] ? 1 : 0); }).join(',');
+            if (w.dataset.gk === key) return; w.dataset.gk = key;
+            w.textContent = ''; const seen = {}; let any = false;
+            names.forEach(n => {
+                const id = map[nrm(n)], u = id && IMG['trophy:' + id]; if (!u || seen[id]) return; seen[id] = 1; any = true;
+                const im = document.createElement('img'); im.className = 'g-tr s-' + sz; im.src = u; im.alt = '🏆'; im.title = n + ' 우승 트로피 (대회 ID ' + String(id).padStart(3, '0') + ')'; im.draggable = false;
+                im.onerror = () => { im.remove(); delete w.dataset.gk; if (!w.querySelector('img') && fb) w.textContent = fb; };
+                w.appendChild(im);
+            });
+            if (!any && fb) w.textContent = fb;
+        });
+    }
+    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); decorate2(); alignTeamCells(); fillTrophies(); }, 150); };
     new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('click', later); window.addEventListener('resize', later);
 
@@ -34419,8 +34548,8 @@ window.pmExtRender = function(name){
         const next = {}, jobs = [];
         ent.forEach(f => {
             const path = f.path;
-            const m = path.replace(/\\/g, '/').match(/(?:^|\/)(teams?|players?|managers?)\/0*(\d+)\.(png|jpe?g|webp|gif)$/i); if (!m) return;
-            const kind = m[1].toLowerCase().replace(/s$/, ''), ext = m[3].toLowerCase();
+            const m = path.replace(/\\/g, '/').match(/(?:^|\/)(teams?|players?|managers?|trophies|trophy)\/0*(\d+)\.(png|jpe?g|webp|gif)$/i); if (!m) return;
+            const kind = m[1].toLowerCase().replace(/^trophies$/, 'trophy').replace(/s$/, ''), ext = m[3].toLowerCase();
             jobs.push(f.buf().then(async b => { let bl = new Blob([b], { type: MIME[ext] }); if (ext !== 'jpg' && ext !== 'jpeg') bl = await trimBlob(bl); next[kind + ':' + parseInt(m[2], 10)] = URL.createObjectURL(bl); }));
         });
         await Promise.all(jobs);
@@ -34431,7 +34560,8 @@ window.pmExtRender = function(name){
         document.querySelectorAll('.g-ph.on').forEach(e => { e.classList.remove('on'); e.textContent = ''; }); document.querySelectorAll('[data-gav]').forEach(e => delete e.dataset.gav); document.querySelectorAll('.dc-tcard-badge[data-gtxt]').forEach(b => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; });
         document.querySelectorAll('td.clickable-team > .g-teamcell').forEach(w => { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); document.querySelectorAll('img.g-av,.g-av-sp').forEach(e => e.remove()); document.querySelectorAll('.g-teamcell').forEach(e => { e.classList.remove('g-teamcell'); e.style.width = ''; });
         document.querySelectorAll('[data-gimg="y"]').forEach(e => delete e.dataset.gimg);
-        decorate(); decorate2();
+        document.querySelectorAll('.g-trw').forEach(e => { delete e.dataset.gk; });
+        decorate(); decorate2(); fillTrophies();
         return Object.keys(next).length;
     }
     window.gImgPick = async function (inp) {
@@ -34450,6 +34580,8 @@ window.pmExtRender = function(name){
         s.teams.forEach(t => (t.players || []).forEach(p => { const i = ident('player', p.name); rows.push(['선수', i.label, p.name, t.name, i.file]); }));
         (s.freeAgents || []).forEach(p => { const i = ident('player', p.name); rows.push(['선수', i.label, p.name, '자유계약', i.file]); });
         (s.managers || []).forEach(m => { const i = ident('manager', m.name); rows.push(['감독', i.label, m.name, '', i.file]); });
+        (s.archives || []).forEach(a => rows.push(['대회', pad(a.sid, 3), a.name, '종료', 'trophies/' + pad(a.sid, 3)]));
+        if (s.idMap && s.idMap.curS) rows.push(['대회', pad(s.idMap.curS, 3), s.seasonName || '현재 시즌', '진행 중', 'trophies/' + pad(s.idMap.curS, 3)]);
         const csv = '\ufeff' + rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\r\n');
         const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'G리그_ID목록.csv'; document.body.appendChild(a); a.click(); a.remove();
     };
@@ -34508,6 +34640,128 @@ window.pmExtRender = function(name){
     new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('change', e => { const t = e.target; if (t && t.tagName === 'SELECT' && t.querySelector('[data-gc]')) gTintSelectEl(t); });
     later();
+})();
+</script>
+
+<script id="g180Core">
+/* ================================================================
+   🏆 팀 수상 진열장 (v1.80)
+   - 아카이브(종료된 시즌) 기준: 우승 트로피 · 준우승 · 이 팀 소속 선수가 받은 개인 수상
+   - 팀 데이터센터 › 🏆 팀 수상 진열장 탭 / 팀 상세 창 › 🏆 진열장 탭 · 트로피 띠가 같은 함수를 사용
+   ================================================================ */
+(function () {
+    const E = v => (typeof gEsc === 'function') ? gEsc(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const AW = [
+        ['topScorer', '득점왕', '⚽️', '#fb923c', false],
+        ['topAssistant', '도움왕', '🎯', '#38bdf8', false],
+        ['mvp', 'MVP (MOM)', '👑', '#facc15', false],
+        ['topRating', '최고평균평점', '⭐', '#a78bfa', false],
+        ['rookie', '신인상', '🌱', '#86efac', true],
+        ['yashin', '야신상', '🧤', '#93c5fd', true],
+        ['ballon', '시즌 골롱도르', '🏅', '#fbbf24', true]
+    ];
+    const fmtRec = q => q && q.gms ? `${q.gms}경기 ${q.w}승 ${q.l}패` : '';
+
+    window.tcHonors = function (team) {
+        const tid = String(team.id), H = { titles: [], runners: [], awards: [] };
+        const arcs = state.archives || [];
+        for (let i = arcs.length - 1; i >= 0; i--) {                 // 최근 시즌이 먼저
+            const a = arcs[i]; if (!a) continue;
+            const ms = a.matches || [];
+            const rec = fmtRec(dcCalcQuickSeasonStats(ms, tid));
+            if (a.winner && a.winner === team.name) H.titles.push({ season: a.name, rec, idx: i });
+            const fin = ms.find(m => m.type === '결승');
+            if (fin) {
+                const hWin = fin.hScore > fin.aScore || (fin.hScore === fin.aScore && (fin.hPk || 0) > (fin.aPk || 0));
+                if (String(hWin ? fin.aId : fin.hId) === tid) H.runners.push({ season: a.name, rec, idx: i });
+            }
+            const sa = a.specialAwards || {};
+            AW.forEach(([key, label, emoji, color, special]) => {
+                const nm = special ? sa[key] : a[key];
+                if (!nm) return;
+                if (String(dcFindPlayerTeamIdInArchive(a, nm)) !== tid) return;
+                H.awards.push({ season: a.name, idx: i, name: nm, label, emoji, color });
+            });
+        }
+        return H;
+    };
+
+    window.tcQuickBadge = function (team) {
+        const H = tcHonors(team);
+        if (!H.titles.length) return '';
+        return `<span onclick="switchDcTab('trophy')" title="팀 수상 진열장 보기" style="cursor:pointer;background:rgba(251,191,36,0.16);color:var(--gold);padding:4px 10px;border-radius:6px;font-size:0.78rem;font-weight:800;border:1px solid rgba(251,191,36,0.35);">🏆 우승 ${H.titles.length}회</span>`;
+    };
+
+    window.tcRenderModalStrip = function (team) {
+        const el = document.getElementById('teamModalTrophyStrip'); if (!el) return;
+        const H = tcHonors(team);
+        if (!H.titles.length && !H.runners.length && !H.awards.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
+        const icons = H.titles.length
+            ? H.titles.map(t => `<span title="${E(t.season)} 우승">${gTrophyOr(t.season, '🏆', 'md')}</span>`).join('')
+            : (H.runners.length ? '🥈' : '🌟');
+        el.innerHTML = `<div class="tcs-in" onclick="switchTeamModalTab('trophy')" title="누르면 진열장 탭으로 이동">
+            <div class="tcs-icons">${icons}</div>
+            <div class="tcs-txt"><b>트로피 진열장</b><span>🏆 우승 ${H.titles.length} · 🥈 준우승 ${H.runners.length} · 🌟 개인 수상 ${H.awards.length}</span></div>
+            <span class="tcs-go">진열장 보기 ›</span></div>`;
+        el.style.display = '';
+    };
+
+    window.tcRenderCabinet = function (teamId, boxId) {
+        const box = document.getElementById(boxId); if (!box) return;
+        const team = (state.teams || []).find(t => String(t.id) === String(teamId));
+        if (!team) { box.innerHTML = ''; return; }
+        const H = tcHonors(team);
+        const players = {};
+        H.awards.forEach(a => { (players[a.name] = players[a.name] || []).push(a); });
+        const pNames = Object.keys(players).sort((x, y) => players[y].length - players[x].length || x.localeCompare(y));
+        const pn = n => `<span class="tc-aw-n" data-pn="${E(n)}" onclick="showPlayerDetail(this.dataset.pn)"><span class="g-nm" data-gk="p" data-gs="sm">${E(n)}</span></span>`;
+
+        // 🏆 우승 트로피 선반
+        const trophies = H.titles.length
+            ? H.titles.map(t => `<div class="tc-it" title="${E(t.season)} 우승"><div class="tc-ico">${gTrophyOr(t.season, '🏆', 'hero')}</div><div class="tc-nm">${E(t.season)}</div><div class="tc-sub">${E(t.rec || '우승')}</div></div>`).join('')
+            : `<div class="tc-it ghost"><div class="tc-ico">🏆</div><div class="tc-nm" style="color:var(--text-muted);">첫 우승을 기다리는 중</div></div>`;
+        // 🥈 준우승 선반
+        const runners = H.runners.length
+            ? H.runners.map(t => `<div class="tc-it silver" title="${E(t.season)} 준우승"><div class="tc-ico">🥈</div><div class="tc-nm">${E(t.season)}</div><div class="tc-sub">${E(t.rec || '준우승')}</div></div>`).join('')
+            : `<div class="tc-it silver ghost"><div class="tc-ico">🥈</div><div class="tc-nm" style="color:var(--text-muted);">준우승 기록 없음</div></div>`;
+
+        // 🌟 개인 수상 — 시즌별 선반
+        const bySeason = [];
+        H.awards.forEach(a => { let g = bySeason.find(x => x.season === a.season); if (!g) { g = { season: a.season, list: [] }; bySeason.push(g); } g.list.push(a); });
+        const awardShelves = bySeason.length ? bySeason.map(g => `
+            <div class="tc-cab-t">${gTrophyOr(g.season, '🗓️', 'xs')}${E(g.season)}<small>${g.list.length}개 수상</small></div>
+            <div class="tc-shelf" style="min-height:0;padding-top:10px;">${g.list.map(a => `
+                <div class="tc-aw" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}">
+                    <div class="tc-aw-ic">${a.emoji}</div>
+                    <div class="tc-aw-tx"><span class="tc-aw-l">${E(a.label)}</span>${pn(a.name)}</div>
+                </div>`).join('')}</div>
+            <div class="tc-board"></div>`).join('')
+            : `<div class="tc-shelf" style="min-height:64px;align-items:center;"><span class="tc-note">아직 이 팀 소속으로 받은 개인 수상이 없습니다.</span></div><div class="tc-board"></div>`;
+
+        const playerChips = pNames.length ? `<div class="tc-ps">${pNames.map(n => `<span class="tc-p" data-pn="${E(n)}" onclick="showPlayerDetail(this.dataset.pn)" title="${E(players[n].map(a => a.season + ' ' + a.label).join(' / '))}"><span class="g-nm" data-gk="p" data-gs="sm">${E(n)}</span><i>${players[n].map(a => a.emoji).join('')}</i><em>×${players[n].length}</em></span>`).join('')}</div>` : '';
+
+        box.innerHTML = `<div class="tc-wrap" style="--tcc:${E(team.color || '#fbbf24')};">
+            <div class="tc-sum">
+                <span class="tc-chip">🏆 우승 <b>${H.titles.length}</b>회</span>
+                <span class="tc-chip">🥈 준우승 <b>${H.runners.length}</b>회</span>
+                <span class="tc-chip">🌟 개인 수상 <b>${H.awards.length}</b>개</span>
+                <span class="tc-chip">👤 수상 선수 <b>${pNames.length}</b>명</span>
+            </div>
+            <div class="tc-cab">
+                <div class="tc-cab-t">🏆 우승 트로피 <small>${E(team.name)}</small></div>
+                <div class="tc-shelf">${trophies}</div><div class="tc-board"></div>
+                <div class="tc-cab-t">🥈 준우승 메달</div>
+                <div class="tc-shelf" style="min-height:0;">${runners}</div><div class="tc-board"></div>
+            </div>
+            <div class="tc-cab">
+                <div class="tc-cab-t">🌟 선수 개인 수상 <small>이 팀 소속으로 받은 수상 · 시즌별</small></div>
+                ${awardShelves}
+            </div>
+            ${pNames.length ? `<div><div class="tc-cab-t" style="margin:0 0 8px;">👤 선수별 수상 현황</div>${playerChips}</div>` : ''}
+            <div class="tc-note">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다. 진행 중인 시즌(${E(state.seasonName || '현재 시즌')})의 우승·수상은 시즌 종료 후 추가됩니다. 트로피 이미지는 images.zip › trophies 폴더(대회 ID)로 자동 적용됩니다.</div>
+        </div>`;
+        if (typeof gApplyNewBadges === 'function') { try { gApplyNewBadges(); } catch (e) { } }
+    };
 })();
 </script>
 </body>
