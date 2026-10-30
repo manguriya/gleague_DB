@@ -1967,14 +1967,26 @@
         <!-- 설정 탭 -->
         <div id="dashboard" class="tab-content active">
             <div class="card" style="padding:8px 12px; margin-bottom:10px;">
-                <div style="display:flex; align-items:center; gap:4px 10px; flex-wrap:wrap; margin-bottom:6px;">
+                <div class="dash-top-row" style="display:flex; align-items:center; gap:4px 10px; flex-wrap:wrap; margin-bottom:5px;">
                     <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800; letter-spacing:0.02em; white-space:nowrap;">🏠 대시보드</span>
                     <h3 class="dash-section-title" style="margin:0; font-size:1.02rem; font-weight:900; color:var(--gold); line-height:1.25;"><span id="dashSeasonLabel">시즌 1</span></h3>
                     <div id="dashKpiToolbar" class="dk-toolbar" style="margin:0 0 0 auto;"></div>
                 </div>
                 <div id="dashKpiPanel" class="dk-panel" style="display:none;"></div>
                 <div id="dashKpiGrid" class="dk-grid"></div>
-                <div id="dashKpiHint" class="dk-hint" style="margin:8px 0 0;"></div>
+                <div id="dashKpiHint" class="dk-hint" style="display:none;"></div>
+            </div>
+
+            <div class="card dash-card-tight" id="dashShortcutCard">
+                <span class="dash-sc-label">🧭 바로가기</span>
+                <div class="dash-shortcuts">
+                        <button type="button" class="dash-sc" onclick="dashGo('team')"><span class="dash-sc-t">🥇 팀 파워랭킹</span><span class="dash-sc-s" id="dashScTeam">Elo · 승점 기반 팀 순위</span></button>
+                        <button type="button" class="dash-sc" onclick="dashGo('power')"><span class="dash-sc-t">⚽ 선수 파워랭킹</span><span class="dash-sc-s">평점 · 영향력 · 팀 성과 종합</span></button>
+                        <button type="button" class="dash-sc" onclick="dashGo('gk')"><span class="dash-sc-t">🧤 골키퍼 기록</span><span class="dash-sc-s">세이브 · 실점 · 무실점</span></button>
+                        <button type="button" class="dash-sc" onclick="dashGo('atk')"><span class="dash-sc-t">🎯 득점 · 도움 순위</span><span class="dash-sc-s">공격포인트 · MOM · 평균평점</span></button>
+                        <button type="button" class="dash-sc" onclick="dashGo('mgr')"><span class="dash-sc-t">🧑‍💼 감독 랭킹</span><span class="dash-sc-s">전체 시즌 통산 감독 순위</span></button>
+                        <button type="button" class="dash-sc" onclick="dashGo('hall')"><span class="dash-sc-t">🏆 역대 우승팀</span><span class="dash-sc-s" id="dashScHall">명예의 전당 · 역대 대회 기록</span></button>
+                </div>
             </div>
 
             <!-- 🏠 v1.53: ① 핵심 현황(위 카드) → ② 순위 + 바로가기 | 최근 경기 + 예정 경기 → ③ 더 보기(접기) -->
@@ -1988,17 +2000,6 @@
                         </span>
                     </h3>
                     <div id="dashTeamRank"></div>
-                </div>
-                <div class="card dash-card-tight" id="dashShortcutCard">
-                    <h3 class="dash-section-title" data-upd="1.53">🧭 주요 정보 바로가기</h3>
-                    <div class="dash-shortcuts">
-                        <button type="button" class="dash-sc" onclick="dashGo('team')"><span class="dash-sc-t">🥇 팀 파워랭킹</span><span class="dash-sc-s" id="dashScTeam">Elo · 승점 기반 팀 순위</span></button>
-                        <button type="button" class="dash-sc" onclick="dashGo('power')"><span class="dash-sc-t">⚽ 선수 파워랭킹</span><span class="dash-sc-s">평점 · 영향력 · 팀 성과 종합</span></button>
-                        <button type="button" class="dash-sc" onclick="dashGo('gk')"><span class="dash-sc-t">🧤 골키퍼 기록</span><span class="dash-sc-s">세이브 · 실점 · 무실점</span></button>
-                        <button type="button" class="dash-sc" onclick="dashGo('atk')"><span class="dash-sc-t">🎯 득점 · 도움 순위</span><span class="dash-sc-s">공격포인트 · MOM · 평균평점</span></button>
-                        <button type="button" class="dash-sc" onclick="dashGo('mgr')"><span class="dash-sc-t">🧑‍💼 감독 랭킹</span><span class="dash-sc-s">전체 시즌 통산 감독 순위</span></button>
-                        <button type="button" class="dash-sc" onclick="dashGo('hall')"><span class="dash-sc-t">🏆 역대 우승팀</span><span class="dash-sc-s" id="dashScHall">명예의 전당 · 역대 대회 기록</span></button>
-                    </div>
                 </div>
                 <details class="card dash-card-tight dash-fold" data-fold="hl" open>
                     <summary><h3 class="dash-section-title" data-upd="1.53">🌟 시즌 주요 선수</h3></summary>
@@ -16312,7 +16313,8 @@ function fmBestStyle(p, role) {
                 const c = DK_CARDS.find(x => x.id === id), d = _dkData[id] || { main: '-', sub: '' };
                 const cTitle = (id === 'leader' && p.season !== 'current') ? '최종 1위' : c.title;
                 const fav = p.favs.includes(id);
-                return `<div class="dk-card ${fav ? 'fav' : ''}" onclick="dashKpiGo('${id}', event)">
+                const _tip = String(d.sub || '').replace(/<[^>]*>/g, '').replace(/"/g, '&quot;');
+                return `<div class="dk-card ${fav ? 'fav' : ''}" title="${_tip}" onclick="dashKpiGo('${id}', event)">
                     <button class="dk-star" onclick="event.stopPropagation(); dkToggleFav('${id}')" title="즐겨찾기">${fav ? '⭐' : '☆'}</button>
                     <div class="dk-title">${c.icon} ${cTitle}</div>
                     <div class="dk-main">${d.main}</div>
@@ -16320,7 +16322,8 @@ function fmBestStyle(p, role) {
                 </div>`;
             }).join('') : '<div class="dash-empty" style="grid-column:1/-1;">표시할 카드가 없습니다. ⚙️ 카드 설정에서 카드를 켜 주세요.</div>';
 
-            const hint = document.getElementById('dashKpiHint');
+            const hint = document.getElementById('dashKpiHint'); const tb2 = document.getElementById('dashKpiToolbar');
+            if (tb2) tb2.title = (p.recent === 'all' ? '카드를 누르면 관련 화면으로 이동합니다.' : `최근 ${p.recent}경기 필터 적용 중`);
             if (hint) hint.textContent = p.recent === 'all' ? '카드를 누르면 관련 화면으로 이동합니다.' : `최근 ${p.recent}경기 필터: 1위 · 득점 · GK · 연승 카드는 각 팀·선수의 최근 ${p.recent}경기 기준입니다.`;
         }
 
@@ -17815,6 +17818,7 @@ function fmBestStyle(p, role) {
                     const medals = ['🥇', '🥈', '🥉'];
                     hotEl.innerHTML = hot.map((p, i) => `
                         <div class="dash-hot-card">
+                            <div class="dash-hot-ph" data-gp="${String(p.name).replace(/"/g, '&quot;')}" onclick="event.stopPropagation(); showPlayerDetail('${p.name}')"></div>
                             <div class="dash-hot-rank">${medals[i] || '⭐'}</div>
                             <div class="dash-hot-name clickable-player" onclick="showPlayerDetail('${p.name}')">${p.name}</div>
                             <div class="dash-hot-team" style="color:${p.teamColor};">${p.teamName}</div>
@@ -17935,6 +17939,7 @@ function fmBestStyle(p, role) {
                 const hs = dashComputeHallSummary(), he = document.getElementById('dashScHall');
                 if (he) he.textContent = hs.latestChamp ? `최근 우승 ${hs.latestChamp}` : '명예의 전당 · 역대 대회 기록';
             } catch (e) { }
+            document.querySelectorAll('#dashShortcutCard .dash-sc').forEach(b => { const x = b.querySelector('.dash-sc-s'); if (x) b.title = x.textContent; });
         }
 
         // 🏆 명예의 전당 카드 클릭 시 🏛️ 역사관 탭의 '명예의 전당' 서브탭으로 바로 이동한다.
@@ -29817,7 +29822,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.77';
+        const G_HTML_VERSION = '1.78';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29841,7 +29846,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.78': '개선', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -32523,6 +32528,31 @@ table th, table td { padding: 6px 8px; }
 .dash-hot-team { grid-area: t; margin: 0; }
 .dash-hot-stats { grid-area: s; }
 
+/* ===== v1.78: 대시보드 상단 간소화 · 바로가기 위치 이동 · HOT 플레이어 사진 ===== */
+#dashboard > .card:first-child { padding: 6px 10px; margin-bottom: 6px; }
+#dashboard .dash-top-row { margin-bottom: 5px !important; }
+#dashboard .dk-toolbar { margin: 0 0 0 auto !important; gap: 5px; }
+#dashboard .dk-toolbar select, #dashboard .dk-toolbar button { font-size: 0.7rem; padding: 2px 7px; }
+#dashKpiGrid.dk-grid { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 5px; }
+#dashKpiGrid .dk-card { display: flex; flex-direction: column; justify-content: center; padding: 4px 8px; min-height: 0; }
+#dashKpiGrid .dk-title { font-size: 0.64rem; padding-right: 16px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#dashKpiGrid .dk-main { font-size: 0.9rem; margin-top: 1px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#dashKpiGrid .dk-sub { display: none; }
+#dashKpiGrid .dk-star { top: 3px; right: 5px; font-size: 0.75rem; opacity: 0; }
+#dashKpiGrid .dk-card:hover .dk-star, #dashKpiGrid .dk-card.fav .dk-star { opacity: 0.9; }
+#dashShortcutCard { display: flex; align-items: center; gap: 4px 10px; flex-wrap: wrap; padding: 5px 10px; margin-bottom: 8px; }
+#dashShortcutCard .dash-sc-label { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); white-space: nowrap; }
+#dashShortcutCard .dash-shortcuts { display: flex; flex-wrap: wrap; gap: 5px; flex: 1 1 auto; }
+#dashShortcutCard .dash-sc { flex-direction: row; align-items: center; padding: 3px 10px; border-radius: 999px; }
+#dashShortcutCard .dash-sc-t { font-size: 0.78rem; white-space: nowrap; }
+#dashShortcutCard .dash-sc-s { display: none; }
+.dash-hot-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
+.dash-hot-card { grid-template-columns: auto auto minmax(0, 1fr); grid-template-areas: "p r n" "p r t" "p r s"; overflow: hidden; }
+.dash-hot-card:has(.dash-hot-ph:empty) { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "r n" "r t" "r s"; }
+.dash-hot-ph { grid-area: p; position: relative; align-self: stretch; width: 56px; min-height: 56px; margin: -4.7px 0 -4.7px -6.8px; background: #1e293b; cursor: pointer; }
+.dash-hot-ph:empty { display: none; }
+.dash-hot-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
+
 /* 기타 큰 박스 · 배경 줄이기 */
 .history-item { padding: 12px clamp(10px, 1.2vw, 16px); }
 .history-item.collapsed { padding: 8px 12px; }
@@ -34141,6 +34171,7 @@ window.pmExtRender = function(name){
             if (!id) return;
             if (!el.title) el.title = 'ID ' + id.label;
             const u = urlOf(kind, id);
+            if (kind === 'player' && el.closest('.dash-hot-card')) { el.dataset.gimg = 'n'; return; }   // HOT 카드는 큰 사진을 따로 표시
             const hasTeamImg = Object.keys(IMG).some(k => k.indexOf('team:') === 0);
             let host = el;                                         // 로고를 넣을 곳 (표 칸 안의 팀명이면 정렬용 묶음 칸)
             if (kind === 'team' && hasTeamImg) {
@@ -34198,7 +34229,7 @@ window.pmExtRender = function(name){
     }
     function decorate2() {
         if (!Object.keys(IMG).length) return;
-        document.querySelectorAll('.gt-ph[data-gp]').forEach(el => {
+        document.querySelectorAll('.gt-ph[data-gp], .dash-hot-ph[data-gp]').forEach(el => {
             if (el.dataset.gav) return; el.dataset.gav = 'n';
             const u = urlOf('player', ident('player', el.dataset.gp)); if (!u) return;
             const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove();
