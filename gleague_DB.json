@@ -2866,7 +2866,7 @@
     {
       "id": 1791449705234,
       "type": "8강",
-      "season": "🏆 2026 제3회 GIFA컵",
+      "season": "2026 제3회 GIFA컵",
       "num": "1",
       "hId": "6",
       "aId": "4",
@@ -3320,7 +3320,7 @@
     {
       "id": 1792051941474,
       "type": "8강",
-      "season": "🏆 2026 제3회 GIFA컵",
+      "season": "2026 제3회 GIFA컵",
       "num": "2",
       "hId": "8",
       "aId": "2",
@@ -3703,7 +3703,7 @@
     {
       "id": 1792601294530,
       "type": "8강",
-      "season": "🏆 2026 제3회 GIFA컵",
+      "season": "2026 제3회 GIFA컵",
       "num": "3",
       "hId": "5",
       "aId": "3",
@@ -4229,7 +4229,7 @@
     {
       "id": 1793207238927,
       "type": "8강",
-      "season": "🏆 2026 제3회 GIFA컵",
+      "season": "2026 제3회 GIFA컵",
       "num": "4",
       "hId": "7",
       "aId": "9",
@@ -20643,7 +20643,7 @@
         "8": 2
       }
     },
-    "teamRank_🏆 2026 제3회 GIFA컵": {
+    "teamRank_2026 제3회 GIFA컵": {
       "2": 4,
       "3": 1,
       "4": 6,
@@ -20651,7 +20651,7 @@
       "6": 3,
       "8": 2
     },
-    "teamElo_🏆 2026 제3회 GIFA컵": {
+    "teamElo_2026 제3회 GIFA컵": {
       "1": 976,
       "2": 977.3,
       "3": 1019.2,
@@ -20662,7 +20662,7 @@
       "8": 1017.2,
       "9": 1000
     },
-    "teamRankCat_🏆 2026 제3회 GIFA컵": {
+    "teamRankCat_2026 제3회 GIFA컵": {
       "gms": {
         "2": 4,
         "3": 1,
@@ -20728,7 +20728,7 @@
         "8": 2
       }
     },
-    "playerRank_🏆 2026 제3회 GIFA컵": {
+    "playerRank_2026 제3회 GIFA컵": {
       "마시마유": 1,
       "소유미": 2,
       "우덕배": 3,
@@ -20771,7 +20771,7 @@
       "먹스나": 40,
       "유히로": 41
     },
-    "playerRankCat_🏆 2026 제3회 GIFA컵": {
+    "playerRankCat_2026 제3회 GIFA컵": {
       "points": {
         "마시마유": 1,
         "소유미": 2,
@@ -22978,7 +22978,7 @@
       "dir": -1
     }
   },
-  "seasonName": "🏆 2026 제3회 GIFA컵",
+  "seasonName": "2026 제3회 GIFA컵",
   "seasonMode": "tournament",
   "tournamentTeams": [
     "2",
@@ -30655,7 +30655,7 @@
   },
   "dbSavedDate": "2026-10-30",
   "eloStartAdj": {
-    "season": "🏆 2026 제3회 GIFA컵",
+    "season": "2026 제3회 GIFA컵",
     "locked": true,
     "detail": {
       "1": {
@@ -30678,10 +30678,10 @@
         "mNowName": "김영광",
         "mPrev": 76,
         "mNow": 76,
-        "prevSeason": "🏆 2026 제2회 GIFA컵"
+        "prevSeason": "2026 제2회 GIFA컵"
       },
       "3": {
-        "delta": -7.1,
+        "delta": -7.2,
         "skipped": "",
         "base": 1009.6,
         "Pprev": 82.7037037037037,
@@ -30696,7 +30696,7 @@
         "mNowName": "김병지",
         "mPrev": 58,
         "mNow": 58,
-        "prevSeason": "🏆 2026 제2회 GIFA컵"
+        "prevSeason": "2026 제2회 GIFA컵"
       },
       "4": {
         "delta": -0.8,
@@ -30714,25 +30714,25 @@
         "mNowName": "조원희",
         "mPrev": 78,
         "mNow": 78,
-        "prevSeason": "🏆 2026 제2회 GIFA컵"
+        "prevSeason": "2026 제2회 GIFA컵"
       },
       "5": {
-        "delta": -3.8,
+        "delta": -19.7,
         "skipped": "",
         "base": 981.5,
-        "Pprev": 75.8,
+        "Pprev": 77.88888888888889,
         "Pnow": 75,
-        "dPower": -0.7999999999999972,
-        "powerAdj": -6.4,
-        "regress": 2.6,
-        "retention": 0.8,
+        "dPower": -2.8888888888888857,
+        "powerAdj": -23.1,
+        "regress": 3.4,
+        "retention": 0.5714285714285714,
         "keptN": 4,
-        "prevN": 5,
+        "prevN": 7,
         "mPrevName": "조재진",
         "mNowName": "조재진",
         "mPrev": 80,
         "mNow": 80,
-        "prevSeason": "🏆 2026 제2회 GIFA컵"
+        "prevSeason": "2026 제2회 GIFA컵"
       },
       "6": {
         "delta": 18.1,
@@ -30750,7 +30750,7 @@
         "mNowName": "최진철",
         "mPrev": 82,
         "mNow": 85,
-        "prevSeason": "🏆 2026 제2회 GIFA컵"
+        "prevSeason": "2026 제2회 GIFA컵"
       },
       "7": {
         "delta": -46.8,
@@ -30768,7 +30768,7 @@
         "mNowName": "이근호",
         "mPrev": 88,
         "mNow": 88,
-        "prevSeason": "🏆 2026 제2회 GIFA컵"
+        "prevSeason": "2026 제2회 GIFA컵"
       },
       "8": {
         "delta": 1.5,
@@ -30786,7 +30786,7 @@
         "mNowName": "백지훈",
         "mPrev": 89,
         "mNow": 89,
-        "prevSeason": "🏆 2026 제2회 GIFA컵"
+        "prevSeason": "2026 제2회 GIFA컵"
       },
       "9": {
         "delta": 0,
@@ -30794,7 +30794,7 @@
       }
     },
     "manual": {},
-    "at": 1792660415497
+    "at": 1793355357877
   },
   "abSchema": 2,
   "idMap": {

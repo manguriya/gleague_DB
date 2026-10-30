@@ -1562,6 +1562,14 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 .tc-note { font-size: .68rem; color: var(--text-muted); }
 @media (max-width: 600px) { .tc-cab { padding: 10px 12px 4px; } .tc-it { width: 108px; } .tc-ico { min-height: 92px; font-size: 3rem; } }
 </style>
+<style id="g181Css">
+/* ===== v1.81 ===== */
+/* 📊 순위표 · 🏅 랭킹: 팀 이름을 조금 키우고, 로고를 글씨 크기(em)에 맞춰 함께 커지도록 */
+#tableA td.clickable-team, #tableB td.clickable-team, #teamRankTbody td.clickable-team, #playerRankTbody td:nth-child(3) { font-size: clamp(0.72rem, 1.8cqw, 1.06rem); }
+#tableA .g-teamcell .g-av.team, #tableB .g-teamcell .g-av.team, #teamRankTbody .g-teamcell .g-av.team,
+#playerRankTbody td:nth-child(3) > .g-av { width: 1.5em; height: 1.5em; margin-right: 0.45em; border-radius: 4px; }
+#tableA .g-teamcell, #tableB .g-teamcell, #teamRankTbody .g-teamcell { align-items: center; }
+</style>
 </head>
 <body>
     <div class="app-shell">
@@ -30017,7 +30025,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.80';
+        const G_HTML_VERSION = '1.81';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -30041,7 +30049,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.80': '신규', '1.79': '신규', '1.78': '신규', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.81': '개선', '1.80': '신규', '1.79': '신규', '1.78': '신규', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -33592,8 +33600,8 @@ window.pmExtRender = function(name){
       return '<span style="font-size:.7rem;margin-right:10px;white-space:nowrap;"><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:' + ZONES[k].c + ';margin-right:4px;"></i>' + ZONES[k].n + ' <b>' + z[k] + '</b>골 <span style="color:var(--text-muted);">(' + pct(z[k], located) + '%)</span></span>';
     }).join('');
   }
-  function miniPitch(goals) {
-    var s = '<svg viewBox="' + (W / 2 - 5) + ' 0 ' + (W / 2 + 5) + ' ' + H + '" style="width:100%;max-width:300px;display:block;border-radius:6px;">' + (typeof gmPitchInner === 'function' ? gmPitchInner('ga') : '');
+  function miniPitch(goals, mw) {
+    var s = '<svg viewBox="' + (W / 2 - 5) + ' 0 ' + (W / 2 + 5) + ' ' + H + '" style="width:100%;max-width:' + (mw || 300) + 'px;display:block;border-radius:6px;">' + (typeof gmPitchInner === 'function' ? gmPitchInner('ga') : '');
     goals.forEach(function (g) {
       if (!g.loc) return;
       var x = g.loc.x * W, y = g.loc.y * H, col = ZONES[g.zone] ? ZONES[g.zone].c : '#fff';
@@ -33644,7 +33652,7 @@ window.pmExtRender = function(name){
       ]), '#a78bfa');
 
       // 2) 득점 분석
-      var body = '';
+      var body = '', pitchHtml = '', side = '';
       if (p.goals) {
         var sub = '총 ' + p.goals + '골 · 위치 기록 ' + p.located + '골';
         if (p.located) {
@@ -33655,28 +33663,27 @@ window.pmExtRender = function(name){
           body += '<div style="font-size:.74rem;margin-top:6px;line-height:1.7;">📦 박스 안 득점 비율 <b style="color:#f97316;">' + mb + '%</b> <span style="color:var(--text-muted);">(리그 평균 ' + lg + '% · ' + (mb >= lg ? '+' : '') + (Math.round((mb - lg) * 10) / 10) + '%p)</span>'
             + (ri >= 0 ? '<br>📊 박스 안 비율 리그 <b>' + (ri + 1) + '위</b> <span style="color:var(--text-muted);">/ 위치 3골 이상 ' + arr.length + '명</span>' : '')
             + (lab ? '<br>🧭 득점 성향 <b style="color:' + lab.c + ';">' + lab.t + '</b>' : '') + '</div>';
-          body += '<div style="margin-top:8px;">' + miniPitch(mine) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">오른쪽 골대를 향해 공격하는 기준 · 점에 마우스를 올리면 시간 · 도움 표시</div></div>';
+          pitchHtml = '<div style="margin-top:8px;">' + miniPitch(mine) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">오른쪽 골대를 향해 공격하는 기준 · 점에 마우스를 올리면 시간 · 도움 표시</div></div>';
         } else body += none('아직 위치를 기록한 골이 없어요. 경기 기록의 득점 줄에서 📍 버튼으로 위치를 남기면 박스 안 · 중거리 비율이 여기에 표시돼요.');
-        h += sec('🎯 득점 분석', sub, body, '#38bdf8');
 
         // 3) 득점 타이밍
         var tm = { 전반: [0, 0, 0], 후반: [0, 0, 0] }, tn = 0;
         mine.forEach(function (g) { var mn = parseInt(g.min, 10); if (!tm[g.half] || isNaN(mn)) return; tm[g.half][mn <= 5 ? 0 : mn <= 10 ? 1 : 2]++; tn++; });
         if (tn) {
           var cell = function (v) { return '<td style="' + tdS() + 'text-align:center;">' + (v ? '<b style="color:#22c55e;">' + v + '</b>' : '<span style="color:var(--text-muted);">-</span>') + '</td>'; };
-          h += sec('⏱️ 득점 타이밍', '시간이 입력된 ' + tn + '골 기준', '<div class="scrollable-table"><table class="pattern-table" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '"></th><th style="' + thS() + 'text-align:center;">1~5분</th><th style="' + thS() + 'text-align:center;">6~10분</th><th style="' + thS() + 'text-align:center;">11분+</th></tr></thead><tbody>'
+          side += sec('⏱️ 득점 타이밍', '시간이 입력된 ' + tn + '골 기준', '<div class="scrollable-table"><table class="pattern-table" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '"></th><th style="' + thS() + 'text-align:center;">1~5분</th><th style="' + thS() + 'text-align:center;">6~10분</th><th style="' + thS() + 'text-align:center;">11분+</th></tr></thead><tbody>'
             + ['전반', '후반'].map(function (hf) { return '<tr><td style="' + tdS() + 'font-weight:800;">' + hf + '</td>' + cell(tm[hf][0]) + cell(tm[hf][1]) + cell(tm[hf][2]) + '</tr>'; }).join('') + '</tbody></table></div>', '#22d3ee');
         }
         // 4) 득점 상대
         var vs = {}; mine.forEach(function (g) { vs[g.oppId] = (vs[g.oppId] || 0) + 1; });
         var vsArr = Object.keys(vs).map(function (k) { return { id: k, c: vs[k] }; }).sort(function (a, b) { return b.c - a.c; }).slice(0, 3);
-        if (vsArr.length) h += sec('🥅 가장 많이 골을 넣은 상대', '', '<div style="font-size:.8rem;">' + vsArr.map(function (x) { return '<span style="color:' + tcol(x.id) + ';font-weight:800;">' + esc(tname(x.id)) + '</span> <b>' + x.c + '골</b>'; }).join(' · ') + '</div>', '#fb7185');
+        if (vsArr.length) side += sec('🥅 가장 많이 골을 넣은 상대', '', '<div style="font-size:.8rem;">' + vsArr.map(function (x) { return '<span style="color:' + tcol(x.id) + ';font-weight:800;">' + esc(tname(x.id)) + '</span> <b>' + x.c + '골</b>'; }).join(' · ') + '</div>', '#fb7185');
       } else {
         h += sec('🎯 득점 분석', '', none('이 기간에 득점 기록이 없습니다.'), '#38bdf8');
       }
 
       // 4.5) 득점 위치 기반 특성 추천 (3단계)
-      try { h += traitBlock(name); } catch (e) { console.error(e); }
+      try { side += traitBlock(name); } catch (e) { console.error(e); }
 
       // 5) 도움 · 파트너
       var pb = '';
@@ -33685,7 +33692,11 @@ window.pmExtRender = function(name){
         if (pr.duo.length) pb += '<div style="font-size:.8rem;margin-bottom:4px;">🥇 합작골 1위 ' + plLink(pr.duo[0].n) + ' <b>' + pr.duo[0].c + '합작골</b></div>';
         pb += '<div style="font-size:.74rem;line-height:1.7;">🅰️→⚽ 내게 도움 준 선수: ' + pl(pr.by) + '<br>⚽←🅰️ 내가 도움 준 선수: ' + pl(pr.forw) + '</div>';
       } else pb = none('도움이 연결된 골이 아직 없어요. 경기 기록의 득점 줄에서 🅰️ 도움 선수를 고르면 파트너가 표시돼요.');
-      h += sec('🤝 최고의 파트너', p.goals ? '내 득점 ' + p.goals + '골 중 도움 연결 ' + p.astLinked + '골' : '', pb, '#fbbf24');
+      side += sec('🤝 최고의 파트너', p.goals ? '내 득점 ' + p.goals + '골 중 도움 연결 ' + p.astLinked + '골' : '', pb, '#fbbf24');
+      // 득점 분석 우측 빈 공간에 득점 타이밍 · 상대 · 특성 추천 · 파트너를 배치 (좁은 화면에서는 아래로 내려감)
+      if (p.goals) {
+        h += sec('🎯 득점 분석' + (typeof gUpdTag === 'function' ? gUpdTag('1.81') : ''), sub, body + '<div style="display:flex;flex-wrap:wrap;gap:6px 22px;align-items:flex-start;margin-top:6px;">' + (pitchHtml ? '<div style="flex:0 1 300px;min-width:240px;max-width:100%;">' + pitchHtml + '</div>' : '') + '<div style="flex:1 1 300px;min-width:0;">' + side + '</div></div>', '#38bdf8');
+      } else h += side;
 
       // 6) GK
       if (gk && (gk.ss || gk.w)) {
@@ -33729,7 +33740,7 @@ window.pmExtRender = function(name){
       if (seasonNames().indexOf(GA.ui.teamSf) < 0 && GA.ui.teamSf !== 'all') GA.ui.teamSf = 'all';
       var R = GA.collect(GA.ui.teamSf), goals = R.goals.filter(function (g) { return String(g.teamId) === id; });
       var z = { six: 0, box: 0, mid: 0, long: 0 }, loc = 0; goals.forEach(function (g) { if (g.zone) { z[g.zone]++; loc++; } });
-      var h = '<h3>🔬 득점 유형 · 콤비 · 세이브</h3><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;"><span style="font-weight:800;font-size:.8rem;">📅 기간</span>' + seasonSelect(GA.ui.teamSf, 'GA.setTeamSf') + '<span style="font-size:.68rem;color:var(--text-muted);">경기 기록의 📍 득점 위치 · 🅰️ 도움 연결 · 🧤 세이브 기준</span></div>';
+      var h = '<h3 data-upd="1.81">🔬 득점 유형 · 콤비 · 세이브</h3><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;"><span style="font-weight:800;font-size:.8rem;">📅 기간</span>' + seasonSelect(GA.ui.teamSf, 'GA.setTeamSf') + '<span style="font-size:.68rem;color:var(--text-muted);">경기 기록의 📍 득점 위치 · 🅰️ 도움 연결 · 🧤 세이브 기준</span></div>';
 
       // 득점 유형
       var tb = '';
@@ -33742,13 +33753,16 @@ window.pmExtRender = function(name){
           + '<br>🚀 중거리 이상 득점 <b style="color:#38bdf8;">' + pct(z.mid + z.long, loc) + '%</b>'
           + (ri >= 0 ? '<br>📊 박스 안 비율 팀 <b>' + (ri + 1) + '위</b> <span style="color:var(--text-muted);">/ 위치 3골 이상 ' + rk.length + '팀</span>' : '') + '</div>';
       } else tb = none('아직 위치를 기록한 골이 없어요. 경기 기록의 득점 줄에서 📍으로 위치를 남기면 팀 득점 유형이 쌓여요.');
+      h += '<div style="display:flex;flex-wrap:wrap;gap:0 22px;align-items:flex-start;"><div style="flex:1 1 340px;min-width:0;">';
       h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🎯 팀 득점 유형 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">총 ' + goals.length + '골 · 위치 기록 ' + loc + '골</span></div>' + tb + '</div>';
 
       // 팀 마무리 전술 ↔ 실제 득점 분포 (3단계)
       h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#a78bfa;font-size:.84rem;margin-bottom:6px;">⚖️ 마무리 전술 vs 실제 득점</div>' + GA.finishCompare(t, z, loc) + '</div>';
+      h += '</div>'; if (loc) h += '<div style="flex:0 1 440px;min-width:260px;max-width:100%;">';
 
       // 득점 지도
-      if (loc) h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#22c55e;font-size:.84rem;margin-bottom:6px;">🗺️ 팀 득점 지도</div>' + miniPitch(goals) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">이 팀이 오른쪽 골대를 향해 공격하는 기준으로 모든 골을 겹쳐 그렸어요 · 점에 마우스를 올리면 득점자 · 도움 표시</div></div>';
+      if (loc) h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#22c55e;font-size:.84rem;margin-bottom:6px;">🗺️ 팀 득점 지도</div>' + miniPitch(goals, 440) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">이 팀이 오른쪽 골대를 향해 공격하는 기준으로 모든 골을 겹쳐 그렸어요 · 점에 마우스를 올리면 득점자 · 도움 표시</div></div>';
+      if (loc) h += '</div>'; h += '</div>';
 
       // 득점 유형 선수 순위 (선수 개별 랭킹에서 이쪽으로 이동)
       var pm = {}; goals.forEach(function (g) { var q = pm[g.scorer] || (pm[g.scorer] = { name: g.scorer, goals: 0, loc: 0, z: { six: 0, box: 0, mid: 0, long: 0 } }); q.goals++; if (g.zone) { q.loc++; q.z[g.zone]++; } });
@@ -33759,7 +33773,8 @@ window.pmExtRender = function(name){
           + rows.map(function (q) { return '<tr><td style="' + tdS() + '">' + plLink(q.name) + '</td><td style="' + tdS() + '">' + q.loc + '/' + q.goals + '골</td><td style="' + tdS() + '"><b style="color:#f97316;">' + pct(q.z.six + q.z.box, q.loc) + '%</b></td><td style="' + tdS() + '">' + pct(q.z.mid, q.loc) + '%</td><td style="' + tdS() + '">' + pct(q.z.long, q.loc) + '%</td><td style="' + tdS() + '">' + zoneBar(q.z, q.loc) + '</td></tr>'; }).join('') + '</tbody></table></div>'
           : none('조건에 맞는 선수가 없어요.')) + '</div>';
 
-      // 팀 베스트 콤비
+      // 팀 베스트 콤비 · 카드 · 세이브: 가로로 나란히 배치
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:0 22px;align-items:start;">';
       var duos = GA.duos(R, id).slice(0, 5), linked = goals.filter(function (g) { return g.ast; }).length;
       h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#fbbf24;font-size:.84rem;margin-bottom:6px;">🤝 팀 베스트 콤비 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">도움 연결 ' + linked + ' / ' + goals.length + '골 · 팀 득점 대비 비중</span></div>'
         + (duos.length ? '<div class="scrollable-table"><table class="pattern-table no-stack" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '">순위</th><th style="' + thS() + '">콤비</th><th style="' + thS() + '">합작골</th><th style="' + thS() + '">방향</th><th style="' + thS() + '">팀 득점 비중</th></tr></thead><tbody>'
@@ -33788,6 +33803,7 @@ window.pmExtRender = function(name){
         gb += '<div style="font-size:.76rem;">' + by.map(function (b) { return plLink(b.name) + ' <b style="color:#38bdf8;">' + b.ss + '</b>' + (b.w > 0 ? ' <span style="color:var(--text-muted);">(경기당 ' + r2(b.ss / b.w) + ')</span>' : ''); }).join(' · ') + '</div>';
       } else gb = none('아직 세이브가 기록되지 않았어요. 경기 기록에서 GK 카드의 🧤 칸에 횟수를 입력해 주세요.');
       h += '<div><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🧤 팀 세이브</div>' + gb + '</div>';
+      h += '</div>';
       host.innerHTML = h;
     } catch (e) { console.error('팀 득점 유형 카드 오류', e); host.innerHTML = '<h3>🔬 득점 유형 · 콤비 · 세이브</h3>' + none('계산 중 오류가 발생했습니다.'); }
   };
