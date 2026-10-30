@@ -101,7 +101,7 @@
         .g-mh-line .modal-title { margin: 0 !important; font-size: 1.45rem !important; line-height: 1.2; }
         .g-mh-sub { margin-top: 3px; }
         .g-mh-flt { display: flex; align-items: center; gap: 6px 8px; flex-wrap: wrap; margin-left: auto; }
-        /* v1.77: 모달 상단 — 사진 · 이름 · 탭을 한 줄로, 사진은 그 줄의 세로 길이에 꽉 차게 */
+        /* v1.76: 모달 상단 — 사진 · 이름 · 탭을 한 줄로, 사진은 그 줄의 세로 길이에 꽉 차게 */
         .g-mh { position: sticky; top: 0; z-index: 6; margin: -14px -16px 12px !important; padding: 8px 52px 8px 16px !important; background: rgba(15,23,42,0.97); backdrop-filter: blur(6px); align-items: center; gap: 8px 14px; border-radius: 15px 15px 0 0; }
         #teamModalContent .g-mh { margin-top: -14px !important; }
         .g-mh .close-modal, .modal-content > .close-modal { z-index: 12; }
@@ -115,7 +115,7 @@
         .g-mh .g-mh-tabs button { flex: 0 0 auto; white-space: nowrap; }
         .g-mh .g-mh-flt { flex: 1 1 auto; justify-content: flex-end; }
         @media (max-width: 600px) { .g-mh { padding-right: 46px !important; } .g-mh-ph { width: 60px; min-height: 60px; } .g-mh-tx { min-width: 0; flex: 1 1 120px; } .g-mh .pm-tabbar { flex-basis: 100%; } }
-        /* v1.77: 역사관 개인 타이틀 랭킹 — 큰 사진 카드형 */
+        /* v1.76: 역사관 개인 타이틀 랭킹 — 큰 사진 카드형 */
         .gt-row { display: flex; align-items: stretch; gap: 10px; padding: 0 8px 0 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; }
         .gt-row.top1 { border-color: rgba(251,191,36,0.55); background: linear-gradient(90deg, rgba(251,191,36,0.12), rgba(255,255,255,0.02) 60%); }
         .gt-rk { flex: 0 0 22px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 900; color: var(--text-muted); background: rgba(255,255,255,0.04); }
@@ -29822,7 +29822,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.78';
+        const G_HTML_VERSION = '1.76';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29846,7 +29846,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.78': '개선', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -32528,7 +32528,7 @@ table th, table td { padding: 6px 8px; }
 .dash-hot-team { grid-area: t; margin: 0; }
 .dash-hot-stats { grid-area: s; }
 
-/* ===== v1.78: 대시보드 상단 간소화 · 바로가기 위치 이동 · HOT 플레이어 사진 ===== */
+/* ===== v1.76: 대시보드 상단 간소화 · 바로가기 위치 이동 · HOT 플레이어 사진 ===== */
 #dashboard > .card:first-child { padding: 6px 10px; margin-bottom: 6px; }
 #dashboard .dash-top-row { margin-bottom: 5px !important; }
 #dashboard .dk-toolbar { margin: 0 0 0 auto !important; gap: 5px; }
