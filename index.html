@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>골때리는그녀들 REBOOT</title>
+    <title>G-LEAGUE REBOOT</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Pretendard:wght@400;600;800&display=swap');
 
@@ -65,6 +65,16 @@
         .visit-counter .vc-label { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.58rem; letter-spacing: 1px; opacity: .8; }
         .visit-counter .vc-num { display: block; margin-top: 2px; font-size: 0.95rem; color: var(--accent); font-variant-numeric: tabular-nums; }
         .sidebar.collapsed .visit-counter { display: none; }
+        /* v1.75: 팀 로고 · 선수/감독 사진 (images.zip) */
+        .g-av { width: 2em; height: 2em; border-radius: 50%; object-fit: cover; object-position: 50% 15%; vertical-align: middle; margin-right: 6px; background: #1e293b; }
+        .g-av.team { width: 2.3em; height: 2.3em; border-radius: 6px; object-fit: contain; object-position: 50% 50%; background: transparent; }
+        .g-av-big { width: 96px; height: 96px; border-radius: 14px; object-fit: cover; object-position: 50% 15%; flex-shrink: 0; background: #1e293b; border: 1px solid rgba(255,255,255,0.15); }
+        .g-av-big.team { width: 104px; height: 104px; object-fit: contain; object-position: 50% 50%; background: transparent; border: none; }
+        .g-av-pv { position: fixed; z-index: 99999; width: 210px; height: 210px; object-fit: contain; pointer-events: none; padding: 8px; box-sizing: border-box; background: #0f172a; border: 1px solid rgba(255,255,255,0.22); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,.6); }
+        .g-teamcell { display: inline-flex; align-items: center; justify-content: flex-start; text-align: left; max-width: 100%; }
+        .g-teamcell .g-av { flex-shrink: 0; }
+        .g-av-sp { visibility: hidden; }
+        .g-idtag { margin-left: 8px; font-size: 0.7rem; font-weight: 500; font-family: monospace; color: var(--text-muted); opacity: 0.55; letter-spacing: 0.5px; vertical-align: middle; white-space: nowrap; }
         /* 📝 패치노트 */
         .pn-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
         .pn-tab { padding: 7px 14px; border-radius: 8px; border: 1px solid #334155; background: var(--bg-input); color: var(--text-muted); font-weight: 800; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
@@ -1354,7 +1364,7 @@
         <aside class="sidebar" id="appSidebar">
             <header class="sidebar-header">
                 <div class="sidebar-header-top">
-                    <h1>골때리는그녀들<br>REBOOT</h1>
+                    <h1>G-LEAGUE<br>REBOOT</h1>
                     <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" title="메뉴 접기/펼치기" aria-label="메뉴 접기/펼치기">◂</button>
                 </div>
                 <div id="seasonBadge" class="season-badge-vertical">
@@ -1977,7 +1987,7 @@
         <div id="setup" class="tab-content">
             <div class="card" style="padding:12px 15px; margin-bottom:10px;">
                 <h3 class="dash-section-title" style="margin-bottom:2px;">⚙️ 리그 관리</h3>
-                <div style="font-size:0.75rem; color:var(--text-muted);">골때리는그녀들 REBOOT 운영 설정 · 데이터를 만들고 관리합니다</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">G-LEAGUE REBOOT 운영 설정 · 데이터를 만들고 관리합니다</div>
             </div>
 
             <!-- 🏁 시즌 관리 -->
@@ -2127,6 +2137,11 @@
                     <div style="display:flex; gap:10px; flex-wrap:wrap;">
                         <button class="btn btn-main" onclick="gSavePublishJson()">💾 gleague_DB.json 저장</button>
                         <button class="btn btn-main" onclick="gSavePublishHtml()">💾 index.html 저장</button>
+                        <button class="btn btn-main" onclick="gImgExportIds()" title="팀·선수·감독 ID와 이미지 파일명 목록 (엑셀로 열림)">🆔 ID 목록(CSV) 저장</button>
+                        <button class="btn btn-main" onclick="document.getElementById('gImgFile').click()" title="내 PC의 images.zip을 직접 불러와 적용 (이 브라우저에서만 보이며, 새로고침하면 GitHub의 images.zip 기준으로 돌아감)">🖼️ 이미지 zip 불러오기</button>
+                        <button class="btn btn-main" onclick="document.getElementById('gImgDir').click()" title="teams · players · managers 폴더가 들어 있는 폴더를 직접 선택해 적용 (PC 브라우저 전용)">📁 이미지 폴더 불러오기</button>
+                        <input type="file" id="gImgFile" accept=".zip" style="display:none" onchange="gImgPick(this)">
+                        <input type="file" id="gImgDir" webkitdirectory multiple style="display:none" onchange="gImgPick(this)">
                     </div>
                     <div style="font-size:0.68rem; color:var(--text-muted); margin-top:6px;">파일명이 고정되어 저장됩니다(날짜 없음). 두 파일을 같은 폴더에 올리면 사이트가 JSON을 자동으로 불러옵니다.</div>
                 </div>
@@ -29736,7 +29751,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.74';
+        const G_HTML_VERSION = '1.75';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29760,7 +29775,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -34011,6 +34026,183 @@ window.pmExtRender = function(name){
         if (doHit && rt.status === 'fulfilled' && ra.status === 'fulfilled') { try { store.setItem(G_VISIT_LAST, day); } catch (e) { } }
     }
     run().catch(() => { show(elT, null); show(elA, null); });
+})();
+</script>
+<script>
+/* ================================================================
+   🖼️ 팀 로고 · 선수/감독 사진 (v1.75)
+   - index.html과 같은 폴더의 images.zip 을 접속할 때 불러와 압축을 풀고, 파일명(ID)이 같은 곳에 자동 적용한다.
+   - 압축파일 구조:  teams/001.png · players/0001.jpg · managers/001.webp  (png/jpg/webp/gif, 앞자리 0은 있어도 없어도 됨)
+   - ID: 팀 = 팀 번호(state.teams[].id) · 선수 = pid · 감독 = mid (처음 한 번 자동 부여, 이름을 바꿔도 유지)
+   - 이미지가 없는 팀/선수는 기존 표시 그대로. 설정 > 🆔 ID 목록(CSV) 저장 으로 파일명을 확인한다.
+   ================================================================ */
+(function () {
+    const ZIP_NAME = 'images.zip', JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    let IMG = {};
+    const pad = (n, w) => String(n).padStart(w, '0');
+    const MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif' };
+
+    window.gEnsureIds = function () {
+        const s = (typeof state !== 'undefined') ? state : null; if (!s || !Array.isArray(s.teams)) return;
+        const M = s.idMap = s.idMap || {}; M.p = M.p || {}; M.m = M.m || {};
+        const pl = []; s.teams.forEach(t => (t.players || []).forEach(p => pl.push(p))); (s.freeAgents || []).forEach(p => pl.push(p));
+        const mg = (s.managers || []);
+        const mx = (arr, k) => arr.reduce((a, o) => Math.max(a, Number(o && o[k]) || 0), 0);
+        let np = Math.max(Number(M.nextP) || 1, mx(pl, 'pid') + 1), nm = Math.max(Number(M.nextM) || 1, mx(mg, 'mid') + 1);
+        pl.forEach(p => { if (!p || !p.name) return; if (!p.pid) p.pid = M.p[p.name] || np++; M.p[p.name] = p.pid; });
+        mg.forEach(m => { if (!m || !m.name) return; if (!m.mid) m.mid = M.m[m.name] || nm++; M.m[m.name] = m.mid; });
+        M.nextP = np; M.nextM = nm;
+    };
+    if (typeof save === 'function') { const o = save; save = function () { try { gEnsureIds(); } catch (e) { } return o.apply(this, arguments); }; }
+
+    function ident(kind, key) {          // → {id(숫자), label(표시용 ID), file(zip 안 경로)}
+        const M = ((typeof state !== 'undefined' && state && state.idMap) || { p: {}, m: {} });
+        if (kind === 'team') { const n = parseInt(key, 10); return isNaN(n) ? null : { n, label: pad(n, 3), file: 'teams/' + pad(n, 3) }; }
+        const n = parseInt((kind === 'player' ? M.p : M.m)[key], 10);
+        return isNaN(n) ? null : kind === 'player' ? { n, label: pad(n, 4), file: 'players/' + pad(n, 4) } : { n, label: pad(n, 3), file: 'managers/' + pad(n, 3) };
+    }
+    const urlOf = (kind, id) => id ? IMG[kind + ':' + id.n] : null;
+    const RX = { player: /showPlayerDetail\('((?:\\.|[^'\\])*)'\)/, manager: /showManagerDetail\('((?:\\.|[^'\\])*)'\)/, team: /showTeamDetail\(\s*['"]?([^'")\s]+)['"]?\s*\)/ };
+
+    function decorate() {
+        try { gEnsureIds(); } catch (e) { return; }
+        document.querySelectorAll('.clickable-player,.clickable-manager,.clickable-team').forEach(el => {
+            if (el.dataset.gimg) return;
+            const oc = el.getAttribute('onclick') || '';
+            const kind = el.classList.contains('clickable-team') ? 'team' : el.classList.contains('clickable-manager') ? 'manager' : 'player';
+            const m = oc.match(RX[kind]); if (!m) return;
+            const id = ident(kind, m[1].replace(/\\(.)/g, '$1'));
+            if (!id) return;
+            if (!el.title) el.title = 'ID ' + id.label;
+            const u = urlOf(kind, id);
+            const hasTeamImg = Object.keys(IMG).some(k => k.indexOf('team:') === 0);
+            let host = el;                                         // 로고를 넣을 곳 (표 칸 안의 팀명이면 정렬용 묶음 칸)
+            if (kind === 'team' && hasTeamImg) {
+                if (el.tagName === 'TD') { host = document.createElement('span'); host.className = 'g-teamcell'; while (el.firstChild) host.appendChild(el.firstChild); el.appendChild(host); }
+                else if (el.tagName === 'SPAN' && el.parentElement && el.parentElement.tagName === 'TD' && el.parentElement.children.length === 1) el.classList.add('g-teamcell');
+            }
+            const cell = host !== el || el.classList.contains('g-teamcell');
+            if (!u) {
+                el.dataset.gimg = 'n';
+                if (cell) { const sp = document.createElement('span'); sp.className = 'g-av team g-av-sp'; host.insertBefore(sp, host.firstChild); }   // 로고가 없는 팀도 같은 자리 비워 두기
+                return;
+            }
+            el.dataset.gimg = 'y';
+            const tg = el.tagName;
+            if (tg === 'DIV' && el.children.length) return;       // 카드형 큰 블록은 건드리지 않음
+            const im = document.createElement('img'); im.className = 'g-av' + (kind === 'team' ? ' team' : ''); im.src = u; im.alt = ''; im.loading = 'lazy';
+            im.onerror = () => im.remove();
+            host.insertBefore(im, host.firstChild);
+        });
+    }
+    // 같은 표 안의 팀명 칸 너비를 가장 긴 이름에 맞춰 통일 → 로고가 세로줄로 정렬되고 이름은 로고 오른쪽에 왼쪽 정렬
+    function alignTeamCells() {
+        const groups = new Map();
+        document.querySelectorAll('.g-teamcell').forEach(el => { const t = el.closest('table'); if (t) { if (!groups.has(t)) groups.set(t, []); groups.get(t).push(el); } });
+        groups.forEach(list => {
+            list.forEach(e => { e.style.width = ''; });
+            const w = Math.max.apply(null, list.map(e => e.offsetWidth));
+            if (w > 0) list.forEach(e => { e.style.width = w + 'px'; });
+        });
+    }
+    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); alignTeamCells(); }, 150); };
+    new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('click', later); window.addEventListener('resize', later);
+
+    [['showPlayerDetail', 'player', '#playerDetailModal .modal-header > div', 'modalPlayerName'], ['showManagerDetail', 'manager', '#managerDetailModal .modal-header > div', 'modalManagerName'], ['showTeamDetail', 'team', '#teamModalHeader > div', 'modalTeamName']].forEach(([fn, kind, sel, nameId]) => {
+        const o = window[fn]; if (typeof o !== 'function') return;
+        window[fn] = function (a) {
+            const r = o.apply(this, arguments);
+            try {
+                gEnsureIds();
+                const nmEl = document.getElementById(nameId), idn = ident(kind, a);
+                if (nmEl) { nmEl.querySelectorAll('.g-idtag').forEach(x => x.remove()); if (idn) { const sp = document.createElement('span'); sp.className = 'g-idtag'; sp.textContent = 'ID:' + idn.label; nmEl.appendChild(sp); } }
+                const box = document.querySelector(sel); if (!box) return r;
+                box.querySelectorAll('.g-av-big').forEach(x => x.remove());
+                const u = urlOf(kind, ident(kind, a));
+                if (u) { const im = document.createElement('img'); im.className = 'g-av-big' + (kind === 'team' ? ' team' : ''); im.src = u; im.alt = ''; im.onerror = () => im.remove(); box.insertBefore(im, box.firstChild); }
+            } catch (e) { }
+            return r;
+        };
+    });
+
+    // 투명 여백 자동 제거: 로고가 캔버스 한가운데에 작게 그려진 이미지도 꽉 차게 보이도록 (투명 PNG/WebP/GIF만, 85% 이상 차 있으면 그대로)
+    async function trimBlob(blob) {
+        try {
+            const bmp = await createImageBitmap(blob), w = bmp.width, h = bmp.height; if (w * h > 4e6) return blob;
+            const c = document.createElement('canvas'); c.width = w; c.height = h;
+            const cx = c.getContext('2d', { willReadFrequently: true }); cx.drawImage(bmp, 0, 0);
+            const d = cx.getImageData(0, 0, w, h).data; let x0 = w, y0 = h, x1 = -1, y1 = -1;
+            for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 10) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+            if (x1 < 0) return blob;
+            const pd = Math.round(Math.max(x1 - x0 + 1, y1 - y0 + 1) * 0.04);
+            x0 = Math.max(0, x0 - pd); y0 = Math.max(0, y0 - pd); x1 = Math.min(w - 1, x1 + pd); y1 = Math.min(h - 1, y1 + pd);
+            const cw = x1 - x0 + 1, ch = y1 - y0 + 1; if (cw * ch > w * h * 0.85) return blob;
+            const c2 = document.createElement('canvas'); c2.width = cw; c2.height = ch; c2.getContext('2d').drawImage(c, x0, y0, cw, ch, 0, 0, cw, ch);
+            return await new Promise(ok => c2.toBlob(b => ok(b || blob), 'image/png'));
+        } catch (e) { return blob; }
+    }
+    // 작은 사진에 마우스를 올리면 크게 미리보기
+    let pv = null;
+    document.addEventListener('mouseover', e => {
+        const t = e.target;
+        if (!(t instanceof HTMLImageElement) || !t.classList.contains('g-av')) { if (pv) { pv.remove(); pv = null; } return; }
+        if (!pv) { pv = document.createElement('img'); pv.className = 'g-av-pv'; document.body.appendChild(pv); }
+        pv.src = t.src; const r = t.getBoundingClientRect();
+        pv.style.left = Math.max(8, Math.min(innerWidth - 222, r.right + 8)) + 'px'; pv.style.top = Math.max(8, Math.min(innerHeight - 222, r.top - 70)) + 'px';
+    });
+    function loadScript(src) { return new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+    async function loadZip(buf) {
+        if (!window.JSZip) await loadScript(JSZIP_URL);
+        const z = await window.JSZip.loadAsync(buf), ent = [];
+        z.forEach((path, f) => { if (!f.dir) ent.push({ path, buf: () => f.async('arraybuffer') }); });
+        return applyEntries(ent);
+    }
+    async function applyEntries(ent) {
+        const next = {}, jobs = [];
+        ent.forEach(f => {
+            const path = f.path;
+            const m = path.replace(/\\/g, '/').match(/(?:^|\/)(teams?|players?|managers?)\/0*(\d+)\.(png|jpe?g|webp|gif)$/i); if (!m) return;
+            const kind = m[1].toLowerCase().replace(/s$/, ''), ext = m[3].toLowerCase();
+            jobs.push(f.buf().then(async b => { let bl = new Blob([b], { type: MIME[ext] }); if (ext !== 'jpg' && ext !== 'jpeg') bl = await trimBlob(bl); next[kind + ':' + parseInt(m[2], 10)] = URL.createObjectURL(bl); }));
+        });
+        await Promise.all(jobs);
+        if (!Object.keys(next).length) return 0;
+        Object.values(IMG).forEach(u => { try { URL.revokeObjectURL(u); } catch (e) { } });
+        IMG = next;
+        document.querySelectorAll('[data-gimg="n"]').forEach(e => delete e.dataset.gimg);
+        document.querySelectorAll('td.clickable-team > .g-teamcell').forEach(w => { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); document.querySelectorAll('img.g-av,.g-av-sp').forEach(e => e.remove()); document.querySelectorAll('.g-teamcell').forEach(e => { e.classList.remove('g-teamcell'); e.style.width = ''; });
+        document.querySelectorAll('[data-gimg="y"]').forEach(e => delete e.dataset.gimg);
+        decorate();
+        return Object.keys(next).length;
+    }
+    window.gImgPick = async function (inp) {
+        const fs = Array.from(inp.files || []); if (!fs.length) return;
+        try {
+            const n = (fs.length === 1 && /\.zip$/i.test(fs[0].name)) ? await loadZip(await fs[0].arrayBuffer())
+                : await applyEntries(fs.map(f => ({ path: f.webkitRelativePath || f.name, buf: () => f.arrayBuffer() })));
+            alert(n ? '이미지 ' + n + '개를 적용했습니다.\n(이 브라우저에서만 보이며, 새로고침하면 GitHub의 images.zip 기준으로 돌아갑니다.)'
+                : '적용할 이미지를 찾지 못했습니다.\nteams/001.png · players/0001.jpg · managers/001.jpg 형태의 폴더 구조인지 확인해 주세요.');
+        } catch (e) { alert('이미지를 읽지 못했습니다. (zip 파일이 맞는지, 인터넷이 연결되어 있는지 확인해 주세요)'); }
+        inp.value = '';
+    };
+    window.gImgExportIds = function () {
+        gEnsureIds(); const s = state, rows = [['종류', 'ID', '이름', '소속', '이미지 파일명(확장자 제외)']];
+        s.teams.forEach(t => { const i = ident('team', t.id); rows.push(['팀', i.label, t.name, '', i.file]); });
+        s.teams.forEach(t => (t.players || []).forEach(p => { const i = ident('player', p.name); rows.push(['선수', i.label, p.name, t.name, i.file]); }));
+        (s.freeAgents || []).forEach(p => { const i = ident('player', p.name); rows.push(['선수', i.label, p.name, '자유계약', i.file]); });
+        (s.managers || []).forEach(m => { const i = ident('manager', m.name); rows.push(['감독', i.label, m.name, '', i.file]); });
+        const csv = '\ufeff' + rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'G리그_ID목록.csv'; document.body.appendChild(a); a.click(); a.remove();
+    };
+    (async function () {
+        if (location.protocol === 'file:') return;
+        try {
+            const r = await fetch(ZIP_NAME, { cache: 'no-cache' }); if (!r.ok) return;
+            await loadZip(await r.arrayBuffer());
+        } catch (e) { }
+    })();
+    later();
 })();
 </script>
 </body>
