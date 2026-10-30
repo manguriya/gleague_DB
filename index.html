@@ -2071,7 +2071,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                     <div class="pm-tabs">
                         <button class="pm-tab on" id="managerTabOverview" onclick="switchManagerModalTab('overview')">📊 개요</button>
                         <button class="pm-tab" id="managerTabH2H" onclick="switchManagerModalTab('h2h')">⚔️ 상대전적</button>
-                        <button class="pm-tab" id="managerTabHistory" onclick="switchManagerModalTab('history')">📜 경기별 전적</button>
+                        <button class="pm-tab" id="managerTabTactic" onclick="switchManagerModalTab('tactic')">🧭 전술별 성적</button>
                     </div>
                     <span class="pm-pageno" id="managerPageNo">1 / 3</span>
                     <button class="pm-nav" onclick="pmStepTab('manager',1)" title="다음 페이지 (→)">›</button>
@@ -2135,6 +2135,8 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                     </div>
                 </div>
 
+                <!-- v1.84: 🏆 트로피 · 메달 진열대 -->
+                <div id="managerTrophyCabinet"></div>
                 <!-- 수상 기록 -->
                 <div id="managerAwardBadges" style="display:none; background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(251,191,36,0.02)); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:14px; margin-bottom:12px;">
                     <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🏆 우승 · 준우승 기록</div>
@@ -2164,7 +2166,28 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                         </table>
                     </div>
                 </div>
-                <div id="modalManagerTac"></div>
+                <!-- v1.84: 📜 경기별 전적 (기존 🧭 전술별 성적 자리) -->
+                <div id="managerHistoryBlock" style="margin-bottom:14px;">
+                    <h4 style="margin:0 0 8px; color:var(--accent); display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:space-between;">
+                        <span>📜 경기별 전적</span>
+                        <select id="mgrHistorySeasonFilter" class="archive-select" style="margin-bottom:0; min-width:140px; font-size:0.8rem;" onchange="filterManagerHistory()">
+                            <option value="all">전체 시즌</option>
+                        </select>
+                    </h4>
+                    <div class="scrollable-table" style="max-height:60vh;">
+                        <table class="pattern-table">
+                            <thead>
+                                <tr>
+                                    <th>경기</th>
+                                    <th>팀</th>
+                                    <th>상대</th>
+                                    <th>결과</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modalManagerHistory"></tbody>
+                        </table>
+                    </div>
+                </div>
 
                 </div></div>
                 </div>
@@ -2194,27 +2217,9 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                 </div>
                 </div>
 
-                <!-- 경기별 전적 -->
-                <div id="managerTabContentHistory" class="pm-page">
-                    <h4 style="margin:0 0 8px; color:var(--accent); display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:space-between;">
-                        <span>📜 경기별 전적</span>
-                        <select id="mgrHistorySeasonFilter" class="archive-select" style="margin-bottom:0; min-width:140px; font-size:0.8rem;" onchange="filterManagerHistory()">
-                            <option value="all">전체 시즌</option>
-                        </select>
-                    </h4>
-                    <div class="scrollable-table" style="max-height:60vh;">
-                        <table class="pattern-table">
-                            <thead>
-                                <tr>
-                                    <th>경기</th>
-                                    <th>팀</th>
-                                    <th>상대</th>
-                                    <th>결과</th>
-                                </tr>
-                            </thead>
-                            <tbody id="modalManagerHistory"></tbody>
-                        </table>
-                    </div>
+                <!-- v1.84: 🧭 전술별 성적 탭 -->
+                <div id="managerTabContentTactic" class="pm-page">
+                    <div id="modalManagerTac"></div>
                 </div>
             </div>
         </div>
@@ -19536,6 +19541,8 @@ function fmBestStyle(p, role) {
                 badgeSection.style.display = 'none';
             }
 
+            try { if (window.gMgrCabinet) gMgrCabinet(detail); } catch (e) { console.error('감독 진열대 오류', e); }   // v1.84
+
             // 시즌·팀별 재임 기록
             const seasonTbody = document.getElementById('modalManagerSeasonTbody');
             seasonTbody.innerHTML = detail.seasonBlocks.length ? detail.seasonBlocks.map(b => {
@@ -19756,7 +19763,7 @@ function fmBestStyle(p, role) {
         // ===== 선수·감독 모달 공용: 상단 탭 + 페이지 넘김 =====
         const PM_TABS = {
             player:  { tabs: ['overview','match','season','analysis','compare','power','growth'], pre: 'player',  cur: 'overview' },
-            manager: { tabs: ['overview','h2h','history'], pre: 'manager', cur: 'overview' }
+            manager: { tabs: ['overview','h2h','tactic'], pre: 'manager', cur: 'overview' }
         };
         function pmCap(s) { return s === 'h2h' ? 'H2H' : s.charAt(0).toUpperCase() + s.slice(1); }
         function pmShowTab(kind, tab) {
@@ -27277,7 +27284,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             }
             const heroColor = winner.color && winner.color !== '#fff' ? winner.color : 'var(--gold)';
             teamAwards.innerHTML = `
-                <div class="season-champion-hero" style="background: linear-gradient(135deg, ${heroColor}22, transparent); border: 1px solid ${heroColor}55;">
+                <div class="season-champion-hero" style="background: linear-gradient(135deg, ${heroColor}22, transparent); border: 1px solid ${heroColor}55; --hc:${heroColor};">
                     <div class="hero-trophy">${window.gTrophyOr ? gTrophyOr(state.seasonName, '🏆', 'hero') : '🏆'}</div>
                     <div class="hero-label">시즌 챔피언</div>
                     <div class="hero-team-name" data-gs="lg" style="color:${heroColor};">${winner.name}</div>
@@ -30147,7 +30154,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.83';
+        const G_HTML_VERSION = '1.84';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -30171,7 +30178,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.83': '신규', '1.82': '신규', '1.81': '개선', '1.80': '신규', '1.79': '신규', '1.78': '신규', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.84': '개선', '1.83': '신규', '1.82': '신규', '1.81': '개선', '1.80': '신규', '1.79': '신규', '1.78': '신규', '1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -34972,7 +34979,7 @@ window.pmExtRender = function(name){
         if (fin) { const hw = fin.hScore > fin.aScore || (fin.hScore === fin.aScore && (fin.hPk || 0) > (fin.aPk || 0)); ru = tr(hw ? fin.aId : fin.hId); }
         if (lp) { const hw = lp.hScore > lp.aScore || (lp.hScore === lp.aScore && (lp.hPk || 0) > (lp.aPk || 0)); lo = tr(hw ? lp.aId : lp.hId); }
         const hc = wr.color || '#fbbf24';
-        const hero = '<div class="card"><div class="season-champion-hero" style="background: linear-gradient(135deg, ' + hc + '22, transparent); border: 1px solid ' + hc + '55;"><div class="hero-trophy">' + gTrophyOr(a.name, '🏆', 'hero') + '</div><div class="hero-label">시즌 챔피언</div><div class="hero-team-name" data-gs="lg" style="color:' + hc + ';">' + E(wr.name) + '</div></div>'
+        const hero = '<div class="card"><div class="season-champion-hero" style="background: linear-gradient(135deg, ' + hc + '22, transparent); border: 1px solid ' + hc + '55; --hc:' + hc + ';"><div class="hero-trophy">' + gTrophyOr(a.name, '🏆', 'hero') + '</div><div class="hero-label">시즌 챔피언</div><div class="hero-team-name" data-gs="lg" style="color:' + hc + ';">' + E(wr.name) + '</div></div>'
             + '<div class="season-runner-pills"><div class="runner-pill">🥈 준우승 <b style="color:' + ru.color + ';">' + E(ru.name) + '</b></div><div class="runner-pill">💀 꼴찌 <b style="color:' + lo.color + ';">' + E(lo.name) + '</b></div></div></div>';
         const sp = '<div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);"><h3 style="color:var(--gold);">🌟 특별 수상</h3><div class="summary-grid season-award-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">' + gAwSpecialHtml(a.specialAwards) + '</div></div>';
         return hero + '<div class="summary-grid season-award-grid">' + grid + '</div>' + sp
@@ -35139,15 +35146,20 @@ window.pmExtRender = function(name){
         try { H = pcHonors(name); } catch (e) { console.error(e); box.innerHTML = ''; return; }
         const tTitle = H.titles.map(t => `<div class="tc-it" title="${E(t.season)} 우승 · ${E(t.team)}"><div class="tc-ico">${gTrophyOr(t.season, '🏆', 'hero')}</div><div class="tc-nm">${E(t.season)}</div><div class="tc-sub"><i style="color:${E(t.color)};">${E(t.team)}</i> 우승</div></div>`).join('');
         const live = pcLive(name);
-        const tLive = live.map(a => `<div class="tc-it pc-aw pc-live" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)} (진행 중 · 유력)"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.label)}</div><div class="tc-sub">${E(a.season)} · 유력</div></div>`).join('');
-        const tAward = tLive + H.awards.map(a => `<div class="tc-it pc-aw" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.label)}</div><div class="tc-sub">${E(a.season)}</div></div>`).join('');
+        // v1.84: 같은 수상끼리 묶어서 (예: 시즌1 득점왕 · 시즌2 득점왕 · 시즌3 득점왕) 나열
+        const grp = AW.map(([key, label, emoji, color]) => ({ key, label, emoji, color,
+            list: H.awards.filter(a => a.key === key).reverse().map(a => Object.assign({}, a, { live: false }))
+                .concat(live.filter(a => a.key === key).map(a => Object.assign({}, a, { live: true }))) })).filter(g => g.list.length);
+        const awItem = a => `<div class="tc-it pc-aw${a.live ? ' pc-live' : ''}" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}${a.live ? ' (진행 중 · 유력)' : ''}"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.season)}</div><div class="tc-sub">${E(a.label)}${a.live ? ' · 유력' : ''}</div></div>`;
+        const tAward = grp.map(g => { const cf = g.list.filter(a => !a.live).length, lv = g.list.length - cf;
+            return `<div class="tc-cab-t pc-gt" style="--awc:${g.color};"><span>${g.emoji} ${E(g.label)}</span><small>×${cf}${lv ? ' · 유력 ' + lv : ''}</small></div><div class="tc-shelf" style="min-height:0;">${g.list.map(awItem).join('')}</div><div class="tc-board"></div>`; }).join('');
         const empty = msg => `<div class="pc-empty"><span class="tc-note">${msg}</span></div>`;
         box.innerHTML = `<div class="tc-cab">
             <div class="tc-cab-t">🏆 트로피 진열대 ${typeof gNewTag === 'function' ? gNewTag('1.83') : ''}<small>우승컵 ${H.titles.length}개 · 개인 수상 ${H.awards.length}개${live.length ? ' · 진행 중 유력 ' + live.length + '개' : ''}</small></div>
             <div class="tc-cab-t" style="margin-top:2px;">🏆 우승컵 <small>소속팀이 우승한 시즌</small></div>
             <div class="tc-shelf" style="min-height:0;">${tTitle || empty('아직 우승컵이 없어요.')}</div><div class="tc-board"></div>
-            <div class="tc-cab-t">🌟 개인 수상 트로피 <small>득점왕 · 도움왕 · MVP · 평점 · 신인상 · 야신상 · 골롱도르</small></div>
-            <div class="tc-shelf" style="min-height:0;">${tAward || empty('아직 개인 수상 트로피가 없어요.')}</div><div class="tc-board"></div>
+            <div class="tc-cab-t">🌟 개인 수상 트로피 <small>같은 수상끼리 모아서 · 시즌 순</small></div>
+            ${tAward || `<div class="tc-shelf" style="min-height:0;">${empty('아직 개인 수상 트로피가 없어요.')}</div><div class="tc-board"></div>`}
         </div>
         <div class="tc-note" style="margin-top:6px;">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다 (우승컵은 그 시즌 출전 기록이 있는 선수 기준). 진행 중인 시즌의 1위 항목은 흐리게 '유력'으로 먼저 표시되고, 시즌이 끝나면 확정됩니다.</div>`;
         try { if (typeof gApplyNewBadges === 'function') gApplyNewBadges(); } catch (e) { }
@@ -35161,6 +35173,100 @@ window.pmExtRender = function(name){
             return r;
         };
     }
+})();
+</script>
+<style id="g184Css">
+/* ===== v1.84 ===== */
+/* 🌟 시즌 기록 › 시즌 챔피언 컨테이너: 화려하게 */
+@property --g184a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes g184Spin { from { --g184a: 0deg; } to { --g184a: 360deg; } }
+@keyframes g184Sweep { 0% { transform: translateX(-140%) skewX(-18deg); } 55%, 100% { transform: translateX(340%) skewX(-18deg); } }
+@keyframes g184Twinkle { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+@keyframes g184Float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes g184Pulse { 0%, 100% { box-shadow: 0 0 0 1px rgba(251,191,36,.25), 0 0 22px color-mix(in srgb, var(--hc, #fbbf24) 38%, transparent), 0 0 46px rgba(251,191,36,.12), inset 0 0 30px rgba(251,191,36,.08); }
+                       50% { box-shadow: 0 0 0 1px rgba(251,191,36,.45), 0 0 34px color-mix(in srgb, var(--hc, #fbbf24) 62%, transparent), 0 0 70px rgba(251,191,36,.26), inset 0 0 42px rgba(251,191,36,.14); } }
+.card .season-champion-hero, div.season-champion-hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    padding: 16px 34px !important; margin-bottom: 10px; border-radius: 16px;
+    border: 2px solid transparent !important;
+    background:
+        radial-gradient(ellipse at 16% 50%, color-mix(in srgb, var(--hc, #fbbf24) 40%, transparent), transparent 62%) padding-box,
+        linear-gradient(135deg, #1e293b, #0b1120 72%) padding-box,
+        conic-gradient(from var(--g184a), #b45309, #fbbf24, #fff3b0, #fbbf24, #b45309, var(--hc, #fbbf24), #b45309) border-box !important;
+    animation: g184Spin 6s linear infinite, g184Pulse 3.4s ease-in-out infinite;
+}
+.season-champion-hero > * { position: relative; z-index: 1; }
+.season-champion-hero::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 34%; z-index: 2; pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.22), transparent); transform: translateX(-140%) skewX(-18deg); animation: g184Sweep 4.4s ease-in-out infinite; }
+.season-champion-hero::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; animation: g184Twinkle 2.6s ease-in-out infinite;
+    background:
+        radial-gradient(circle at 5% 28%, #fff 0 1.3px, transparent 2.8px), radial-gradient(circle at 12% 80%, #fde68a 0 1.7px, transparent 3.2px),
+        radial-gradient(circle at 30% 16%, #fff 0 1px, transparent 2.4px), radial-gradient(circle at 46% 86%, #fde68a 0 1.3px, transparent 2.7px),
+        radial-gradient(circle at 63% 20%, #fff 0 1.5px, transparent 3px), radial-gradient(circle at 78% 76%, #fde68a 0 1.2px, transparent 2.5px),
+        radial-gradient(circle at 91% 28%, #fff 0 1.7px, transparent 3.2px), radial-gradient(circle at 97% 78%, #fde68a 0 1px, transparent 2.3px); }
+.season-champion-hero .hero-trophy { position: relative; }
+.season-champion-hero .hero-trophy::before { content: ''; position: absolute; inset: -16px; z-index: -1; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(251,191,36,.42), transparent 68%); }
+.season-champion-hero .hero-trophy:not(:has(img)) { font-size: 3.6rem; line-height: 1; text-shadow: 0 0 18px rgba(251,191,36,.8); }
+.season-champion-hero img.g-tr.s-hero { height: 100px; filter: drop-shadow(0 0 10px rgba(251,191,36,.85)) drop-shadow(0 6px 12px rgba(0,0,0,.55)); animation: g184Float 3.2s ease-in-out infinite; }
+.season-champion-hero .hero-label { font-size: .88rem; letter-spacing: .3em; font-weight: 900;
+    background: linear-gradient(90deg, #fde68a, #fbbf24, #fff7d1, #fbbf24); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.season-champion-hero .hero-label::before { content: '✦ '; } .season-champion-hero .hero-label::after { content: ' ✦'; }
+.season-champion-hero .hero-team-name { font-size: 2rem; text-shadow: 0 0 16px color-mix(in srgb, currentColor 55%, transparent), 0 2px 0 rgba(0,0,0,.55); }
+.season-champion-hero .hero-team-name .g-av { width: 56px; height: 56px; filter: drop-shadow(0 0 8px rgba(251,191,36,.45)); }
+@media (max-width: 520px) { .card .season-champion-hero, div.season-champion-hero { padding: 12px 16px !important; }
+    .season-champion-hero img.g-tr.s-hero { height: 72px; } .season-champion-hero .hero-team-name { font-size: 1.35rem; } .season-champion-hero .hero-team-name .g-av { width: 40px; height: 40px; } .season-champion-hero .hero-label { font-size: .74rem; letter-spacing: .2em; } }
+@media (prefers-reduced-motion: reduce) { .season-champion-hero, .season-champion-hero::before, .season-champion-hero::after, .season-champion-hero img.g-tr.s-hero { animation: none !important; } }
+
+/* 🌟 특별 수상 카드 크기 80% */
+.summary-grid:has(> .aw-card.aw-sp), #specialAwardsDisplay { grid-template-columns: repeat(auto-fit, minmax(152px, 184px)) !important; gap: 6px !important; }
+.aw-card.aw-sp { padding: 6px 6px 8px; }
+.aw-card.aw-sp h3 { font-size: 1.2rem; gap: 3px; margin-bottom: 4px; }
+.aw-card.aw-sp h3 .g-awi { font-size: 3rem; }
+.aw-card.aw-sp h3 img.g-awimg.s-hero { height: 86px; }
+.aw-card.aw-sp .aw-pl { flex: 0 1 118px; max-width: 134px; padding: 6px 6px 7px; }
+.aw-card.aw-sp .aw-name { font-size: .8rem; } .aw-card.aw-sp .aw-team { font-size: .58rem; } .aw-card.aw-sp .aw-val { font-size: .8rem; margin-top: 3px; } .aw-card.aw-sp .aw-none { padding: 10px 4px; font-size: .72rem; }
+@media (max-width: 700px) { .aw-card.aw-sp h3 { font-size: 1.05rem; } .aw-card.aw-sp h3 img.g-awimg.s-hero { height: 68px; } .aw-card.aw-sp .aw-pl { flex-basis: 106px; max-width: 120px; } }
+
+/* 🧩 선수 모달 › 트로피 진열대: 같은 수상끼리 */
+.tc-cab-t.pc-gt { color: var(--awc, var(--gold)); margin-top: 6px; }
+.tc-it.pc-aw .tc-nm { color: #e2e8f0; }
+.tc-it.pc-aw .tc-sub { color: var(--awc, var(--gold)); font-weight: 800; }
+
+/* 🧑‍💼 감독 모달 › 🏆 트로피 · 🥈 준우승 메달 진열대 */
+#managerAwardBadges { display: none !important; }
+#managerTrophyCabinet { margin-bottom: 12px; }
+#managerTrophyCabinet .tc-cab { padding: 12px 12px 2px; }
+#managerTrophyCabinet .tc-it { width: 96px; padding: 6px 4px; }
+#managerTrophyCabinet .tc-ico { min-height: 78px; font-size: 2.5rem; }
+#managerTrophyCabinet img.g-tr.s-hero { height: 78px; margin-bottom: 0; }
+#managerTrophyCabinet .tc-it.silver .tc-ico { min-height: 52px; font-size: 2.5rem; filter: drop-shadow(0 0 8px rgba(203,213,225,.5)) drop-shadow(0 6px 10px rgba(0,0,0,.55)); }
+#managerTrophyCabinet .tc-nm { font-size: .68rem; } #managerTrophyCabinet .tc-sub { font-size: .58rem; }
+#managerTrophyCabinet .tc-sub i { font-style: normal; font-weight: 800; }
+</style>
+<script id="g184Core">
+/* v1.84 — 🧑‍💼 감독 상세 창 › 🏆 트로피 · 🥈 준우승 메달 진열대 (종료되어 아카이브에 저장된 시즌 기준) */
+(function () {
+    const E = v => (typeof gEsc === 'function') ? gEsc(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    window.gMgrCabinet = function (detail) {
+        const box = document.getElementById('managerTrophyCabinet'); if (!box) return;
+        const ch = (detail && detail.champSeasons) || [], ru = (detail && detail.runnerUpSeasons) || [], lp = (detail && detail.lastPlaceSeasons) || [];
+        const trophies = ch.length
+            ? ch.map(s => `<div class="tc-it" title="${E(s.season)} 우승 · ${E(s.teamName)}"><div class="tc-ico">${gTrophyOr(s.season, '🏆', 'hero')}</div><div class="tc-nm">${E(s.season)}</div><div class="tc-sub"><i style="color:${E(s.teamColor || '#fbbf24')};">${E(s.teamName)}</i> 우승</div></div>`).join('')
+            : `<div class="tc-it ghost"><div class="tc-ico">🏆</div><div class="tc-nm" style="color:var(--text-muted);">첫 우승을 기다리는 중</div></div>`;
+        const medals = ru.length
+            ? ru.map(s => `<div class="tc-it silver" title="${E(s.season)} 준우승 · ${E(s.teamName)}"><div class="tc-ico">🥈</div><div class="tc-nm">${E(s.season)}</div><div class="tc-sub"><i style="color:${E(s.teamColor || '#cbd5e1')};">${E(s.teamName)}</i> 준우승</div></div>`).join('')
+            : `<div class="tc-it silver ghost"><div class="tc-ico">🥈</div><div class="tc-nm" style="color:var(--text-muted);">준우승 기록 없음</div></div>`;
+        box.innerHTML = `<div class="tc-cab">
+            <div class="tc-cab-t">🏆 트로피 · 메달 진열대 ${typeof gNewTag === 'function' ? gNewTag('1.84') : ''}<small>우승 ${ch.length} · 준우승 ${ru.length}${lp.length ? ' · 💀 꼴찌 ' + lp.length : ''}</small></div>
+            <div class="tc-cab-t" style="margin-top:2px;">🏆 우승 트로피 <small>감독으로서 이끈 팀이 우승한 시즌</small></div>
+            <div class="tc-shelf" style="min-height:0;">${trophies}</div><div class="tc-board"></div>
+            <div class="tc-cab-t">🥈 준우승 메달</div>
+            <div class="tc-shelf" style="min-height:0;">${medals}</div><div class="tc-board"></div>
+        </div>
+        <div class="tc-note" style="margin-top:6px;">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다 (시즌별로 지정된 감독 기준).</div>`;
+        try { if (typeof gApplyNewBadges === 'function') gApplyNewBadges(); } catch (e) { }
+    };
 })();
 </script>
 </body>
