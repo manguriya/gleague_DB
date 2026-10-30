@@ -76,6 +76,7 @@
         .g-av-sp { visibility: hidden; }
         .g-idtag { margin-left: 8px; font-size: 0.7rem; font-weight: 500; font-family: monospace; color: var(--text-muted); opacity: 0.55; letter-spacing: 0.5px; vertical-align: middle; white-space: nowrap; }
 
+
         /* v1.76: 화면별 로고/사진 크기 · 모달 상단 한 줄 헤더 */
         .g-nm { white-space: nowrap; }
         .g-av.s-xs { width: 20px; height: 20px; margin-right: 5px; }
@@ -100,6 +101,32 @@
         .g-mh-line .modal-title { margin: 0 !important; font-size: 1.45rem !important; line-height: 1.2; }
         .g-mh-sub { margin-top: 3px; }
         .g-mh-flt { display: flex; align-items: center; gap: 6px 8px; flex-wrap: wrap; margin-left: auto; }
+        /* v1.77: 모달 상단 — 사진 · 이름 · 탭을 한 줄로, 사진은 그 줄의 세로 길이에 꽉 차게 */
+        .g-mh { position: sticky; top: 0; z-index: 6; margin: -14px -16px 12px !important; padding: 8px 52px 8px 16px !important; background: rgba(15,23,42,0.97); backdrop-filter: blur(6px); align-items: center; gap: 8px 14px; border-radius: 15px 15px 0 0; }
+        #teamModalContent .g-mh { margin-top: -14px !important; }
+        .g-mh .close-modal, .modal-content > .close-modal { z-index: 12; }
+        .g-mh-ph { position: relative; flex: 0 0 auto; align-self: stretch; width: 76px; min-height: 76px; border-radius: 12px; overflow: hidden; }
+        .g-mh-ph:empty { display: none; }
+        .g-mh .g-av-big, .g-mh .g-av-big.team { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0; object-fit: cover; object-position: 50% 15%; border: none; }
+        .g-mh .g-av-big.team { object-fit: contain; object-position: 50% 50%; padding: 2px; box-sizing: border-box; }
+        .g-mh-tx { flex: 0 1 auto; min-width: 150px; max-width: 360px; }
+        .g-mh .pm-tabbar, .g-mh .g-mh-tabs { position: static; flex: 1 1 340px; min-width: 0; margin: 0; padding: 0; background: none; border: 0; backdrop-filter: none; }
+        .g-mh .g-mh-tabs { display: flex; gap: 6px; flex: 0 1 auto; flex-wrap: wrap; }
+        .g-mh .g-mh-tabs button { flex: 0 0 auto; white-space: nowrap; }
+        .g-mh .g-mh-flt { flex: 1 1 auto; justify-content: flex-end; }
+        @media (max-width: 600px) { .g-mh { padding-right: 46px !important; } .g-mh-ph { width: 60px; min-height: 60px; } .g-mh-tx { min-width: 0; flex: 1 1 120px; } .g-mh .pm-tabbar { flex-basis: 100%; } }
+        /* v1.77: 역사관 개인 타이틀 랭킹 — 큰 사진 카드형 */
+        .gt-row { display: flex; align-items: stretch; gap: 10px; padding: 0 8px 0 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; }
+        .gt-row.top1 { border-color: rgba(251,191,36,0.55); background: linear-gradient(90deg, rgba(251,191,36,0.12), rgba(255,255,255,0.02) 60%); }
+        .gt-rk { flex: 0 0 22px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 900; color: var(--text-muted); background: rgba(255,255,255,0.04); }
+        .gt-row.top1 .gt-rk { color: #0f172a; background: var(--gold); }
+        .gt-ph { position: relative; flex: 0 0 56px; width: 56px; min-height: 56px; background: #1e293b; }
+        .gt-ph:empty { display: none; }
+        .gt-ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
+        .gt-body { flex: 1 1 auto; min-width: 0; padding: 8px 0; display: flex; flex-direction: column; gap: 5px; justify-content: center; }
+        .gt-nm { font-weight: 800; font-size: 0.95rem; color: var(--text); cursor: pointer; }
+        .gt-nm:hover { color: var(--accent); }
+        .gt-bd { display: flex; gap: 3px; flex-wrap: wrap; }
         /* 📝 패치노트 */
         .pn-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
         .pn-tab { padding: 7px 14px; border-radius: 8px; border: 1px solid #334155; background: var(--bg-input); color: var(--text-muted); font-weight: 800; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
@@ -1485,6 +1512,11 @@
                     </div>
                     <div id="modalTeamMgrCaptain" class="g-mh-sub" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"></div>
                 </div>
+                <div class="g-mh-tabs">
+                    <button id="teamTabH2H" onclick="switchTeamModalTab('h2h')" style="padding:6px 14px; border:none; border-radius:6px; background:var(--accent); color:#000; font-weight:800; font-size:0.8rem; cursor:pointer;">⚔️ 경기 기록</button>
+                    <button id="teamTabSeason" onclick="switchTeamModalTab('season')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">📅 시즌별 기록</button>
+                    <button id="teamTabAbility" onclick="switchTeamModalTab('ability')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">🧬 능력치 비교</button>
+                </div>
                 <div class="g-mh-flt">
                     <span style="font-size:0.8rem; color:var(--text-muted);">시즌:</span>
                     <select id="h2hSeasonSelect" onchange="updateTeamH2H()" style="padding:4px 10px; border-radius:6px; background:#1e293b; color:#f1f5f9; border:1px solid rgba(255,255,255,0.25); font-size:0.8rem;">
@@ -1498,12 +1530,6 @@
                 </div>
             </div>
             <div id="modalContent">
-                <!-- 탭 버튼 -->
-                <div style="display:flex; gap:8px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px;">
-                    <button id="teamTabH2H" onclick="switchTeamModalTab('h2h')" style="padding:6px 14px; border:none; border-radius:6px; background:var(--accent); color:#000; font-weight:800; font-size:0.8rem; cursor:pointer;">⚔️ 경기 기록</button>
-                    <button id="teamTabSeason" onclick="switchTeamModalTab('season')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">📅 시즌별 기록</button>
-                    <button id="teamTabAbility" onclick="switchTeamModalTab('ability')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">🧬 능력치 비교</button>
-                </div>
 
                 <!-- 경기 기록 탭 -->
                 <div id="teamTabContentH2H">
@@ -1574,8 +1600,6 @@
                     </div>
                     <div id="modalPlayerTeamBadge" class="g-mh-sub" style="font-size:0.9rem; font-weight:700; opacity:0.85;"></div>
                 </div>
-            </div>
-            <div id="playerModalContent">
                 <div class="pm-tabbar" id="playerTabBar">
                     <button class="pm-nav" onclick="pmStepTab('player',-1)" title="이전 페이지 (←)">‹</button>
                     <div class="pm-tabs">
@@ -1590,6 +1614,8 @@
                     <span class="pm-pageno" id="playerPageNo">1 / 7</span>
                     <button class="pm-nav" onclick="pmStepTab('player',1)" title="다음 페이지 (→)">›</button>
                 </div>
+            </div>
+            <div id="playerModalContent">
                 <div id="playerTabContentOverview" class="pm-page on">
                 <div class="pm-cols"><div class="pm-col">
 <!-- 핵심 스탯 카드 -->
@@ -1783,8 +1809,6 @@
                     </div>
                     <div id="modalManagerTeamBadge" class="g-mh-sub" style="font-size:0.9rem; font-weight:700; opacity:0.85;"></div>
                 </div>
-            </div>
-            <div id="managerModalContent">
                 <div class="pm-tabbar" id="managerTabBar">
                     <button class="pm-nav" onclick="pmStepTab('manager',-1)" title="이전 페이지 (←)">‹</button>
                     <div class="pm-tabs">
@@ -1795,6 +1819,8 @@
                     <span class="pm-pageno" id="managerPageNo">1 / 3</span>
                     <button class="pm-nav" onclick="pmStepTab('manager',1)" title="다음 페이지 (→)">›</button>
                 </div>
+            </div>
+            <div id="managerModalContent">
                 <div id="managerTabContentOverview" class="pm-page on">
                 <div class="pm-cols"><div class="pm-col">
                 <!-- 🧬 감독 능력치 -->
@@ -26635,11 +26661,15 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                                         ${d.val !== '' ? `<span style="font-size: 0.72rem; font-weight: 900; color: #0f172a; background: var(--gold); padding: 1px 6px; border-radius: 3px;">${d.val}${d.unit || ''}</span>` : ''}
                                     </div>
                                 `).join('');
+                                const _ri = sorted.indexOf(p) + 1;
+                                const _nm = String(p.name).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
                                 return `
-                                    <div style="padding: 8px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
-                                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span class="g-nm" data-gk="p" data-gs="sm" style="font-weight: 800; font-size: 0.95rem; color: var(--text);">${p.name}</span>
-                                            <div style="display: flex; gap: 3px; flex-wrap: wrap; justify-content: flex-end;">${emojiWithVal}</div>
+                                    <div class="gt-row${_ri === 1 ? ' top1' : ''}">
+                                        <div class="gt-rk">${_ri}</div>
+                                        <div class="gt-ph" data-gp="${String(p.name).replace(/"/g,'&quot;')}"></div>
+                                        <div class="gt-body">
+                                            <span class="gt-nm" onclick="showPlayerDetail('${_nm}')">${p.name}</span>
+                                            <div class="gt-bd">${emojiWithVal}</div>
                                         </div>
                                     </div>
                                 `;
@@ -29787,7 +29817,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.76';
+        const G_HTML_VERSION = '1.77';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29811,7 +29841,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -34168,6 +34198,12 @@ window.pmExtRender = function(name){
     }
     function decorate2() {
         if (!Object.keys(IMG).length) return;
+        document.querySelectorAll('.gt-ph[data-gp]').forEach(el => {
+            if (el.dataset.gav) return; el.dataset.gav = 'n';
+            const u = urlOf('player', ident('player', el.dataset.gp)); if (!u) return;
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove();
+            el.appendChild(im); el.dataset.gav = 'y';
+        });
         document.querySelectorAll('.g-ph[data-gp]:not(.on)').forEach(el => {          // 선수 카드 상단 사진 (원형 아님 · 이미지 전체 표시)
             if (el.dataset.gav) return; el.dataset.gav = 'n';
             const u = urlOf('player', ident('player', el.dataset.gp)); if (!u) return;
