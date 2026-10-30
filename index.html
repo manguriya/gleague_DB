@@ -58,6 +58,13 @@
         .db-date-label { flex-shrink: 0; padding: 10px 14px 14px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.68rem; color: var(--text-muted); font-weight: 700; text-align: center; word-break: break-all; }
         .sidebar.collapsed .db-date-label { display: none; }
         .db-date-label.ver-label { border-top: none; padding-top: 0; margin-top: -8px; }
+        /* v1.74: 좌측 메뉴 최하단 방문자 카운터 (TODAY / TOTAL) */
+        .visit-counter { flex-shrink: 0; display: flex; justify-content: center; gap: 0; padding: 9px 10px 12px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.68rem; color: var(--text-muted); font-weight: 700; }
+        .visit-counter .vc-item { flex: 1; text-align: center; padding: 0 6px; }
+        .visit-counter .vc-item + .vc-item { border-left: 1px solid rgba(255,255,255,0.1); }
+        .visit-counter .vc-label { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.58rem; letter-spacing: 1px; opacity: .8; }
+        .visit-counter .vc-num { display: block; margin-top: 2px; font-size: 0.95rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+        .sidebar.collapsed .visit-counter { display: none; }
         /* 📝 패치노트 */
         .pn-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
         .pn-tab { padding: 7px 14px; border-radius: 8px; border: 1px solid #334155; background: var(--bg-input); color: var(--text-muted); font-weight: 800; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
@@ -1408,6 +1415,10 @@
             </nav>
             <div class="db-date-label" id="gDbDateLabel" title="현재 불러온 DB의 저장 날짜"></div>
             <div class="db-date-label ver-label" id="gHtmlVerLabel" title="현재 HTML 버전"></div>
+            <div class="visit-counter" id="gVisitCounter" title="방문자 수 — 같은 브라우저는 하루 1회만 집계 (한국시간 자정 기준)">
+                <div class="vc-item"><span class="vc-label">TODAY</span><span class="vc-num" id="gVisitToday">-</span></div>
+                <div class="vc-item"><span class="vc-label">TOTAL</span><span class="vc-num" id="gVisitTotal">-</span></div>
+            </div>
         </aside>
 
         <div class="main-content">
@@ -28167,7 +28178,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if(confirm("모든 데이터가 삭제됩니다. 계속하시겠습니까?")) { 
                 gAddAutoBackup('reset');
                 const keep = {};
-                [G_AUTOBACKUP_KEY, G_LASTBACKUP_KEY].forEach(k => { const v = localStorage.getItem(k); if(v !== null) keep[k] = v; });
+                [G_AUTOBACKUP_KEY, G_LASTBACKUP_KEY, 'glg_visit_last'].forEach(k => { const v = localStorage.getItem(k); if(v !== null) keep[k] = v; });
                 localStorage.clear();
                 Object.keys(keep).forEach(k => { try { localStorage.setItem(k, keep[k]); } catch(e) {} });
                 location.reload(); 
@@ -29725,7 +29736,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.73';
+        const G_HTML_VERSION = '1.74';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29749,7 +29760,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -33949,6 +33960,57 @@ window.pmExtRender = function(name){
       } catch (err) { }
     }
   });
+})();
+</script>
+<script>
+/* ================================================================
+   👥 방문자 카운터 (v1.74) — 좌측 메뉴 최하단 TODAY / TOTAL
+   - GitHub Pages는 서버가 없어서 무료 외부 카운터(Abacus, 가입·키 불필요)에 숫자를 저장한다.
+   - 같은 브라우저는 하루(한국시간 기준) 1회만 +1 → 새로고침해도 숫자가 늘지 않는다.
+   - TODAY = 오늘 처음 접속한 브라우저 수 / TOTAL = 지금까지의 일별 접속 합계
+   - 내 PC에서 파일로 열거나(file://) localhost에서 테스트할 때는 숫자를 올리지 않고 읽기만 한다.
+   - G_VISIT_NS 값을 바꾸면 카운트가 0부터 새로 시작한다. (공개 카운터라 남과 겹치지 않는 값 유지)
+   ================================================================ */
+(function () {
+    const G_VISIT_NS = 'gleague-reboot-k7x2q9';
+    const G_VISIT_API = 'https://abacus.jasoncameron.dev';
+    const G_VISIT_LAST = 'glg_visit_last';
+    const elT = document.getElementById('gVisitToday'), elA = document.getElementById('gVisitTotal');
+    if (!elT || !elA) return;
+
+    function kstDay() {
+        try { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).replace(/-/g, ''); }
+        catch (e) { const d = new Date(Date.now() + 9 * 3600e3); return d.toISOString().slice(0, 10).replace(/-/g, ''); }
+    }
+    async function call(path) {
+        const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 6000);
+        try {
+            const r = await fetch(G_VISIT_API + path, { cache: 'no-store', signal: ctl.signal });
+            if (r.status === 404) return 0;          // 아직 한 번도 집계되지 않은 날 = 0
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const j = await r.json();
+            return Number(j.value) || 0;
+        } finally { clearTimeout(tm); }
+    }
+    const show = (el, v) => { el.textContent = (v === null || v === undefined) ? '-' : Number(v).toLocaleString('ko-KR'); };
+
+    async function run() {
+        const day = kstDay(), kToday = 'd' + day, kTotal = 'total';
+        const host = location.hostname;
+        const canCount = location.protocol !== 'file:' && host !== 'localhost' && host !== '127.0.0.1' && host !== '';
+        let store = null;
+        try { localStorage.setItem('__glg_t', '1'); localStorage.removeItem('__glg_t'); store = localStorage; }
+        catch (e) { try { store = sessionStorage; } catch (e2) { store = null; } }
+        let already = true;                          // 저장소를 못 쓰면 늘리지 않고 읽기만
+        if (store) { try { already = store.getItem(G_VISIT_LAST) === day; } catch (e) { already = true; } }
+        const doHit = canCount && !already;
+        const op = (key) => call((doHit ? '/hit/' : '/get/') + G_VISIT_NS + '/' + key);
+        const [rt, ra] = await Promise.allSettled([op(kToday), op(kTotal)]);
+        show(elT, rt.status === 'fulfilled' ? rt.value : null);
+        show(elA, ra.status === 'fulfilled' ? ra.value : null);
+        if (doHit && rt.status === 'fulfilled' && ra.status === 'fulfilled') { try { store.setItem(G_VISIT_LAST, day); } catch (e) { } }
+    }
+    run().catch(() => { show(elT, null); show(elA, null); });
 })();
 </script>
 </body>
