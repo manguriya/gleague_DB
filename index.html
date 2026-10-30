@@ -107,14 +107,22 @@
         .g-mh .close-modal, .modal-content > .close-modal { z-index: 12; }
         .g-mh-ph { position: relative; flex: 0 0 auto; align-self: stretch; width: 76px; min-height: 76px; border-radius: 12px; overflow: hidden; }
         .g-mh-ph:empty { display: none; }
-        .g-mh .g-av-big, .g-mh .g-av-big.team { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0; object-fit: cover; object-position: 50% 15%; border: none; }
-        .g-mh .g-av-big.team { object-fit: contain; object-position: 50% 50%; padding: 2px; box-sizing: border-box; }
+        .g-mh .g-av-big, .g-mh .g-av-big.team { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0; object-fit: contain; object-position: 50% 50%; border: none; }
+        .g-mh .g-av-big.team { padding: 2px; box-sizing: border-box; background: transparent; }
         .g-mh-tx { flex: 0 1 auto; min-width: 150px; max-width: 360px; }
         .g-mh .pm-tabbar, .g-mh .g-mh-tabs { position: static; flex: 1 1 340px; min-width: 0; margin: 0; padding: 0; background: none; border: 0; backdrop-filter: none; }
         .g-mh .g-mh-tabs { display: flex; gap: 6px; flex: 0 1 auto; flex-wrap: wrap; }
         .g-mh .g-mh-tabs button { flex: 0 0 auto; white-space: nowrap; }
         .g-mh .g-mh-flt { flex: 1 1 auto; justify-content: flex-end; }
         @media (max-width: 600px) { .g-mh { padding-right: 46px !important; } .g-mh-ph { width: 60px; min-height: 60px; } .g-mh-tx { min-width: 0; flex: 1 1 120px; } .g-mh .pm-tabbar { flex-basis: 100%; } }
+        #teamModalHeader.g-mh-team { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "ph top" "ph tabs"; align-items: center; gap: 8px 16px; }
+        #teamModalHeader.g-mh-team:has(.g-mh-ph:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "tabs"; }
+        #teamModalHeader .g-mh-ph { grid-area: ph; width: 112px; min-height: 100px; border-radius: 10px; overflow: visible; }
+        #teamModalHeader .g-mh-top { grid-area: top; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 14px; min-width: 0; }
+        #teamModalHeader .g-mh-top .g-mh-tx { flex: 1 1 200px; max-width: none; }
+        #teamModalHeader .g-mh-top .g-mh-flt { flex: 0 1 auto; margin-left: auto; }
+        #teamModalHeader .g-mh-tabs { grid-area: tabs; flex: none; }
+        @media (max-width: 600px) { #teamModalHeader .g-mh-ph { width: 76px; min-height: 76px; } }
         /* v1.76: 역사관 개인 타이틀 랭킹 — 큰 사진 카드형 */
         .gt-row { display: flex; align-items: stretch; gap: 10px; padding: 0 8px 0 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; }
         .gt-row.top1 { border-color: rgba(251,191,36,0.55); background: linear-gradient(90deg, rgba(251,191,36,0.12), rgba(255,255,255,0.02) 60%); }
@@ -1503,30 +1511,32 @@
             <!-- 팀 컬러 상단 띠 -->
             <div id="teamModalColorBar" style="position:absolute; top:0; left:0; right:0; height:4px;"></div>
             <span class="close-modal" onclick="closeTeamModal()" style="z-index:10; position:absolute; top:12px; right:16px;">&times;</span>
-            <div class="modal-header g-mh" id="teamModalHeader" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div class="modal-header g-mh g-mh-team" id="teamModalHeader" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
                 <div class="g-mh-ph"></div>
-                <div class="g-mh-tx">
-                    <div class="g-mh-line">
-                        <div id="teamModalColorDot" style="width:14px; height:14px; border-radius:50%; flex-shrink:0;"></div>
-                        <h2 id="modalTeamName" class="modal-title" style="margin:0; font-size:1.6rem;"></h2>
+                <div class="g-mh-top">
+                    <div class="g-mh-tx">
+                        <div class="g-mh-line">
+                            <div id="teamModalColorDot" style="width:14px; height:14px; border-radius:50%; flex-shrink:0;"></div>
+                            <h2 id="modalTeamName" class="modal-title" style="margin:0; font-size:1.6rem;"></h2>
+                        </div>
+                        <div id="modalTeamMgrCaptain" class="g-mh-sub" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"></div>
                     </div>
-                    <div id="modalTeamMgrCaptain" class="g-mh-sub" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"></div>
+                    <div class="g-mh-flt">
+                        <span style="font-size:0.8rem; color:var(--text-muted);">시즌:</span>
+                        <select id="h2hSeasonSelect" onchange="updateTeamH2H()" style="padding:4px 10px; border-radius:6px; background:#1e293b; color:#f1f5f9; border:1px solid rgba(255,255,255,0.25); font-size:0.8rem;">
+                            <option value="all">전체 시즌</option>
+                            <option value="current" id="h2hCurrentSeasonOpt">현재 시즌</option>
+                        </select>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">상대팀:</span>
+                        <select id="h2hOpponentSelect" onchange="updateTeamH2H()" style="padding:4px 10px; border-radius:6px; background:#1e293b; color:#f1f5f9; border:1px solid rgba(255,255,255,0.25); font-size:0.8rem;">
+                            <option value="all">전체 보기</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="g-mh-tabs">
                     <button id="teamTabH2H" onclick="switchTeamModalTab('h2h')" style="padding:6px 14px; border:none; border-radius:6px; background:var(--accent); color:#000; font-weight:800; font-size:0.8rem; cursor:pointer;">⚔️ 경기 기록</button>
                     <button id="teamTabSeason" onclick="switchTeamModalTab('season')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">📅 시즌별 기록</button>
                     <button id="teamTabAbility" onclick="switchTeamModalTab('ability')" style="padding:6px 14px; border:none; border-radius:6px; background:rgba(255,255,255,0.07); color:var(--text-muted); font-weight:800; font-size:0.8rem; cursor:pointer;">🧬 능력치 비교</button>
-                </div>
-                <div class="g-mh-flt">
-                    <span style="font-size:0.8rem; color:var(--text-muted);">시즌:</span>
-                    <select id="h2hSeasonSelect" onchange="updateTeamH2H()" style="padding:4px 10px; border-radius:6px; background:#1e293b; color:#f1f5f9; border:1px solid rgba(255,255,255,0.25); font-size:0.8rem;">
-                        <option value="all">전체 시즌</option>
-                        <option value="current" id="h2hCurrentSeasonOpt">현재 시즌</option>
-                    </select>
-                    <span style="font-size:0.8rem; color:var(--text-muted);">상대팀:</span>
-                    <select id="h2hOpponentSelect" onchange="updateTeamH2H()" style="padding:4px 10px; border-radius:6px; background:#1e293b; color:#f1f5f9; border:1px solid rgba(255,255,255,0.25); font-size:0.8rem;">
-                        <option value="all">전체 보기</option>
-                    </select>
                 </div>
             </div>
             <div id="modalContent">
