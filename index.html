@@ -1441,6 +1441,30 @@
 .tl-more{margin-top:8px}
 .tl-more>summary{cursor:pointer;font-size:.78rem;color:#38bdf8;font-weight:800}
 </style>
+
+    <style id="g177Css">
+        /* ===== v1.77 ===== */
+        /* 🎯 개인 기록 랭킹: 이름 · 팀 칸을 로고(사진) 자리 기준으로 왼쪽 정렬 — 로고가 없는 행도 같은 크기의 빈 자리를 둬서 이름이 들쑥날쑥하지 않게 */
+        #playerRankTable th:nth-child(2), #playerRankTable th:nth-child(3),
+        #playerRankTbody td:nth-child(2), #playerRankTbody td:nth-child(3) { text-align: left; padding-left: 14px; }
+        #playerRankTbody td:nth-child(2) > .g-av, #playerRankTbody td:nth-child(3) > .g-av { width: 28px; height: 28px; margin-right: 8px; display: inline-block; vertical-align: middle; flex: none; }
+        #playerRankTbody td:nth-child(2) > .g-av { border-radius: 50%; object-fit: cover; object-position: 50% 15%; }
+        #playerRankTbody td:nth-child(3) > .g-av { border-radius: 4px; object-fit: contain; object-position: 50% 50%; background: transparent; }
+        #playerRankTbody td > .g-av-sp { visibility: hidden; background: transparent; }
+        /* 🧩 선수 · 감독 상세 창: 사진 뒤 배경 박스 제거 + 박스 크기만큼 사진 확대 */
+        #playerDetailModal .g-mh-ph, #managerDetailModal .g-mh-ph { width: 128px; min-height: 128px; background: none; overflow: visible; }
+        #playerDetailModal .g-mh .g-av-big, #managerDetailModal .g-mh .g-av-big { background: transparent !important; border: 0 !important; box-shadow: none; border-radius: 0; object-fit: contain; object-position: 50% 50%; }
+        @media (max-width: 700px) { #playerDetailModal .g-mh-ph, #managerDetailModal .g-mh-ph { width: 88px; min-height: 88px; } }
+        /* 🧩 팀 상세 창: 시즌 · 상대팀 필터를 위쪽 줄(팀 이름 줄)에 맞춰 더 위로 */
+        #teamModalHeader.g-mh-team { align-items: start; row-gap: 6px; padding-top: 6px !important; }
+        #teamModalHeader .g-mh-ph { align-self: center; }
+        #teamModalHeader .g-mh-top { align-self: start; align-items: flex-start; }
+        #teamModalHeader .g-mh-top .g-mh-flt { align-self: flex-start; margin-top: 0; }
+        #teamModalHeader .g-mh-tabs { align-self: end; }
+        /* 🎨 드롭다운 팀 색 구분 (선택 칸 왼쪽 띠) */
+        select.g-teamsel { border-left: 4px solid var(--g-sel-c, transparent) !important; }
+        .g-aw-hint { font-weight: 500; color: var(--text-muted); font-size: 0.66rem; margin-left: 4px; }
+    </style>
 </head>
 <body>
     <div class="app-shell">
@@ -2472,13 +2496,13 @@
                 <div style="display:flex; flex-direction:column; gap:14px;">
                     <div style="font-size:0.78rem; color:var(--text-muted);" id="archiveAwardsSeasonLabel"></div>
                     <div>
-                        <label style="display:block; font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-bottom:4px;">🌱 신인상</label>
+                        <label style="display:block; font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-bottom:4px;">🌱 신인상<span class="g-aw-hint">그 시즌에 처음 출전한 신인만</span></label>
                         <select id="archiveAwardRookie" class="archive-select" style="margin-bottom:0; width:100%;">
                             <option value="">— 선택 —</option>
                         </select>
                     </div>
                     <div>
-                        <label style="display:block; font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-bottom:4px;">🧤 야신상</label>
+                        <label style="display:block; font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-bottom:4px;">🧤 야신상<span class="g-aw-hint">키퍼(GK)만</span></label>
                         <select id="archiveAwardYashin" class="archive-select" style="margin-bottom:0; width:100%;">
                             <option value="">— 선택 —</option>
                         </select>
@@ -2952,13 +2976,13 @@
                     <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-bottom: 10px;">✏️ 수상자 선택</div>
                     <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
                         <div style="display:flex; flex-direction:column; gap:4px;">
-                            <label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">🌱 신인상</label>
+                            <label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">🌱 신인상<span class="g-aw-hint">이번 시즌 신인만</span></label>
                             <select id="awardRookie" class="archive-select" style="margin-bottom:0; width:170px; padding:8px 10px; font-size:0.85rem;">
                                 <option value="">— 선택 —</option>
                             </select>
                         </div>
                         <div style="display:flex; flex-direction:column; gap:4px;">
-                            <label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">🧤 야신상</label>
+                            <label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">🧤 야신상<span class="g-aw-hint">키퍼(GK)만</span></label>
                             <select id="awardYashin" class="archive-select" style="margin-bottom:0; width:170px; padding:8px 10px; font-size:0.85rem;">
                                 <option value="">— 선택 —</option>
                             </select>
@@ -26889,20 +26913,74 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             return container.innerHTML;
         }
 
-        function buildPlayerOptions(selectEl, selectedName) {
+        // ===== v1.77: 특별 수상 후보 · 드롭다운 팀 색 구분 =====
+        // 팀 색을 어두운 배경과 섞어 드롭다운 항목 배경색으로 쓴다 (흰색 · 연두 같은 밝은 팀 색도 글씨가 읽히도록)
+        function gTintColor(hex, a) {
+            let h = String(hex || '').trim().replace('#', '');
+            if (h.length === 3) h = h.split('').map(c => c + c).join('');
+            if (!/^[0-9a-fA-F]{6}$/.test(h)) return '';
+            const n = parseInt(h, 16), base = [15, 23, 42];
+            return 'rgb(' + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v, i) => Math.round(v * a + base[i] * (1 - a))).join(',') + ')';
+        }
+        function gStyleTeamOpt(el, color, strong) {
+            const bg = gTintColor(color, strong ? 0.62 : 0.34); if (!bg) return;
+            el.style.backgroundColor = bg; el.style.color = '#f8fafc';
+            if (strong) el.style.fontWeight = '800';
+            el.dataset.gc = color;
+        }
+        // 닫힌 select 왼쪽에 지금 고른 선수(팀)의 색 띠 표시
+        function gTintSelectEl(sel) {
+            if (!sel || !sel.options) return;
+            const o = sel.options[sel.selectedIndex], c = o && o.dataset ? o.dataset.gc : '';
+            sel.classList.toggle('g-teamsel', !!c);
+            if (c) sel.style.setProperty('--g-sel-c', c); else sel.style.removeProperty('--g-sel-c');
+        }
+        // 시즌별 후보 계산: seasonKey = 'current'(진행 중 시즌) 또는 아카이브 번호(문자열)
+        //  · rookie: 그 시즌에 처음 출전(선발/교체)한 선수 (이전 시즌 경기 기록에 한 번도 없던 선수, 진행 중 시즌은 아직 한 번도 안 뛴 선수 포함)
+        //  · gk: 그 시즌 경기에서 GK로 출전한 선수
+        function gAwardSets(seasonKey) {
+            const list = (state.archives || []).map((a, i) => ({ key: String(i), matches: a.matches || [] }));
+            list.push({ key: 'current', matches: state.matches || [] });
+            const rookie = new Set(), gk = new Set(), seen = new Set();
+            list.forEach(se => {
+                const inSeason = new Set();
+                (se.matches || []).forEach(m => (m.pStats || []).forEach(ps => {
+                    if (!ps || !ps.name) return;
+                    const st = ps.status || 'starter'; if (st !== 'starter' && st !== 'substitute') return;
+                    inSeason.add(ps.name);
+                    if (se.key === seasonKey && (ps.pos === 'GK' || ps.pos2 === 'GK')) gk.add(ps.name);
+                }));
+                if (se.key === seasonKey) inSeason.forEach(n => { if (!seen.has(n)) rookie.add(n); });
+                inSeason.forEach(n => seen.add(n));
+            });
+            if (seasonKey === 'current') (state.teams || []).forEach(t => (t.players || []).forEach(p => { if (!seen.has(p.name)) rookie.add(p.name); }));
+            return { rookie, gk };
+        }
+
+        function buildPlayerOptions(selectEl, selectedName, kind) {
             selectEl.innerHTML = '<option value="">— 선택 —</option>';
+            const sets = (kind === 'rookie' || kind === 'yashin') ? gAwardSets('current') : null;
+            const okFn = p => !sets ? true : (kind === 'yashin' ? (p.pos === 'GK' || sets.gk.has(p.name)) : sets.rookie.has(p.name));
+            let any = false;
+            state.teams.forEach(team => { if (team.players.some(okFn)) any = true; });
+            const useFilter = !!sets && any;       // 후보가 하나도 없으면 막히지 않도록 전체 선수를 보여준다
+            selectEl.title = !sets ? '' : (useFilter ? (kind === 'yashin' ? '🧤 키퍼(GK)만 표시돼요' : '🌱 이번 시즌에 처음 출전한 신인만 표시돼요') : '후보가 없어 전체 선수를 표시해요');
             state.teams.forEach(team => {
+                const list = team.players.filter(p => !useFilter || okFn(p) || p.name === selectedName);
+                if (!list.length) return;
                 const grp = document.createElement('optgroup');
-                grp.label = team.name;
-                team.players.forEach(p => {
+                grp.label = team.name; gStyleTeamOpt(grp, team.color, true);
+                list.forEach(p => {
                     const opt = document.createElement('option');
                     opt.value = p.name;
                     opt.textContent = p.name + ' (' + p.pos + ')';
+                    gStyleTeamOpt(opt, team.color, false);
                     if(p.name === selectedName) opt.selected = true;
                     grp.appendChild(opt);
                 });
                 selectEl.appendChild(grp);
             });
+            gTintSelectEl(selectEl);
         }
 
         function saveSpecialAwards() {
@@ -26921,9 +26999,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const rookieEl = document.getElementById('awardRookie');
             const yashinEl = document.getElementById('awardYashin');
             const ballonEl = document.getElementById('awardBallon');
-            if(rookieEl)  buildPlayerOptions(rookieEl,  sa.rookie  || '');
-            if(yashinEl)  buildPlayerOptions(yashinEl,  sa.yashin  || '');
-            if(ballonEl)  buildPlayerOptions(ballonEl,  sa.ballon  || '');
+            if(rookieEl)  buildPlayerOptions(rookieEl,  sa.rookie  || '', 'rookie');
+            if(yashinEl)  buildPlayerOptions(yashinEl,  sa.yashin  || '', 'yashin');
+            if(ballonEl)  buildPlayerOptions(ballonEl,  sa.ballon  || '', 'ballon');
 
             // 수상자 카드 렌더링
             const display = document.getElementById('specialAwardsDisplay');
@@ -27389,30 +27467,42 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
         // 종료된(아카이브) 시즌의 선수 명단으로 select 옵션을 만든다 — 그 시즌에 실제로 뛰었던
         // 선수 목록(playerRank) 기준이라, 지금은 팀을 옮겼거나 방출된 선수도 그 시즌 소속팀으로 정확히 표시된다.
-        function buildArchivePlayerOptions(selectEl, archive, selectedName) {
+        function buildArchivePlayerOptions(selectEl, archive, selectedName, kind) {
             selectEl.innerHTML = '<option value="">— 선택 —</option>';
             const roster = (archive.playerRank && archive.playerRank.length)
                 ? archive.playerRank
-                : Object.entries(archive.playerStats || {}).map(([name, s]) => ({ name, teamName: s.teamName || '', teamId: s.teamId }));
-            // 팀별로 그룹핑 (팀명 기준, 소속 불명은 마지막 그룹으로)
-            const groups = {};
+                : Object.entries(archive.playerStats || {}).map(([name, s]) => ({ name, teamName: s.teamName || '', teamId: s.teamId, color: s.color, pos: s.pos, subPos: s.subPos }));
+            // v1.77: 신인상은 그 시즌에 처음 출전한 선수만, 야신상은 그 시즌 키퍼(GK)만 후보로 표시
+            const sets = (kind === 'rookie' || kind === 'yashin') ? gAwardSets(String((state.archives || []).indexOf(archive))) : null;
+            const okFn = p => !sets ? true : (kind === 'yashin' ? (p.pos === 'GK' || p.subPos === 'GK' || sets.gk.has(p.name)) : sets.rookie.has(p.name));
+            const useFilter = !!sets && roster.some(okFn);
+            selectEl.title = !sets ? '' : (useFilter ? (kind === 'yashin' ? '🧤 그 시즌 키퍼(GK)만 표시돼요' : '🌱 그 시즌에 처음 출전한 신인만 표시돼요') : '후보가 없어 전체 선수를 표시해요');
+            // 팀별로 그룹핑 (팀명 기준, 소속 불명은 마지막 그룹으로) + 팀 색
+            const groups = {}, colors = {};
             roster.forEach(p => {
+                if (useFilter && !okFn(p) && p.name !== selectedName) return;
                 const groupName = p.teamName || '소속 불명';
                 if (!groups[groupName]) groups[groupName] = [];
                 groups[groupName].push(p.name);
+                if (!colors[groupName]) {
+                    const t = (state.teams || []).find(t => (p.teamId !== undefined && String(t.id) === String(p.teamId)) || t.name === p.teamName);
+                    colors[groupName] = p.color || (t ? t.color : '');
+                }
             });
             Object.keys(groups).sort((a, b) => a === '소속 불명' ? 1 : (b === '소속 불명' ? -1 : a.localeCompare(b, 'ko'))).forEach(groupName => {
                 const grp = document.createElement('optgroup');
-                grp.label = groupName;
+                grp.label = groupName; gStyleTeamOpt(grp, colors[groupName], true);
                 groups[groupName].forEach(name => {
                     const opt = document.createElement('option');
                     opt.value = name;
                     opt.textContent = name;
+                    gStyleTeamOpt(opt, colors[groupName], false);
                     if (name === selectedName) opt.selected = true;
                     grp.appendChild(opt);
                 });
                 selectEl.appendChild(grp);
             });
+            gTintSelectEl(selectEl);
         }
 
         function openArchiveAwardsModal(archiveIdx) {
@@ -27422,9 +27512,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             document.getElementById('archiveAwardsIdx').value = String(idx);
             document.getElementById('archiveAwardsSeasonLabel').textContent = `${archive.name || '시즌 미상'} 시즌의 특별 수상을 지정합니다.`;
             const sa = archive.specialAwards || {};
-            buildArchivePlayerOptions(document.getElementById('archiveAwardRookie'), archive, sa.rookie || '');
-            buildArchivePlayerOptions(document.getElementById('archiveAwardYashin'), archive, sa.yashin || '');
-            buildArchivePlayerOptions(document.getElementById('archiveAwardBallon'), archive, sa.ballon || '');
+            buildArchivePlayerOptions(document.getElementById('archiveAwardRookie'), archive, sa.rookie || '', 'rookie');
+            buildArchivePlayerOptions(document.getElementById('archiveAwardYashin'), archive, sa.yashin || '', 'yashin');
+            buildArchivePlayerOptions(document.getElementById('archiveAwardBallon'), archive, sa.ballon || '', 'ballon');
             document.getElementById('archiveAwardsModal').style.display = 'block';
         }
 
@@ -29829,7 +29919,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.76';
+        const G_HTML_VERSION = '1.77';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29853,7 +29943,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.77': '개선', '1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -34370,6 +34460,53 @@ window.pmExtRender = function(name){
             await loadZip(await r.arrayBuffer());
         } catch (e) { }
     })();
+    later();
+})();
+</script>
+
+<script id="g177Js">
+/* ===== v1.77: 🎯 개인 기록 랭킹 이름 · 팀 칸 로고 기준 정렬 / 🎨 드롭다운 팀 색 구분(전체) ===== */
+(function () {
+    'use strict';
+    // 이름 · 팀 칸 앞에 로고(사진)가 있는 행과 없는 행이 섞여도 같은 크기의 자리를 두어 글씨가 같은 위치에서 시작하도록 맞춘다
+    function alignRankCells() {
+        const tb = document.getElementById('playerRankTbody'); if (!tb) return;
+        tb.querySelectorAll('tr').forEach(tr => {
+            [1, 2].forEach(ci => {
+                const td = tr.children[ci]; if (!td) return;
+                const img = td.querySelector(':scope > img.g-av'), sp = td.querySelector(':scope > .g-av-sp');
+                if (img && sp) { sp.remove(); return; }                 // 사진/로고가 뒤늦게 들어왔으면 빈 자리는 제거
+                if (img || sp) return;
+                const e = document.createElement('span'); e.className = 'g-av g-av-sp' + (ci === 2 ? ' team' : ''); e.setAttribute('aria-hidden', 'true');
+                td.insertBefore(e, td.firstChild);
+            });
+        });
+    }
+    // 팀 이름이 들어간 모든 드롭다운(optgroup · 팀 선택 · 선수 선택)에 팀 색 배경 적용
+    function tintSelects() {
+        if (typeof state === 'undefined' || !state || !Array.isArray(state.teams)) return;
+        const byName = {}, byId = {};
+        state.teams.forEach(t => { byName[t.name] = t.color; byId[String(t.id)] = t; });
+        document.querySelectorAll('select').forEach(sel => {
+            let hit = false;
+            sel.querySelectorAll('optgroup').forEach(g => {
+                const c = byName[g.label]; if (!c) return; hit = true;
+                if (g.dataset.gc !== c) gStyleTeamOpt(g, c, true);
+                g.querySelectorAll('option').forEach(o => { if (o.dataset.gc !== c) gStyleTeamOpt(o, c, false); });
+            });
+            sel.querySelectorAll(':scope > option').forEach(o => {
+                const t = byId[o.value], txt = o.textContent.trim();
+                const c = (t && txt.indexOf(t.name) === 0) ? t.color : ((byName[o.value] && o.value === txt) ? byName[o.value] : null);
+                if (!c) return; hit = true;
+                if (o.dataset.gc !== c) gStyleTeamOpt(o, c, false);
+            });
+            if (hit) gTintSelectEl(sel);
+        });
+    }
+    function run() { try { alignRankCells(); } catch (e) { console.error('랭킹 정렬 오류', e); } try { tintSelects(); } catch (e) { console.error('드롭다운 색 오류', e); } }
+    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(run, 200); };
+    new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('change', e => { const t = e.target; if (t && t.tagName === 'SELECT' && t.querySelector('[data-gc]')) gTintSelectEl(t); });
     later();
 })();
 </script>
