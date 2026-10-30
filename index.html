@@ -75,6 +75,28 @@
         .g-teamcell .g-av { flex-shrink: 0; }
         .g-av-sp { visibility: hidden; }
         .g-idtag { margin-left: 8px; font-size: 0.7rem; font-weight: 500; font-family: monospace; color: var(--text-muted); opacity: 0.55; letter-spacing: 0.5px; vertical-align: middle; white-space: nowrap; }
+
+        /* v1.76: 화면별 로고/사진 크기 · 모달 상단 한 줄 헤더 */
+        .g-nm { white-space: nowrap; }
+        .g-av.s-xs { width: 20px; height: 20px; margin-right: 5px; }
+        .g-av.s-sm { width: 28px; height: 28px; margin-right: 7px; }
+        .g-av.s-md { width: 40px; height: 40px; margin-right: 9px; }
+        .g-av.s-lg { width: 72px; height: 72px; margin-right: 0; }
+        .g-av.s-lg.block { display: block; margin: 0 auto 6px; }
+        .g-av.team.s-xs, .g-av.team.s-sm, .g-av.team.s-md { border-radius: 4px; }
+        .tb-n .g-av.s-xs { margin-right: 6px; }
+        .dc-tcard-badge.has-logo { background: transparent; width: 46px; height: 46px; border-radius: 8px; overflow: hidden; }
+        .dc-tcard-badge.has-logo .g-av { width: 100%; height: 100%; margin: 0; object-fit: contain; }
+        .g-mh { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 10px !important; margin-bottom: 12px !important; padding-right: 36px; }
+        .g-mh-ph:empty { display: none; }
+        .g-mh-ph { flex: 0 0 auto; display: flex; }
+        .g-mh .g-av-big { width: 60px; height: 60px; border-radius: 12px; }
+        .g-mh .g-av-big.team { width: 60px; height: 60px; border-radius: 8px; }
+        .g-mh-tx { flex: 1 1 260px; min-width: 0; }
+        .g-mh-line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .g-mh-line .modal-title { margin: 0 !important; font-size: 1.45rem !important; line-height: 1.2; }
+        .g-mh-sub { margin-top: 3px; }
+        .g-mh-flt { display: flex; align-items: center; gap: 6px 8px; flex-wrap: wrap; margin-left: auto; }
         /* 📝 패치노트 */
         .pn-tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
         .pn-tab { padding: 7px 14px; border-radius: 8px; border: 1px solid #334155; background: var(--bg-input); color: var(--text-muted); font-weight: 800; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
@@ -1450,20 +1472,23 @@
         <div class="modal-content" id="teamModalContent" style="background: linear-gradient(135deg, #0f172a, #1e293b); border-radius: 15px; position: relative; overflow-x: hidden; overflow-y: auto;">
             <!-- 팀 컬러 상단 띠 -->
             <div id="teamModalColorBar" style="position:absolute; top:0; left:0; right:0; height:4px;"></div>
-            <span class="close-modal" onclick="closeTeamModal()" style="z-index:10; position:relative;">&times;</span>
-            <div class="modal-header" id="teamModalHeader" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom:14px; margin-bottom:16px;">
-                <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
-                    <div id="teamModalColorDot" style="width:14px; height:14px; border-radius:50%; flex-shrink:0;"></div>
-                    <h2 id="modalTeamName" class="modal-title" style="margin:0; font-size:1.6rem;"></h2>
+            <span class="close-modal" onclick="closeTeamModal()" style="z-index:10; position:absolute; top:12px; right:16px;">&times;</span>
+            <div class="modal-header g-mh" id="teamModalHeader" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <div class="g-mh-ph"></div>
+                <div class="g-mh-tx">
+                    <div class="g-mh-line">
+                        <div id="teamModalColorDot" style="width:14px; height:14px; border-radius:50%; flex-shrink:0;"></div>
+                        <h2 id="modalTeamName" class="modal-title" style="margin:0; font-size:1.6rem;"></h2>
+                    </div>
+                    <div id="modalTeamMgrCaptain" class="g-mh-sub" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;"></div>
                 </div>
-                <div id="modalTeamMgrCaptain" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:10px;"></div>
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span style="font-size:0.8rem; color:var(--text-muted);">시즌 필터:</span>
+                <div class="g-mh-flt">
+                    <span style="font-size:0.8rem; color:var(--text-muted);">시즌:</span>
                     <select id="h2hSeasonSelect" onchange="updateTeamH2H()" style="padding:4px 10px; border-radius:6px; background:#1e293b; color:#f1f5f9; border:1px solid rgba(255,255,255,0.25); font-size:0.8rem;">
                         <option value="all">전체 시즌</option>
                         <option value="current" id="h2hCurrentSeasonOpt">현재 시즌</option>
                     </select>
-                    <span style="font-size:0.8rem; color:var(--text-muted);">상대팀 필터:</span>
+                    <span style="font-size:0.8rem; color:var(--text-muted);">상대팀:</span>
                     <select id="h2hOpponentSelect" onchange="updateTeamH2H()" style="padding:4px 10px; border-radius:6px; background:#1e293b; color:#f1f5f9; border:1px solid rgba(255,255,255,0.25); font-size:0.8rem;">
                         <option value="all">전체 보기</option>
                     </select>
@@ -1537,12 +1562,15 @@
     <div id="playerDetailModal" class="modal">
         <div class="modal-content" style="background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid rgba(56,189,248,0.4); box-shadow: 0 0 40px rgba(56,189,248,0.15);">
             <span class="close-modal" onclick="closePlayerModal()">&times;</span>
-            <div class="modal-header" style="border-bottom: 2px solid rgba(56,189,248,0.3); margin-bottom: 16px; padding-bottom: 12px;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div id="modalPlayerPosBadge" style="padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.85rem;"></div>
-                    <h2 id="modalPlayerName" class="modal-title" style="font-size:1.6rem;"></h2>
+            <div class="modal-header g-mh" style="border-bottom: 2px solid rgba(56,189,248,0.3);">
+                <div class="g-mh-ph"></div>
+                <div class="g-mh-tx">
+                    <div class="g-mh-line">
+                        <div id="modalPlayerPosBadge" style="padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.85rem;"></div>
+                        <h2 id="modalPlayerName" class="modal-title" style="font-size:1.6rem;"></h2>
+                    </div>
+                    <div id="modalPlayerTeamBadge" class="g-mh-sub" style="font-size:0.9rem; font-weight:700; opacity:0.85;"></div>
                 </div>
-                <div id="modalPlayerTeamBadge" style="margin-top:6px; font-size:0.9rem; font-weight:700; opacity:0.85;"></div>
             </div>
             <div id="playerModalContent">
                 <div class="pm-tabbar" id="playerTabBar">
@@ -1743,12 +1771,15 @@
     <div id="managerDetailModal" class="modal">
         <div class="modal-content" style="background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid rgba(251,191,36,0.4); box-shadow: 0 0 40px rgba(251,191,36,0.15);">
             <span class="close-modal" onclick="closeManagerModal()">&times;</span>
-            <div class="modal-header" style="border-bottom: 2px solid rgba(251,191,36,0.3); margin-bottom: 16px; padding-bottom: 12px;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div style="padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.85rem; background:var(--gold); color:#000;">🧑‍💼</div>
-                    <h2 id="modalManagerName" class="modal-title" style="font-size:1.6rem; color:var(--gold);"></h2>
+            <div class="modal-header g-mh" style="border-bottom: 2px solid rgba(251,191,36,0.3);">
+                <div class="g-mh-ph"></div>
+                <div class="g-mh-tx">
+                    <div class="g-mh-line">
+                        <div style="padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.85rem; background:var(--gold); color:#000;">🧑‍💼</div>
+                        <h2 id="modalManagerName" class="modal-title" style="font-size:1.6rem; color:var(--gold);"></h2>
+                    </div>
+                    <div id="modalManagerTeamBadge" class="g-mh-sub" style="font-size:0.9rem; font-weight:700; opacity:0.85;"></div>
                 </div>
-                <div id="modalManagerTeamBadge" style="margin-top:6px; font-size:0.9rem; font-weight:700; opacity:0.85;"></div>
             </div>
             <div id="managerModalContent">
                 <div class="pm-tabbar" id="managerTabBar">
@@ -26602,7 +26633,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                                 return `
                                     <div style="padding: 8px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
                                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span style="font-weight: 800; font-size: 0.95rem; color: var(--text);">${p.name}</span>
+                                            <span class="g-nm" data-gk="p" data-gs="sm" style="font-weight: 800; font-size: 0.95rem; color: var(--text);">${p.name}</span>
                                             <div style="display: flex; gap: 3px; flex-wrap: wrap; justify-content: flex-end;">${emojiWithVal}</div>
                                         </div>
                                     </div>
@@ -26863,7 +26894,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 return `
                 <div class="summary-card" style="border:1px solid rgba(251,191,36,0.25);">
                     <h3 style="color:var(--gold);">${a.emoji} ${a.title}</h3>
-                    <div class="summary-val" style="color:${name ? 'var(--text)' : 'var(--text-muted)'}; ${name ? '' : 'font-size:0.95rem;'}">${name || '미정'}</div>
+                    <div class="summary-val" style="color:${name ? 'var(--text)' : 'var(--text-muted)'}; ${name ? '' : 'font-size:0.95rem;'}">${name ? `<span class="g-nm" data-gk="p" data-gs="md">${name}</span>` : '미정'}</div>
                     ${teamName}
                 </div>`;
             }).join('');
@@ -26889,7 +26920,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 <div class="season-champion-hero" style="background: linear-gradient(135deg, ${heroColor}22, transparent); border: 1px solid ${heroColor}55;">
                     <div class="hero-trophy">🏆</div>
                     <div class="hero-label">시즌 챔피언</div>
-                    <div class="hero-team-name" style="color:${heroColor};">${winner.name}</div>
+                    <div class="hero-team-name" data-gs="lg" style="color:${heroColor};">${winner.name}</div>
                 </div>
                 <div class="season-runner-pills">
                     <div class="runner-pill">🥈 준우승 <b style="color:${runnerUp.color};">${runnerUp.name}</b></div>
@@ -26937,7 +26968,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     }
                     const first = groups[0];
                     const tiedTag = first.names.length > 1 ? ` <small style="font-size:0.68rem; color:var(--accent); font-weight:700;">(공동 ${first.names.length}명)</small>` : '';
-                    html += `<div class="summary-val">${first.names.join(', ')} <small style="font-size:0.8rem; color:var(--gold);">${fmtVal(first.val)}${unit}</small></div>${tiedTag}`;
+                    html += `<div class="summary-val">${first.names.map(n => `<span class="g-nm" data-gk="p" data-gs="sm">${n}</span>`).join(', ')} <small style="font-size:0.8rem; color:var(--gold);">${fmtVal(first.val)}${unit}</small></div>${tiedTag}`;
                     if(groups.length > 1) {
                         html += `<div style="text-align:left; margin-top:10px; border-top:1px solid rgba(255,255,255,0.05); padding-top:5px;">`;
                         groups.slice(1).forEach(g => {
@@ -27702,20 +27733,20 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     <h4 style="color:var(--gold); display:flex; align-items:center; gap:8px; flex-wrap:wrap;">🌟 특별 수상 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openArchiveAwardsModal('${idx}')">✏️ 수정</button></h4>
                     ${(sa.rookie || sa.yashin || sa.ballon) ? `
                     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
-                        ${sa.rookie ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🌱 신인상</h4><div style="font-weight:800;">${sa.rookie}</div></div>` : ''}
-                        ${sa.yashin ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🧤 야신상</h4><div style="font-weight:800;">${sa.yashin}</div></div>` : ''}
-                        ${sa.ballon ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🏅 시즌 골롱도르</h4><div style="font-weight:800;">${sa.ballon}</div></div>` : ''}
+                        ${sa.rookie ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🌱 신인상</h4><div style="font-weight:800;"><span class="g-nm" data-gk="p" data-gs="sm">${sa.rookie}</span></div></div>` : ''}
+                        ${sa.yashin ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🧤 야신상</h4><div style="font-weight:800;"><span class="g-nm" data-gk="p" data-gs="sm">${sa.yashin}</span></div></div>` : ''}
+                        ${sa.ballon ? `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.2);"><h4 style="color:var(--gold);">🏅 시즌 골롱도르</h4><div style="font-weight:800;"><span class="g-nm" data-gk="p" data-gs="sm">${sa.ballon}</span></div></div>` : ''}
                     </div>` : `<div style="color:var(--text-muted); font-size:0.8rem; padding:6px 0;">아직 지정된 특별 수상이 없습니다. '수정' 버튼을 눌러 지정해주세요.</div>`}
                 </div>`;
             let html = `
                 <div class="card" style="background:rgba(56, 189, 248, 0.05); border:1px solid var(--accent);">
                     <h3 style="margin-bottom:15px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">🏆 ${a.name} 최종 결과 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openSeasonRenameModal('${idx}')">✏️ 이름 수정</button></h3>
                     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
-                        <div class="summary-card"><h4>🥇 우승</h4><div style="font-weight:800; color:var(--gold);">${a.winner}</div></div>
-                        <div class="summary-card"><h4>⚽️ 득점왕</h4><div style="font-weight:800;">${a.topScorer}</div></div>
-                        <div class="summary-card"><h4>🎯 도움왕</h4><div style="font-weight:800;">${a.topAssistant}</div></div>
-                        <div class="summary-card"><h4>👑 MVP</h4><div style="font-weight:800;">${a.mvp}</div></div>
-                        <div class="summary-card"><h4>⭐ 최고평점</h4><div style="font-weight:800;">${a.topRating}</div></div>
+                        <div class="summary-card"><h4>🥇 우승</h4><div style="font-weight:800; color:var(--gold);"><span class="g-nm" data-gk="t" data-gs="sm">${a.winner}</span></div></div>
+                        <div class="summary-card"><h4>⚽️ 득점왕</h4><div style="font-weight:800;">${(window.gNames||String)(a.topScorer)}</div></div>
+                        <div class="summary-card"><h4>🎯 도움왕</h4><div style="font-weight:800;">${(window.gNames||String)(a.topAssistant)}</div></div>
+                        <div class="summary-card"><h4>👑 MVP</h4><div style="font-weight:800;">${(window.gNames||String)(a.mvp)}</div></div>
+                        <div class="summary-card"><h4>⭐ 최고평점</h4><div style="font-weight:800;">${(window.gNames||String)(a.topRating)}</div></div>
                     </div>
                 </div>
                 ${specialBlock}
@@ -29751,7 +29782,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.75';
+        const G_HTML_VERSION = '1.76';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29775,7 +29806,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.76': '개선', '1.75': '신규', '1.74': '신규', '1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -34105,11 +34136,61 @@ window.pmExtRender = function(name){
             if (w > 0) list.forEach(e => { e.style.width = w + 'px'; });
         });
     }
-    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); alignTeamCells(); }, 150); };
+
+    /* ===== v1.76: 이름 텍스트를 찾아 화면별 크기로 로고 · 사진 추가 (너무 많아지지 않도록 선별) ===== */
+    const GAV = [
+        { sel: '.tb-n', k: 't', s: 'xs' },                                   // 순위표 토너먼트 대진표
+        { sel: '.dash-match-team', k: 't', s: 'xs' },                         // 대시보드 최근 경기
+        { sel: '.team-box .team-name', k: 't', s: 'sm' },                     // 히스토리 경기 카드
+        { sel: '.total-summary-name', k: 't', s: 'sm' },                      // 역사관 우승 · 준우승 · 꼴찌
+        { sel: '.hero-team-name', k: 't', s: 'lg', block: 1 },                // 시즌 기록 챔피언
+        { sel: '.runner-pill b', k: 't', s: 'xs' },                           // 시즌 기록 준우승 · 꼴찌
+        { sel: '#total td, #archiveContent td', k: 't', s: 'xs' },                                // 역사관 통산 기록 표
+        { sel: '#ranking td', k: 't', s: 'xs' },                              // 랭킹 팀 표
+        { sel: '.dc-tcard-name', k: 't', s: 'badge' },                        // 팀 데이터센터 카드 (원형 배지 → 로고)
+        { sel: '.dc-tcard-people > div', k: 'a', s: 'xs' },                   // 팀 카드 감독 · 주장
+        { sel: '.g-nm', k: 'p', s: 'sm' },                                    // 직접 표시한 선수 이름 (수상자 · 개인 타이틀)
+        { sel: '#awards .rs-nm > a.rs-link', k: 'p', s: 'xs' }                // 시즌 기록 TOP 리스트
+    ];
+    window.gNames = function (str) { return String(str == null ? '' : str).split(/,\s*/).map(x => x ? '<span class="g-nm" data-gk="p" data-gs="sm">' + x + '</span>' : '').join(', '); };
+    function nameMaps() {
+        const s = (typeof state !== 'undefined') ? state : null; const T = {}, P = {}, M = {};
+        if (!s || !Array.isArray(s.teams)) return { T, P, M };
+        s.teams.forEach(t => { T[t.name] = t.id; });
+        const idm = s.idMap || { p: {}, m: {} };
+        Object.keys(idm.p || {}).forEach(n => { P[n] = 1; }); Object.keys(idm.m || {}).forEach(n => { M[n] = 1; });
+        return { T, P, M };
+    }
+    function decorate2() {
+        if (!Object.keys(IMG).length) return;
+        const NM = nameMaps();
+        GAV.forEach(r => document.querySelectorAll(r.sel).forEach(el => {
+            if (el.dataset.gav || el.closest('.modal-header') || el.querySelector(':scope > img.g-av')) return;
+            const n = Array.from(el.childNodes).find(c => c.nodeType === 3 && c.textContent.trim()); if (!n) return;
+            const raw = n.textContent, k = raw.match(/^[^\p{L}\p{N}]*/u)[0].length, tok = raw.slice(k).trim().split(/[\s,(·]/)[0];
+            let kind = null, id = null;
+            const rk = el.dataset.gk || r.k;
+            if (rk === 't' && NM.T[tok] !== undefined) { kind = 'team'; id = ident('team', NM.T[tok]); }
+            else if ((rk === 'p' || rk === 'a') && NM.P[tok]) { kind = 'player'; id = ident('player', tok); }
+            else if ((rk === 'a' || rk === 'p') && NM.M[tok]) { kind = 'manager'; id = ident('manager', tok); }
+            const sz = el.dataset.gs || r.s;
+            if (!kind) { el.dataset.gav = 'n'; return; }
+            const u = urlOf(kind, id); el.dataset.gav = u ? 'y' : 'n'; if (!u) return;
+            if (sz === 'badge') {                                            // 팀 카드: 앞의 원형 배지를 로고로 교체
+                const b = el.parentElement && el.parentElement.parentElement && el.parentElement.parentElement.querySelector('.dc-tcard-badge');
+                if (b && !b.dataset.gtxt) { b.dataset.gtxt = b.textContent; b.classList.add('has-logo'); b.textContent = ''; const im = document.createElement('img'); im.className = 'g-av team'; im.src = u; im.alt = ''; im.onerror = () => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; im.remove(); }; b.appendChild(im); }
+                return;
+            }
+            const im = document.createElement('img'); im.className = 'g-av' + (kind === 'team' ? ' team' : '') + ' s-' + sz + (r.block ? ' block' : ''); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove();
+            if (r.block) { el.insertBefore(im, n); }
+            else { const rest = k ? n.splitText(k) : n; el.insertBefore(im, rest); }
+        }));
+    }
+    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); decorate2(); alignTeamCells(); }, 150); };
     new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('click', later); window.addEventListener('resize', later);
 
-    [['showPlayerDetail', 'player', '#playerDetailModal .modal-header > div', 'modalPlayerName'], ['showManagerDetail', 'manager', '#managerDetailModal .modal-header > div', 'modalManagerName'], ['showTeamDetail', 'team', '#teamModalHeader > div', 'modalTeamName']].forEach(([fn, kind, sel, nameId]) => {
+    [['showPlayerDetail', 'player', '#playerDetailModal .g-mh-ph', 'modalPlayerName'], ['showManagerDetail', 'manager', '#managerDetailModal .g-mh-ph', 'modalManagerName'], ['showTeamDetail', 'team', '#teamModalHeader .g-mh-ph', 'modalTeamName']].forEach(([fn, kind, sel, nameId]) => {
         const o = window[fn]; if (typeof o !== 'function') return;
         window[fn] = function (a) {
             const r = o.apply(this, arguments);
@@ -34121,6 +34202,7 @@ window.pmExtRender = function(name){
                 box.querySelectorAll('.g-av-big').forEach(x => x.remove());
                 const u = urlOf(kind, ident(kind, a));
                 if (u) { const im = document.createElement('img'); im.className = 'g-av-big' + (kind === 'team' ? ' team' : ''); im.src = u; im.alt = ''; im.onerror = () => im.remove(); box.insertBefore(im, box.firstChild); }
+                if (kind === 'team') { const dot = document.getElementById('teamModalColorDot'); if (dot) dot.style.display = u ? 'none' : ''; }
             } catch (e) { }
             return r;
         };
@@ -34171,9 +34253,10 @@ window.pmExtRender = function(name){
         Object.values(IMG).forEach(u => { try { URL.revokeObjectURL(u); } catch (e) { } });
         IMG = next;
         document.querySelectorAll('[data-gimg="n"]').forEach(e => delete e.dataset.gimg);
+        document.querySelectorAll('[data-gav]').forEach(e => delete e.dataset.gav); document.querySelectorAll('.dc-tcard-badge[data-gtxt]').forEach(b => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; });
         document.querySelectorAll('td.clickable-team > .g-teamcell').forEach(w => { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); document.querySelectorAll('img.g-av,.g-av-sp').forEach(e => e.remove()); document.querySelectorAll('.g-teamcell').forEach(e => { e.classList.remove('g-teamcell'); e.style.width = ''; });
         document.querySelectorAll('[data-gimg="y"]').forEach(e => delete e.dataset.gimg);
-        decorate();
+        decorate(); decorate2();
         return Object.keys(next).length;
     }
     window.gImgPick = async function (inp) {
