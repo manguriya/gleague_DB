@@ -1373,7 +1373,7 @@
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🛡️</span><span class="tab-label">팀·선수</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
                         <button class="tab-btn" data-upd="1.67" onclick="openTab('datacenter')" title="팀 데이터센터 — UP(1.67): 전술 설정이 필드 위 선수 배치에 더 크게 반영 · 기본 위치 점선 표시 · 1.57: 전술 설정 패널을 섹션 카드로 정리 · 세부 전술 접기 · 1.56: 팀 상세 탭을 7개 영역으로 정리 · 1.54: 팀 목록 검색·정렬 · 팀 개요 요약 · 이전: 📋 전술 탭 › 🪄 과거 경기 전술 자동 채우기 · UP: 🧭 전술 기록 분석"><span class="tab-icon">🗂️</span><span class="tab-label">팀 데이터센터</span></button>
-                        <button class="tab-btn" data-upd="1.70" onclick="openTab('playerdatacenter')" title="선수 데이터센터 — 개선(1.70): 이름 열 고정 · 필드/키퍼 분류 · 대분류별 소분류 보기 · 1.55: 선수 선택 비교(최대 4명) · 팀 이름 검색"><span class="tab-icon">🧑‍🤝‍🧑</span><span class="tab-label">선수 데이터센터</span></button>
+                        <button class="tab-btn" data-upd="1.72:변경" onclick="openTab('playerdatacenter')" title="선수 데이터센터 — 변경(1.72): 능력치 6대분류 개편(공격·수비·기술·심리·피지컬·멘탈) · 개선(1.70): 이름 열 고정 · 필드/키퍼 분류 · 대분류별 소분류 보기 · 1.55: 선수 선택 비교(최대 4명) · 팀 이름 검색"><span class="tab-icon">🧑‍🤝‍🧑</span><span class="tab-label">선수 데이터센터</span></button>
                         <button class="tab-btn" data-upd="1.59" onclick="openTab('managerdatacenter')" title="감독 데이터센터 — UP(1.59): 통합 검색에서 감독 상세 열기"><span class="tab-icon">🧑‍💼</span><span class="tab-label">감독 데이터센터</span></button>
                     </div>
                 </div>
@@ -2249,7 +2249,7 @@
 
         <!-- 감독 추가/수정 모달 -->
         <div id="managerEditModal" class="modal">
-            <div class="modal-content" style="max-width:420px;">
+            <div class="modal-content" style="max-width:520px;">
                 <span class="close-modal" onclick="closeManagerEditModal()">&times;</span>
                 <div class="modal-header">
                     <h2 id="managerEditModalTitle" class="modal-title" style="font-size:1.2rem;">감독 추가</h2>
@@ -3575,7 +3575,7 @@
                 </div>
                 <div class="rp-legend">
                     ※ 오버롤과 능력치는 현재 등록된 값 기준이며, 선수별로 가장 높은 능력치는 배경이 강조됩니다.
-                    &nbsp;|&nbsp; 열은 6대분류(필드: 공격·수비·기술·피지컬·멘탈·팀워크 / GK: 선방·수비·기술·피지컬·멘탈·팀워크)이며, 필드와 GK는 항목이 달라 해당하지 않는 항목은 '-'로 표시되고 정렬 시 항상 맨 뒤에 놓입니다.
+                    &nbsp;|&nbsp; 열은 6대분류(필드: 공격·수비·기술·심리·피지컬·멘탈 / GK: 선방·수비·기술·심리·피지컬·멘탈)이며, 필드와 GK는 항목이 달라 해당하지 않는 항목은 '-'로 표시되고 정렬 시 항상 맨 뒤에 놓입니다.
                     &nbsp;|&nbsp; 포지션 필터를 고르면 그 포지션의 열만 표시되고, 🔬 소분류 열 보기를 켜면 대분류별 소분류 3개(직접 입력하지 않은 값은 기존 능력치에서 자동 계산)가 함께 표시됩니다. 능력치가 아직 설정되지 않은 선수는 모든 능력치가 '-'입니다.
                 </div>
             </div>
@@ -3806,21 +3806,21 @@
                     { k: '대인마크', n: '대인 마크', d: '일대일 마크 · 상대 공격수 봉쇄' },
                     { k: '수비위치', n: '수비 위치선정', d: '수비 시 자리 잡기 · 커버' } ] },
                 { k: '기술', ic: '🎯', subs: [
-                    { k: '패스', s: 1, d: '정확한 패스 연결' },
+                    { k: '패스', n: '짧은 패스', s: 1, d: '짧고 정확한 패스 연결 · 빌드업 (기존 \'패스\' 능력치)' },
                     { k: '롱패스', n: '롱패스', d: '멀리 보내는 패스 · 역습 전개' },
                     { k: '드리블', s: 1, d: '볼 운반 · 돌파' } ] },
+                { k: '심리', ic: '🧠', subs: [
+                    { k: '집중력', n: '집중력', d: '초반부터 후반까지 경기력을 유지하고 상황 판단을 흐트러뜨리지 않는 능력' },
+                    { k: '침착성', n: '침착성', d: '압박 속에서도 흔들리지 않는 마무리·처리' },
+                    { k: '판단력', n: '판단력', d: '상황 판단 · 선택의 질' } ] },
                 { k: '피지컬', ic: '💪', subs: [
                     { k: '스피드', s: 1, d: '주력 · 가속' },
                     { k: '체력', s: 1, d: '지구력 · 후반에도 유지되는 힘' },
                     { k: '피지컬', n: '몸싸움', d: '몸싸움 · 볼 지키기' } ] },
-                { k: '멘탈', ic: '🧠', subs: [
-                    { k: '판단력', n: '판단력', d: '상황 판단 · 선택의 질' },
-                    { k: '활동량', n: '활동량', d: '많이 뛰고 적극적으로 움직이는 정도 (체력과 별개)' },
-                    { k: '침착성', n: '침착성', d: '압박 속에서도 흔들리지 않는 마무리·처리' } ] },
-                { k: '팀워크', ic: '🤝', subs: [
-                    { k: '연계', n: '연계 플레이', d: '동료와 주고받는 호흡 · 연결' },
+                { k: '멘탈', ic: '🤝', subs: [
+                    { k: '팀워크', n: '팀워크', d: '동료와 호흡을 맞추고 서로를 살려 주는 협력 · 연결' },
                     { k: '소통', n: '소통', d: '콜 플레이 · 위치 조율' },
-                    { k: '적극성', n: '적극성', d: '먼저 달려드는 압박 · 수비 가담 · 궂은일을 마다하지 않는 자세' } ] }
+                    { k: '적극성', n: '적극성', d: '먼저 달려드는 압박 · 수비 가담 · 궂은일을 마다하지 않는 자세 (체력과 함께 🏃 활동량을 결정)' } ] }
             ],
             gk: [
                 { k: '선방', ic: '🧤', subs: [
@@ -3835,15 +3835,15 @@
                     { k: '배급', s: 1, d: '정확한 패스 배급 · 빠른 전개' },
                     { k: '킥력', n: '킥력', d: '멀리 정확하게 차는 킥' },
                     { k: '발밑', n: '발밑 플레이', d: '발로 하는 빌드업 · 압박 탈출' } ] },
+                { k: '심리', ic: '🧠', subs: [
+                    { k: '판단력', s: 1, d: '나올지 말지 · 상황 판단' },
+                    { k: '침착성', n: '침착성', d: '실수 뒤에도 흔들리지 않는 정도' },
+                    { k: '집중력', n: '집중력', d: '경기 내내 유지되는 집중' } ] },
                 { k: '피지컬', ic: '💪', subs: [
                     { k: '순발력', s: 1, d: '순간 움직임 · 다이빙 속도' },
                     { k: '체력', s: 1, d: '후반에도 유지되는 힘' },
                     { k: '점프력', n: '점프력', d: '높이 뛰어 막는 힘' } ] },
-                { k: '멘탈', ic: '🧠', subs: [
-                    { k: '판단력', s: 1, d: '나올지 말지 · 상황 판단' },
-                    { k: '침착성', n: '침착성', d: '실수 뒤에도 흔들리지 않는 정도' },
-                    { k: '집중력', n: '집중력', d: '경기 내내 유지되는 집중' } ] },
-                { k: '팀워크', ic: '🤝', subs: [
+                { k: '멘탈', ic: '🤝', subs: [
                     { k: '수비조율', n: '수비 조율', d: '수비수들을 지휘하는 능력' },
                     { k: '소통', n: '소통', d: '콜 플레이 · 동료와의 의사소통' },
                     { k: '연계', n: '빌드업 연계', d: '수비진과의 빌드업 호흡' } ] }
@@ -3859,9 +3859,9 @@
                 롱패스: S => S('패스'),
                 피지컬: (S, p) => p.pos === 'FW' ? (S('체력') + S('드리블')) / 2 : (S('수비') + S('체력')) / 2,
                 판단력: S => (S('패스') + S('위치선정')) / 2,
-                활동량: S => S('체력'),
+                집중력: S => (S('체력') * 2 + S('위치선정') + S('패스')) / 4,   // v1.73: 경기력 유지(체력) + 상황 판단(위치선정·패스)
                 침착성: S => (S('결정력') + S('위치선정')) / 2,
-                연계: S => S('패스'),
+                팀워크: S => (S('패스') + S('위치선정')) / 2,
                 소통: S => S('위치선정'),
                 적극성: S => (S('체력') + S('수비')) / 2
             },
@@ -4020,9 +4020,9 @@
                 { k: '승부욕', n: '승부욕', d: '지지 않으려는 집념' },
                 { k: '선수육성', n: '선수 육성', d: '어린 · 신입 선수를 키우는 능력' } ] },
             { k: '소통', ic: '💬', subs: [
-                { k: '팀케미', n: '팀 케미', d: '팀원들을 하나로 뭉치게 하는 능력 · 선수들의 팀워크 능력치(연계 · 소통 · 적극성)에 관여' },
-                { k: '적극성', n: '적극성', d: '경기 중 사이드라인에서 적극적으로 경기에 관여하는 정도 · 선수들의 멘탈 능력치(판단력 · 활동량 · 침착성)에 관여' },
-                { k: '분위기메이커', n: '분위기메이커', d: '팀 분위기를 무겁지 않게 만드는 능력 · 선수들의 멘탈 · 팀워크 능력치에 관여' } ] }
+                { k: '팀케미', n: '팀 케미', d: '팀원들을 하나로 뭉치게 하는 능력 · 선수들의 멘탈 능력치(팀워크 · 소통 · 적극성)에 관여' },
+                { k: '적극성', n: '적극성', d: '경기 중 사이드라인에서 적극적으로 경기에 관여하는 정도 · 선수들의 심리 능력치(집중력 · 침착성 · 판단력)에 관여' },
+                { k: '분위기메이커', n: '분위기메이커', d: '팀 분위기를 무겁지 않게 만드는 능력 · 선수들의 심리 · 멘탈 능력치에 관여' } ] }
         ];
         // v1.30: 감독 세부능력치 이름 정리 — 예전 DB(JSON)의 소분류 키를 새 이름으로 자동 변환 (값은 그대로 유지)
         const MGR_SUB_RENAME = { '공격지도': '공격시전술', '수비지도': '수비시전술', '전술이해': '전술분석', '현재능력판단': '자팀선수분석', '성장판단': '상대선수분석', '인력관리': '선발기용', '협상': '선수면담', '스탭관리': '갈등조율' };
@@ -4039,6 +4039,36 @@
             (raw.archives || []).forEach(a => (a.teams || []).forEach(t => (t.players || []).forEach(fix)));
             Object.keys(raw.statLog || {}).forEach(n => (raw.statLog[n] || []).forEach(e => { if (e) migratePlExtObj(e.ext); }));
             Object.keys(raw.ovrHistory || {}).forEach(n => { const h = raw.ovrHistory[n]; if (h) migratePlExtObj(h.subDeltas); });
+        }
+        // v1.72: 선수 능력치 6대분류 개편 — 필드 선수: 공격(결정력·중거리슛·공격 위치선정) · 수비(태클·대인 마크·수비 위치선정) · 기술(짧은 패스·롱패스·드리블) · 심리(집중력·침착성·판단력) · 피지컬(스피드·체력·몸싸움) · 멘탈(팀워크·소통·적극성)
+        //   대분류 이름: 옛 '멘탈'(판단력·활동량·침착성) → '심리', 옛 '팀워크'(연계·소통·적극성) → '멘탈' (GK도 같은 이름으로 정리)
+        //   소분류: 연계 → 팀워크 (필드만 · GK의 '연계'는 그대로), 활동량 → 집중력 (값은 그대로 이어받음 · 필드만)
+        //   ※ 이름이 서로 바뀌는 변환이라 한 번만 적용해야 한다 → DB(JSON)에 abSchema 번호를 기록해 두고 2 미만일 때만 변환
+        const AB_SCHEMA_VER = 2;
+        const AB_MAIN_RENAME_V2 = { '멘탈': '심리', '팀워크': '멘탈' };
+        function migrateAbilitySchemaV2(raw) {
+            if (!raw || (raw.abSchema || 0) >= AB_SCHEMA_VER) return;
+            const fixExt = (ext, pos) => {
+                if (!ext || typeof ext !== 'object' || pos === 'GK') return;
+                if ('연계' in ext) { if (!('팀워크' in ext)) ext['팀워크'] = ext['연계']; delete ext['연계']; }
+                if ('활동량' in ext) { if (!('집중력' in ext)) ext['집중력'] = ext['활동량']; delete ext['활동량']; }
+            };
+            const posOf = {};
+            const reg = p => { if (p && p.name && p.pos) posOf[p.name] = p.pos; };
+            (raw.teams || []).forEach(t => (t.players || []).forEach(reg));
+            (raw.freeAgents || []).forEach(reg);
+            (raw.archives || []).forEach(a => (a.teams || []).forEach(t => (t.players || []).forEach(reg)));
+            const fix = p => { if (p) fixExt(p.ext, p.pos); };
+            (raw.teams || []).forEach(t => (t.players || []).forEach(fix));
+            (raw.freeAgents || []).forEach(fix);
+            (raw.archives || []).forEach(a => (a.teams || []).forEach(t => (t.players || []).forEach(fix)));
+            Object.keys(raw.statLog || {}).forEach(n => (raw.statLog[n] || []).forEach(e => { if (e) fixExt(e.ext, e.pos || posOf[n]); }));
+            Object.keys(raw.ovrHistory || {}).forEach(n => {
+                const h = raw.ovrHistory[n]; if (!h) return;
+                if (h.subDeltas) fixExt(h.subDeltas, posOf[n]);
+                if (h.mainDeltas) { const o = {}; Object.keys(h.mainDeltas).forEach(k => { o[AB_MAIN_RENAME_V2[k] || k] = h.mainDeltas[k]; }); h.mainDeltas = o; }
+            });
+            raw.abSchema = AB_SCHEMA_VER;
         }
         function migrateMgrSubKeys(raw) { (raw.managers || []).forEach(m => migrateMgrSubObj(m && m.sub)); Object.keys(raw.mgrStatLog || {}).forEach(n => (raw.mgrStatLog[n] || []).forEach(e => migrateMgrSubObj(e && e.sub))); }
         function abMgrSub(m, g, s) { const v = m && m.sub ? m.sub[s.k] : undefined; if (typeof v === 'number' && isFinite(v)) return abClamp(v); const b = m && m.stats ? m.stats[g.k] : undefined; return typeof b === 'number' ? b : ABILITY_STAT_DEFAULT; }
@@ -4066,18 +4096,18 @@
             수비: '수비력 75% · 대인마크·적극성·몸싸움 자동값',
             대인마크: '수비력 (자동값과 다른 1점당 +0.04)',
             수비위치: '수비력 (자동값과 다른 1점당 +0.04)',
-            패스: '패스·빌드업 · 롱패스·판단력·연계·중거리슛 자동값',
+            패스: '짧은 패스 — 패스·빌드업 · 롱패스·판단력·팀워크·중거리슛 자동값',
             롱패스: '패스·빌드업 (1점당 +0.04 · 롱볼·역습 전술이면 1.5배)',
             드리블: '드리블 항목 · 공격력 20%',
             스피드: '스피드 항목 (필드 전원 동일 반영)',
-            체력: '체력 항목 · 활동량·적극성 자동값',
+            체력: '체력 항목 · 집중력·적극성 자동값 · 🏃 활동량(체력+적극성)의 절반',
             피지컬: '수비력 +0.03 · 공격력 +0.02 (자동값과 다른 1점당)',
-            판단력: '패스 +0.02 · 종합 전력 +0.02 (자동값과 다른 1점당) · 🧬 감독 적극성·분위기메이커가 보정',
-            활동량: '체력 항목 +0.05 (자동값과 다른 1점당) · 압박·빠른 템포에서 낮으면 후반 경고 · 🧬 감독 적극성·분위기메이커가 보정',
+            판단력: '패스 +0.02 · 종합 전력 +0.02 (자동값과 다른 1점당) · PK 키커 · 🧬 감독 적극성·분위기메이커가 보정',
+            집중력: '초반~후반 경기력 유지 · 상황 판단 유지 — 체력 +0.03 · 패스 +0.02 · 수비력 +0.02 · 종합 +0.02 (자동값과 다른 1점당) · PK 키커 · 선발 평균이 낮으면 후반 경고 · 🧬 감독 적극성·분위기메이커가 보정',
             침착성: '공격력 +0.03 · 종합 +0.01 (자동값과 다른 1점당) · 🧬 감독 적극성·분위기메이커가 보정',
-            연계: '패스 +0.04 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정',
+            팀워크: '패스 +0.04 · 종합 +0.01 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정',
             소통: '수비력 +0.02 · 종합 +0.01 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정',
-            적극성: '수비력 +0.03 · 체력 +0.02 (자동값과 다른 1점당) · 🧬 감독 팀 케미·분위기메이커가 보정'
+            적극성: '수비력 +0.03 · 🏃 활동량(체력+적극성) 상승 → 체력 +0.04 (자동값과 다른 1점당) · 활동량이 높으면 압박·빠른 템포 가점 · 🧬 감독 팀 케미·분위기메이커가 보정'
         };
         const PL_FX_GK = {
             선방력: '골키퍼 항목 30%',
@@ -4105,7 +4135,7 @@
             '용병술': '교체 선수 반영 비중 (기본 20%, 5~50%)',
             '위기대처': '열세일 때 격차 완화 (−20%~+30%) · PK 키커 능력',
             '동기부여': '스피드·체력 항목 (최대 ±5) · PK 키커 능력',
-            '소통': '선발 선수의 팀워크·멘탈 능력치 보정 (최대 ±10점) · 출전 가능성(결장 영향 완화 최대 ±30%p)'
+            '소통': '선발 선수의 멘탈·심리 능력치 보정 (최대 ±10점) · 출전 가능성(결장 영향 완화 최대 ±30%p)'
         };
         const MGR_FX_SUB = {
             공격시전술: '공격력 (대분류 전술과 50:50으로 섞어 반영)',
@@ -4123,9 +4153,9 @@
             의욕고취: '체력 항목 (동기부여 체력 효과의 25%)',
             승부욕: '스피드 항목 (대분류 동기부여와 50:50)',
             선수육성: '체력 항목 (동기부여 체력 효과의 15%)',
-            팀케미: '선발 선수 팀워크 능력치 (연계·소통·적극성 / GK 수비조율·소통·연계) — 팀워크 보정의 65%',
-            적극성: '선발 선수 멘탈 능력치 (판단력·활동량·침착성 / GK 침착성·집중력) — 멘탈 보정의 65%',
-            분위기메이커: '선발 선수 멘탈·팀워크 능력치 모두 — 각 보정의 35% · 결장 영향 완화(25%)에도 반영'
+            팀케미: '선발 선수 멘탈 능력치 (팀워크·소통·적극성 / GK 수비조율·소통·연계) — 멘탈 보정의 65%',
+            적극성: '선발 선수 심리 능력치 (집중력·침착성·판단력 / GK 침착성·집중력) — 심리 보정의 65%',
+            분위기메이커: '선발 선수 심리·멘탈 능력치 모두 — 각 보정의 35% · 결장 영향 완화(25%)에도 반영'
         };
         (function () {
             const add = (o, fx) => { if (fx) o.d = (o.d ? o.d + '\n' : '') + '📌 팀 전력 영향: ' + fx; };
@@ -4769,6 +4799,9 @@
             const lgCmp = abPlayerCompare(playerName, pos, refAb);   // v1.10: 6대분류 기준 리그 비교
             if (radarEl) radarEl.innerHTML = renderStatRadarSVG(abMainKeys(pos), abMainMap(refAb), _playerAbilityColor, mainDeltas, 'stSelectMain', lgCmp.avgMap, lgCmp.rankMap);
             lgRenderCompareBox('modalPlayerLgCmp', lgCmp, _playerAbilityColor);
+            // v1.73: 필드 선수는 계산값 🏃 활동량(체력+적극성) · 🔬 집중력 유지력을 레이더 아래에 함께 표시
+            if (radarEl && pos !== 'GK') { const act = Math.round(fmExt(refAb, '활동량')), foc = Math.round(abSubVal(refAb, abTree(pos).flatMap(g => g.subs).find(x => x.k === '집중력')));
+                radarEl.insertAdjacentHTML('beforeend', `<div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; font-size:0.74rem; color:var(--text-muted); margin-top:4px;"><span title="체력과 적극성의 평균 — 둘 다 높을수록 활동량이 늘어납니다">🏃 활동량 <b style="color:${ovrColor(act)};">${act}</b> <i style="font-style:normal; opacity:.6;">체력+적극성</i></span><span title="초반부터 후반까지 경기력과 상황 판단을 유지하는 능력">🔬 집중력 <b style="color:${ovrColor(foc)};">${foc}</b></span></div>`); }
             // 레이더 아래에 '최근 능력치 변동' 요약 (v1.11: 대분류 · 소분류 기준, 예전 기록은 기존 능력치 기준으로 표시)
             if (deltaEl) {
                 const chipHtml = (label, d, small) => { const up = d > 0, c = up ? 'var(--success)' : '#f87171'; return `<span style="font-size:${small ? '0.68rem' : '0.74rem'}; font-weight:800; padding:2px ${small ? '7px' : '9px'}; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">${label} <span style="color:${c};">${up ? '▲+' : '▼'}${d}</span></span>`; };
@@ -8223,6 +8256,7 @@
             if(!Array.isArray(raw.managers)) raw.managers = [];
             migrateMgrSubKeys(raw);   // v1.30: 감독 세부능력치 이름 변경 반영
             migratePlayerExtKeys(raw);   // v1.33: 선수 세부능력치 이름 변경(개인기→중거리슛, 헌신→적극성) 반영
+            migrateAbilitySchemaV2(raw);   // v1.72: 능력치 6대분류 개편(심리 · 멘탈) 반영
             raw.archives = raw.archives.map(a => ({
                 ...a,
                 matches: (a.matches || []).map(m => ({ ...m, hId: String(m.hId), aId: String(m.aId) })),
@@ -8235,7 +8269,7 @@
             return raw;
         }
 
-        function save() { tacAggReset(); localStorage.setItem('gleague_reboot_v1.5_updated', JSON.stringify(state)); }
+        function save() { tacAggReset(); state.abSchema = AB_SCHEMA_VER; localStorage.setItem('gleague_reboot_v1.5_updated', JSON.stringify(state)); }
         function load() {
             tacAggReset();
             const data = localStorage.getItem('gleague_reboot_v1.5_updated');
@@ -9321,7 +9355,7 @@ function fmPosPenalty(p, role, team, code) {
 // 자리 적합도(감점 반영) — 전술판 카드 · 전력 계산 · 자동 배치 공용
 function fmRoleFit(p, role, sk, team, code) { return fmRoleRating(p, role, sk) - fmPosPenalty(p, role, team, code); }
 // 🔬 직접 입력한 세부 능력치(기본 파생값과 다른 만큼)를 자리 선택에 반영 — 팀 전력에는 abSubFx가 따로 반영하므로 이중 계산되지 않게 '자리 고르기'에만 사용
-const FM_ROLE_EXT = { DEF: { 대인마크: .35, 수비위치: .35, 피지컬: .2, 적극성: .1 }, MID: { 판단력: .3, 활동량: .3, 롱패스: .2, 연계: .2 }, WING: { 활동량: .25, 공격위치: .25, 중거리슛: .2, 연계: .15, 침착성: .15 }, FW: { 공격위치: .4, 중거리슛: .25, 침착성: .25, 피지컬: .1 } };
+const FM_ROLE_EXT = { DEF: { 대인마크: .3, 수비위치: .3, 피지컬: .15, 집중력: .15, 적극성: .1 }, MID: { 판단력: .25, 적극성: .2, 롱패스: .2, 팀워크: .2, 집중력: .15 }, WING: { 적극성: .2, 공격위치: .25, 중거리슛: .2, 팀워크: .1, 침착성: .15, 집중력: .1 }, FW: { 공격위치: .4, 중거리슛: .2, 침착성: .2, 집중력: .1, 피지컬: .1 } };
 function fmRoleExtBonus(p, role) {
     if (!p || p.pos === 'GK' || !FM_ROLE_EXT[role]) return 0;
     let s = 0; Object.keys(FM_ROLE_EXT[role]).forEach(k => { s += fmExtDelta(p, k) * FM_ROLE_EXT[role][k]; });
@@ -9565,7 +9599,7 @@ function fmBestStyle(p, role) {
                         if (role !== 'DEF') sd.f += ze('활동량') * 1.5;
                         sd.f += fmClamp((fmExt(p, '공격위치') - fmExt(p, '수비위치')) / 30, -1, 1) * 1.5;
                         if (role === 'WING') sd.w += z('스피드') * 1.5;
-                        if (role === 'MID' || role === 'WING') sd.w -= ze('연계') * 1.5;
+                        if (role === 'MID' || role === 'WING') sd.w -= ze('팀워크') * 1.5;
                     }
                     sd.f = fmClamp(sd.f, -5, 5); sd.w = fmClamp(sd.w, -4, 4);
                 }
@@ -10303,7 +10337,7 @@ function fmBestStyle(p, role) {
             if (typeof gToast === 'function') { try { gToast(`${n}개 팀의 전술판을 감독 선호·선수단에 맞춰 최적 세팅했습니다.`); } catch (e) { } }
         }
         // ======= 🧬 선수 특성 · 🔬 세부 능력치 · 🤝 팀워크 · 🧑‍💼 감독 운영 성향 (v1.08~1.09) =======
-        // 저장: player.traits = ['drib', ...] (최대 3개) / player.ext = {판단력,활동량,롱패스,피지컬,공격위치,수비위치 (선택 입력)} / manager.tac.beh = { rot, core, setp, lead, trail, fgk, subT, fat: 0~5 } (DB json에 함께 저장)
+        // 저장: player.traits = ['drib', ...] (최대 4개) / player.ext = {판단력,활동량,롱패스,피지컬,공격위치,수비위치 (선택 입력)} / manager.tac.beh = { rot, core, setp, lead, trail, fgk, subT, fat: 0~5 } (DB json에 함께 저장)
         const _A = ['GK', 'DF', 'MF', 'FW'], _F = ['DF', 'MF', 'FW'];
         // b = 항상 붙는 보정, w = 전술 항목이 맞을 때 추가 보정 [항목, 선택지, 보정], o = 종합 가점
         const FM_TRAITS = {
@@ -10341,7 +10375,25 @@ function fmBestStyle(p, role) {
             target: { g: '공격', ic: '🏔️', n: '타겟맨', pos: ['FW'], b: { atk: .2 }, w: [['build', 'long', { atk: .3 }]], d: '버티며 공을 받아 줍니다. 롱볼 전술에서 핵심.' },
             runner: { g: '공격', ic: '🏁', n: '뒷공간 침투', pos: ['FW', 'MF'], b: { spd: .3 }, w: [['attack', 'counter', { atk: .3 }]], d: '수비 뒷공간으로 달립니다. 역습의 해결사.' },
             linkfw: { g: '공격', ic: '🪢', n: '연계형 공격수', pos: ['FW'], b: { pas: .25 }, d: '내려와 연결하고 동료를 살립니다.' },
-            cutin:  { g: '공격', ic: '✂️', n: '컷인 플레이', pos: ['MF', 'FW'], b: { dri: .1, atk: .1 }, w: [['width', 'narrow', { atk: .15 }]], d: '측면에서 안쪽으로 파고들어 슈팅합니다.' }
+            cutin:  { g: '공격', ic: '✂️', n: '컷인 플레이', pos: ['MF', 'FW'], b: { dri: .1, atk: .1 }, w: [['width', 'narrow', { atk: .15 }]], d: '측면에서 안쪽으로 파고들어 슈팅합니다.' },
+            // ---- v1.72: 새 능력치(집중력 · 팀워크 · 몸싸움 · 적극성 등)와 어울리는 특성 추가 ----
+            teamplayer: { g: '공통', ic: '🤝', n: '팀플레이어', pos: _A, b: { pas: .08, def: .05 }, o: .1, d: '동료와 호흡을 맞추며 팀을 살립니다. 선발에 있으면 연결과 수비 안정감이 소폭 오르고, 팀플레이어 둘이면 시너지가 납니다.' },
+            focus:  { g: '공통', ic: '🔬', n: '높은 집중력', pos: _A, b: { def: .12 }, d: '초반부터 후반까지 경기력과 판단이 흔들리지 않습니다. 수비 안정감에 도움.' },
+            latebloom: { g: '공통', ic: '⏳', n: '후반 강자', pos: _A, b: { sta: .12 }, w: [['tempo', 'fast', { sta: .1 }]], d: '후반에도 지치지 않고 더 살아납니다. 빠른 템포에서 더 효과적입니다.' },
+            selfish: { g: '필드 공통', ic: '🙋', n: '개인 플레이 선호', pos: ['MF', 'FW'], b: { atk: .12, pas: -.1 }, d: '직접 해결하려는 성향이 강합니다. 돌파·마무리는 늘지만 연결은 줄고, 같은 성향 둘이면 서로 공을 가지려 해 겹칩니다.' },
+            hardwork: { g: '필드 공통', ic: '🛠️', n: '궂은일 담당', pos: _F, b: { def: .1, sta: .1 }, w: [['defense', 'press', { def: .1 }]], d: '눈에 띄지 않는 수비 가담과 커버를 도맡습니다. 압박 전술에서 더 빛납니다.' },
+            physical: { g: '필드 공통', ic: '🦍', n: '몸싸움 강자', pos: _F, b: { def: .1, atk: .06 }, w: [['build', 'long', { atk: .1 }]], d: '몸싸움에서 잘 밀리지 않고 볼을 지켜 냅니다. 롱볼 전술에서 공을 받아 줍니다.' },
+            speedster: { g: '필드 공통', ic: '⚡', n: '스피드스터', pos: _F, b: { spd: .25 }, w: [['attack', 'counter', { atk: .12 }]], d: '폭발적인 스피드가 무기입니다. 역습에서 위력이 커집니다.' },
+            counterpress: { g: '필드 공통', ic: '🐺', n: '역압박(전환 압박)', pos: _F, b: { def: .08 }, w: [['trans', 'press', { def: .2, sta: -.1 }]], d: '공을 잃자마자 곧바로 압박해 되찾습니다. 전환 압박 전술과 잘 맞지만 체력을 더 씁니다.' },
+            wingplay: { g: '필드 공통', ic: '🪁', n: '측면 플레이어', pos: _F, b: { atk: .08 }, w: [['lane', 'wing', { atk: .2 }], ['width', 'wide', { atk: .1 }]], d: '측면에서 폭을 넓게 쓰며 공격을 풀어 갑니다. 측면 공격·넓은 간격 전술에서 효과적입니다.' },
+            safeplay: { g: '수비', ic: '🧯', n: '안정 지향', pos: ['DF', 'MF'], b: { def: .1, pas: .05 }, w: [['defense', 'low', { def: .1 }]], d: '위험한 선택을 피하고 안전하게 처리합니다. 내려 앉아 지키는 수비에서 안정감이 커집니다.' },
+            reader: { g: '수비', ic: '👁️', n: '수 읽기(예측 수비)', pos: ['DF', 'MF'], b: { def: .15 }, w: [['line', 'high', { def: .1 }]], d: '상대의 다음 움직임을 먼저 읽고 길목을 지킵니다. 높은 라인에서도 안정적입니다.' },
+            holdup: { g: '미드필더', ic: '🫴', n: '볼 키핑(버티기)', pos: ['MF', 'FW'], b: { pas: .1, dri: .05 }, w: [['attack', 'possess', { pas: .15 }]], d: '압박 속에서도 공을 지키며 시간을 벌어 줍니다. 점유 위주 공격과 잘 맞습니다.' },
+            creator: { g: '공격', ic: '✨', n: '찬스 메이커', pos: ['MF', 'FW'], b: { atk: .15, pas: .1 }, d: '결정적인 기회를 만들어 내는 창조적인 플레이어입니다.' },
+            gkone:  { g: '골키퍼', ic: '🙌', n: '1대1 방어', pos: ['GK'], b: { def: .15 }, w: [['line', 'high', { def: .15 }]], d: '일대일 상황에서 강합니다. 높은 수비 라인의 뒷공간 위험을 줄입니다.' },
+            gkaerial: { g: '골키퍼', ic: '🪂', n: '공중볼 장악', pos: ['GK'], b: { def: .15 }, d: '크로스와 공중볼 처리에 강해 문전을 안정시킵니다.' },
+            gkbuild: { g: '골키퍼', ic: '🦶', n: '발밑 좋은 키퍼', pos: ['GK'], b: { pas: .12 }, w: [['build', 'back', { pas: .15 }]], d: '발로 빌드업을 시작합니다. 후방 빌드업 전술에서 효과가 큽니다.' },
+            gkcalm: { g: '골키퍼', ic: '❄️', n: '강심장 키퍼', pos: ['GK'], b: { def: .1 }, o: .1, d: '실수 뒤에도 흔들리지 않습니다. 선발에 있으면 종합 전력에 소폭 가점.' }
         };
         // 시너지(true)·충돌(false) 쌍 — [특성A, 특성B, 보정, 좋은지, 문구({a}/{b}=선수 이름)]
         const FM_TRAIT_PAIRS = [
@@ -10356,18 +10408,26 @@ function fmBestStyle(p, role) {
             ['overlap', 'cutin', { atk: .25 }, true, '🏃 {a}가 비운 측면으로 ✂️ {b}가 안쪽을 파고듭니다.'],
             ['poacher', 'poacher', { atk: -.3 }, false, '🦊 {a}·{b}: 박스 안 골잡이 둘은 같은 공간을 노려 겹칩니다.'],
             ['target', 'target', { atk: -.25 }, false, '🏔️ {a}·{b}: 타겟맨 둘은 역할이 겹칩니다.'],
-            ['playmaker', 'playmaker', { pas: -.3 }, false, '🎼 {a}·{b}: 경기 조율형 둘이 볼을 서로 잡으려 해 흐름이 끊길 수 있습니다.']
+            ['playmaker', 'playmaker', { pas: -.3 }, false, '🎼 {a}·{b}: 경기 조율형 둘이 볼을 서로 잡으려 해 흐름이 끊길 수 있습니다.'],
+            ['teamplayer', 'teamplayer', { pas: .2 }, true, '🤝 {a}·{b}: 팀플레이어 둘이 서로를 살려 줘 연결이 매끄럽습니다.'],
+            ['selfish', 'selfish', { atk: -.3 }, false, '🙋 {a}·{b}: 개인 플레이를 즐기는 둘이 서로 공을 가지려 해 공격이 막힐 수 있습니다.'],
+            ['holdup', 'runner', { atk: .25 }, true, '🫴 {a}가 버텨 주는 사이 🏁 {b}가 뒷공간을 파고듭니다.'],
+            ['wingplay', 'cross', { atk: .25 }, true, '🪁 {a}가 측면을 열고 🎪 {b}가 크로스를 올립니다.'],
+            ['hardwork', 'creator', { atk: .2 }, true, '🛠️ {a}가 궂은일을 해 줘 ✨ {b}가 공격에 집중할 수 있습니다.'],
+            ['reader', 'tackle', { def: .25 }, true, '👁️ {a}가 길목을 읽고 🦵 {b}가 볼을 끊어 냅니다.'],
+            ['gkbuild', 'libero', { pas: .25 }, true, '🦶 {a}와 🧭 {b}가 후방 빌드업을 이끕니다.']
         ];
-        const FM_TRAIT_MAX = 3;
+        const FM_TRAIT_MAX = 4;   // v1.73: 선수 1명당 특성 최대 4개 (v1.72까지 3개)
         // ----- 🔬 세부 능력치 (선택 입력: p.ext) — 비어 있으면 기존 7개 능력치에서 파생 -----
-        const FM_EXT = { 판단력: '🧠 판단력', 활동량: '🏃 활동량', 롱패스: '🎯 롱패스', 피지컬: '💪 피지컬(몸싸움)', 공격위치: '⚔️ 공격 위치선정', 수비위치: '🛡️ 수비 위치선정', 중거리슛: '🚀 중거리슛', 대인마크: '🧍 대인 마크', 침착성: '🧊 침착성', 연계: '🔗 연계 플레이', 소통: '🗣️ 소통', 적극성: '🔥 적극성' };
+        // v1.72: 활동량은 입력 항목이 아니라 '체력 + 적극성'으로 계산하는 종합값(특성 추천 · 포지션 자동 추천용)으로만 남김 / 연계 → 팀워크, 집중력 신규
+        const FM_EXT = { 판단력: '🧠 판단력', 활동량: '🏃 활동량(체력+적극성)', 롱패스: '🎯 롱패스', 피지컬: '💪 피지컬(몸싸움)', 공격위치: '⚔️ 공격 위치선정', 수비위치: '🛡️ 수비 위치선정', 중거리슛: '🚀 중거리슛', 대인마크: '🧍 대인 마크', 침착성: '🧊 침착성', 집중력: '🔬 집중력', 팀워크: '🔗 팀워크', 소통: '🗣️ 소통', 적극성: '🔥 적극성' };
         function fmExtDerive(p, k) {
             const S = x => fmStat(p, x);
             const f = AB_DERIVE.field[k];
             return f ? f(S, p) : S('위치선정');
         }
         const fmExtHas = (p, k) => !!(p && p.pos !== 'GK' && p.ext && typeof p.ext[k] === 'number' && isFinite(p.ext[k]));
-        const fmExt = (p, k) => fmExtHas(p, k) ? fmClamp(p.ext[k], 50, 99) : fmExtDerive(p, k);
+        const fmExt = (p, k) => k === '활동량' ? fmClamp((fmStat(p, '체력') + fmExt(p, '적극성')) / 2, 50, 99) : (fmExtHas(p, k) ? fmClamp(p.ext[k], 50, 99) : fmExtDerive(p, k));
         const fmExtDelta = (p, k) => fmExtHas(p, k) ? fmExt(p, k) - fmExtDerive(p, k) : 0;   // 직접 입력한 값이 기본 파생값보다 얼마나 다른가
         let _fmExtAvgC = null;
         function fmExtLeagueAvg() {
@@ -10435,7 +10495,25 @@ function fmBestStyle(p, role) {
             target: z => z('피지컬') >= 7 ? z('피지컬') : 0,
             runner: z => z('스피드') >= 7 && z('공격위치') >= 3 ? z('스피드') : 0,
             linkfw: z => z('패스') >= 6 ? z('패스') - 1 : 0,
-            cutin: z => z('드리블') >= 5 && z('결정력') >= 3 ? z('드리블') - 1 : 0
+            cutin: z => z('드리블') >= 5 && z('결정력') >= 3 ? z('드리블') - 1 : 0,
+            // v1.72: 새 특성 (필드는 세부 능력치 · GK는 기본 능력치 기준)
+            teamplayer: z => z('팀워크') >= 6 && z('소통') >= 3 ? z('팀워크') - 1 : 0,
+            focus: z => z('집중력') >= 7 ? z('집중력') - 1 : 0,
+            latebloom: z => z('체력') >= 8 && z('집중력') >= 2 ? z('체력') - 2 : 0,
+            selfish: (z, p) => p.pos !== 'DF' && z('드리블') >= 6 && z('팀워크') <= -3 ? z('드리블') - 2 : 0,
+            hardwork: z => z('적극성') >= 6 && z('체력') >= 3 ? z('적극성') - 1 : 0,
+            physical: z => z('피지컬') >= 6 && z('적극성') >= 2 ? z('피지컬') - 1 : 0,
+            speedster: z => z('스피드') >= 9 ? z('스피드') - 1 : 0,
+            counterpress: z => z('적극성') >= 6 && z('스피드') >= 2 ? z('적극성') - 1 : 0,
+            wingplay: z => z('드리블') >= 5 && z('스피드') >= 4 ? z('드리블') - 1 : 0,
+            safeplay: z => z('집중력') >= 5 && z('수비위치') >= 3 ? z('집중력') - 2 : 0,
+            reader: z => z('수비위치') >= 5 && z('판단력') >= 5 ? z('수비위치') - 1 : 0,
+            holdup: z => z('피지컬') >= 4 && z('패스') >= 3 ? z('피지컬') - 2 : 0,
+            creator: z => z('패스') >= 5 && z('드리블') >= 4 && z('공격위치') >= 3 ? z('패스') - 1 : 0,
+            gkone: z => z('반사신경') >= 5 && z('판단력') >= 3 ? z('반사신경') - 1 : 0,
+            gkaerial: z => z('선방력') >= 5 && z('순발력') >= 5 ? z('순발력') - 1 : 0,
+            gkbuild: z => z('배급') >= 7 ? z('배급') - 1 : 0,
+            gkcalm: z => z('판단력') >= 8 && z('위치선정') >= 3 ? z('판단력') - 2 : 0
         };
         function fmTraitSuggest(p) {
             if (!p) return [];
@@ -10455,12 +10533,16 @@ function fmBestStyle(p, role) {
             if (fp.length) {
                 const md = k => fmMean(fp.map(p => fmExtDelta(p, k))) + ((adj && adj.f && adj.f[k]) || 0);
                 const long = st.build === 'long' || st.attack === 'counter';
-                cats.sta += md('활동량') * .05; cats.pas += md('롱패스') * .04 * (long ? 1.5 : 1) + md('판단력') * .02;
+                cats.pas += md('롱패스') * .04 * (long ? 1.5 : 1) + md('판단력') * .02;
                 cats.def += md('피지컬') * .03 + md('수비위치') * .04; cats.atk += md('피지컬') * .02 + md('공격위치') * .04;
                 overall += fmClamp(md('판단력') * .02, -.5, .5);
                 cats.atk += md('중거리슛') * .05 + md('침착성') * .03;   // v1.33: 개인기 → 중거리슛 (드리블 중복 반영 제거, 공격에만 반영)
-                cats.def += md('대인마크') * .04 + md('소통') * .02 + md('적극성') * .03; cats.pas += md('연계') * .04; cats.sta += md('적극성') * .02;
-                overall += fmClamp(md('침착성') * .01 + md('소통') * .01, -.3, .3);
+                cats.def += md('대인마크') * .04 + md('소통') * .02 + md('적극성') * .03 + md('집중력') * .02; cats.pas += md('팀워크') * .04 + md('집중력') * .02;   // v1.72: 연계 → 팀워크 / v1.73: 집중력 → 상황 판단 유지(패스·판단)
+                // v1.73: 🏃 활동량 = (체력 + 적극성) / 2 — 적극성이 자동값보다 높으면 활동량도 그만큼(절반) 올라 체력 항목에 반영
+                const actD = md('적극성') / 2; cats.sta += actD * .08;
+                // v1.73: 🔬 집중력 = 초반부터 후반까지 경기력 유지 + 상황 판단 유지 → 체력(지구력) · 종합 전력에 반영
+                cats.sta += md('집중력') * .03;
+                overall += fmClamp(md('침착성') * .01 + md('소통') * .01 + md('집중력') * .02 + md('팀워크') * .01, -.5, .5);
             }
             if (gk && (gk.ext || adj)) {
                 const gm = k => abExtDelta(gk, k) + ((adj && adj.gk && adj.gk[k]) || 0);
@@ -10471,13 +10553,13 @@ function fmBestStyle(p, role) {
             return { cats, overall };
         }
         // v1.33: 감독 소통 세부 3종(팀 케미 · 적극성 · 분위기메이커)이 선발 선수의 멘탈 · 팀워크 능력치를 올리거나 내리는 효과 (전술판 유무와 관계없이 tcTeamPowerCore가 호출)
-        //  팀워크 능력치: 필드 연계 · 소통 · 적극성 / GK 수비 조율 · 소통 · 연계    멘탈 능력치: 필드 판단력 · 활동량 · 침착성 / GK 침착성 · 집중력
+        //  멘탈 능력치(shTeam): 필드 팀워크 · 소통 · 적극성 / GK 수비 조율 · 소통 · 연계    심리 능력치(shMental): 필드 집중력 · 침착성 · 판단력 / GK 침착성 · 집중력   (v1.72: 옛 '팀워크'→'멘탈', 옛 '멘탈'→'심리')
         //  (GK 판단력은 기본 능력치라 소분류 보정에서 제외) 보정 전후 abSubFx 차이만 돌려줘서 직접 입력한 소분류와 이중 계산되지 않는다.
         function abMgrCommFx(fp, gk, mg, st) {
             const z = { cats: { atk: 0, def: 0, pas: 0, dri: 0, spd: 0, sta: 0 }, overall: 0 };
             if (!mg || !mg.on || (!mg.shTeam && !mg.shMental)) return z;
             const T = mg.shTeam || 0, M = mg.shMental || 0;
-            const adj = { f: { 연계: T, 소통: T, 적극성: T, 판단력: M, 활동량: M, 침착성: M }, gk: { 수비조율: T, 소통: T, 연계: T, 침착성: M, 집중력: M } };
+            const adj = { f: { 팀워크: T, 소통: T, 적극성: T, 판단력: M, 집중력: M, 침착성: M }, gk: { 수비조율: T, 소통: T, 연계: T, 침착성: M, 집중력: M } };
             const a = abSubFx(fp, gk, st || {}, adj), b = abSubFx(fp, gk, st || {});
             Object.keys(z.cats).forEach(k => { z.cats[k] = a.cats[k] - b.cats[k]; });
             z.overall = a.overall - b.overall;
@@ -10491,8 +10573,11 @@ function fmBestStyle(p, role) {
             { const fx = abSubFx(c.field.map(x => x.p), c.gk, st); add(fx.cats); overall += fx.overall; }
             if (c.field.length) {
                 if (st.defense === 'press' || st.trans === 'press' || st.tempo === 'fast') {
-                    const ex = fmExtLeagueAvg(), av = fmMean(c.field.map(x => fmExt(x.p, '활동량')));
-                    if (av !== null && av < ex['활동량'] - 3) notes.push({ t: 'warn', m: `🏃 선발의 활동량(${Math.round(av)})이 리그 평균(${Math.round(ex['활동량'])})보다 낮아 압박·빠른 템포는 후반에 무뎌질 수 있습니다.` });
+                    const ex = fmExtLeagueAvg(), av = fmMean(c.field.map(x => fmExt(x.p, '활동량'))), fc = fmMean(c.field.map(x => fmExt(x.p, '집중력')));
+                    if (av !== null) { const dv = fmClamp(av - ex['활동량'], -10, 10); cats.def += dv * .03; cats.sta += dv * .03; }   // v1.73: 활동량(체력+적극성)이 높을수록 압박·빠른 템포가 잘 통함
+                    if (av !== null && av < ex['활동량'] - 3) notes.push({ t: 'warn', m: `🏃 선발의 활동량(체력+적극성 ${Math.round(av)})이 리그 평균(${Math.round(ex['활동량'])})보다 낮아 압박·빠른 템포는 후반에 무뎌질 수 있습니다.` });
+                    if (fc !== null && fc < ex['집중력'] - 3) notes.push({ t: 'warn', m: `🔬 선발의 집중력(${Math.round(fc)})이 리그 평균(${Math.round(ex['집중력'])})보다 낮아 후반에 경기력과 상황 판단이 흔들릴 수 있습니다.` });
+                    else if (fc !== null && fc > ex['집중력'] + 3) notes.push({ t: 'info', m: `🔬 선발의 집중력(${Math.round(fc)})이 높아 후반까지 경기력과 판단이 유지됩니다.` });
                 }
             }
             // 🤝 팀워크(호흡)
@@ -10561,8 +10646,8 @@ function fmBestStyle(p, role) {
         (function () { const o = renderPlayerAbilityBlock; renderPlayerAbilityBlock = function (name) { const r = o.apply(this, arguments); try { pmTraitRender(name); pmExtRender(name); } catch (e) { console.error(e); } return r; }; })();
         // ----- 감독 모달 › 🧑‍💼 운영 성향 (0~5 슬라이더) -----
         const FM_BEH = {
-            rot:   { n: '🔄 로테이션',        lo: '고정', hi: '적극', d: '선수를 얼마나 자주 바꾸는지 — 높을수록 교체 선수 반영 비중↑ · 호흡(팀워크) 영향↓ (v1.32 반영)' },
-            core:  { n: '⭐ 주전 선호',        lo: '유동', hi: '고정', d: '주전을 얼마나 고집하는지 — 높을수록 교체 선수 반영 비중↓ · 호흡(팀워크) 영향↑ (v1.32 반영)' },
+            rot:   { n: '🔄 로테이션',        lo: '고정', hi: '적극', d: '선수를 얼마나 자주 바꾸는지 — 높을수록 교체 선수 반영 비중↑ · 호흡(함께 뛴 경기) 영향↓ (v1.32 반영)' },
+            core:  { n: '⭐ 주전 선호',        lo: '유동', hi: '고정', d: '주전을 얼마나 고집하는지 — 높을수록 교체 선수 반영 비중↓ · 호흡(함께 뛴 경기) 영향↑ (v1.32 반영)' },
             setp:  { n: '🎌 세트피스 중시',    lo: '낮음', hi: '높음', d: '3 이상이면 🎌 세트피스 키커 선수에게 가점 (지금 반영)' },
             lead:  { n: '🛡️ 앞서면 수비 전환', lo: '공격 유지', hi: '내려앉기', d: '리드 중 경기 운영 — 높을수록 앞서면 공격을 줄이고 내려앉음 (v1.17 전·후반 시뮬레이션에 반영)' },
             trail: { n: '🔥 지면 공격 강화',   lo: '유지', hi: '올인', d: '뒤지고 있을 때 공격을 끌어올리는 정도 (v1.17에서 반영)' },
@@ -16278,7 +16363,7 @@ function fmBestStyle(p, role) {
         // ======================================================
         // 🧑‍💼 감독 효과 엔진 (v3_15)
         //  - 감독 능력치 6가지를 '리그 감독 평균 대비 격차'로 환산해 전력 계산(tcTeamPower)과 맞대결 예측(tcMatchupModel)에 반영한다.
-        //    전술 → 공격력·패스·수비력 / 동기부여 → 스피드·체력 / 용병술(선발 기용·교체 판단·자팀 선수 분석) → 교체 선수 반영 비중 / 소통(팀 케미·적극성·분위기메이커) → 선발 선수의 팀워크·멘탈 능력치 보정 + 출전 가능성
+        //    전술 → 공격력·패스·수비력 / 동기부여 → 스피드·체력 / 용병술(선발 기용·교체 판단·자팀 선수 분석) → 교체 선수 반영 비중 / 소통(팀 케미·적극성·분위기메이커) → 선발 선수의 멘탈·심리 능력치 보정 + 출전 가능성
         //    분석력(상대 선수 분석·전술 분석) → 상대 약점 공략(맞대결 전용) / 위기대처 → 열세일 때 격차 완화(맞대결 전용)
         //  - 평균 대비 격차 기준이라 리그 감독들이 비슷하면 효과가 거의 0이고, 감독이 없거나 능력치가 없는 팀은 보정 0(중립)이다.
         //  - 전력 비교 탭의 스위치(tcMgrOn)로 반영 여부를 끌 수 있다. (전력분석·팀 데이터센터도 같은 값을 쓴다)
@@ -16288,7 +16373,7 @@ function fmBestStyle(p, role) {
             tactic:   { per: 0.16,  cap: 6.0 },                          // 전술 1점 격차 → 공격·패스·수비 +0.09점 (최대 ±3.5)
             motive:   { per: 0.12,  cap: 5.0 },                          // 동기부여 1점 격차 → 스피드·체력 +0.07점 (최대 ±3)
             bench:    { base: TC_BENCH_W, per: 0.010, min: 0.05, max: 0.50 }, // 용병술 → 교체 3명 반영 비중
-            comm:     { availPer: 0.02, availCap: 0.3, shiftPer: 0.7, shiftCap: 10 }, // 소통 → 결장 영향 완화 · 선수 멘탈/팀워크 능력치 보정(격차 1점 → 능력치 +0.7점, 최대 ±10점 — 이전 '케미' 효과와 비슷한 크기)
+            comm:     { availPer: 0.02, availCap: 0.3, shiftPer: 0.7, shiftCap: 10 }, // 소통 → 결장 영향 완화 · 선수 심리/멘탈 능력치 보정(격차 1점 → 능력치 +0.7점, 최대 ±10점 — 이전 '케미' 효과와 비슷한 크기)
             analysis: { per: 0.10,  cap: 3.5 },                          // 분석력 1점 격차 → 맞대결 시 종합 전력 +0.06점 (최대 ±2)
             crisis:   { per: 0.02, min: -0.2, max: 0.3 }               // 위기대처 1점 격차 → 열세 시 격차 1.2% 완화 (-15%~+20%)
         };
@@ -16336,7 +16421,7 @@ function fmBestStyle(p, role) {
             const motSpd = mgrClamp(mix('동기부여', '승부욕', .5) * F.motive.per, -F.motive.cap, F.motive.cap);
             const motSta = mgrClamp(((rel['동기부여'] * .4) + sr('의욕고취') * .25 + sr('체력관리') * .2 + sr('선수육성') * .15) * F.motive.per, -F.motive.cap, F.motive.cap);   // v1.33: 선수육성도 반영
             const mot = (motSpd + motSta) / 2;
-            // v1.33: 소통 세부 3종 → 선수 능력치 보정(점). 팀 케미 → 팀워크 / 적극성 → 멘탈 / 분위기메이커 → 멘탈 + 팀워크 (대분류 30% + 세부 70% 격차)
+            // v1.33: 소통 세부 3종 → 선수 능력치 보정(점). 팀 케미 → 멘탈(팀워크·소통·적극성) / 적극성 → 심리(집중력·침착성·판단력) / 분위기메이커 → 심리 + 멘탈 (대분류 30% + 세부 70% 격차)
             const cg = sk => mix('소통', sk, .7);
             const cgT = cg('팀케미'), cgA = cg('적극성'), cgM = cg('분위기메이커');
             const shTeam = mgrClamp((cgT * .65 + cgM * .35) * F.comm.shiftPer, -F.comm.shiftCap, F.comm.shiftCap);
@@ -16358,13 +16443,13 @@ function fmBestStyle(p, role) {
                 case '전술': return `공격·패스·수비 ${tcSg(m.tac)}`;
                 case '동기부여': return `스피드·체력 ${tcSg(m.mot)}`;
                 case '용병술': return `교체 반영 ${Math.round(m.benchW * 100)}%`;
-                case '소통': return `팀워크 능력치 ${tcSg(m.shTeam)}점 · 멘탈 능력치 ${tcSg(m.shMental)}점 · 출전가능성 ${m.availC >= 0 ? '+' : ''}${Math.round(m.availC * 100)}%p`;
+                case '소통': return `멘탈 능력치 ${tcSg(m.shTeam)}점 · 심리 능력치 ${tcSg(m.shMental)}점 · 출전가능성 ${m.availC >= 0 ? '+' : ''}${Math.round(m.availC * 100)}%p`;
                 case '분석력': return `맞대결 공략 ${tcSg(m.analysisPts)}`;
                 case '위기대처': return `열세 시 격차 ${m.crisisFrac >= 0 ? '완화' : '확대'} ${Math.abs(Math.round(m.crisisFrac * 100))}%`;
             }
             return '';
         }
-        const TC_MGR_TARGET = { '전술': '공격력·패스·수비력', '동기부여': '스피드·체력', '용병술': '교체 선수 반영 비중', '소통': '선수 멘탈·팀워크 능력치 · 출전 가능성', '분석력': '상대 약점 공략 (맞대결)', '위기대처': '열세 시 격차 완화 (맞대결)' };
+        const TC_MGR_TARGET = { '전술': '공격력·패스·수비력', '동기부여': '스피드·체력', '용병술': '교체 선수 반영 비중', '소통': '선수 멘탈·심리 능력치 · 출전 가능성', '분석력': '상대 약점 공략 (맞대결)', '위기대처': '열세 시 격차 완화 (맞대결)' };
 
         // 팀 전력: 선수단(코어) + 감독 효과. 감독 반영 전 값(rawOverall)과 증감(mgrDelta)도 함께 돌려준다.
         function tcTeamPower(team, availMap, overrideName) {
@@ -16563,7 +16648,7 @@ function fmBestStyle(p, role) {
             let subFx = null;
             if (!tplan) { subFx = abSubFx(startersField, gk, {}); Object.entries(subFx.cats).forEach(([k, d]) => { const dd = fmClamp(d, -1.2, 1.2); if (cats[k] !== null && cats[k] !== undefined) cats[k] = Math.max(0, Math.min(99, cats[k] + dd)); }); }
 
-            // 🧑‍💼 v1.33: 감독 소통(팀 케미 · 적극성 · 분위기메이커) → 선발 선수의 팀워크 · 멘탈 능력치 보정 (전술판 유무와 관계없이 같은 계산)
+            // 🧑‍💼 v1.33: 감독 소통(팀 케미 · 적극성 · 분위기메이커) → 선발 선수의 멘탈 · 심리 능력치 보정 (전술판 유무와 관계없이 같은 계산)
             let commFx = null;
             try { commFx = abMgrCommFx(startersField, gk, mg, tplan && tplan.tac ? tplan.tac.style : {}); } catch (e) { commFx = null; }
             if (commFx) Object.entries(commFx.cats).forEach(([k, d]) => { if (cats[k] !== null && cats[k] !== undefined) cats[k] = Math.max(0, Math.min(99, cats[k] + d)); });
@@ -16571,7 +16656,7 @@ function fmBestStyle(p, role) {
             // 종합 전력 (비어 있는 항목은 50점으로 취급)
             let overall = 0;
             Object.entries(TC_OVERALL_W).forEach(([k, w]) => { overall += w * (cats[k] === null ? 50 : cats[k]); });
-            if (commFx) overall += fmClamp(commFx.overall, -.5, .5);   // 소통 → 선수 멘탈·팀워크 능력치 보정의 종합 반영분
+            if (commFx) overall += fmClamp(commFx.overall, -.5, .5);   // 소통 → 선수 심리·멘탈 능력치 보정의 종합 반영분
             if (tplan) overall += tplan.E.overall;   // 전술판: 전술 적합도 · 라인업 자리 적합도
             else if (subFx) overall += fmClamp(subFx.overall, -.4, .7);   // 소분류 효과(판단력·침착성·소통 등)
 
@@ -16927,8 +17012,8 @@ function fmBestStyle(p, role) {
                     · <b>필드와 GK는 분리</b>: GK의 선방력과 필드 선수의 결정력은 같은 항목으로 합치지 않습니다. 골키퍼 항목은 GK 전용 능력치(선방력 30%·반사신경 25%·판단력 15%·위치선정 10%·순발력 10%·배급 5%·체력 5%)로만 계산합니다.<br>
                     · <b>공격력</b> = 결정력 55% + 위치선정 25% + 드리블 20% (FW 1.0 · MF 0.7 · DF 0.35 반영) / <b>패스·빌드업</b> = 패스 (MF 1.0 · DF 0.7 · FW 0.6, GK 배급 0.3 추가) / <b>드리블</b> (FW 1.0 · MF 0.8 · DF 0.4) / <b>수비력</b> = 수비 75% + 위치선정 25% (DF 1.0 · MF 0.6 · FW 0.25) / <b>스피드·체력</b>은 필드 선수 전원 동일 반영.<br>
                     · <b>주전·교체</b>: OVR × 출전 가능성 순으로 필드 4명 + GK 1명이 주전, 다음 3명이 교체(기본 20% 반영)입니다. 출전 가능성은 전 시즌 출전·결장 기록으로 계산하며 기록이 적으면 100%에 가깝게 보정됩니다. 📅 예정 경기에서 선발을 직접 지정하면 지정한 선수가 우선 주전이 되고 빈자리는 같은 방식으로 자동 보충합니다.<br>
-                    · <b>종합 전력</b> = 공격 22% + 패스 12% + 드리블 10% + 수비 18% + 스피드 9% + 체력 9% + 골키퍼 20% (+ 감독 소통이 선발 선수의 멘탈·팀워크 능력치를 보정한 만큼, ±0.5 이내).<br>
-                    · <b>감독 효과</b>(리그 감독 평균 대비 격차 기준): 전술 → 공격·패스·수비 (격차 1점당 0.16점, 최대 ±6) / 동기부여 → 스피드·체력 (0.12점, ±5) / 용병술 → 교체 3명 반영 비중 (기본 20%, 5~50%) / 소통 → 선발 선수의 능력치 보정 (팀 케미 → 팀워크[연계·소통·적극성] / 적극성 → 멘탈[판단력·활동량·침착성] / 분위기메이커 → 멘탈+팀워크, 격차 1점당 0.7점, 최대 ±10점)과 선수 결장 영향 완화(±30%p) / 분석력 → 맞대결에서 상대 약점 공략(종합 전력 ±3.5) / 위기대처 → 열세 쪽 감독이 격차를 -20%~+30% 완화. 감독이 없거나 능력치가 없는 팀은 보정 0입니다.<br>
+                    · <b>종합 전력</b> = 공격 22% + 패스 12% + 드리블 10% + 수비 18% + 스피드 9% + 체력 9% + 골키퍼 20% (+ 감독 소통이 선발 선수의 심리·멘탈 능력치를 보정한 만큼, ±0.5 이내).<br>
+                    · <b>감독 효과</b>(리그 감독 평균 대비 격차 기준): 전술 → 공격·패스·수비 (격차 1점당 0.16점, 최대 ±6) / 동기부여 → 스피드·체력 (0.12점, ±5) / 용병술 → 교체 3명 반영 비중 (기본 20%, 5~50%) / 소통 → 선발 선수의 능력치 보정 (팀 케미 → 멘탈[팀워크·소통·적극성] / 적극성 → 심리[집중력·침착성·판단력] / 분위기메이커 → 심리+멘탈, 격차 1점당 0.7점, 최대 ±10점)과 선수 결장 영향 완화(±30%p) / 분석력 → 맞대결에서 상대 약점 공략(종합 전력 ±3.5) / 위기대처 → 열세 쪽 감독이 격차를 -20%~+30% 완화. 감독이 없거나 능력치가 없는 팀은 보정 0입니다.<br>
                     · <b>PK 승부</b>: 정규시간 무승부 시 주전 5명(필드 4 + GK)의 키커 능력(결정력 38%·위치선정 18%·패스 14%·드리블 12%·체력 10%·스피드 5%·수비 3%)과 상대 GK 능력(선방력 32%·반사신경 24%·판단력 18%·순발력 14%·위치선정 8%·체력 4%)으로 5번씩 차는 확률을 계산하고, 동점이면 서든데스로 이어집니다. 감독 위기대처·동기부여·분석력도 소폭 반영합니다.<br>
                     · <b>종합 예측</b> = 여섯 지표의 가중 평균 — 능력치 우세도(비중 1.0) · Elo 기대 승률(1.0) · 득실 시뮬레이션(1.0, 전력분석 탭과 같은 포아송 모델에 이 화면의 주전·출전 가능성 반영 능력치를 넣어 확률로 계산) · 역대 맞대결(최대 0.9, 6경기 이상이면 최대, 소표본은 50% 쪽으로 보정) · 통산 전적(최대 0.6, 10경기 이상이면 최대, log5 방식) · 최근 5경기(최대 0.5). 지표들이 같은 방향이면 신뢰도 '높음', 엇갈리거나 표본이 적으면 낮아집니다.<br>
                     · <b>해석 항목</b>은 기록실(연승·무실점·득점/실점 시간대·시즌별 기록)과 팀 데이터센터(감독 능력치·감독별 기록·선수 기록·상대팀별 기록)의 저장된 데이터만 사용합니다. 시간대 분석은 해석용이며 승률 계산에는 넣지 않습니다. 감독 능력치는 위 <b>🧑‍💼 감독 효과</b> 기준대로 전력과 예측에 반영됩니다(스위치로 끌 수 있음).<br>
@@ -16999,7 +17084,7 @@ function fmBestStyle(p, role) {
             const d = k => abExtDelta(p, k);
             const trk = PK_TRAIT.kick * (fmTraits(p).includes('pk') ? 1 : 0) + PK_TRAIT.calm * (fmTraits(p).includes('calm') ? 1 : 0);   // v1.32: 🥅 PK 전담 · 🧊 침착한 마무리
             return trk + (p.pos === 'GK' ? tcFormula(p, PK_KICK_GK) - PK_GK_KICK_PENALTY + d('킥력') * .15 + d('침착성') * .12
-                : tcFormula(p, PK_KICK_FIELD) + d('침착성') * .18 + d('공격위치') * .06 + d('중거리슛') * .04 + d('판단력') * .04);
+                : tcFormula(p, PK_KICK_FIELD) + d('침착성') * .18 + d('공격위치') * .06 + d('중거리슛') * .04 + d('판단력') * .04 + d('집중력') * .04);
         }
         // v1.11: 1대1방어·반사·집중력·침착성·핸들링 같은 GK 소분류도 PK 선방에 반영
         function tcPkSaveSkill(gk) { return gk ? (fmTraits(gk).includes('pkstop') ? PK_TRAIT.save : 0) + tcFormula(gk, PK_SAVE) + abExtDelta(gk, '1대1방어') * .22 + abExtDelta(gk, '집중력') * .08 + abExtDelta(gk, '침착성') * .08 + abExtDelta(gk, '핸들링') * .05 : PK_NO_GK_SAVE; }
@@ -17843,7 +17928,7 @@ function fmBestStyle(p, role) {
         let pdcSortDir = -1; // 1 = 오름차순, -1 = 내림차순
         const PDC_POS_ORDER = { 'GK': 0, 'DF': 1, 'MF': 2, 'FW': 3 };
         const PDC_POS_COLOR = { 'FW': '#f97316', 'MF': '#84cc16', 'DF': '#0ea5e9', 'GK': '#eab308' };
-        // v1.11: 열 = 6대분류 (필드: 공격·수비·기술·피지컬·멘탈·팀워크 / GK: 선방·수비·기술·피지컬·멘탈·팀워크). 포지션을 고르면 소분류 열도 펼칠 수 있다.
+        // v1.11: 열 = 6대분류 (v1.72 필드: 공격·수비·기술·심리·피지컬·멘탈 / GK: 선방·수비·기술·심리·피지컬·멘탈). 포지션을 고르면 소분류 열도 펼칠 수 있다.
         //  열 id: 대분류 'stat:이름' / 필드 소분류 'sub:이름' / GK 소분류 'gsub:이름'
         const PDC_MAIN_FIELD = abMainKeys('FW'), PDC_MAIN_GK = abMainKeys('GK');
         const PDC_MAIN_ALL = PDC_MAIN_FIELD.concat(PDC_MAIN_GK.filter(k => !PDC_MAIN_FIELD.includes(k)));
@@ -19277,7 +19362,7 @@ function fmBestStyle(p, role) {
                         <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">${catRows.map(x => `<span style="padding:3px 9px; border-radius:6px; background:rgba(255,255,255,0.06); font-size:0.74rem;">${x.c.label} <b style="color:${x.d < 0 ? '#f87171' : '#22c55e'};">${tcSg(x.d)}</b></span>`).join('')}</div>`
                         : '<div class="dk-hint">이 선수가 빠져도 전력 항목에 큰 변화가 없습니다. (주전·교체 밖)</div>';
                     const mg = pw.mgr;
-                    html += `<div class="dk-hint">${mg.on ? `감독 <b>${gEsc(mg.name)}</b>의 용병술(교체 반영 ${Math.round(mg.benchW * 100)}%)·소통(팀워크 능력치 ${tcSg(mg.shTeam)}점 · 멘탈 능력치 ${tcSg(mg.shMental)}점 · 결장 완화 ${mg.availC >= 0 ? '+' : ''}${Math.round(mg.availC * 100)}%p)이 이 수치에 반영되어 있습니다.` : '감독 능력치가 없어 선수단 능력치만으로 계산했습니다.'} 능력치·출전 기록이 바뀌면 값도 달라집니다.${pw2.noGK && !pw.noGK ? ' 대체 GK가 없어 이탈 시 골키퍼 항목은 50점으로 계산됩니다.' : ''}</div>
+                    html += `<div class="dk-hint">${mg.on ? `감독 <b>${gEsc(mg.name)}</b>의 용병술(교체 반영 ${Math.round(mg.benchW * 100)}%)·소통(멘탈 능력치 ${tcSg(mg.shTeam)}점 · 심리 능력치 ${tcSg(mg.shMental)}점 · 결장 완화 ${mg.availC >= 0 ? '+' : ''}${Math.round(mg.availC * 100)}%p)이 이 수치에 반영되어 있습니다.` : '감독 능력치가 없어 선수단 능력치만으로 계산했습니다.'} 능력치·출전 기록이 바뀌면 값도 달라집니다.${pw2.noGK && !pw.noGK ? ' 대체 GK가 없어 이탈 시 골키퍼 항목은 50점으로 계산됩니다.' : ''}</div>
                         <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"><button class="btn-edit" onclick="closePlayerModal(); tcGoTeam('${team.id}')">🗂️ 소속팀 데이터센터</button>
                         <button class="btn-edit" onclick="closePlayerModal(); openTeamCompare('${team.id}', ${JSON.stringify(String((state.teams.find(t => String(t.id) !== String(team.id)) || {}).id || ''))})">⚔️ 매치업 분석 열기</button></div>`;
                 }
@@ -29640,7 +29725,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.71';
+        const G_HTML_VERSION = '1.73';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -29664,7 +29749,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         const G_UP_GROUP = { '신규': '신규', '추가': '신규', '개선': '개선', '수정': '수정', '변경': '변경', '삭제': '삭제' };
         const G_UP_PRI = ['신규', '변경', '수정', '개선', '삭제'];
         const G_UP_KEY = { '신규': 'new', '개선': 'imp', '수정': 'fix', '변경': 'chg', '삭제': 'del' };
-        const G_UP_FALLBACK = {'1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
+        const G_UP_FALLBACK = {'1.73': '변경', '1.72': '변경', '1.71': '수정', '1.70': '개선', '1.69': '개선', '1.68': '개선', '1.67': '신규', '1.66': '신규', '1.65': '개선', '1.64': '개선', '1.63': '변경', '1.62': '개선', '1.61': '개선', '1.60': '개선', '1.59': '신규', '1.58': '신규', '1.57': '개선', '1.56': '신규', '1.55': '신규', '1.54': '신규', '1.53': '신규', '1.52': '개선', '1.51': '개선', '1.50': '개선'};
         let gUpCache = { text: null, map: {} };
         function gUpInfo(ver) {
             const v = String(ver || '').split(':')[0].trim().replace(/^v/i, '');
@@ -29718,7 +29803,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         let gAutoJsonInfo = null;
         // DB 저장 날짜: JSON 내부(state.dbSavedDate)에 기록하고 메뉴바 최하단에 표시
         function gTodayStr() { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; }
-        function gStampDbDate() { state.dbSavedDate = gTodayStr(); gRenderDbDate(); }
+        function gStampDbDate() { state.dbSavedDate = gTodayStr(); state.abSchema = AB_SCHEMA_VER; gRenderDbDate(); }
         function gRenderDbDate() {
             const el = document.getElementById('gDbDateLabel'); if (!el) return;
             el.textContent = 'gleague_DB/' + ((state && state.dbSavedDate) || '날짜 없음');
@@ -32190,6 +32275,8 @@ body:not(.tac-help-open) .tac-help-txt { display: none !important; }
 .pam-subs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
 .pam-subs > div{min-width:0}
 .pam-subs label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me-sub-input{width:100% !important;min-width:0 !important;box-sizing:border-box;padding:0 2px !important;text-align:center;font-size:.95rem !important;letter-spacing:0;-moz-appearance:textfield;appearance:textfield}
+.me-sub-input::-webkit-inner-spin-button,.me-sub-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .pam-grid .pam-sub-input{height:26px !important;font-size:.84rem !important;padding:0 3px !important;text-align:center}
 .pam-bar{position:sticky;bottom:0;z-index:4;margin:10px -6px -4px;padding:8px 6px;background:rgba(15,23,42,.97);border-top:1px solid rgba(139,92,246,.35);border-radius:0 0 8px 8px}
 
