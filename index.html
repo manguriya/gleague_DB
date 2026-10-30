@@ -87,6 +87,9 @@
         .tb-n .g-av.s-xs { margin-right: 6px; }
         .dc-tcard-badge.has-logo { background: transparent; width: 46px; height: 46px; border-radius: 8px; overflow: hidden; }
         .dc-tcard-badge.has-logo .g-av { width: 100%; height: 100%; margin: 0; object-fit: contain; }
+        .g-ph { display: none; }
+        .g-ph.on { display: block; aspect-ratio: 1 / 1; margin: -2px 0 9px; border-radius: 10px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--pc, #64748b) 45%, transparent); background: linear-gradient(160deg, color-mix(in srgb, var(--pc, #64748b) 22%, #0f172a), #0f172a 75%); }
+        .g-ph.on img { width: 100%; height: 100%; object-fit: contain; display: block; }
         .g-mh { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 10px !important; margin-bottom: 12px !important; padding-right: 36px; }
         .g-mh-ph:empty { display: none; }
         .g-mh-ph { flex: 0 0 auto; display: flex; }
@@ -3258,7 +3261,7 @@
                             </div>
                         </div>
                         <div class="ranking-info">선수 카드를 클릭하면 통산 기록과 시즌별 요약을 담은 상세 정보를 볼 수 있습니다. 시즌을 바꾸면 그 시즌에 실제로 이 팀 소속으로 뛰었던 선수단이 표시됩니다. 파워랭킹은 선택한 시즌 기준 리그 전체 선수 대상 순위입니다. 이름 옆 <sup style="color:var(--success); font-weight:900;">N</sup> 표시는 그 시즌에 새로 합류한 선수입니다.</div>
-                        <div id="dcRosterCards" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; margin-top:10px;"></div>
+                        <div id="dcRosterCards" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-top:10px;"></div>
                     </div>
 
                     <!-- 📈 선수단 전력분석 (그래프 · 수치 · 선수별 상세) — 🧭 전략 분석은 🔍 상세분석 탭으로 이동 -->
@@ -12140,6 +12143,7 @@ function fmBestStyle(p, role) {
                         <div style="height:100%; width:${ovrBarPct}%; background:${oColor};"></div>
                     </div>`;
                 return `<div class="clickable-player" onclick="showPlayerDetail('${safeName}')" style="cursor:pointer; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-top:3px solid ${posColor}; border-radius:12px; padding:12px 8px; text-align:center; transition:0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                    <div class="g-ph" data-gp="${gEsc(name)}" style="--pc:${posColor};"></div>
                     <div style="font-weight:800; font-size:0.88rem;">${name}${newBadge}</div>
                     ${captainBadge}
                     <div style="margin-top:6px;"><span style="background:${posColor}22; color:${posColor}; padding:2px 8px; border-radius:5px; font-weight:800; font-size:0.72rem; border:1px solid ${posColor}55;">${primaryPos || '-'}</span></div>
@@ -12279,6 +12283,7 @@ function fmBestStyle(p, role) {
                 const safeName = name.replace(/'/g, "\\'");
                 const statLine = st ? `⚽${st.goals || 0} 🎯${st.assists || 0} · 평점 ${st.avg ? st.avg.toFixed(1) : '-'}` : '';
                 return `<div class="clickable-player" onclick="showPlayerDetail('${safeName}')" style="cursor:pointer; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-top:3px solid ${posColor}; border-radius:12px; padding:12px 10px; text-align:center;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                    <div class="g-ph" data-gp="${gEsc(name)}" style="--pc:${posColor};"></div>
                     <div style="font-weight:800; font-size:0.9rem;">${name}</div>
                     <div style="margin-top:4px;"><span style="background:${posColor}22; color:${posColor}; padding:2px 8px; border-radius:5px; font-weight:800; font-size:0.7rem; border:1px solid ${posColor}55;">${pos || '-'}</span></div>
                     <div style="margin-top:6px; font-size:0.72rem; color:var(--text-muted);">${statLine}</div>
@@ -34163,6 +34168,12 @@ window.pmExtRender = function(name){
     }
     function decorate2() {
         if (!Object.keys(IMG).length) return;
+        document.querySelectorAll('.g-ph[data-gp]:not(.on)').forEach(el => {          // 선수 카드 상단 사진 (원형 아님 · 이미지 전체 표시)
+            if (el.dataset.gav) return; el.dataset.gav = 'n';
+            const u = urlOf('player', ident('player', el.dataset.gp)); if (!u) return;
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => { im.remove(); el.classList.remove('on'); };
+            el.appendChild(im); el.classList.add('on'); el.dataset.gav = 'y';
+        });
         const NM = nameMaps();
         GAV.forEach(r => document.querySelectorAll(r.sel).forEach(el => {
             if (el.dataset.gav || el.closest('.modal-header') || el.querySelector(':scope > img.g-av')) return;
@@ -34253,7 +34264,7 @@ window.pmExtRender = function(name){
         Object.values(IMG).forEach(u => { try { URL.revokeObjectURL(u); } catch (e) { } });
         IMG = next;
         document.querySelectorAll('[data-gimg="n"]').forEach(e => delete e.dataset.gimg);
-        document.querySelectorAll('[data-gav]').forEach(e => delete e.dataset.gav); document.querySelectorAll('.dc-tcard-badge[data-gtxt]').forEach(b => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; });
+        document.querySelectorAll('.g-ph.on').forEach(e => { e.classList.remove('on'); e.textContent = ''; }); document.querySelectorAll('[data-gav]').forEach(e => delete e.dataset.gav); document.querySelectorAll('.dc-tcard-badge[data-gtxt]').forEach(b => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; });
         document.querySelectorAll('td.clickable-team > .g-teamcell').forEach(w => { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); document.querySelectorAll('img.g-av,.g-av-sp').forEach(e => e.remove()); document.querySelectorAll('.g-teamcell').forEach(e => { e.classList.remove('g-teamcell'); e.style.width = ''; });
         document.querySelectorAll('[data-gimg="y"]').forEach(e => delete e.dataset.gimg);
         decorate(); decorate2();
