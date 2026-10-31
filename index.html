@@ -598,6 +598,11 @@
         /* 팀 데이터센터: 창 크기에 따라 자동으로 정렬 배치되는 그리드 */
         .dc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; align-items: start; }
         .dc-grid > .card { margin-bottom: 0; min-width: 0; }
+        /* v1.85: 팀 데이터센터 좌우 배치용 — 2칸(감독실) · 3칸(상세분석 전력분석) */
+        .dc-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 16px; align-items: start; margin-bottom: 16px; }
+        .dc-grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; align-items: start; margin-bottom: 16px; }
+        .dc-grid2 > *, .dc-grid3 > * { min-width: 0; }
+        .dc-grid2 .card, .dc-grid3 .card { margin-bottom: 0; }
         .dc-tab-btn { padding: 7px 16px; border: none; border-radius: 6px; background: rgba(255,255,255,0.07); color: var(--text-muted); font-weight: 800; font-size: 0.82rem; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .dc-tab-btn.active { background: var(--accent); color: #000; }
         .dc-tab-content { display: none; }
@@ -1437,6 +1442,43 @@
 .tl-simple td small{display:block;color:var(--text-muted);font-size:.68rem}
 .tl-more{margin-top:8px}
 .tl-more>summary{cursor:pointer;font-size:.78rem;color:#38bdf8;font-weight:800}
+/* v1.86: 🧑‍💼 감독 상세 › 🧭 전술별 성적 — 요약 → 자주 쓴 조합 → 항목별 카드 */
+.tm-wrap{margin-top:8px}
+.tm-title{font-size:.95rem;font-weight:900;color:var(--accent);margin:0 0 8px}
+.tm-title small,.tm-sub small{font-size:.68rem;font-weight:600;color:var(--text-muted);margin-left:6px}
+.tm-hero{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.tm-stat{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:10px;padding:8px 4px;text-align:center;min-width:0}
+.tm-stat b{display:block;font-family:'Orbitron';font-size:1.15rem;line-height:1.2;font-weight:800}
+.tm-stat b small{font-family:inherit;font-size:.62rem;font-weight:700;color:var(--text-muted);margin:0 2px 0 1px}
+.tm-stat span{display:block;font-size:.68rem;color:var(--text-muted);margin-top:3px}
+.tm-sub{font-size:.82rem;font-weight:800;margin:12px 0 6px;color:#e2e8f0}
+.tm-combos{display:flex;flex-direction:column;gap:6px}
+.tm-combo{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+.tm-rk{flex:0 0 22px;height:22px;border-radius:50%;background:rgba(56,189,248,.18);color:#38bdf8;font-weight:900;font-size:.74rem;display:flex;align-items:center;justify-content:center}
+.tm-cl{flex:1;min-width:0;font-size:.78rem;font-weight:700;line-height:1.4}
+.tm-cr{flex:0 0 auto;text-align:right}
+.tm-cr b{display:block;font-family:'Orbitron';font-size:.95rem}
+.tm-cr span{font-size:.66rem;color:var(--text-muted)}
+.tm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.tm-card{border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.025);padding:8px 10px;min-width:0}
+.tm-ct{font-size:.82rem;font-weight:900;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.07)}
+.tm-ct small{font-size:.64rem;font-weight:600;color:var(--text-muted);margin-left:6px}
+.tm-row{padding:5px 6px;border-radius:8px;margin-bottom:3px}
+.tm-row.best{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3)}
+.tm-row.low{opacity:.6}
+.tm-r1{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tm-nm{font-size:.78rem;font-weight:800;min-width:0}
+.tm-r1 b{font-family:'Orbitron';font-size:.88rem;flex:0 0 auto}
+.tm-bar{height:7px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;margin:4px 0 3px}
+.tm-bar i{display:block;height:100%;border-radius:4px}
+.tm-rec{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.66rem;color:var(--text-muted)}
+.tg{font-style:normal;font-size:.58rem;font-weight:800;padding:1px 5px;border-radius:8px;margin-left:5px;white-space:nowrap}
+.tg.b{background:rgba(251,191,36,.18);color:#fbbf24}
+.tg.m{background:rgba(56,189,248,.16);color:#38bdf8}
+.tm-rest{margin-top:2px}
+.tm-rest>summary{cursor:pointer;font-size:.7rem;font-weight:800;color:#38bdf8;padding:3px 6px}
+@media (max-width:700px){.tm-hero{grid-template-columns:repeat(3,minmax(0,1fr))}.tm-grid{grid-template-columns:1fr}}
+
 </style>
 
     <style id="g177Css">
@@ -1508,7 +1550,27 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 #playerTabContentOverview .pm-cols { align-items: start !important; }
 #playerTabContentOverview .pm-col:first-child { display: block !important; }
 #playerTabContentOverview #playerRankTrendChart { display: block !important; flex: none !important; height: auto !important; }
-#playerRankTrendChart > svg { max-width: 640px; margin-inline: auto; }
+#playerRankTrendChart > svg { max-width: none; margin-inline: auto; }
+
+/* 선수 모달 개요: 상단 여백 · 포지션 출전 1열 · 좌측 넓게 (능력치 살짝 축소) */
+#playerTabContentOverview .pm-statrow { margin-top: 14px; margin-bottom: 12px; }
+#playerTabContentOverview .pm-posrow { display: flex !important; align-items: center; gap: 10px; flex-wrap: nowrap; }
+#playerTabContentOverview .pm-posrow > div:first-child { margin-bottom: 0 !important; white-space: nowrap; flex: none; }
+#playerTabContentOverview .pm-posrow #modalPlayerPosCounts { flex-wrap: wrap; min-width: 0; }
+@media (min-width: 1000px) {
+    #playerTabContentOverview .pm-cols { grid-template-columns: minmax(0, 1.16fr) minmax(0, 0.84fr); }
+}
+#playerTabContentOverview #playerTrophyCabinet .tc-cab { width: 100%; box-sizing: border-box; }
+/* 능력치 칸: 역할 · 특성 글씨 더 작게 / 가능 포지션 필드 더 작게 */
+#playerAbilitySection .pm-abtrait { zoom: 0.86; }
+#playerAbilitySection .pm-posview .pm-posmap > svg { width: 210px !important; }
+
+/* 팀 데이터센터 › 경기·시즌: 순위 변동 그래프(좌) + 경기별 Elo 변동(우) */
+.dc-rt-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.dc-rt-split > div { min-width: 0; }
+.dc-rt-split .dc-rt-r h5 { margin-top: 0 !important; }
+.dc-rt-split .dc-rt-r .scrollable-table { max-height: 300px !important; }
+@media (max-width: 1000px) { .dc-rt-split { grid-template-columns: minmax(0, 1fr); } }
 
 /* 🏆 트로피 띠 (팀 상세 창) */
 .tcs-strip { margin: 0 0 12px; }
@@ -1695,13 +1757,6 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                 <div class="sidebar-header-top">
                     <h1>G-LEAGUE<br>REBOOT</h1>
                     <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleSidebarCollapse()" title="메뉴 접기/펼치기" aria-label="메뉴 접기/펼치기">◂</button>
-                </div>
-                <div id="seasonBadge" class="season-badge-vertical">
-                    <span id="seasonBadgeText">시즌 1 · 조별리그</span>
-                    <div class="season-badge-actions">
-                        <button class="btn btn-auto" onclick="openSeasonRenameModal('')">✏️ 이름 수정</button>
-                        <button class="btn btn-auto" onclick="openSeasonSetupModal()">⚙️ 시즌 설정</button>
-                    </div>
                 </div>
             </header>
 
@@ -1904,18 +1959,18 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                 <div id="playerTabContentOverview" class="pm-page on">
                 <div class="pm-statrow">
                     <div class="pm-sc" style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05)); border-color:rgba(56,189,248,0.3);"><div id="modalPlayerGames" class="pm-sc-n" style="color:var(--accent);">0</div><div class="pm-sc-l">출전 경기</div></div>
-                    <div class="pm-sc" style="background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(251,191,36,0.05)); border-color:rgba(251,191,36,0.3);"><div id="modalPlayerPoints" class="pm-sc-n" style="color:var(--gold);">0</div><div class="pm-sc-l">공격포인트</div></div>
+                    <div class="pm-sc" style="background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(251,191,36,0.05)); border-color:rgba(251,191,36,0.3);"><div id="modalPlayerPoints" class="pm-sc-n" style="color:var(--gold);">0</div><div id="modalPlayerPointsL" class="pm-sc-l">공격포인트</div></div>
                     <div class="pm-sc" style="background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05)); border-color:rgba(34,197,94,0.3);"><div id="modalPlayerAvg" class="pm-sc-n" style="color:var(--success);">0.00</div><div class="pm-sc-l">평균 평점</div></div>
                     <div class="pm-sc" style="background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(168,85,247,0.05)); border-color:rgba(168,85,247,0.3);"><div id="modalPlayerTotalM" class="pm-sc-n" style="color:#c084fc;">0</div><div class="pm-sc-l">👑 MOM</div></div>
-                    <div class="pm-sc" style="background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(249,115,22,0.03)); border-color:rgba(249,115,22,0.3);"><div id="modalPlayerTotalG" class="pm-sc-n" style="color:#fb923c;">0</div><div class="pm-sc-l">⚽️ 통산 득점</div></div>
-                    <div class="pm-sc" style="background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.03)); border-color:rgba(56,189,248,0.25);"><div id="modalPlayerTotalA" class="pm-sc-n" style="color:var(--accent);">0</div><div class="pm-sc-l">🎯 통산 도움</div></div>
+                    <div class="pm-sc" style="background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(249,115,22,0.03)); border-color:rgba(249,115,22,0.3);"><div id="modalPlayerTotalG" class="pm-sc-n" style="color:#fb923c;">0</div><div id="modalPlayerTotalGL" class="pm-sc-l">⚽️ 통산 득점</div></div>
+                    <div class="pm-sc" style="background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.03)); border-color:rgba(56,189,248,0.25);"><div id="modalPlayerTotalA" class="pm-sc-n" style="color:var(--accent);">0</div><div id="modalPlayerTotalAL" class="pm-sc-l">🎯 통산 도움</div></div>
                 </div>
                 <div class="pm-cols"><div class="pm-col">
 <!-- v1.35: 카드 기록 (있을 때만 표시) -->
                 <div id="modalPlayerCards" style="display:none; background:rgba(250,204,21,0.06); border:1px solid rgba(250,204,21,0.2); border-radius:10px; padding:10px 14px; margin-bottom:12px; font-size:0.85rem;"></div>
 
                 <!-- 포지션별 출전횟수 -->
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 14px; margin-bottom:12px;">
+                <div class="pm-posrow" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 14px; margin-bottom:12px;">
                     <div style="font-weight:800; color:var(--text-muted); margin-bottom:8px; font-size:0.8rem;">🧢 포지션별 출전횟수</div>
                     <div id="modalPlayerPosCounts" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
                 </div>
@@ -1953,10 +2008,10 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                             <button id="playerRankTrendBtnPoints" onclick="setPlayerRankTrendMetric('points')" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">공격P</button>
                             <button id="playerRankTrendBtnPwr" onclick="setPlayerRankTrendMetric('pwr')" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">파워랭킹 🌟</button>
                             <span style="width:1px; background:rgba(255,255,255,0.15); margin:2px 2px;"></span>
-                            <button id="playerRankTrendGroupBtn1" onclick="setPlayerRankTrendGroup(1)" title="모든 경기를 압축 없이 표시 (가로 스크롤)" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">전체경기</button>
+                            <button id="playerRankTrendGroupBtn1" onclick="setPlayerRankTrendGroup(1)" title="모든 경기를 압축 없이 표시" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">전체경기</button>
                             <button id="playerRankTrendGroupBtn3" onclick="setPlayerRankTrendGroup(3)" title="3경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">3경기씩</button>
                             <button id="playerRankTrendGroupBtn5" onclick="setPlayerRankTrendGroup(5)" title="5경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">5경기씩</button>
-                            <button id="playerRankTrendGroupBtn10" onclick="setPlayerRankTrendGroup(10)" title="10경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">10경기씩</button>
+                            <button id="playerRankTrendBtnPlayed" onclick="setPlayerRankTrendPlayed()" title="이 선수가 실제로 뛴 경기만 표시" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">경기날만</button>
                         </div>
                     </div>
                     <div id="playerRankTrendChart"></div>
@@ -2237,12 +2292,14 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
             <div class="card" style="padding:8px 12px; margin-bottom:10px;">
                 <div class="dash-top-row" style="display:flex; align-items:center; gap:4px 10px; flex-wrap:wrap; margin-bottom:5px;">
                     <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800; letter-spacing:0.02em; white-space:nowrap;">🏠 대시보드</span>
-                    <h3 class="dash-section-title" style="margin:0; font-size:1.02rem; font-weight:900; color:var(--gold); line-height:1.25;"><span id="dashSeasonLabel">시즌 1</span></h3>
+                    <h3 class="dash-section-title dash-season-title" style="margin:0; font-size:1.02rem; font-weight:900; color:var(--gold); line-height:1.25;"><span id="dashSeasonLabel">시즌 1</span></h3>
                     <div id="dashKpiToolbar" class="dk-toolbar" style="margin:0 0 0 auto;"></div>
                 </div>
-                <div id="dashTopActions" class="dash-top-actions"></div>
                 <div id="dashKpiPanel" class="dk-panel" style="display:none;"></div>
-                <div id="dashKpiGrid" class="dk-grid"></div>
+                <div class="dash-kpi-line">
+                    <div id="dashKpiGrid" class="dk-grid"></div>
+                    <div id="dashTopActions" class="dash-top-actions"></div>
+                </div>
                 <div id="dashKpiHint" class="dk-hint" style="display:none;"></div>
             </div>
 
@@ -3496,7 +3553,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                             <button class="btn btn-main" onclick="dcOpenFullDetail()">🔎 경기기록&순위 상세보기</button>
                         </div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06);">
+                    <div style="display:none; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06);">
                         <span style="font-size:0.75rem; color:var(--text-muted); font-weight:800;">🔥 최근 폼</span>
                         <div id="dcRecentForm" style="display:flex; gap:4px; flex-wrap:wrap;"></div>
                     </div>
@@ -3529,8 +3586,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                             <div id="dcTeamInfoRecentMatches"></div>
                         </div>
                         <div class="card">
-                            <h3>⭐ 팀 핵심 선수</h3>
-                            <div class="ranking-info">현재 소속 선수 중 모든 시즌 통합 파워랭킹 기준 상위 선수입니다.</div>
+                            <h3 class="dc-key-title">⭐ 팀 핵심 선수 <span class="dc-key-note">현재 소속 선수 중 모든 시즌 통합 파워랭킹 기준 상위 선수입니다.</span></h3>
                             <div id="dcTeamInfoKeyPlayers" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;"></div>
                         </div>
                     </div>
@@ -3757,9 +3813,13 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                                     <button id="dcRankTrendGroupBtn10" onclick="setTeamRankTrendGroup(10,'dc')" title="10경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">10경기씩</button>
                                 </div>
                             </div>
-                            <div id="dcRankTrendChart"></div>
-                            <h5 style="margin:12px 0 6px 0; font-size:0.78rem; color:var(--text-muted);">⚡ 경기별 Elo 변동</h5>
-                            <div id="dcRankTrendMatchList"></div>
+                            <div class="dc-rt-split">
+                                <div class="dc-rt-l"><div id="dcRankTrendChart"></div></div>
+                                <div class="dc-rt-r">
+                                    <h5 style="margin:12px 0 6px 0; font-size:0.78rem; color:var(--text-muted);">⚡ 경기별 Elo 변동</h5>
+                                    <div id="dcRankTrendMatchList"></div>
+                                </div>
+                            </div>
                         </div>
 
                         <h4 id="dcHistoryTitle" style="margin-bottom:8px; border-left:3px solid; padding-left:8px; font-size:0.9rem;">⚽ 최근 경기 결과</h4>
@@ -3802,11 +3862,11 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                     </div>
                     <div class="card"><h3>🔎 구간별 득실 · 시즌별 · 득점자</h3><div id="dcTimeTables"></div></div>
                     <div class="card" id="gaTeamCard" data-new="1.35"></div>
-                    <div class="dc-grid">
+                    <div class="dc-grid3">
                     <div class="card"><h3>🧠 전력분석 팀 카드</h3><div class="ranking-info">전력분석 탭에서 쓰는 팀 카드와 같은 카드입니다. 누르면 팀 상세분석 창이 열립니다.</div><div id="dcMlCardDetail"></div></div>
+                    <div id="dcStrategy"></div>
                     <div class="card" style="border:1px solid rgba(167,139,250,0.4);"><h3 style="color:#a78bfa;">🧠 전력분석 주요내용</h3><div class="ranking-info">전력분석 탭의 팀 상세분석에서 핵심만 가져온 요약입니다.</div><div id="dcMlKey"></div></div>
                     </div>
-                    <div id="dcStrategy"></div>
                 </div>
 
                 <!-- 📅 시즌별 기록 탭 -->
@@ -3824,13 +3884,20 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                         <div class="ranking-info">이 팀 현재 감독의 통산 지휘 기록·타이틀·능력치를 한눈에 봅니다. (🧑‍💼 감독 랭킹 · 감독 상세 정보와 같은 데이터)</div>
                         <div id="dcMgrOverview"></div>
                     </div>
-                    <!-- 🧑‍💼 감독 효과 분석 (v3_15: 전력 비교와 같은 엔진) -->
+<!-- v1.85: 좌우 배치 — ①감독 효과 분석 | 다른 감독이었다면 ②역대 감독별 기록 | 거쳐간 감독 능력치 ③시즌별 감독·팀 성적 | 리그 감독 랭킹 -->
+                    <div class="dc-grid2">
                     <div class="card">
                         <h3>🧑‍💼 감독 효과 분석</h3>
                         <div class="ranking-info">감독 능력치가 이 팀의 전력에 어떻게 반영되는지, 다른 감독이었다면 어땠을지, 실제 승률과 감독 능력치가 얼마나 맞는지를 보여줍니다. (⚔️ 전력 비교 · 🧠 전력분석과 같은 계산)</div>
                         <div id="dcManagerEffect" style="margin-top:8px;"></div>
                     </div>
-                    <!-- 🧑‍💼 역대 감독별 기록 + 🏆 시즌별 최고 기록 (이전 🏟️팀기록 탭에서 이동) -->
+                    <div class="card">
+                        <h3>🔁 다른 감독이었다면?</h3>
+                        <div class="ranking-info">같은 선수단 + 그 감독의 능력치로 가정한 종합 전력입니다.</div>
+                        <div id="dcManagerAlt"></div>
+                    </div>
+                    </div>
+                    <div class="dc-grid2">
                     <div class="card">
                         <h3>🧑‍💼 역대 감독별 기록</h3>
                         <div class="ranking-info">시즌별로 지정된 감독을 기준으로, 그 감독의 재임 시즌 동안 이 팀이 치른 경기 기록을 집계합니다. 감독순위는 이 팀을 거쳐간 감독들 중 승률(동률 시 경기수) 기준 순위입니다.</div>
@@ -3855,23 +3922,24 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3>🗓️ 시즌별 감독 · 팀 성적</h3>
-                        <div class="ranking-info">시즌마다 이 팀을 맡았던 감독과 그 시즌의 팀 성적입니다. 감독이 바뀐 시즌은 🔄로 표시됩니다.</div>
-                        <div id="dcMgrTimeline"></div>
-                    </div>
-                    <div class="dc-grid">
                         <div class="card">
                             <h3>🧬 이 팀을 거쳐간 감독 능력치</h3>
                             <div class="ranking-info">이 팀을 맡았던 감독들의 능력치와 이 팀에서의 승률을 비교합니다.</div>
                             <div id="dcMgrAbilityCompare"></div>
                         </div>
+                    </div>
+                    <div class="dc-grid2">
+                    <div class="card">
+                        <h3>🗓️ 시즌별 감독 · 팀 성적</h3>
+                        <div class="ranking-info">시즌마다 이 팀을 맡았던 감독과 그 시즌의 팀 성적입니다. 감독이 바뀐 시즌은 🔄로 표시됩니다.</div>
+                        <div id="dcMgrTimeline"></div>
+                    </div>
                         <div class="card">
                             <h3>🏆 리그 감독 랭킹 TOP 5</h3>
                             <div class="ranking-info">전체 시즌 통산 기준 리그 감독 순위입니다. 이 팀 감독은 강조 표시됩니다.</div>
                             <div id="dcMgrLeagueTop"></div>
-                        </div>
                     </div>
+                </div>
                 </div>
 
                 <!-- 🔁 이적기록 탭 -->
@@ -12469,11 +12537,10 @@ function fmBestStyle(p, role) {
                 const posColor = posColorMap[primaryPos] || '#94a3b8';
                 const safeName = name.replace(/'/g, "\\'");
                 const isCaptain = seasonCaptain && seasonCaptain === name;
-                const captainBadge = isCaptain ? `<div style="margin-top:4px;"><span title="주장" style="font-size:0.65rem; color:var(--accent); background:rgba(56,189,248,0.12); padding:2px 7px; border-radius:5px; font-weight:800;">©️ 주장</span></div>` : '';
+                const captainBadge = isCaptain ? `<span title="주장" style="position:absolute; top:8px; left:8px; z-index:2; font-size:0.65rem; color:#0f172a; background:var(--accent); padding:2px 7px; border-radius:5px; font-weight:900; box-shadow:0 1px 4px rgba(0,0,0,0.45);">©️ 주장</span>` : '';
                 const newBadge = newPlayerSet.has(name) ? `<sup title="이 시즌 신규 합류" style="font-size:0.6rem; color:var(--success); font-weight:900; margin-left:2px;">N</sup>` : '';
                 const pwrText = pwrRank ? `<b style="color:var(--accent);">${pwr.toFixed(1)}</b> <span style="color:var(--text-muted); font-size:0.65rem;">(${pwrRank}/${pwrTotal})</span>` : `<span style="color:var(--text-muted);">-</span>`;
                 const oColor = ovrColor(ovr);
-                const ovrBarPct = ovr === null ? 0 : Math.max(0, Math.min(100, (ovr - ABILITY_STAT_MIN) / (ABILITY_STAT_MAX - ABILITY_STAT_MIN) * 100));
                 let lgCardHtml = '';
                 if (lg && lg.total >= 2) {
                     const best = lg.rows.slice().sort((a, b) => (a.rank / a.total) - (b.rank / b.total) || b.diff - a.diff)[0];
@@ -12482,14 +12549,11 @@ function fmBestStyle(p, role) {
                 }
                 const ovrHtml = ovr === null ? '' : `
                     <div style="margin-top:7px; font-size:0.62rem; color:var(--text-muted); font-weight:700;">OVR 🧬</div>
-                    <div style="font-size:0.85rem; font-weight:800; color:${oColor};">${ovr}${ovrDeltaBadgeHtml(name)}</div>
-                    <div style="height:4px; background:rgba(255,255,255,0.08); border-radius:2px; margin-top:3px; overflow:hidden;">
-                        <div style="height:100%; width:${ovrBarPct}%; background:${oColor};"></div>
-                    </div>`;
-                return `<div class="clickable-player" onclick="showPlayerDetail('${safeName}')" style="cursor:pointer; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-top:3px solid ${posColor}; border-radius:12px; padding:12px 8px; text-align:center; transition:0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                    <div style="font-size:0.85rem; font-weight:800; color:${oColor};">${ovr}${ovrDeltaBadgeHtml(name)}</div>`;
+                return `<div class="clickable-player" onclick="showPlayerDetail('${safeName}')" style="cursor:pointer; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-top:3px solid ${posColor}; border-radius:12px; padding:12px 8px; text-align:center; transition:0.2s; position:relative;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                    ${captainBadge}
                     <div class="g-ph" data-gp="${gEsc(name)}" style="--pc:${posColor};"></div>
                     <div style="font-weight:800; font-size:0.88rem;">${name}${newBadge}</div>
-                    ${captainBadge}
                     <div style="margin-top:6px;"><span style="background:${posColor}22; color:${posColor}; padding:2px 8px; border-radius:5px; font-weight:800; font-size:0.72rem; border:1px solid ${posColor}55;">${primaryPos || '-'}</span></div>
                     <div style="margin-top:7px; font-size:0.62rem; color:var(--text-muted); font-weight:700;">파워랭킹 🌟</div>
                     <div style="font-size:0.8rem; margin-top:1px;">${pwrText}</div>
@@ -12687,8 +12751,7 @@ function fmBestStyle(p, role) {
                 cell('🏆 통산 순위', rank ? `${rank}위 <small>/ ${(state.teams || []).length}팀</small>` : '-', elo !== undefined && elo !== null ? `⚡ Elo ${Math.round(elo)}` : '경기 기록 없음', 'hot') +
                 cell('📈 통산 성적', rec.gms ? `${rec.w}승 ${rec.l}패` : '-', rec.gms ? `승률 ${winRate} · 득실 ${sgn(rec.gd)}` : '경기 기록 없음') +
                 cell(`📅 ${gEsc(state.seasonName || '현재 시즌')}`, cur.gms ? `${cur.w}승 ${cur.l}패` : '-', cur.gms ? `${cur.gms}경기 · 득실 ${sgn(cur.gd)}` : '아직 경기 없음') +
-                cell('👥 선수단', `${(team.players || []).length}명`, `FW ${pc.FW} · MF ${pc.MF} · DF ${pc.DF} · GK ${pc.GK}`) +
-                cell('🧑‍💼 감독 · ©️ 주장', mgrHtml, team.captain ? `©️ ${gEsc(team.captain)}` : '<span class="dc-tcard-muted">주장 없음</span>');
+                cell('👥 선수단', `${(team.players || []).length}명`, `FW ${pc.FW} · MF ${pc.MF} · DF ${pc.DF} · GK ${pc.GK}`);
         }
 
         // 🏠 팀 정보 탭 전체 렌더링 진입점
@@ -14712,7 +14775,7 @@ function fmBestStyle(p, role) {
                 const rk = (v, arr) => arr.filter(x => x > v + 1e-9).length + 1;
                 const qj = s2 => String(s2).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
                 const hasStats = !!(mg.ref && mg.ref.stats);
-                let html = '';
+                let html = '', htmlA = null;
                 if (!hasStats) {
                     html += `<div class="dash-empty">${team.manager ? gEsc(team.manager) + ' 감독의 능력치가 입력되어 있지 않아' : '현재 지정된 감독이 없어'} 감독 보정 없이(0) 전력이 계산됩니다.</div>`;
                 } else {
@@ -14734,8 +14797,9 @@ function fmBestStyle(p, role) {
                 if (tcMgrOn) {
                     const base = pw.overall;
                     const regs = (state.managers || []).filter(m => m.stats).map(m => { const p = tcTeamPower(team, avail, m.name); return { name: m.name, ovr: calcManagerOVR(m), overall: p.overall, cur: managerCurrentTeam(m.name) }; }).sort((a, b) => b.overall - a.overall);
+                    htmlA = html; html = '';   // v1.85: 여기부터는 오른쪽 '다른 감독이었다면?' 카드
                     if (regs.length) {
-                        html += `<div style="margin-top:12px; font-size:0.78rem; font-weight:800; color:var(--gold);">🔁 다른 감독이었다면? <span style="font-size:0.66rem; color:var(--text-muted); font-weight:600;">(같은 선수단 + 그 감독의 능력치로 가정한 종합 전력)</span></div>
+                        html += `<div style="margin-top:12px; font-size:0.78rem; font-weight:800; color:var(--gold); display:none;">🔁 다른 감독이었다면? <span style="font-size:0.66rem; color:var(--text-muted); font-weight:600;">(같은 선수단 + 그 감독의 능력치로 가정한 종합 전력)</span></div>
                             <div class="scrollable-table"><table class="pattern-table" style="margin:4px 0 0;"><thead><tr><th style="text-align:left;">감독</th><th>OVR</th><th>종합 전력</th><th>현재 대비</th><th style="text-align:left;">현재 소속</th></tr></thead><tbody>${regs.map(r => { const isCur = r.name === team.manager, d = r.overall - base;
                                 return `<tr style="${isCur ? 'background:rgba(251,191,36,0.1); font-weight:900;' : ''}"><td style="text-align:left;"><span class="clickable-manager" onclick="showManagerDetail('${qj(r.name)}')">${gEsc(r.name)}</span>${isCur ? ' ✔' : ''}</td><td>${r.ovr}</td><td>${r.overall.toFixed(1)}</td><td style="color:${d > 0.049 ? '#22c55e' : d < -0.049 ? '#f87171' : 'inherit'};">${isCur ? '-' : tcSg(d)}</td><td style="text-align:left; font-size:0.72rem; color:var(--text-muted);">${r.cur ? gEsc(r.cur.name) : '미배정'}</td></tr>`; }).join('')}</tbody></table></div>`;
                     }
@@ -14757,7 +14821,8 @@ function fmBestStyle(p, role) {
                 // 연결: 전력 비교
                 const others = teams.filter(t => String(t.id) !== id).sort((a, b) => ((PM[String(b.id)] || {}).overall || 0) - ((PM[String(a.id)] || {}).overall || 0));
                 if (others.length) html += `<div style="margin-top:10px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;"><select id="dcMgrFxOpp">${others.map(t => `<option value="${t.id}">${gEsc(t.name)}</option>`).join('')}</select><button class="btn-edit" onclick="openTeamCompare('${team.id}', document.getElementById('dcMgrFxOpp').value)">⚔️ 이 팀 vs 선택 팀 전력 비교</button></div>`;
-                el.innerHTML = html;
+                el.innerHTML = htmlA !== null ? htmlA : html;
+                const altEl = document.getElementById('dcManagerAlt'); if (altEl) altEl.innerHTML = htmlA !== null ? html : '<div class="dash-empty">감독 능력치가 있어야 비교할 수 있습니다.</div>';
             } catch (e) { console.error('감독 효과 분석 오류', e); el.innerHTML = '<div class="dash-empty">감독 효과를 계산하는 중 오류가 발생했습니다.</div>'; }
         }
 
@@ -19087,6 +19152,7 @@ function fmBestStyle(p, role) {
             playerRankTrendMetric = 'pwr';
             playerRankTrendScope = 'all';
             playerRankTrendGroup = 1;
+            playerRankTrendPlayedOnly = false;
             // 열 때는 항상 첫 페이지(개요)로
             switchPlayerModalTab('overview');
             const stats = [];
@@ -19237,6 +19303,28 @@ function fmBestStyle(p, role) {
                 document.getElementById('modalGkGAAvg').innerText = totalGkWeight > 0 ? (totalGA/totalGkWeight).toFixed(2) : '0.00';
             } else {
                 gkSection.style.display = 'none';
+            }
+
+            // 상단 요약 카드 — 키퍼(GK 출전이 주가 되는 선수)는 공격포인트·득점·도움 대신 경기당 실점 · 세이브 · 경기당 세이브를 보여준다.
+            {
+                const isKeeperView = gkGamesStats.length > 0 && (playerPos === 'GK' || gkGamesStats.length * 2 >= count);
+                const topSet = (idn, val, label, color) => {
+                    const n = document.getElementById(idn), l = document.getElementById(idn + 'L');
+                    if (n) { n.innerText = val; n.style.color = color; }
+                    if (l) l.innerText = label;
+                };
+                if (isKeeperView) {
+                    let kGA = 0, kW = 0, kSS = 0;
+                    gkGamesStats.forEach(s => { kGA += s.gkConceded; kW += s.gkWeight; });
+                    kSS = stats.reduce((a, s) => a + (s.ss || 0), 0);
+                    topSet('modalPlayerPoints', kW > 0 ? (kGA / kW).toFixed(2) : '0.00', '🥅 경기당 실점', '#f87171');
+                    topSet('modalPlayerTotalG', kSS, '🧤 세이브', '#38bdf8');
+                    topSet('modalPlayerTotalA', kW > 0 ? (kSS / kW).toFixed(2) : '0.00', '🧤 경기당 세이브', '#22d3ee');
+                } else {
+                    topSet('modalPlayerPoints', totalG + totalA, '공격포인트', 'var(--gold)');
+                    topSet('modalPlayerTotalG', totalG, '⚽️ 통산 득점', '#fb923c');
+                    topSet('modalPlayerTotalA', totalA, '🎯 통산 도움', 'var(--accent)');
+                }
             }
 
             const historyTbody = document.getElementById('modalPlayerHistory');
@@ -22322,23 +22410,13 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     const pr = mpPredict(x);
                     if (pr) {
                         const m = pr.mdl, pH = Math.round(m.ens * 100);
-                        const top = m.simUse && m.simUse.top && m.simUse.top[0] ? m.simUse.top[0].key : '';
                         pred = `<div style="width:100%; margin-top:2px;">
                             <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px; font-size:0.95rem; font-weight:900; margin-bottom:1px;">
                                 <span style="color:${cH};">${pH}%</span>
                                 <span style="font-size:0.66rem; color:var(--text-muted); font-weight:700;">종합 예측</span>
                                 <span style="color:${cA};">${100 - pH}%</span>
                             </div>
-                            <div style="color:var(--text-muted); font-weight:700; text-align:center; font-size:0.74rem; margin-bottom:4px;">🔮 ${mpVerdictText(pr)}${top ? ' · 예상 ' + gEsc(top) : ''} · 신뢰도 ${gEsc(m.conf)}</div>
                             ${mpBarHtml(m.ens, cH, cA, 6)}
-                            ${(m.simUse && m.pk) ? (() => {
-                                // 상세 예측과 같은 방식: 정규시간 승(진한 색) + 무승부 후 PK 승(연한 색)
-                                const pk = m.pk.pA, S = m.simUse;
-                                const a1 = S.aReg * 100, a2 = S.draw * pk * 100, b2 = S.draw * (1 - pk) * 100, b1 = S.bReg * 100;
-                                const seg = (v, c, op, lab) => `<div style="flex:${Math.max(v, 0.3)}; background:${c}; opacity:${op}; text-align:center; font-size:0.72rem; font-weight:800; color:#000; padding:3px 0; overflow:hidden;" title="${lab} ${v.toFixed(1)}%">${v >= 5 ? v.toFixed(0) + '%' : ''}</div>`;
-                                return `<div style="margin-top:5px;">${mpSimCapHtml(m, cH, cA, '0.7rem')}<div style="display:flex; border-radius:5px; overflow:hidden;">${seg(a1, cH, 1, '정규시간 승')}${seg(a2, cH, 0.5, 'PK 승')}${seg(b2, cA, 0.5, 'PK 승')}${seg(b1, cA, 1, '정규시간 승')}</div>
-                                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:2px 10px; font-size:0.68rem; color:var(--text-muted); margin-top:3px;"><span>진한 색 = 정규시간 승 ${a1.toFixed(1)}% · 연한 색 = PK 승 ${a2.toFixed(1)}%</span><span>PK 승 ${b2.toFixed(1)}% · 정규시간 승 ${b1.toFixed(1)}%</span></div>${mpSignalsHtml(m, ht ? ht.name : '홈', '0.66rem')}</div>`;
-                            })() : ''}
                         </div>`;
                     }
                 } catch (e) { console.error('대시보드 예측 요약 오류', e); }
@@ -25462,22 +25540,23 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const padL = Math.round(34 * FS), padR = 18, padB = Math.round(26 * FS);
             let padT = hasSeasonLabels ? 42 : 26;
             const neededW = padL + padR + (points.length - 1) * MIN_POINT_SPACING;
-            const w = Math.max(BASEW, neededW);
-            const scrollable = w > BASEW;
+            const w = OP.noScroll ? BASEW : Math.max(BASEW, neededW);   // noScroll: 점이 많아도 가로 스크롤 없이 한 화면에 맞춤
+            const scrollable = !OP.noScroll && w > BASEW;
             const maxRankOverall = Math.max(...points.map(p => p.maxRank));
             const xStep = points.length > 1 ? (w - padL - padR) / (points.length - 1) : 0;
             const xFor = (i) => padL + i * xStep;
 
             // 🚩 시즌 구간 라벨 배치 (v1.28): 시즌이 짧아 라벨끼리 가로로 겹치면 위 줄 → 아래 줄로 자동으로 쌓는다.
             //  (🧩 전체 팀 순위 변동 통합 그래프와 같은 방식 — 글자 폭을 추정해 배경 박스로 그리고, 오른쪽 끝을 넘으면 안쪽으로 당겨 잘리지 않게 함)
-            const LABEL_FS = Math.round(9 * FS), LANE_H = Math.round(15 * FS), LABEL_GAP = 8;
+            const LS = OP.labelScale || 1;   // 시즌 라벨 크기 배율
+            const LABEL_FS = Math.max(6, Math.round(9 * FS * LS)), LANE_H = Math.round(15 * FS * LS), LABEL_GAP = 6;
             const estLabelW = (str) => Array.from(String(str)).reduce((sum, ch) => {
                 const c = ch.codePointAt(0);
                 if(ch === ' ') return sum + 3.4;
                 if(c < 128) return sum + (/[A-Z0-9]/.test(ch) ? 6.2 : 5.2);
                 if(c >= 0x1F000 || c === 0x2B50) return sum + 12.5; // 이모지
                 return sum + 9.8; // 한글 등 전각 문자
-            }, 0) * 1.05 * FS + 12;
+            }, 0) * 1.05 * FS * LS + 10;
             const seasonLabels = [];
             if(hasSeasonLabels) {
                 const laneEnd = [];
@@ -25557,10 +25636,11 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const tip = escTip(tipFor(p, i));
                 const isLast = i === points.length - 1;
                 // 마지막 포인트는 아래쪽에서 더 크게 강조 표시하므로 여기서는 중복 라벨을 생략
-                const label = isLast ? '' : `<text x="${xFor(i)}" y="${yFor(p.rank) - 8 * FS}" font-size="${9 * FS}" font-weight="700" fill="${color}" text-anchor="middle" style="pointer-events:none;">${fmtRank(p.rank)}위</text>`;
+                const showTxt = !OP.playedOnly || p.played !== false;
+                const label = (isLast || !showTxt) ? '' : `<text x="${xFor(i)}" y="${yFor(p.rank) - 8 * FS}" font-size="${9 * FS}" font-weight="700" fill="${color}" text-anchor="middle" style="pointer-events:none;">${fmtRank(p.rank)}위</text>`;
                 return `<g>
                     ${label}
-                    ${isLast ? '' : extraMarksFor(p, i, false)}
+                    ${(isLast || !showTxt) ? '' : extraMarksFor(p, i, false)}
                     <circle cx="${xFor(i)}" cy="${yFor(p.rank)}" r="${3 * Math.min(FS, 1.4)}" fill="${color}" style="pointer-events:none;"/>
                     <circle cx="${xFor(i)}" cy="${yFor(p.rank)}" r="9" fill="transparent" style="cursor:pointer;" onmousemove="showChartTooltip(event, '${tip}')" onmouseleave="hideChartTooltip()"/>
                 </g>`;
@@ -25639,6 +25719,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     label,
                     elo: avgElo,
                     season: first.season,
+                    played: chunk.some(p => p.played !== false),
                     _groupCount: chunk.length,
                     _minRank: Math.min(...ranks),
                     _maxRank: Math.max(...ranks)
@@ -27452,7 +27533,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     const label2 = playedThisMatch
                         ? `${seasonTag}${roundNum}라운드 (${m.type} No.${m.num})`
                         : `${seasonTag}${roundNum}라운드 (${m.type} No.${m.num}, 순위 변동)`;
-                    points.push({ x: roundNum, rank: rank2, maxRank: list.length, label: label2, elo: me.pwr, season: m.__season });
+                    points.push({ x: roundNum, rank: rank2, maxRank: list.length, label: label2, elo: me.pwr, season: m.__season, played: playedThisMatch });
                     return;
                 }
 
@@ -27469,7 +27550,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const label1 = playedThisMatch
                     ? `${seasonTag}${roundNum}라운드 (${m.type} No.${m.num})`
                     : `${seasonTag}${roundNum}라운드 (${m.type} No.${m.num}, 순위 변동)`;
-                points.push({ x: roundNum, rank: rank1, maxRank: list.length, label: label1, season: m.__season });
+                points.push({ x: roundNum, rank: rank1, maxRank: list.length, label: label1, season: m.__season, played: playedThisMatch });
             });
             return points;
         }
@@ -27487,6 +27568,11 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
         // 그래프 점 압축 단위 (1=전체경기, 3/5/10=N경기씩 평균) — 선수 모달을 열 때마다 1로 초기화됨
         let playerRankTrendGroup = 1;
+        let playerRankTrendPlayedOnly = false;   // 경기날만: 그 선수가 실제로 뛴 경기 지점만 표시
+        function setPlayerRankTrendPlayed() {
+            playerRankTrendPlayedOnly = !playerRankTrendPlayedOnly;
+            renderPlayerRankTrend(_playerModalName);
+        }
         function setPlayerRankTrendGroup(group) {
             playerRankTrendGroup = group;
             renderPlayerRankTrend(_playerModalName);
@@ -27518,8 +27604,11 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             setBtn(btnCur, scope === 'current');
             setBtn(btnAll, scope === 'all');
 
-            const group = playerRankTrendGroup || 1;
-            [1, 3, 5, 10].forEach(g => {
+            let group = playerRankTrendGroup || 1;
+            if(group === 10) group = 1;
+            { const pb = document.getElementById('playerRankTrendBtnPlayed');
+              if(pb) { pb.style.background = playerRankTrendPlayedOnly ? 'var(--accent)' : 'rgba(255,255,255,0.07)'; pb.style.color = playerRankTrendPlayedOnly ? '#000' : 'var(--text-muted)'; } }
+            [1, 3, 5].forEach(g => {
                 const btn = document.getElementById('playerRankTrendGroupBtn' + g);
                 if(!btn) return;
                 const active = group === g;
@@ -27527,8 +27616,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 btn.style.color = active ? '#000' : 'var(--text-muted)';
             });
 
-            const rawPoints = calcPlayerRankHistory(playerName, metric, scope);
-            container.innerHTML = renderRankTrendSVG(aggregateTrendPoints(rawPoints, group), color, metric === 'pwr' ? 'PWR' : undefined, true, { baseW: 560, plotH: 130, fs: 1.3 });
+            let rawPoints = calcPlayerRankHistory(playerName, metric, scope);
+            if(playerRankTrendPlayedOnly) rawPoints = rawPoints.filter(p => p.played !== false);
+            container.innerHTML = renderRankTrendSVG(aggregateTrendPoints(rawPoints, group), color, metric === 'pwr' ? 'PWR' : undefined, true, { baseW: 560, plotH: 165, fs: 1.3, playedOnly: true, noScroll: true, labelScale: 0.72 });
         }
 
         function nextSeason() {
@@ -29957,13 +30047,22 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.76rem; font-weight:800; margin:6px 0 2px; cursor:pointer;"><input type="checkbox" ${_lgRosterSub ? 'checked' : ''} onchange="lgToggleRosterSub(this.checked)"> 🔬 소분류(세부 능력치) 열도 함께 보기</label>
                 ${html}</div>`;
         }
+        // v1.85: 중앙 0 기준 좌우 막대 — 오른쪽(초록) = 높음/상승 · 왼쪽(빨강) = 낮음/하락. rows: [{label, sub, d, title}]
+        function gDivBars(rows, unit) {
+            const mx = Math.max(1, ...rows.map(r => Math.abs(r.d)));
+            return rows.map(r => {
+                const z = Math.abs(r.d) < 0.05, pos = r.d >= 0, c = z ? '#94a3b8' : (pos ? '#22c55e' : '#f87171'), w = z ? 0 : Math.max(3, Math.abs(r.d) / mx * 50);
+                return `<div style="display:grid;grid-template-columns:84px 1fr 54px;gap:8px;align-items:center;margin:7px 0;" title="${gEsc(r.title || '')}"><div style="font-size:0.8rem;font-weight:800;line-height:1.2;">${r.label}${r.sub ? `<div style="font-size:0.64rem;font-weight:600;color:var(--text-muted);">${r.sub}</div>` : ''}</div><div style="position:relative;height:18px;border-radius:4px;background:rgba(255,255,255,0.04);"><div style="position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:rgba(226,232,240,0.55);z-index:1;"></div><div style="position:absolute;top:3px;height:12px;border-radius:3px;background:${c};width:${w}%;${pos ? 'left:50%;' : 'right:50%;'}"></div></div><div style="text-align:right;font-weight:900;font-size:0.84rem;color:${c};">${z ? '0.0' : (pos ? '+' : '') + r.d.toFixed(1)}${unit || ''}</div></div>`;
+            }).join('');
+        }
         // 🗂️ 팀 데이터센터 › 선수단 로스터 아래에 능력치 비교(로스터 매트릭스 + 팀/감독 비교)를 그린다
         function lgRenderDcAbility() {
             const el = document.getElementById('dcAbilityCompare'); if (!el) return;
             const team = (state.teams || []).find(t => String(t.id) === String(currentDcTeamId));
             if (!team) { el.innerHTML = ''; return; }
-            el.innerHTML = lgRosterMatrixHtml(team) + `<div class="card" style="margin-top:12px;"><h3>🧬 팀 · 감독 능력치 비교 <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">(팀 상세 팝업의 🧬 능력치 비교와 동일)</span></h3><div id="dcAbilityTeamCmp"></div></div>`;
-            try { lgRenderTeamCompare(team.id, 'dcAbilityTeamCmp'); } catch (e) { console.error(e); }
+            const prev = el.querySelector('details'), wasOpen = !!(prev && prev.open);   // v1.85: 기본은 접힘 (🔬 소분류 토글로 다시 그려도 펼침 유지)
+            el.innerHTML = `<details ${wasOpen ? 'open' : ''} style="margin-top:12px;"><summary style="cursor:pointer; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); font-weight:800; font-size:0.85rem;">🔬 상세 비교 보기 <span style="font-weight:600; color:var(--text-muted); font-size:0.74rem;">· 리그 순위 · 소분류 · 팀 능력치 비교</span></summary>` + lgRosterMatrixHtml(team) + `<div class="card" style="margin-top:12px;"><h3>🧬 팀 능력치 비교 <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">(감독 능력치는 🧑‍💼 감독실 탭에서 확인)</span></h3><div id="dcAbilityTeamCmp"></div></div></details>`;
+            try { lgRenderTeamCompare(team.id, 'dcAbilityTeamCmp', { noMgr: true }); } catch (e) { console.error(e); }
         }
         // 데이터센터 표 맨 위 '리그 평균' 행에 쓸 평균 (필드 항목은 필드 선수 평균, GK 전용 항목은 GK 평균)
         function lgPdcAvgRow(allRows, keys, posFilter) {
@@ -30076,7 +30175,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 ${rowsHtml}
             </div>`;
         }
-        function lgRenderTeamCompare(teamId, elId) {
+        function lgRenderTeamCompare(teamId, elId, opts) {
             const el = document.getElementById(elId || 'teamAbilityCompare'); if (!el) return;
             const team = (state.teams || []).find(t => String(t.id) === String(teamId));
             if (!team) { el.innerHTML = ''; return; }
@@ -30131,7 +30230,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
             // ── 🧑‍💼 감독 ──
             let mgrHtml = '';
-            if (team.manager) {
+            if (team.manager && !(opts && opts.noMgr)) {
                 const mref = findManagerRef(team.manager);
                 if (mref && mref.stats) {
                     const mc = lgManagerCompare(team.manager, mref.stats);
@@ -30184,7 +30283,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.84';
+        const G_HTML_VERSION = '1.85';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -31446,10 +31545,10 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const who = { 전반: {}, 후반: {} };
                 pool.forEach(({ m }) => (m.pStats || []).forEach(p => { if (String(p.teamId) !== id) return; (p.goalTimes || []).forEach(g => { if (who[g.half]) who[g.half][p.name] = (who[g.half][p.name] || 0) + 1; }); }));
                 const chips = o => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([n, v]) => `<span style="display:inline-block;margin:2px 4px 2px 0;padding:2px 8px;border-radius:12px;background:rgba(255,255,255,0.07);font-size:0.72rem;"><a style="cursor:pointer;color:#38bdf8;" onclick="${tcPlayerClick(n)}">${esc(n)}</a> <b>${v}</b></span>`).join('') || `<span style="${MUTE}">기록 없음</span>`;
-                tb.innerHTML = `<h4 style="margin:0 0 6px;font-size:0.85rem;">구간별 득실 비교</h4><div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.76rem;"><thead><tr><th style="text-align:left;">구간</th><th>득점</th><th>비중</th><th>실점</th><th>비중</th><th>득실</th><th></th><th>판정</th></tr></thead><tbody>${rows}</tbody></table></div>
-                    <div style="font-size:0.68rem;${MUTE}margin:3px 0 12px;">판정: 해당 구간 득실이 +2 이상이면 강점, -2 이하면 취약 (표본이 적을 땐 참고용)</div>
-                    <h4 style="margin:0 0 6px;font-size:0.85rem;">시즌별 구간 분포 <span style="font-weight:400;${MUTE}"><span style="color:#22c55e;">득점</span>/<span style="color:#f87171;">실점</span></span></h4><div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.76rem;"><thead><tr><th style="text-align:left;">시즌</th><th>경기</th>${DC_TIME_KEYS.map(k => `<th>${k}</th>`).join('')}</tr></thead><tbody>${srows || '<tr><td colspan="8">기록 없음</td></tr>'}</tbody></table></div>
-                    <h4 style="margin:12px 0 4px;font-size:0.85rem;">구간별 득점자</h4><div style="font-size:0.78rem;">전반: ${chips(who.전반)}</div><div style="font-size:0.78rem;">후반: ${chips(who.후반)}</div>`;
+                tb.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr));gap:16px 22px;align-items:start;"><div><h4 style="margin:0 0 6px;font-size:0.85rem;">구간별 득실 비교</h4><div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.76rem;"><thead><tr><th style="text-align:left;">구간</th><th>득점</th><th>비중</th><th>실점</th><th>비중</th><th>득실</th><th></th><th>판정</th></tr></thead><tbody>${rows}</tbody></table></div>
+                    <div style="font-size:0.68rem;${MUTE}margin:3px 0 12px;">판정: 해당 구간 득실이 +2 이상이면 강점, -2 이하면 취약 (표본이 적을 땐 참고용)</div></div>
+                    <div><h4 style="margin:0 0 6px;font-size:0.85rem;">시즌별 구간 분포 <span style="font-weight:400;${MUTE}"><span style="color:#22c55e;">득점</span>/<span style="color:#f87171;">실점</span></span></h4><div class="scrollable-table"><table class="pattern-table no-stack" style="width:100%;font-size:0.76rem;"><thead><tr><th style="text-align:left;">시즌</th><th>경기</th>${DC_TIME_KEYS.map(k => `<th>${k}</th>`).join('')}</tr></thead><tbody>${srows || '<tr><td colspan="8">기록 없음</td></tr>'}</tbody></table></div>
+                    <h4 style="margin:12px 0 4px;font-size:0.85rem;">구간별 득점자</h4><div style="font-size:0.78rem;">전반: ${chips(who.전반)}</div><div style="font-size:0.78rem;">후반: ${chips(who.후반)}</div></div></div>`;
             }
             // 전력분석 주요내용
             const kf = document.getElementById('dcMlKey');
@@ -31544,23 +31643,21 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             // 7개 항목
             const cats = TC_CATS.map(c => { const v = pw.cats[c.key], vs = ids.map(j => PM[j].cats[c.key]).filter(nz), mu = mean(vs); return { c, v, mu, d: nz(v) && nz(mu) ? v - mu : null, r: nz(v) ? vs.filter(z => z > v).length + 1 : null, n: vs.length }; });
             const sorted = cats.filter(z => nz(z.d)).sort((a, b) => b.d - a.d), strongC = sorted.slice(0, 2).filter(z => z.d > 0.5), weakC = sorted.slice(-2).filter(z => z.d < -0.5).reverse();
-            const catRows = cats.map(z => `<tr><td style="text-align:left;"><b>${z.c.label}</b></td><td><b style="color:${ovrColor(Math.round(z.v || 0))};">${f1(z.v)}</b></td><td>${f1(z.mu)}</td><td style="color:${z.d > 0.5 ? '#22c55e' : z.d < -0.5 ? '#f87171' : 'inherit'};">${sg(z.d)}</td><td>${nz(z.r) ? z.r + '/' + z.n : '-'}</td><td>${nz(z.v) ? bar(z.v, ovrColor(Math.round(z.v))) : '-'}</td></tr>`).join('');
             // 포지션 구성
             const roster = (team.players || []), rs = roster.filter(p => p.stats);
-            const posRows = ['FW', 'MF', 'DF', 'GK'].map(q => { const ps = rs.filter(p => p.pos === q), av = mean(ps.map(p => calcPlayerOVR(p))), bst = ps.slice().sort((a, b) => calcPlayerOVR(b) - calcPlayerOVR(a))[0];
-                return `<tr><td style="text-align:left;"><b>${q}</b></td><td>${ps.length}명</td><td>${nz(av) ? `<b style="color:${ovrColor(Math.round(av))};">${f1(av)}</b>` : '-'}</td><td>${nz(av) ? bar(av, ovrColor(Math.round(av))) : '-'}</td><td>${bst ? pl(bst.name) + ' ' + calcPlayerOVR(bst) : '-'}</td></tr>`; }).join('');
+            const posBoxes = ['FW', 'MF', 'DF', 'GK'].map(q => { const ps = rs.filter(p => p.pos === q), av = mean(ps.map(p => calcPlayerOVR(p))), bst = ps.slice().sort((a, b) => calcPlayerOVR(b) - calcPlayerOVR(a))[0];
+                return `<div style="padding:10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);text-align:center;"><div style="font-size:0.78rem;font-weight:900;">${q} <span style="${MUTE}font-weight:700;">${ps.length}명</span></div><div style="font-size:1.15rem;font-weight:900;margin-top:2px;color:${nz(av) ? ovrColor(Math.round(av)) : 'inherit'};">${nz(av) ? f1(av) : '-'}</div><div style="font-size:0.68rem;${MUTE}">${bst ? 'TOP ' + pl(bst.name) + ' ' + calcPlayerOVR(bst) : '선수 없음'}</div></div>`; }).join('');
             // 필드 능력치별 팀 평균 vs 리그 평균
             const allField = []; (state.teams || []).forEach(t => (t.players || []).forEach(p => { if (p.stats && p.pos !== 'GK') allField.push(p); }));
             const myField = rs.filter(p => p.pos !== 'GK');
             const statRows = abTree('FW').flatMap(g => [{ g, s: null, k: `${g.ic} ${g.k}` }].concat(g.subs.map(s => ({ g, s, k: `${g.k} › ${s.n || s.k}` })))).map(z => { const vf = p => z.s ? abSubVal(p, z.s) : abMainVal(p, z.g); const mine = mean(myField.map(vf)), lg = mean(allField.map(vf)); return { k: z.k, mine, lg, d: nz(mine) && nz(lg) ? mine - lg : null, sub: !!z.s }; });   // v1.11: 6대분류 + 소분류
-            const statTr = statRows.map(z => `<tr><td style="text-align:left;"><b>${z.k}</b></td><td><b style="color:${ovrColor(Math.round(z.mine || 0))};">${f1(z.mine)}</b></td><td>${f1(z.lg)}</td><td style="color:${z.d > 1 ? '#22c55e' : z.d < -1 ? '#f87171' : 'inherit'};">${sg(z.d)}</td><td>${nz(z.mine) ? bar((z.mine - 40) / 60 * 100, ovrColor(Math.round(z.mine))) : '-'}</td></tr>`).join('');
             // 선수별 능력치 히트맵
             const heat = v => { const a = Math.max(0, Math.min(1, (v - 55) / 40)); return `background:rgba(${v >= 80 ? '34,197,94' : v >= 70 ? '234,179,8' : '248,113,113'},${(0.12 + a * 0.35).toFixed(2)});`; };
             const lineupNames = new Map(pw.lineup.map(z => [z.name, z]));
             const impact = {}; pw.lineup.forEach(z => { try { impact[z.name] = tcAbsenceImpact(team, avail, z.name, pw.overall); } catch (e) { } });
-            const mkRow = (p, tree) => { const keys = tree.map(g => g.k), o = calcPlayerOVR(p), vals = tree.map(g => Math.round(abMainVal(p, g))), mx = Math.max(...vals), mn = Math.min(...vals), lu = lineupNames.get(p.name), av = avail[p.name] !== undefined ? avail[p.name] : 1;
-                return `<tr><td style="text-align:left;white-space:nowrap;">${pl(p.name)}</td><td><b style="color:${ovrColor(o)};">${o}</b></td>${vals.map(v => `<td style="${heat(v)}font-weight:${v === mx ? 900 : 500};">${v}</td>`).join('')}<td style="white-space:nowrap;font-size:0.7rem;"><span style="color:#22c55e;">${keys[vals.indexOf(mx)]}</span> / <span style="color:#f87171;">${keys[vals.indexOf(mn)]}</span></td><td>${Math.round(av * 100)}%</td><td>${lu ? (lu.starter ? '⭐ 주전' : '🔄 교체') : '후보'}</td><td style="color:${impact[p.name] < 0 ? '#f87171' : 'inherit'};">${nz(impact[p.name]) ? sg(impact[p.name]) : '-'}</td></tr>`; };
-            const tblHead = tree => `<thead><tr><th style="text-align:left;">선수</th><th>OVR</th>${tree.map(g => `<th>${g.ic} ${g.k}</th>`).join('')}<th>강점/약점</th><th>출전가능</th><th>역할</th><th>빠지면</th></tr></thead>`;
+            const mkRow = (p, tree) => { const o = calcPlayerOVR(p), vals = tree.map(g => Math.round(abMainVal(p, g))), mx = Math.max(...vals), lu = lineupNames.get(p.name);
+                return `<tr><td style="text-align:left;white-space:nowrap;">${pl(p.name)} <span style="${MUTE}font-size:0.66rem;">${p.pos}</span></td><td><b style="color:${ovrColor(o)};">${o}</b></td>${vals.map(v => `<td style="${heat(v)}font-weight:${v === mx ? 900 : 500};">${v}</td>`).join('')}<td style="font-size:0.7rem;white-space:nowrap;">${lu ? (lu.starter ? '⭐ 주전' : '🔄 교체') : `<span style="${MUTE}">후보</span>`}</td></tr>`; };
+            const tblHead = tree => `<thead><tr><th style="text-align:left;">선수</th><th>OVR</th>${tree.map(g => `<th>${g.ic} ${g.k}</th>`).join('')}<th>역할</th></tr></thead>`;
             const fieldTbl = myField.slice().sort((a, b) => calcPlayerOVR(b) - calcPlayerOVR(a)), gkTbl = rs.filter(p => p.pos === 'GK').sort((a, b) => calcPlayerOVR(b) - calcPlayerOVR(a));
             const heatHtml = `<div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.74rem;">${tblHead(abTree('FW'))}<tbody>${fieldTbl.map(p => mkRow(p, abTree('FW'))).join('')}</tbody></table></div>`
                 + (gkTbl.length ? `<div style="font-weight:800;font-size:0.8rem;margin:10px 0 4px;">🧤 골키퍼</div><div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.74rem;">${tblHead(abTree('GK'))}<tbody>${gkTbl.map(p => mkRow(p, abTree('GK'))).join('')}</tbody></table></div>` : '');
@@ -31576,17 +31673,24 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             let sty = null; try { const M = tsMetrics(), S = tsScores(M); if (S[id]) { const ok = Object.entries(S[id]).filter(([, v]) => v !== null).sort((a, b) => b[1] - a[1])[0]; if (ok) sty = ok[0]; } } catch (e) { }
             if (sty && TC_STYLE_NOTE[sty]) tips.push(`🧠 기록상 <b>${sty}</b> — ${TC_STYLE_NOTE[sty]}.`);
             const lu = pw.lineup.filter(z => z.starter).map(z => `${pl(z.name)}<span style="${MUTE}">(${z.pos} ${z.ovr})</span>`).join(' · '), bn = pw.lineup.filter(z => !z.starter).map(z => `${pl(z.name)}<span style="${MUTE}">(${z.pos} ${z.ovr})</span>`).join(' · ');
+            // v1.85: ① 한줄 진단 ② 리그 평균 대비(중앙 기준 좌우 막대) ③ 선수 OVR 순위(강점 · 약점 글자로)
+            const divRows = cats.filter(z => nz(z.d)).sort((a, b) => b.d - a.d).map(z => ({ label: z.c.label, sub: `${f1(z.v)} <span style="opacity:.7">(리그 ${f1(z.mu)})</span>`, d: z.d, title: z.c.desc }));
+            const sNames = strongC.map(z => z.c.label).join(' · '), wNames = weakC.map(z => z.c.label).join(' · ');
+            const verdict = (sNames ? `<span style="color:#22c55e;font-weight:900;">💪 강점 ${sNames}</span>` : '') + (sNames && wNames ? ' &nbsp;/&nbsp; ' : '') + (wNames ? `<span style="color:#f87171;font-weight:900;">⚠️ 약점 ${wNames}</span>` : '') || `<span style="${MUTE}">리그 평균과 비슷한 균형형 팀입니다</span>`;
+            const posCnt = ['FW', 'MF', 'DF', 'GK'].map(q => { const n = rs.filter(p => p.pos === q).length; return `<span style="display:inline-block;padding:2px 9px;border-radius:999px;font-size:0.74rem;font-weight:800;margin-right:5px;background:rgba(255,255,255,${n ? 0.08 : 0.03});${n ? '' : MUTE}">${q} ${n}</span>`; }).join('');
+            const mainTag = (p, kind) => { const tree = abTree(p.pos === 'GK' ? 'GK' : 'FW'), vals = tree.map(g => Math.round(abMainVal(p, g))), i = kind === 'hi' ? vals.indexOf(Math.max(...vals)) : vals.indexOf(Math.min(...vals)); return `<span style="color:${kind === 'hi' ? '#22c55e' : '#f87171'};font-weight:800;">${tree[i].k}</span> <span style="${MUTE}">${vals[i]}</span>`; };
+            const posCol = { FW: '#f97316', MF: '#84cc16', DF: '#0ea5e9', GK: '#eab308' };
+            const plRows = rs.slice().sort((a, b) => calcPlayerOVR(b) - calcPlayerOVR(a)).map(p => { const o = calcPlayerOVR(p), lu = lineupNames.get(p.name);
+                return `<tr><td style="text-align:left;white-space:nowrap;">${pl(p.name)}</td><td><span style="background:${posCol[p.pos] || '#94a3b8'}33;color:${posCol[p.pos] || '#94a3b8'};padding:1px 7px;border-radius:5px;font-size:0.68rem;font-weight:800;">${p.pos}</span></td><td><b style="font-size:0.95rem;color:${ovrColor(o)};">${o}</b></td><td style="text-align:left;">${mainTag(p, 'hi')}</td><td style="text-align:left;">${mainTag(p, 'lo')}</td><td style="font-size:0.72rem;white-space:nowrap;">${lu ? (lu.starter ? '⭐ 주전' : '🔄 교체') : `<span style="${MUTE}">후보</span>`}</td></tr>`; }).join('');
             el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;margin:18px 0 4px;"><div style="font-size:1.05rem;font-weight:900;color:#fbbf24;white-space:nowrap;">📈 선수단 전력분석</div><div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(251,191,36,0.4),transparent);"></div></div>
-                <div class="card"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:10px;">
-                    ${box('⚔️ 종합 전력', `<span style="color:${ovrColor(Math.round(pw.overall))};">${pw.overall.toFixed(1)}</span>`, `${ids.length}팀 중 ${orank}위`)}
-                    ${box('⭐ 주전 평균 OVR', f1(pw.startersPower), `필드 ${f1(pw.fieldPower)} · GK ${f1(pw.gkPower)}`)}
-                    ${box('👥 선수단 평균 OVR', f1(pw.squadPower), `${pw.squadSize}명 반영${pw.missing ? ' · 미설정 ' + pw.missing : ''}`)}
-                    ${box('🩹 주전 출전 가능성', nz(pw.availability) ? Math.round(pw.availability * 100) + '%' : '-', '과거 출전·결장 기록 기준')}
-                    ${box('🧑‍💼 감독 효과', Math.abs(pw.mgrDelta) >= 0.05 ? `<span style="color:${pw.mgrDelta > 0 ? '#22c55e' : '#f87171'};">${sg(pw.mgrDelta)}</span>` : '0.0', pw.mgr && pw.mgr.name ? esc(pw.mgr.name) : '감독 없음')}</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">${dcPowerRadar(cats.map(z => z.v), cats.map(z => z.mu), col)}<div style="flex:1;min-width:260px;"><div style="font-size:0.7rem;${MUTE}margin-bottom:4px;">실선 = 이 팀 · 점선 = 리그 평균</div><div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.76rem;"><thead><tr><th style="text-align:left;">항목</th><th>값</th><th>리그 평균</th><th>차이</th><th>순위</th><th></th></tr></thead><tbody>${catRows}</tbody></table></div></div></div></div>
-                <div class="dc-grid"><div class="card"><h3>🧩 포지션 구성</h3><div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.76rem;"><thead><tr><th style="text-align:left;">포지션</th><th>인원</th><th>평균 OVR</th><th></th><th>최고 선수</th></tr></thead><tbody>${posRows}</tbody></table></div></div>
-                <div class="card"><h3>📐 필드 능력치 vs 리그 평균</h3><div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.76rem;"><thead><tr><th style="text-align:left;">능력치</th><th>팀 평균</th><th>리그 평균</th><th>차이</th><th></th></tr></thead><tbody>${statTr}</tbody></table></div></div></div>
-                <div class="card"><h3>🔬 선수별 능력치 상세</h3><div class="ranking-info">셀 색: 초록 80↑ · 노랑 70↑ · 빨강 그 이하 / 굵은 글씨 = 그 선수의 최고 능력치 / ‘빠지면’ = 그 선수가 빠졌을 때 종합 전력 변화(주전·교체 선수만)</div>${heatHtml}</div>`;
+                <div class="card" style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
+                    <div style="text-align:center;min-width:120px;"><div style="font-size:0.7rem;${MUTE}">⚔️ 종합 전력</div><div style="font-size:2.2rem;font-weight:900;line-height:1.1;color:${ovrColor(Math.round(pw.overall))};">${pw.overall.toFixed(1)}</div><div style="font-size:0.82rem;font-weight:800;">${ids.length}팀 중 <span style="color:#fbbf24;">${orank}위</span></div></div>
+                    <div style="flex:1;min-width:220px;"><div style="font-size:0.88rem;line-height:1.7;">${verdict}</div><div style="font-size:0.74rem;${MUTE}margin-top:6px;">⭐ 주전 평균 <b style="color:var(--text);">${f1(pw.startersPower)}</b> · 👥 선수단 평균 <b style="color:var(--text);">${f1(pw.squadPower)}</b> (${pw.squadSize}명)</div></div></div>
+                <div class="card"><h3>📊 리그 평균 대비</h3>
+                    <div style="display:grid;grid-template-columns:84px 1fr 54px;gap:8px;font-size:0.66rem;${MUTE}"><span></span><div style="display:flex;justify-content:space-between;"><span>◀ 리그 평균보다 낮음</span><span>높음 ▶</span></div><span></span></div>
+                    ${divRows.map ? gDivBars(divRows) : ''}</div>
+                <div class="card"><h3>👥 선수 OVR 순위</h3><div style="margin-bottom:8px;">${posCnt}</div>
+                    <div class="scrollable-table"><table class="pattern-table" style="width:100%;font-size:0.8rem;text-align:center;"><thead><tr><th style="text-align:left;">선수</th><th>포지션</th><th>OVR</th><th style="text-align:left;">가장 강한 능력</th><th style="text-align:left;">가장 약한 능력</th><th>역할</th></tr></thead><tbody>${plRows}</tbody></table></div></div>`;
             // 🧭 전략 분석은 🔍 상세분석 탭(dcStrategy)에 표시
             const stEl = document.getElementById('dcStrategy');
             if (stEl) stEl.innerHTML = `<div class="card"><h3>🧭 전략 분석</h3><div style="font-size:0.8rem;margin-bottom:8px;">⭐ 추천 주전: ${lu || '-'}<br>🔄 교체: ${bn || '-'}</div><ul style="margin:0;padding-left:18px;font-size:0.8rem;line-height:1.7;">${tips.map(t => `<li>${t}</li>`).join('')}</ul></div>`;
@@ -33586,25 +33690,50 @@ window.pmExtRender = function(name){
     var box = $('modalManagerTac'); if(!box) return;
     try {
       var list = tacRecs().filter(function(x){ return x.mgr === name; });
-      var head = '<h4 style="margin:0 0 6px;color:var(--accent);">🧭 전술별 성적</h4>';
-      if(!list.length){ box.innerHTML = '<div class="tl-mgr">' + head + tacEmptyHtml() + '</div>'; return; }
+      var head = '<div class="tm-title">🧭 전술별 성적 <small>이 감독이 전술을 기록한 경기 기준</small></div>';
+      if(!list.length){ box.innerHTML = '<div class="tl-mgr tm-wrap">' + head + tacEmptyHtml() + '</div>'; return; }
       var t = tacTally(list);
-      var cell = function(r){ return gEsc(r.name) + '<small>' + r.g + '경기 · ' + r.w + '승 ' + r.l + '패 · ' + tacPct(r.rate) + '</small>'; };
+      var rcol = function(r){ return r === null ? '#94a3b8' : r >= .6 ? '#22c55e' : r >= .4 ? '#facc15' : '#f87171'; };
+      var stat = function(v, l, c){ return '<div class="tm-stat"><b style="color:' + c + ';">' + v + '</b><span>' + l + '</span></div>'; };
+      var hero = '<div class="tm-hero">'
+        + stat(t.g, '기록 경기', '#a78bfa')
+        + stat(t.w + '<small>승</small> ' + t.d + '<small>무</small> ' + t.l + '<small>패</small>', '전적', '#e2e8f0')
+        + stat(tacPct(t.rate), '승률', rcol(t.rate))
+        + stat((t.gf / t.g).toFixed(1), '경기당 득점', '#22c55e')
+        + stat((t.ga / t.g).toFixed(1), '경기당 실점', '#f87171') + '</div>';
+
+      // 항목별 카드 — 선택지마다 승률 막대 · 전적 · 👑 승률 최고(2경기+) · 📌 최다 사용
       var dims = TAC_ALL_DIMS.map(function(d){ var rows = tacBreakdown(list, d); if(d === 'fgk' && !rows.some(function(r){ return r.k === '1'; })) rows = []; return { d: d, rows: rows }; }).filter(function(x){ return x.rows.length; });
-      var tbody = dims.map(function(x){
-        var most = x.rows[0];
-        var best = x.rows.filter(function(r){ return r.g >= 2; }).sort(function(a,b){ return (b.rate - a.rate) || (b.g - a.g); })[0];
-        return '<tr><td>' + tacDimLabel(x.d) + '</td><td>' + cell(most) + '</td><td>' + (!best ? '<span class="mut">-</span>' : (best.k === most.k ? '<span class="mut">같음</span>' : cell(best))) + '</td></tr>';
+      var rowHtml = function(r, best, most, multi){
+        var c = rcol(r.rate), w = Math.round((r.rate || 0) * 100), isBest = multi && best && r.k === best.k, isMost = multi && r.k === most.k;
+        return '<div class="tm-row' + (isBest ? ' best' : '') + (r.g < 2 ? ' low' : '') + '">'
+          + '<div class="tm-r1"><span class="tm-nm">' + gEsc(r.name) + (isBest ? '<em class="tg b">👑 승률 최고</em>' : '') + (isMost ? '<em class="tg m">📌 최다</em>' : '') + '</span><b style="color:' + c + ';">' + tacPct(r.rate) + '</b></div>'
+          + '<div class="tm-bar"><i style="width:' + w + '%;background:' + c + ';"></i></div>'
+          + '<div class="tm-rec">' + r.g + '경기 · ' + r.w + '승 ' + r.d + '무 ' + r.l + '패<span>득 ' + (r.gf / r.g).toFixed(1) + ' · 실 ' + (r.ga / r.g).toFixed(1) + '</span></div></div>';
+      };
+      var cards = dims.map(function(x){
+        var rows = x.rows, multi = rows.length > 1, most = rows[0];
+        var best = rows.filter(function(r){ return r.g >= 2; }).sort(function(a,b){ return (b.rate - a.rate) || (b.g - a.g); })[0];
+        var shown = rows.slice(0, 4), rest = rows.slice(4);
+        return '<div class="tm-card"><div class="tm-ct">' + tacDimLabel(x.d) + '<small>' + rows.length + '가지 사용</small></div>'
+          + shown.map(function(r){ return rowHtml(r, best, most, multi); }).join('')
+          + (rest.length ? '<details class="tm-rest"><summary>나머지 ' + rest.length + '개 더 보기</summary>' + rest.map(function(r){ return rowHtml(r, best, most, multi); }).join('') + '</details>' : '')
+          + '</div>';
       }).join('');
-      var full = dims.map(function(x){
-        return '<div class="tl-blk" style="margin-top:6px;"><div class="tt">' + tacDimLabel(x.d) + '</div><div class="tl-scroll"><table class="tl-t"><thead><tr><th>선택</th><th>경기</th><th>승-패</th><th>승률</th></tr></thead><tbody>'
-          + x.rows.map(function(r){ return '<tr><td>' + gEsc(r.name) + '</td><td>' + r.g + '</td><td>' + r.w + '-' + r.l + '</td><td class="barc"><div class="tl-rate">' + tacBar(r.rate) + '<span>' + tacPct(r.rate) + '</span></div></td></tr>'; }).join('')
-          + '</tbody></table></div></div>';
-      }).join('');
-      box.innerHTML = '<div class="tl-mgr">' + head
-        + '<div class="tl-sum"><b>' + t.g + '</b>경기 기록 · ' + t.w + '승 ' + t.l + '패 (승률 ' + tacPct(t.rate) + ') · 경기당 ' + (t.gf / t.g).toFixed(1) + '득 ' + (t.ga / t.g).toFixed(1) + '실</div>'
-        + '<div class="tl-scroll"><table class="tl-t tl-simple"><thead><tr><th>항목</th><th>가장 많이 쓴 전술</th><th>승률 최고 <span class="mut">(2경기+)</span></th></tr></thead><tbody>' + tbody + '</tbody></table></div>'
-        + '<details class="tl-more"><summary>전체 표 보기</summary>' + full + '</details></div>';
+
+      // 자주 쓴 전술 조합 TOP3
+      var combos = '';
+      try {
+        var cb = tacCombos(list).slice(0, 3);
+        if(cb.length) combos = '<div class="tm-sub">🧩 자주 쓴 전술 조합 <small>포메이션 · 핵심 전술</small></div><div class="tm-combos">' + cb.map(function(c, i){
+          var col = rcol(c.rate);
+          return '<div class="tm-combo"><span class="tm-rk">' + (i + 1) + '</span><div class="tm-cl">' + gEsc(c.label) + '</div><div class="tm-cr"><b style="color:' + col + ';">' + tacPct(c.rate) + '</b><span>' + c.g + '경기 · ' + c.w + '승 ' + c.d + '무 ' + c.l + '패</span></div></div>';
+        }).join('') + '</div>';
+      } catch(e){}
+
+      box.innerHTML = '<div class="tl-mgr tm-wrap">' + head + hero + combos
+        + '<div class="tm-sub">📊 항목별 성적 <small>막대 = 승률 · <span style="color:#22c55e;">60%↑</span> <span style="color:#facc15;">40%↑</span> <span style="color:#f87171;">미만</span> · 흐린 줄 = 표본 1경기</small></div>'
+        + '<div class="tm-grid">' + cards + '</div></div>';
     } catch(e){ console.error('감독 전술 성적 오류', e); box.innerHTML = ''; }
   };
 })();
@@ -33774,6 +33903,8 @@ window.pmExtRender = function(name){
     return '<div style="margin-bottom:18px;"><h4 style="color:' + c + ';border-left:3px solid ' + c + ';padding-left:8px;margin-bottom:4px;">' + t + '</h4>' + (sub ? '<div style="font-size:.7rem;color:var(--text-muted);margin-bottom:8px;">' + sub + '</div>' : '') + body + '</div>';
   }
   function card(v, lb, c) { return '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:1.25rem;font-weight:800;color:' + c + ';font-family:\'Orbitron\';">' + v + '</div><div style="font-size:.7rem;color:var(--text-muted);margin-top:3px;">' + lb + '</div></div>'; }
+  function cardS(v, lb, c) { return '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:6px 4px;text-align:center;"><div style="font-size:1rem;font-weight:800;color:' + c + ';font-family:\'Orbitron\';">' + v + '</div><div style="font-size:.6rem;color:var(--text-muted);margin-top:2px;line-height:1.25;">' + lb + '</div></div>'; }
+  function cardsS(arr) { return '<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:8px;">' + arr.join('') + '</div>'; }
   function cards(arr) { return '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin-bottom:10px;">' + arr.join('') + '</div>'; }
   function medal(i) { return i < 3 ? ['🥇', '🥈', '🥉'][i] : (i + 1); }
   function duoDir(x) { return (x.ab ? plLink(x.a) + '→' + plLink(x.b) + ' ' + x.ab : '') + (x.ab && x.ba ? ' · ' : '') + (x.ba ? plLink(x.b) + '→' + plLink(x.a) + ' ' + x.ba : ''); }
@@ -33804,11 +33935,25 @@ window.pmExtRender = function(name){
       if (!log.length) { box.innerHTML = h + none('이 기간에 출전 기록이 없습니다.'); return; }
       var gSum = 0, aSum = 0, rSum = 0, rN = 0, mom = 0, yS = 0, rS = 0;
       log.forEach(function (x) { gSum += x.g; aSum += x.a; if (typeof x.r === 'number') { rSum += x.r; rN++; } if (x.mom) mom++; yS += x.y; if (x.off) rS++; });
-      h += sec('📋 기록 요약', '출전(선발·교체) 경기만 집계합니다.', cards([
-        card(log.length, '출전', '#a78bfa'), card(gSum, '득점', '#22c55e'), card(aSum, '도움', '#38bdf8'),
-        card(rN ? (rSum / rN).toFixed(2) : '-', '평균 평점', '#fbbf24'), card(mom, '👑 MOM', '#c084fc'),
-        card(r2(gSum / log.length), '경기당 득점', '#22c55e'), card(r2((gSum + aSum) / log.length), '경기당 공격P', '#f97316'), card(yS, '🟨 경고', '#facc15'), card(rS, '🟥 퇴장', '#ef4444')
-      ]), '#a78bfa');
+      // 연관 있는 카드끼리 묶어서 표시 (출전·평가 / 공격 / 🧱 실점 / 🧤 세이브 / 징계) — 키퍼 기록은 🧤 키퍼 분석 구역을 없애고 여기로 통합
+      var isKeeper = !!(gk && (gk.ss || gk.w)) && gk.w * 2 >= log.length;
+      var grp = function (label, color, arr) {
+        return '<div style="flex:1 1 ' + (arr.length * 92) + 'px;min-width:0;padding:8px 8px 2px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);">'
+          + '<div style="font-size:.72rem;font-weight:800;color:' + color + ';margin:0 0 6px 2px;">' + label + '</div>'
+          + '<div style="display:grid;grid-template-columns:repeat(' + arr.length + ',minmax(0,1fr));gap:6px;margin-bottom:8px;">' + arr.join('') + '</div></div>';
+      };
+      var gPlay = grp('📌 출전 · 평가', '#a78bfa', [card(log.length, '출전', '#a78bfa'), card(rN ? (rSum / rN).toFixed(2) : '-', '평균 평점', '#fbbf24'), card(mom, '👑 MOM', '#c084fc')]);
+      var gAtk = grp('⚽ 공격 기록', '#22c55e', [card(gSum, '득점', '#22c55e'), card(aSum, '도움', '#38bdf8'), card(r2(gSum / log.length), '경기당 득점', '#22c55e'), card(r2((gSum + aSum) / log.length), '경기당 공격P', '#f97316')]);
+      var gCard = grp('🟨 징계', '#facc15', [card(yS, '🟨 경고', '#facc15'), card(rS, '🟥 퇴장', '#ef4444')]);
+      var gGk = '';
+      if (gk && (gk.ss || gk.w)) {
+        var lgGA = 0, lgW = 0; Object.keys(R.gk).forEach(function (k) { lgGA += R.gk[k].ga; lgW += R.gk[k].w; });
+        var lgGAavg = lgW > 0 ? r2(lgGA / lgW) : 0, lgSS = GA.leagueGkPerGame(R), lgT = function (v) { return '<br><span style="opacity:.75;">리그 ' + v + '</span>'; };
+        gGk = grp('🧱 실점 · 수비', '#f87171', [card(gk.ga, '🥅 실점', '#f87171'), card(gk.w > 0 ? r2(gk.ga / gk.w) : 0, '경기당 실점' + lgT(lgGAavg), '#f87171'), card(gk.cs, '무실점 경기', '#22c55e')])
+          + grp('🧤 세이브', '#38bdf8', [card(gk.ss, '🧤 세이브', '#38bdf8'), card(gk.w > 0 ? r2(gk.ss / gk.w) : 0, '경기당 세이브' + lgT(lgSS), '#38bdf8'), card(gk.bestSS, '한 경기 최다', '#38bdf8'), card(pct(gk.ss, gk.ss + gk.ga) + '%', '세이브 기여율', '#38bdf8')]);
+      }
+      h += sec('📋 기록 요약', '출전(선발·교체) 경기만 집계합니다.' + (gGk ? ' · 세이브 = 경기 기록의 GK 행에 입력한 결정적 선방 · 기여율 = 세이브 ÷ (세이브 + 실점)' : ''),
+        '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px;">' + (isKeeper ? gPlay + gGk + gAtk + gCard : gPlay + gAtk + gGk + gCard) + '</div>', '#a78bfa');
 
       // 2) 득점 분석
       var body = '', pitchHtml = '', side = '';
@@ -33856,15 +34001,6 @@ window.pmExtRender = function(name){
       if (p.goals) {
         h += sec('🎯 득점 분석' + (typeof gUpdTag === 'function' ? gUpdTag('1.81:개선') : ''), sub, body + '<div style="display:flex;flex-wrap:wrap;gap:6px 22px;align-items:flex-start;margin-top:6px;">' + (pitchHtml ? '<div style="flex:0 1 300px;min-width:240px;max-width:100%;">' + pitchHtml + '</div>' : '') + '<div style="flex:1 1 300px;min-width:0;">' + side + '</div></div>', '#38bdf8');
       } else h += side;
-
-      // 6) GK
-      if (gk && (gk.ss || gk.w)) {
-        var perG = gk.w > 0 ? r2(gk.ss / gk.w) : 0, lgG = GA.leagueGkPerGame(R);
-        h += sec('🧤 키퍼 분석', '세이브 = 경기 기록의 GK 행에 입력한 결정적 선방 · 기여율 = 세이브 ÷ (세이브 + 실점)', cards([
-          card(gk.ss, '세이브', '#38bdf8'), card(perG, '경기당 (리그 ' + lgG + ')', '#38bdf8'), card(gk.bestSS, '한 경기 최다', '#38bdf8'),
-          card(pct(gk.ss, gk.ss + gk.ga) + '%', '세이브 기여율', '#38bdf8'), card(gk.cs, '무실점 경기', '#22c55e'), card(gk.ga, '실점', '#f87171')
-        ]), '#38bdf8');
-      }
 
       // 7) 베스트 경기
       var best = log.filter(function (x) { return typeof x.r === 'number'; }).sort(function (a, b) { return b.r - a.r || (b.g + b.a) - (a.g + a.a); }).slice(0, 3);
@@ -33917,11 +34053,9 @@ window.pmExtRender = function(name){
 
       // 팀 마무리 전술 ↔ 실제 득점 분포 (3단계)
       h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#a78bfa;font-size:.84rem;margin-bottom:6px;">⚖️ 마무리 전술 vs 실제 득점</div>' + GA.finishCompare(t, z, loc) + '</div>';
-      h += '</div>'; if (loc) h += '<div style="flex:0 1 440px;min-width:260px;max-width:100%;">';
 
-      // 득점 지도
-      if (loc) h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#22c55e;font-size:.84rem;margin-bottom:6px;">🗺️ 팀 득점 지도</div>' + miniPitch(goals, 440) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">이 팀이 오른쪽 골대를 향해 공격하는 기준으로 모든 골을 겹쳐 그렸어요 · 점에 마우스를 올리면 득점자 · 도움 표시</div></div>';
-      if (loc) h += '</div>'; h += '</div>';
+      // 득점 지도 (오른쪽 칸 — 아래에서 붙임)
+      var mapHtml = ''; if (loc) mapHtml = '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#22c55e;font-size:.84rem;margin-bottom:6px;">🗺️ 팀 득점 지도</div>' + miniPitch(goals, 440) + '<div style="font-size:.62rem;color:var(--text-muted);margin-top:3px;">이 팀이 오른쪽 골대를 향해 공격하는 기준으로 모든 골을 겹쳐 그렸어요 · 점에 마우스를 올리면 득점자 · 도움 표시</div></div>';
 
       // 득점 유형 선수 순위 (선수 개별 랭킹에서 이쪽으로 이동)
       var pm = {}; goals.forEach(function (g) { var q = pm[g.scorer] || (pm[g.scorer] = { name: g.scorer, goals: 0, loc: 0, z: { six: 0, box: 0, mid: 0, long: 0 } }); q.goals++; if (g.zone) { q.loc++; q.z[g.zone]++; } });
@@ -33933,9 +34067,9 @@ window.pmExtRender = function(name){
           : none('조건에 맞는 선수가 없어요.')) + '</div>';
 
       // 팀 베스트 콤비 · 카드 · 세이브: 가로로 나란히 배치
-      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:0 22px;align-items:start;">';
+      h += '<div style="display:flex;flex-wrap:wrap;gap:0 22px;align-items:flex-start;">';   // v1.85: 왼쪽 = 팀 베스트 콤비(넓게) · 오른쪽 = 팀 세이브 + 팀 카드 기록
       var duos = GA.duos(R, id).slice(0, 5), linked = goals.filter(function (g) { return g.ast; }).length;
-      h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#fbbf24;font-size:.84rem;margin-bottom:6px;">🤝 팀 베스트 콤비 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">도움 연결 ' + linked + ' / ' + goals.length + '골 · 팀 득점 대비 비중</span></div>'
+      h += '<div style="flex:3 1 460px;min-width:0;margin-bottom:16px;font-size:.92em;"><div style="font-weight:800;color:#fbbf24;font-size:.84rem;margin-bottom:6px;">🤝 팀 베스트 콤비 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">도움 연결 ' + linked + ' / ' + goals.length + '골 · 팀 득점 대비 비중</span></div>'
         + (duos.length ? '<div class="scrollable-table"><table class="pattern-table no-stack" style="width:100%;border-collapse:collapse;"><thead><tr><th style="' + thS() + '">순위</th><th style="' + thS() + '">콤비</th><th style="' + thS() + '">합작골</th><th style="' + thS() + '">방향</th><th style="' + thS() + '">팀 득점 비중</th></tr></thead><tbody>'
           + duos.map(function (x, i) {
             var dir = duoDir(x);
@@ -33947,22 +34081,24 @@ window.pmExtRender = function(name){
       Object.keys(R.teamCards).forEach(function (k) { lgY += R.teamCards[k].y; lgR += R.teamCards[k].r; });
       Object.keys(R.teamGames).forEach(function (k) { lgG += R.teamGames[k]; });
       if (tcd && (tcd.y || tcd.r)) {
-        cb += cards([card(tcd.y, '🟨 경고', '#facc15'), card(tcd.r, '🟥 퇴장', '#ef4444'),
-          card(tgm ? r2(tcd.y / tgm) : 0, '경기당 경고 (리그 ' + (lgG ? r2(lgY / lgG) : 0) + ')', '#facc15'), card(tgm ? r2(tcd.r / tgm) : 0, '경기당 퇴장 (리그 ' + (lgG ? r2(lgR / lgG) : 0) + ')', '#ef4444')]);
+        cb += cardsS([cardS(tcd.y, '🟨 경고', '#facc15'), cardS(tcd.r, '🟥 퇴장', '#ef4444'),
+          cardS(tgm ? r2(tcd.y / tgm) : 0, '경기당 경고 (리그 ' + (lgG ? r2(lgY / lgG) : 0) + ')', '#facc15'), cardS(tgm ? r2(tcd.r / tgm) : 0, '경기당 퇴장 (리그 ' + (lgG ? r2(lgR / lgG) : 0) + ')', '#ef4444')]);
         var tby = Object.keys(tcd.by).map(function (k) { return tcd.by[k]; }).sort(function (a, b) { return (b.r * 3 + b.y) - (a.r * 3 + a.y); }).slice(0, 5);
         cb += '<div style="font-size:.76rem;">' + tby.map(function (b) { return plLink(b.name) + ' ' + (b.y ? '🟨' + b.y : '') + (b.r ? '🟥' + b.r : ''); }).join(' · ') + '</div>';
       } else cb = none('아직 카드 기록이 없어요. 경기 기록의 선수 카드에서 🟨🟥 카드를 고르면 쌓여요.');
-      h += '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#facc15;font-size:.84rem;margin-bottom:6px;">🟨 팀 카드 기록 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">경고 2회는 퇴장으로 계산 · 카드 많은 선수 TOP5</span></div>' + cb + '</div>';
+      var cardHtml = '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#facc15;font-size:.84rem;margin-bottom:6px;">🟨 팀 카드 기록 <span style="font-weight:600;color:var(--text-muted);font-size:.7rem;">경고 2회는 퇴장으로 계산 · 카드 많은 선수 TOP5</span></div>' + cb + '</div>';
 
       // 팀 세이브
       var gt = R.gkTeam[id], gb = '';
       if (gt && (gt.ss || gt.w)) {
         var by = Object.keys(gt.by).map(function (k) { return gt.by[k]; }).sort(function (a, b) { return b.ss - a.ss; });
-        gb += cards([card(gt.ss, '팀 세이브', '#38bdf8'), card(gt.w > 0 ? r2(gt.ss / gt.w) : 0, '경기당 (리그 ' + GA.leagueGkPerGame(R) + ')', '#38bdf8'), card(pct(gt.ss, gt.ss + gt.ga) + '%', '세이브 기여율', '#38bdf8'), card(gt.ga, '실점', '#f87171')]);
+        gb += cardsS([cardS(gt.ss, '팀 세이브', '#38bdf8'), cardS(gt.w > 0 ? r2(gt.ss / gt.w) : 0, '경기당 (리그 ' + GA.leagueGkPerGame(R) + ')', '#38bdf8'), cardS(pct(gt.ss, gt.ss + gt.ga) + '%', '세이브 기여율', '#38bdf8'), cardS(gt.ga, '실점', '#f87171')]);
         gb += '<div style="font-size:.76rem;">' + by.map(function (b) { return plLink(b.name) + ' <b style="color:#38bdf8;">' + b.ss + '</b>' + (b.w > 0 ? ' <span style="color:var(--text-muted);">(경기당 ' + r2(b.ss / b.w) + ')</span>' : ''); }).join(' · ') + '</div>';
       } else gb = none('아직 세이브가 기록되지 않았어요. 경기 기록에서 GK 카드의 🧤 칸에 횟수를 입력해 주세요.');
-      h += '<div><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🧤 팀 세이브</div>' + gb + '</div>';
+      var saveHtml = '<div style="margin-bottom:16px;"><div style="font-weight:800;color:#38bdf8;font-size:.84rem;margin-bottom:6px;">🧤 팀 세이브</div>' + gb + '</div>';
+      h += '<div style="flex:1 1 200px;min-width:0;">' + saveHtml + cardHtml + '</div>';
       h += '</div>';
+      h += '</div>' + (loc ? '<div style="flex:0 1 440px;min-width:260px;max-width:100%;position:sticky;top:12px;">' + mapHtml + '</div>' : '') + '</div>';   // v1.85: 왼쪽 칸 = 득점 유형~세이브 전부 · 오른쪽 칸 = 득점 지도
       host.innerHTML = h;
     } catch (e) { console.error('팀 득점 유형 카드 오류', e); host.innerHTML = '<h3>🔬 득점 유형 · 콤비 · 세이브</h3>' + none('계산 중 오류가 발생했습니다.'); }
   };
@@ -35346,14 +35482,52 @@ window.pmExtRender = function(name){
 /* 🏅 감독 랭킹 수상기록 트로피 16px */
 #managerRankTbody img.g-tr, #managerTotalTbody img.g-tr { height: 16px !important; }
 /* 📈 현재 리그 순위: 행 세로 간격 축소 · 글씨 확대 */
-#dashTeamRankTable td, #dashTeamRankTable th { padding: 2px 6px; font-size: .86rem; line-height: 1.2; }
-#dashTeamRankTable td.clickable-team { font-size: 1rem; }
+#dashTeamRankTable td, #dashTeamRankTable th { padding: 1px 6px; font-size: .84rem; line-height: 1.15; }
+#dashTeamRankTable td.clickable-team { font-size: .9rem; }
+#dashTeamRankTable .g-teamcell { align-items: center; }
+#dashTeamRankTable .g-teamcell .g-av.team { width: 1.6em; height: 1.6em; margin-right: .4em; }
 /* 🏠 대시보드 상단: 타이틀바와 대시보드 박스를 하나로 (검색 · 뒤로 버튼은 필터 아래 줄) */
 .content-topbar.dash-merged { display: none; }
 .dash-top-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin: 2px 0 6px; }
 .dash-top-actions:empty { display: none; }
 .dash-top-actions .content-topbar-actions { flex: 1 1 auto; justify-content: flex-end; }
 #dashboard > .card:first-child { position: relative; z-index: 300; }
+
+/* 🏠 대시보드 상단 2열: ① 제목 줄(제목 확대) ② 카드 + 검색 · 뒤로 한 줄 */
+#dashboard .dash-season-title { font-size: 1.55rem !important; letter-spacing: .01em; }
+.dash-kpi-line { display: flex; align-items: center; gap: 8px; }
+#dashKpiGrid.dk-grid { flex: 1 1 auto; min-width: 0; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; }
+#dashKpiGrid .dk-card { padding: 3px 6px; }
+#dashKpiGrid .dk-title { font-size: .6rem; padding-right: 12px; }
+#dashKpiGrid .dk-main { font-size: .82rem; }
+.dash-kpi-line .dash-top-actions { flex: 0 0 auto; margin: 0; flex-wrap: nowrap; }
+.dash-kpi-line .dash-top-actions .content-topbar-actions { flex: 0 0 auto; flex-wrap: nowrap; gap: 6px; }
+.dash-kpi-line .gs-wrap { flex: 0 0 170px; min-width: 0; max-width: 170px; }
+.dash-kpi-line .gs-input { padding: 4px 8px; font-size: .74rem; }
+.dash-kpi-line .global-back-btn { padding: 4px 8px; font-size: .72rem; white-space: nowrap; }
+@media (max-width: 1280px) {
+  .dash-kpi-line { flex-wrap: wrap; }
+  #dashKpiGrid.dk-grid { flex: 1 1 100%; grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .dash-kpi-line .dash-top-actions { flex: 1 1 100%; }
+  .dash-kpi-line .gs-wrap { flex: 1 1 170px; max-width: none; }
+}
+/* 좌측 메뉴: G-LEAGUE REBOOT 글자를 로고와 같이 중앙 정렬 (접기 버튼은 우측 모서리에 고정) */
+.sidebar-header-top { position: relative; justify-content: center; }
+.sidebar-header h1 { text-align: center; margin: 0 0 4px; }
+.sidebar-header-top .sidebar-collapse-btn { position: absolute; right: 0; top: 0; margin-top: 0; }
+@media (min-width: 901px) { .sidebar.collapsed .sidebar-header-top .sidebar-collapse-btn { position: static; } }
+
+/* 🗂️ 팀 데이터센터 › 🏠 개요 정리: 핵심 선수 안내문은 제목 옆 · 좌우 박스 끝선 맞춤 */
+.dc-key-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
+.dc-key-note { font-size: .68rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0; }
+#dcTabContent_teaminfo .dc-grid { align-items: stretch; }
+.dc-info-split { align-items: stretch; }
+.dc-info-left { display: flex; flex-direction: column; }
+.dc-info-left > #dcTeamInfoFormation { flex: 1 1 auto; display: flex; flex-direction: column; }
+.dc-info-left > #dcTeamInfoFormation > .card { flex: 1 1 auto; margin-bottom: 0; }
+.dc-info-split .dc-info-right > .card:last-child { flex: 1 1 auto; }
+.dc-info-split .dc-info-right > .card, .dc-info-split .dc-info-left .card { margin-bottom: 0; }
+.dc-info-split .dc-info-right { gap: 12px; }
 </style>
 <script id="g184Core">
 /* v1.84 — 🧑‍💼 감독 상세 창 › 🏆 트로피 · 🥈 준우승 메달 진열대 (종료되어 아카이브에 저장된 시즌 기준) */
@@ -35368,7 +35542,7 @@ window.pmExtRender = function(name){
         const body = (ch.length || ru.length)
             ? sec('gold', '🏆 우승 트로피', ch.length + '개', trophies) + sec('silver', '🥈 준우승 메달', ru.length + '개', medals)
             : '<div class="pc-empty"><span class="tc-note">아직 우승 · 준우승 기록이 없어요.</span></div>';
-        box.innerHTML = `<details class="tc-fold">
+        box.innerHTML = `<details class="tc-fold" open>
             <summary><span class="tc-sum-t">🏛️ 트로피 진열대 ${typeof gNewTag === 'function' ? gNewTag('1.84') : ''}</span>
                 <span class="tc-chips"><span class="tcc gold${ch.length ? '' : ' mute'}">🏆 우승 ${ch.length}</span><span class="tcc silver${ru.length ? '' : ' mute'}">🥈 준우승 ${ru.length}</span>${lp.length ? `<span class="tcc bad">💀 꼴찌 ${lp.length}</span>` : ''}</span>
                 <span class="tc-more"><b class="m-o">상세보기</b><b class="m-c">접기</b></span></summary>
@@ -35377,6 +35551,42 @@ window.pmExtRender = function(name){
         </details>`;
         try { if (typeof gApplyNewBadges === 'function') gApplyNewBadges(); } catch (e) { }
     };
+})();
+</script>
+<script id="pmEqOverview">
+/* 선수 모달 개요: 좌우 컬럼 하단 맞춤 (왼쪽이 짧으면 트로피 진열대를, 오른쪽이 짧으면 능력치 박스를 늘림) */
+(function () {
+    var raf = 0, tm = 0;
+    function run() {
+        raf = 0;
+        try {
+            var root = document.getElementById('playerTabContentOverview');
+            if (!root || !root.offsetParent) return;
+            var cab = root.querySelector('#playerTrophyCabinet .tc-cab');
+            var ab = document.getElementById('playerAbilitySection');
+            if (cab) cab.style.minHeight = '';
+            if (ab) ab.style.minHeight = '';
+            if (window.innerWidth < 1000) return;
+            var cols = root.querySelectorAll('.pm-cols > .pm-col');
+            if (cols.length < 2) return;
+            var l = cols[0].getBoundingClientRect().height, r = cols[1].getBoundingClientRect().height;
+            var diff = r - l;
+            if (diff > 1 && cab) { cab.style.boxSizing = 'border-box'; cab.style.minHeight = Math.ceil(cab.getBoundingClientRect().height + diff) + 'px'; }
+            else if (diff < -1 && ab && ab.offsetParent) { ab.style.boxSizing = 'border-box'; ab.style.minHeight = Math.ceil(ab.getBoundingClientRect().height - diff) + 'px'; }
+        } catch (e) { }
+    }
+    function schedule() {
+        if (!raf) raf = requestAnimationFrame(run);
+        clearTimeout(tm); tm = setTimeout(run, 350);
+    }
+    function boot() {
+        var m = document.getElementById('playerDetailModal');
+        if (!m) return;
+        try { new MutationObserver(schedule).observe(m, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] }); } catch (e) { }
+        m.addEventListener('load', schedule, true);
+        window.addEventListener('resize', schedule);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
 </body>
