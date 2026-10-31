@@ -969,6 +969,28 @@
         
         
         .tc-insight li { margin:4px 0; font-size:0.8rem; line-height:1.45; }
+/* v1.86: 💡 종합 해석 — 카드형 구역 · 문장별 줄바꿈 · 접기/펼치기 */
+.tci-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 12px; align-items: start; }
+.tci-box { background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.09); border-radius: 12px; overflow: hidden; }
+.tci-box > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: .92rem; font-weight: 900; background: rgba(255,255,255,.045); }
+.tci-box > summary::-webkit-details-marker { display: none; }
+.tci-box > summary::after { content: '▾'; margin-left: 4px; color: var(--text-muted); font-size: .8rem; transition: transform .15s; }
+.tci-box:not([open]) > summary::after { transform: rotate(-90deg); }
+.tci-ico { font-size: 1.05rem; }
+.tci-sub { font-size: .66rem; font-weight: 700; color: var(--text-muted); }
+.tci-cnt { margin-left: auto; min-width: 20px; text-align: center; font-size: .68rem; font-weight: 800; padding: 1px 7px; border-radius: 10px; background: rgba(56,189,248,.15); color: var(--accent); }
+.tci-body { padding: 10px 14px 12px; }
+.tci-list { list-style: none; margin: 0; padding: 2px 14px 6px; }
+.tci-list li { position: relative; padding: 9px 0 9px 16px; font-size: .84rem; line-height: 1.7; border-bottom: 1px dashed rgba(255,255,255,.09); word-break: keep-all; overflow-wrap: anywhere; }
+.tci-list li:last-child { border-bottom: none; }
+.tci-list li::before { content: ''; position: absolute; left: 2px; top: 1.2em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.tci-list li b { color: #f8fafc; }
+.tci-list-in { padding: 0; }
+.tci-list-in li::before { background: var(--tcc, var(--accent)); }
+.tci-team { margin: 0 0 10px; padding: 8px 12px 4px; border-left: 3px solid var(--tcc, var(--accent)); border-radius: 4px 8px 8px 4px; background: color-mix(in srgb, var(--tcc, #38bdf8) 8%, transparent); }
+.tci-team:last-child { margin-bottom: 0; }
+.tci-team-h { font-size: .86rem; font-weight: 900; color: var(--tcc, var(--text)); }
+.tci-caution { margin-top: 12px; padding: 9px 12px; border-radius: 8px; background: rgba(251,191,36,.06); border: 1px solid rgba(251,191,36,.2); font-size: .74rem; line-height: 1.65; color: var(--text-muted); }
         /* 🧠 전력분석 탭: 상단 화면 전환(매치업 분석 · 팀 스타일 · 시뮬레이션) + 매치업 모드 전환 */
         .ml-subnav { display:flex; gap:6px; flex-wrap:wrap; margin:0 0 12px; padding:6px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); }
         .ml-subnav button { flex:1; min-width:120px; display:flex; flex-direction:column; align-items:center; gap:1px; font-size:0.86rem; font-weight:900; padding:8px 10px; border-radius:9px; background:transparent; color:var(--text-muted); border:1px solid transparent; cursor:pointer; }
@@ -1477,6 +1499,53 @@
 .tg.m{background:rgba(56,189,248,.16);color:#38bdf8}
 .tm-rest{margin-top:2px}
 .tm-rest>summary{cursor:pointer;font-size:.7rem;font-weight:800;color:#38bdf8;padding:3px 6px}
+
+/* v1.86: 📜 시즌 아카이브 — 우승 트로피 아래 팀 로고 크게 · 좌측 조별리그/인터리그 + 우측 토너먼트 */
+.aw-champ-nm .g-nm { display: flex; flex-direction: column; align-items: center; white-space: normal; }
+.aw-champ-nm .g-av.team.s-lg.block { order: 2; width: 132px !important; height: 132px !important; max-width: none; margin: 8px auto 4px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.5)); }
+.aw-champ-nm { font-size: 1.25rem; }
+@media (max-width: 700px) { .aw-champ-nm .g-av.team.s-lg.block { width: 96px !important; height: 96px !important; } }
+.arc-stage { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 14px; align-items: start; }
+.arc-stage > .card { margin-bottom: 0; }
+.arc-stage .arc-tourn { position: sticky; top: 8px; }
+@media (max-width: 1100px) { .arc-stage { grid-template-columns: 1fr; } .arc-stage .arc-tourn { position: static; } }
+.arc-grp { margin-top: 10px; }
+.arc-grp-t { font-size: .84rem; font-weight: 900; margin-bottom: 4px; color: var(--accent); }
+.arc-grp-t small { font-weight: 600; color: var(--text-muted); margin-left: 4px; }
+.arc-league .pattern-table th, .arc-league .pattern-table td { padding: 5px 4px; font-size: .78rem; }
+.arc-inter { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px; }
+.arc-gm { margin-top: 6px; }
+.arc-gm > summary { cursor: pointer; font-size: .74rem; font-weight: 800; color: #38bdf8; padding: 3px 2px; }
+.arc-gm-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 6px; margin-top: 4px; }
+.arc-league .inter-match-card { padding: 7px 9px; font-size: .8rem; }
+
+/* v1.86: 📜 시즌 아카이브 우승팀 카드 — 황금 효과 + 팀 고유색(--hc) (🌟 시즌 기록 시즌 챔피언과 같은 방식) */
+@property --arcHa { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes arcHeroSpin { from { --arcHa: 0deg; } to { --arcHa: 360deg; } }
+.aw-card.aw-champ { --hc: #fbbf24; position: relative; overflow: hidden; isolation: isolate; border-radius: 16px;
+  border: 2px solid transparent !important;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--hc) 46%, transparent), color-mix(in srgb, var(--hc) 12%, transparent) 58%, transparent) padding-box,
+    linear-gradient(160deg, #1e293b, #0b1120 78%) padding-box,
+    conic-gradient(from var(--arcHa), #b45309, #fbbf24, #fff3b0, #fbbf24, #b45309, var(--hc), #b45309) border-box !important;
+  box-shadow: 0 0 0 1px rgba(253,224,71,.25) inset, 0 0 22px color-mix(in srgb, var(--hc) 45%, transparent), 0 0 48px rgba(251,191,36,.14);
+  animation: arcHeroSpin 6s linear infinite, arcGoldPulse 3.2s ease-in-out infinite; }
+.aw-card.aw-champ::before { content: ''; position: absolute; top: -20%; bottom: -20%; left: -60%; width: 40%; z-index: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.26), transparent); transform: skewX(-18deg); animation: arcGoldSweep 4.2s ease-in-out infinite; }
+.aw-card.aw-champ::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(circle at 18% 22%, rgba(255,255,255,.9) 0 1.5px, transparent 2.5px), radial-gradient(circle at 82% 30%, rgba(253,230,138,.85) 0 1.5px, transparent 2.5px), radial-gradient(circle at 70% 78%, rgba(255,255,255,.75) 0 1.5px, transparent 2.5px), radial-gradient(circle at 28% 72%, rgba(253,230,138,.85) 0 1.5px, transparent 2.5px);
+  animation: arcGoldTwinkle 2.4s ease-in-out infinite; }
+.aw-card.aw-champ > * { position: relative; z-index: 1; }
+.aw-card.aw-champ h3 > span:not([class]) { background: linear-gradient(180deg, #fff3b0, #fbbf24 60%, #d97706); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 900; letter-spacing: .2em; text-shadow: none; filter: drop-shadow(0 0 6px rgba(251,191,36,.6)); }
+.aw-card.aw-champ .aw-champ-nm { color: color-mix(in srgb, var(--hc) 72%, #fff) !important; font-weight: 900;
+  text-shadow: 0 0 14px color-mix(in srgb, var(--hc) 70%, transparent), 0 2px 0 rgba(0,0,0,.55); }
+.aw-card.aw-champ .g-av.team { filter: drop-shadow(0 0 14px color-mix(in srgb, var(--hc) 75%, transparent)) drop-shadow(0 4px 10px rgba(0,0,0,.5)); }
+@keyframes arcGoldPulse { 0%, 100% { box-shadow: 0 0 0 1px rgba(253,224,71,.25) inset, 0 0 18px color-mix(in srgb, var(--hc) 38%, transparent), 0 0 40px color-mix(in srgb, var(--hc) 14%, transparent); } 50% { box-shadow: 0 0 0 1px rgba(253,224,71,.45) inset, 0 0 30px color-mix(in srgb, var(--hc) 68%, transparent), 0 0 64px color-mix(in srgb, var(--hc) 30%, transparent); } }
+@keyframes arcGoldSweep { 0% { left: -60%; } 55%, 100% { left: 130%; } }
+@keyframes arcGoldTwinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .aw-card.aw-champ, .aw-card.aw-champ::before, .aw-card.aw-champ::after { animation: none; } }
+
+
 @media (max-width:700px){.tm-hero{grid-template-columns:repeat(3,minmax(0,1fr))}.tm-grid{grid-template-columns:1fr}}
 
 </style>
@@ -1637,10 +1706,15 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 /* 🎨 팀 모달 · 팀 데이터센터: 팀 색상 + 중앙 대형 로고 배경 */
 .g-tbgHost { position: relative; isolation: isolate; }
 .g-tbg { position: sticky; top: 0; height: 0; z-index: -1; pointer-events: none; }
-.g-tbg-in { position: absolute; top: -24px; left: -60px; right: -60px; height: calc(var(--tbgh, 80vh) + 24px); overflow: hidden; background: color-mix(in srgb, var(--tc, #38bdf8) 13%, transparent); }
-.g-tbg-tint { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, color-mix(in srgb, var(--tc, #38bdf8) 34%, transparent), color-mix(in srgb, var(--tc, #38bdf8) 12%, transparent) 55%, transparent 88%); }
-.g-tbg-logo { position: absolute; left: 50%; top: 50%; width: min(72%, 640px); aspect-ratio: 1 / 1; max-height: 92%; transform: translate(-50%, -50%); background: center / contain no-repeat; opacity: .11; filter: saturate(1.1); }
+.g-tbg-in { position: absolute; top: -24px; left: -60px; right: -60px; height: calc(var(--tbgh, 80vh) + 24px); overflow: hidden; background: color-mix(in srgb, var(--tc, #38bdf8) 7%, #060b16); }
+.g-tbg-in::after { content: ''; position: absolute; inset: 0; background: rgba(2, 6, 16, .38); pointer-events: none; }
+.g-tbg-tint { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, color-mix(in srgb, var(--tc, #38bdf8) 22%, transparent), color-mix(in srgb, var(--tc, #38bdf8) 8%, transparent) 55%, transparent 88%); }
+.g-tbg-logo { position: absolute; left: 50%; top: 50%; width: min(72%, 640px); aspect-ratio: 1 / 1; max-height: 92%; transform: translate(-50%, -50%); background: center / contain no-repeat; opacity: .09; filter: saturate(1.1); }
 #teamModalContent.g-tbgHost .card, #dcTeamPanel.g-tbgHost .card { background: rgba(15, 23, 42, .6); }
+/* v1.86: 🧩 선수 · 🧑‍💼 감독 상세 창 — 소속팀 색상 + 투명 로고 배경 (팀 데이터센터와 동일) · 이름 아래 소속팀 로고 */
+#playerDetailModal .modal-content.g-tbgHost .card, #managerDetailModal .modal-content.g-tbgHost .card { background: rgba(15, 23, 42, .6); }
+#playerDetailModal .modal-content.g-tbgHost .g-mh, #managerDetailModal .modal-content.g-tbgHost .g-mh { background: rgba(15, 23, 42, .84); }
+.g-mh-tlogo { height: 1.5em; width: 1.5em; object-fit: contain; vertical-align: -.4em; margin-right: 5px; filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
 /* 📅 시즌 기록: 시즌 넘겨보기 */
 .sr-nav { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
 .sr-mid { flex: 1; min-width: 0; text-align: center; }
@@ -18076,7 +18150,8 @@ function fmBestStyle(p, role) {
 
             // 렌더링
             const boxStyle = 'background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px;';
-            const groupHtml = g => g.items.length ? `<div style="${boxStyle}"><div style="font-size:0.84rem; font-weight:900; margin-bottom:5px;">${g.icon} ${g.title}${g.sub ? ` <span style="font-size:0.6rem; color:var(--text-muted); font-weight:700;">${g.sub}</span>` : ''}</div><ul class="tc-insight" style="margin:0; padding-left:16px;">${g.items.map(x => `<li>${x}</li>`).join('')}</ul></div>` : '';
+            const tciBr = x => String(x).replace(/([다요음함]\.)\s+(?=[^<\s])/g, '$1<br>');   // 문장마다 줄바꿈
+            const groupHtml = g => g.items.length ? `<details open class="tci-box"><summary><span class="tci-ico">${g.icon}</span><span>${g.title}</span>${g.sub ? `<span class="tci-sub">${g.sub}</span>` : ''}<span class="tci-cnt">${g.items.length}</span></summary><ul class="tci-list">${g.items.map(x => `<li>${tciBr(x)}</li>`).join('')}</ul></details>` : '';
 
             // 종합 예측 헤드라인
             const ens = mdl.ens, lead = mdl.leanA ? A : B, leadP = mdl.leanA ? ens : 1 - ens;
@@ -18098,7 +18173,7 @@ function fmBestStyle(p, role) {
             let scoreHtml = '';
             if (mdl.simUse) {
                 const s = mdl.simUse, mx = s.top.length ? s.top[0].p : 1;
-                scoreHtml = `<div style="${boxStyle}"><div style="font-size:0.84rem; font-weight:900; margin-bottom:5px;">🎲 예상 스코어 분포 <span style="font-size:0.6rem; color:var(--text-muted); font-weight:700;">🧠 시뮬레이션 모델 (확률 계산)</span></div>
+                scoreHtml = `<details open class="tci-box"><summary><span class="tci-ico">🎲</span><span>예상 스코어 분포</span><span class="tci-sub">🧠 시뮬레이션 모델 (확률 계산)</span></summary><div class="tci-body">
                     ${s.top.map(x => {
                         const c = x.a > x.b ? cA : x.a < x.b ? cB : '#94a3b8';
                         const isDraw = x.a === x.b && mdl.pk;
@@ -18110,10 +18185,10 @@ function fmBestStyle(p, role) {
                         const pkNote = isDraw ? `<div style="font-size:0.62rem; color:var(--text-muted); margin:-1px 0 3px 44px;">🥅 무승부 시 PK 우세: <b style="color:${cA};">${A.n} ${pc(mdl.pk.pA)}</b> : <b style="color:${cB};">${pc(1 - mdl.pk.pA)} ${B.n}</b></div>` : '';
                         return `<div style="display:flex; align-items:center; gap:6px; font-size:0.76rem; margin:3px 0;"><span style="width:38px; font-weight:900; font-family:'Orbitron', sans-serif;">${x.key}</span><div style="flex:1; height:9px; background:rgba(255,255,255,0.06); border-radius:5px; overflow:hidden;">${barInner}</div><span style="width:42px; text-align:right; color:var(--text-muted);">${(x.p * 100).toFixed(1)}%</span></div>${pkNote}`;
                     }).join('')}
-                    <div style="font-size:0.72rem; line-height:1.55; margin-top:6px; color:var(--text-muted);">정규시간 무승부(PK행) <b style="color:var(--text);">${pc(s.draw)}</b> · 1골 차 접전 <b style="color:var(--text);">${pc(s.one)}</b> · 3골 차 이상 <b style="color:var(--text);">${pc(s.big)}</b><br>무실점 승 가능성: ${A.n} ${pc(s.aCS)} / ${B.n} ${pc(s.bCS)} <span style="color:var(--text-muted);">(PK 승률 ${A.n} ${mdl.pk ? pc(mdl.pk.pA) : '50%'} · 선수 능력치 반영)</span></div>${mdl.pk ? tcPkHtml(mdl.pk, A.t.name, cA, B.t.name, cB) : ''}</div>`;
+                    <div style="font-size:0.72rem; line-height:1.55; margin-top:6px; color:var(--text-muted);">정규시간 무승부(PK행) <b style="color:var(--text);">${pc(s.draw)}</b> · 1골 차 접전 <b style="color:var(--text);">${pc(s.one)}</b> · 3골 차 이상 <b style="color:var(--text);">${pc(s.big)}</b><br>무실점 승 가능성: ${A.n} ${pc(s.aCS)} / ${B.n} ${pc(s.bCS)} <span style="color:var(--text-muted);">(PK 승률 ${A.n} ${mdl.pk ? pc(mdl.pk.pA) : '50%'} · 선수 능력치 반영)</span></div>${mdl.pk ? tcPkHtml(mdl.pk, A.t.name, cA, B.t.name, cB) : ''}</div></details>`;
             }
-            const scenHtml = `<div style="${boxStyle}"><div style="font-size:0.84rem; font-weight:900; margin-bottom:5px;">🗝️ 승부 열쇠 <span style="font-size:0.6rem; color:var(--text-muted); font-weight:700;">위 분석에서 뽑은 팀별 전략 포인트</span></div>
-                ${sides.map(X => { const v = scenario(X); return `<div style="font-size:0.78rem; margin:4px 0;"><div style="font-weight:900; color:${X.c};">${gEsc(X.t.name)}${X.j('이/가')} 이기려면</div>${v.length ? `<ul class="tc-insight" style="margin:2px 0 0; padding-left:16px;">${v.map(x => `<li>${x}</li>`).join('')}</ul>` : '<div style="color:var(--text-muted); font-size:0.74rem;">뚜렷한 우위 요소가 적어 전체적인 컨디션·집중력이 관건입니다.</div>'}</div>`; }).join('')}</div>`;
+            const scenHtml = `<details open class="tci-box"><summary><span class="tci-ico">🗝️</span><span>승부 열쇠</span><span class="tci-sub">분석에서 뽑은 팀별 전략 포인트</span></summary><div class="tci-body">
+                ${sides.map(X => { const v = scenario(X); return `<div class="tci-team" style="--tcc:${X.c};"><div class="tci-team-h">${gEsc(X.t.name)}${X.j('이/가')} 이기려면</div>${v.length ? `<ul class="tci-list tci-list-in">${v.map(x => `<li>${x}</li>`).join('')}</ul>` : '<div style="color:var(--text-muted); font-size:0.8rem; padding:6px 0 2px;">뚜렷한 우위 요소가 적어 전체적인 컨디션·집중력이 관건입니다.</div>'}</div>`; }).join('')}</div></details>`;
 
             // 주의사항
             const cautions = [];
@@ -18121,7 +18196,7 @@ function fmBestStyle(p, role) {
             sides.forEach(X => { if (X.rec.g < 5) cautions.push(`${gEsc(X.t.name)}의 기록 표본이 ${X.rec.g}경기로 적어 통산·폼 지표의 신뢰도가 낮습니다.`); if (X.p.missing) cautions.push(`${gEsc(X.t.name)}: 능력치 미설정 ${X.p.missing}명 제외`); if (X.p.noGK) cautions.push(`${gEsc(X.t.name)}: GK 없음(50점 처리)`); });
             if (!mdl.sim) cautions.push('한 팀 이상이 능력치 미설정이라 시뮬레이션 지표를 계산하지 못했습니다.');
             cautions.push('홈 이점·당일 컨디션·부상·실제 전술은 반영되지 않습니다. 예측은 참고용입니다.');
-            const cautionHtml = `<div style="font-size:0.7rem; line-height:1.55; color:var(--text-muted); margin-top:10px;">⚠️ ${cautions.join(' · ')}</div>`;
+            const cautionHtml = `<div class="tci-caution">⚠️ ${cautions.join('<br>⚠️ ')}</div>`;
 
             return `<div class="card dash-card-tight">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
@@ -18130,7 +18205,7 @@ function fmBestStyle(p, role) {
                 </div>
                 ${head}
                 <details open style="margin-bottom:10px;"><summary style="cursor:pointer; font-size:0.74rem; font-weight:800; color:var(--text-muted); margin-bottom:4px;">📐 지표별 예측과 반영 비중</summary>${sigRows}</details>
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:10px;">${groups.map(groupHtml).join('')}${scoreHtml}${scenHtml}</div>
+                <div class="tci-grid">${scoreHtml}${scenHtml}${groups.map(groupHtml).join('')}</div>
                 ${cautionHtml}
             </div>`;
         }
@@ -19257,7 +19332,7 @@ function fmBestStyle(p, role) {
             document.getElementById('modalPlayerPosBadge').innerText = playerPos || '?';
             document.getElementById('modalPlayerPosBadge').style.background = posColor;
             document.getElementById('modalPlayerPosBadge').style.color = (playerPos === 'GK' || playerPos === 'MF') ? '#000' : '#fff';
-            document.getElementById('modalPlayerTeamBadge').innerText = '🏠 ' + currentTeam;
+            document.getElementById('modalPlayerTeamBadge').innerHTML = '🏠 ' + (window.gMhTeamLogo ? gMhTeamLogo(currentTeam) : '') + (typeof gEsc === 'function' ? gEsc(currentTeam) : currentTeam);
             document.getElementById('modalPlayerTeamBadge').style.color = teamColor;
             document.getElementById('modalPlayerGames').innerText = count;
             document.getElementById('modalPlayerPoints').innerText = totalG + totalA;
@@ -19614,8 +19689,9 @@ function fmBestStyle(p, role) {
 
             document.getElementById('modalManagerName').innerText = mgrName;
             renderManagerAbilityBlock(mgrName, c && c !== '#94a3b8' ? c : '');
+            window._mgrBgTeamName = detail.lastTeamName !== '-' ? detail.lastTeamName : '';
             document.getElementById('modalManagerTeamBadge').innerHTML = detail.lastTeamName !== '-'
-                ? `<span style="color:${c};">${detail.isCurrentTeam ? '🏠 현재 소속: ' : '🕓 최근 소속: '}${detail.lastTeamName}</span>`
+                ? `<span style="color:${c};">${detail.isCurrentTeam ? '🏠 현재 소속: ' : '🕓 최근 소속: '}${window.gMhTeamLogo ? gMhTeamLogo(detail.lastTeamName) : ''}${detail.lastTeamName}</span>`
                 : '';
             document.getElementById('modalManagerGames').innerText = detail.games;
             document.getElementById('modalManagerWL').innerText = `${detail.w}승 ${detail.l}패`;
@@ -28222,6 +28298,45 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             alert('새 시즌 순서를 반영해 앱 전체 데이터를 다시 정렬했습니다.');
         }
 
+        // 📜 시즌 아카이브 › 좌측: 조별리그 결과(A조·B조 순위표 + 경기 결과) · 🤝 인터리그 결과 / 우측: 🏆 토너먼트 결과
+        function gArcStageHtml(a) {
+            const E = v => (typeof gEsc === 'function') ? gEsc(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            const tm = {}; (a.teamRank || []).forEach(r => { tm[String(r.id)] = r; });
+            const ms = a.matches || [];
+            const bracket = `<div class="card arc-tourn"><h4>🏆 토너먼트 결과</h4><div class="horizontal-bracket">${window.gTrophyBracket ? gTrophyBracket(a.bracketHTML, a.name) : (a.bracketHTML || '')}</div></div>`;
+            const grpTable = (label, icon, rows, type) => {
+                if (!rows || !rows.length) return '';
+                const body = rows.map((r, i) => {
+                    const cls = i < 2 ? 'rank-top' : (i === rows.length - 1 ? 'rank-bottom' : '');
+                    const rk = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+                    const gd = (r.gd !== undefined ? r.gd : (r.gf - r.ga));
+                    return `<tr class="${cls}"><td>${rk}</td><td style="color:${E(r.color)}; font-weight:800;">${E(r.name)}</td><td>${r.gms}</td><td>${r.w}</td><td>${r.l !== undefined ? r.l : r.gms - r.w}</td><td>${r.gf}</td><td>${r.ga}</td><td class="${gd > 0 ? 'gd-plus' : (gd < 0 ? 'gd-minus' : '')}">${gd > 0 ? '+' + gd : gd}</td><td><b>${r.pts}</b></td></tr>`;
+                }).join('');
+                const gm = ms.filter(m => m.type === type).sort((x, y) => (Number(x.num) || 0) - (Number(y.num) || 0) || (Number(x.id) || 0) - (Number(y.id) || 0));
+                const gmHtml = gm.length ? `<details class="arc-gm"><summary>📋 ${label} 경기 결과 (${gm.length}경기)</summary><div class="arc-gm-list">${gm.map(m => matchCard(m)).join('')}</div></details>` : '';
+                return `<div class="arc-grp"><div class="arc-grp-t">${icon} ${label}</div><div class="scrollable-table"><table class="pattern-table"><thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th></tr></thead><tbody>${body}</tbody></table></div>${gmHtml}</div>`;
+            };
+            const matchCard = m => {
+                const h = tm[String(m.hId)] || {}, aw = tm[String(m.aId)] || {};
+                return cardHtml({ hName: h.name || '?', hColor: h.color || '#fff', aName: aw.name || '?', aColor: aw.color || '#fff', hScore: m.hScore, aScore: m.aScore, hPk: m.hPk || 0, aPk: m.aPk || 0 });
+            };
+            const cardHtml = m => {
+                const hWin = m.hScore > m.aScore || (m.hScore === m.aScore && m.hPk > m.aPk);
+                const aWin = m.aScore > m.hScore || (m.aScore === m.hScore && m.aPk > m.hPk);
+                const isPK = m.hScore === m.aScore && (m.hPk > 0 || m.aPk > 0);
+                return `<div class="inter-match-card"><span style="color:${E(m.hColor)}; font-weight:800;">${E(m.hName)}</span><span style="font-family:'Orbitron'; font-weight:800;"><span class="${hWin ? 'win-score' : ''}">${m.hScore}</span> : <span class="${aWin ? 'win-score' : ''}">${m.aScore}</span>${isPK ? `<small style="color:var(--gold); display:block; font-size:0.6rem;">PK ${m.hPk}:${m.aPk}</small>` : ''}</span><span style="color:${E(m.aColor)}; font-weight:800;">${E(m.aName)}</span></div>`;
+            };
+            let inter = (a.interMatches && a.interMatches.length) ? a.interMatches : ms.filter(m => m.type === '인터리그').map(m => {
+                const h = tm[String(m.hId)] || {}, aw = tm[String(m.aId)] || {};
+                return { hName: h.name || '?', hColor: h.color || '#fff', aName: aw.name || '?', aColor: aw.color || '#fff', hScore: m.hScore, aScore: m.aScore, hPk: m.hPk || 0, aPk: m.aPk || 0 };
+            });
+            const tA = grpTable('A조', '🅰️', a.tableA, 'A조'), tB = grpTable('B조', '🅱️', a.tableB, 'B조');
+            const interHtml = inter.length ? `<div class="arc-grp"><div class="arc-grp-t">🤝 인터리그 결과 <small>${inter.length}경기</small></div><div class="arc-inter">${inter.map(cardHtml).join('')}</div></div>` : '';
+            if (!tA && !tB && !interHtml) return bracket;   // 토너먼트 컵 시즌: 대진표만
+            const left = `<div class="card arc-league"><h4>📊 조별리그 결과</h4>${tA}${tB}${interHtml}<div class="rp-legend" style="margin-top:6px;">※ 조별 순위표의 전적에는 인터리그 경기가 포함됩니다.</div></div>`;
+            return `<div class="arc-stage">${left}${bracket}</div>`;
+        }
+
         function renderArchive(idx) {
             const content = document.getElementById('archiveContent');
             if(idx === "") { content.innerHTML = ""; return; }
@@ -28233,19 +28348,18 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     ${(sa.rookie || sa.yashin || sa.ballon) ? `
                     <div class="summary-grid season-award-grid" style="margin-top:6px;">${gArcSpecialCards(a)}</div>` : `<div style="color:var(--text-muted); font-size:0.8rem; padding:6px 0;">아직 지정된 특별 수상이 없습니다. '수정' 버튼을 눌러 지정해주세요.</div>`}
                 </div>`;
+            const arcWinTeam = (a.teamRank || []).find(t => t.name === a.winner) || (state.teams || []).find(t => t.name === a.winner);
+            const arcWinColor = (arcWinTeam && /^#[0-9a-f]{3,8}$/i.test(String(arcWinTeam.color || '').trim())) ? String(arcWinTeam.color).trim() : '#fbbf24';
             let html = `
                 <div class="card" style="background:rgba(56, 189, 248, 0.05); border:1px solid var(--accent);">
                     <h3 style="margin-bottom:15px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">${window.gTrophyOr ? gTrophyOr(a.name, '🏆', 'md') : '🏆'} ${a.name} 최종 결과 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openSeasonRenameModal('${idx}')">✏️ 이름 수정</button></h3>
                     <div class="summary-grid season-award-grid" style="margin-top:6px;">
-                        <div class="summary-card aw-card aw-champ"><h3>${gTrophyOr(a.name, '🏆', 'hero')}<span>우승</span></h3><div class="aw-champ-nm" style="font-weight:900; color:var(--gold);"><span class="g-nm" data-gk="t" data-gs="sm">${a.winner}</span></div></div>
+                        <div class="summary-card aw-card aw-champ" style="--hc:${arcWinColor};"><h3>${gTrophyOr(a.name, '🏆', 'hero')}<span>우승</span></h3><div class="aw-champ-nm" style="font-weight:900; color:var(--gold);"><span class="g-nm" data-gk="t" data-gs="lg">${a.winner}</span></div></div>
                         ${gArcAwardCards(a)}
                     </div>
                 </div>
                 ${specialBlock}
-                <div class="card">
-                    <h4>🏆 토너먼트 결과</h4>
-                    <div class="horizontal-bracket">${window.gTrophyBracket ? gTrophyBracket(a.bracketHTML, a.name) : a.bracketHTML}</div>
-                </div>
+                ${gArcStageHtml(a)}
                 <div class="card">
                     <h4>📈 최종 팀 랭킹</h4>
                     <table class="pattern-table"><thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th><th title="해당 시즌 최종 Elo 레이팅">Elo ⚡</th></tr></thead><tbody>
@@ -34722,6 +34836,7 @@ window.pmExtRender = function(name){
         { sel: '.dash-match-team', k: 't', s: 'xs' },                         // 대시보드 최근 경기
         { sel: '.team-box .team-name', k: 't', s: 'sm' },                     // 히스토리 경기 카드
         { sel: '.total-summary-name', k: 't', s: 'sm' },                      // 역사관 우승 · 준우승 · 꼴찌
+        { sel: '.aw-champ-nm .g-nm', k: 't', s: 'lg', block: 1 },             // 📜 시즌 아카이브 우승팀 (트로피 아래 큰 로고)
         { sel: '.hero-team-name', k: 't', s: 'lg', block: 1 },                // 시즌 기록 챔피언
         { sel: '.runner-pill b', k: 't', s: 'xs' },                           // 시즌 기록 준우승 · 꼴찌
         { sel: '#total td, #archiveContent td', k: 't', s: 'xs' },                                // 역사관 통산 기록 표
@@ -35215,7 +35330,40 @@ window.pmExtRender = function(name){
         const o = window.dcSelectTeam;
         window.dcSelectTeam = function (id) { const r = o.apply(this, arguments); try { apply('dcTeamPanel', id); } catch (e) { console.error(e); } return r; };
     }
-    window.addEventListener('resize', () => { ['teamModalContent', 'dcTeamPanel'].forEach(id => { const h = $(id); if (h) sizeIt(h); }); });
+    /* ----- 🧩 선수 · 🧑‍💼 감독 상세 창: 현재(최근) 소속팀 배경 + 이름 아래 팀 로고 ----- */
+    window.gMhTeamLogo = function (teamName) {
+        try {
+            const t = (state.teams || []).find(x => x.name === teamName); if (!t) return '';
+            const u = window.gTeamLogoUrl && gTeamLogoUrl(t.id); return u ? '<img class="g-mh-tlogo" src="' + u + '" alt="">' : '';
+        } catch (e) { return ''; }
+    };
+    function applyModalBg(sel, team) {
+        const host = document.querySelector(sel); if (!host) return;
+        if (!team) { const old = host.querySelector(':scope > .g-tbg'); if (old) old.remove(); host.classList.remove('g-tbgHost'); return; }
+        const el = ensure(host), u = (window.gTeamLogoUrl && gTeamLogoUrl(team.id)) || '', lg = el.querySelector('.g-tbg-logo');
+        el.style.setProperty('--tc', team.color || '#38bdf8');
+        lg.style.backgroundImage = u ? 'url("' + u + '")' : 'none'; lg.style.display = u ? '' : 'none';
+        sizeIt(host); if (ro && !seen.has(host)) { seen.add(host); ro.observe(host); }
+        requestAnimationFrame(() => sizeIt(host));
+    }
+    let pmName = null, mmName = null;
+    const pTeam = n => (state.teams || []).find(t => (t.players || []).some(p => p.name === n));
+    const mTeam = () => window._mgrBgTeamName ? (state.teams || []).find(t => t.name === window._mgrBgTeamName) : null;
+    if (typeof window.showPlayerDetail === 'function') {
+        const o = window.showPlayerDetail;
+        window.showPlayerDetail = function (n) { const r = o.apply(this, arguments); try { pmName = n; applyModalBg('#playerDetailModal .modal-content', pTeam(n)); } catch (e) { console.error(e); } return r; };
+    }
+    if (typeof window.showManagerDetail === 'function') {
+        const o = window.showManagerDetail;
+        window.showManagerDetail = function (n) { const r = o.apply(this, arguments); try { mmName = n; applyModalBg('#managerDetailModal .modal-content', mTeam()); } catch (e) { console.error(e); } return r; };
+    }
+    const prevRefresh = window.gTeamBgRefresh;
+    window.gTeamBgRefresh = function () {
+        prevRefresh();
+        try { if (pmName != null) { applyModalBg('#playerDetailModal .modal-content', pTeam(pmName)); const t = pTeam(pmName), b = $('modalPlayerTeamBadge'); if (t && b && b.querySelector && !b.querySelector('.g-mh-tlogo')) { b.innerHTML = '🏠 ' + gMhTeamLogo(t.name) + E(t.name); } } } catch (e) { }
+        try { if (mmName != null) applyModalBg('#managerDetailModal .modal-content', mTeam()); } catch (e) { }
+    };
+    window.addEventListener('resize', () => { ['teamModalContent', 'dcTeamPanel'].forEach(id => { const h = $(id); if (h) sizeIt(h); }); document.querySelectorAll('#playerDetailModal .modal-content, #managerDetailModal .modal-content').forEach(sizeIt); });
 })();
 </script>
 <script id="g183Core">
