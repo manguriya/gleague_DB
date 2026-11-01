@@ -1856,7 +1856,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">📊</span><span class="tab-label">기록·랭킹</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
                         <button class="tab-btn" data-new="1.01" data-upd="1.81:개선" onclick="openTab('ranking')" title="랭킹 — 팀 Elo · 선수 파워랭킹 · 감독 순위"><span class="tab-icon">🏅</span><span class="tab-label">랭킹</span></button>
-                        <button class="tab-btn" data-new="1.82" data-upd="1.84:개선" onclick="openTab('awards')" title="시즌 기록 — 시즌별 챔피언 · 개인 수상 · 리그 기록"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
+                        <button class="tab-btn" data-new="1.82" data-upd="1.86:수정" onclick="openTab('awards')" title="시즌 기록 — 시즌별 챔피언 · 개인 수상 · 리그 기록"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
                     </div>
                 </div>
                 <div class="nav-group" data-group="hall" data-label="역사관">
@@ -30397,7 +30397,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.85';
+        const G_HTML_VERSION = '1.86';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
