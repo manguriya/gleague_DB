@@ -1835,48 +1835,48 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
             </header>
 
             <nav class="nav-tabs">
-                <button class="tab-btn active" data-upd="1.71:개선" onclick="openTab('dashboard')" title="대시보드 — 개선(1.71): 빈 공간 없이 주요 선수 · HOT · 골대녀 · 명예의 전당 재배치 · 1.69: 접이식 카드 기본 펼침 · 1.53: 핵심 현황 · 바로가기 · 접이식 카드"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
+                <button class="tab-btn active" data-upd="1.71:개선" onclick="openTab('dashboard')" title="대시보드 — 리그 현황 · 다음 경기 · 주요 선수를 한눈에 보는 첫 화면"><span class="tab-icon">🏠</span><span class="tab-label">대시보드</span></button>
                 <div class="nav-group" data-group="league" data-label="리그">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🏟️</span><span class="tab-label">리그</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
-                        <button class="tab-btn" data-upd="1.81:개선" onclick="openTab('stats')" title="순위표 — 개선(1.81): 팀 이름 글씨 · 팀 로고 크기 조정 · 삭제(1.69): 조별 순위표 최근 폼 열 · 1.58: 팀 이름 검색 · 필터 초기화 · 표 스타일 통일"><span class="tab-icon">📊</span><span class="tab-label">순위표</span></button>
-                        <button class="tab-btn" data-upd="1.68" onclick="openTab('history')" title="히스토리 — 개선(1.68): 경기 전술 홈 · 원정 한 줄 배치 · 전술 목록 폭 축소 · 1.65: 경기 전술 필드 왼쪽 · 전술 내용 오른쪽 배치 · 1.63: 득점 위치 기본 접힘 · 1.58: 경기 종류 칩 필터"><span class="tab-icon">📜</span><span class="tab-label">히스토리</span></button>
-                        <button class="tab-btn" data-upd="1.69" onclick="openTab('match')" title="경기 기록 — 수정(1.69): 득점 시간 입력칸 숫자 잘림 · 1.23: 전술 보드에서 포지션·화살표 드래그 · 교체/부상/미출전/감독 표시 · 모든 경기 출전 포지션 자동 채우기"><span class="tab-icon">⚽</span><span class="tab-label">경기 기록</span></button>
+                        <button class="tab-btn" data-upd="1.81:개선" onclick="openTab('stats')" title="순위표 — 현재 시즌 팀 순위와 승·무·패 · 득실 기록"><span class="tab-icon">📊</span><span class="tab-label">순위표</span></button>
+                        <button class="tab-btn" data-upd="1.68" onclick="openTab('history')" title="히스토리 — 지난 경기 결과 · 득점 · 전술 기록 보기"><span class="tab-icon">📜</span><span class="tab-label">히스토리</span></button>
+                        <button class="tab-btn" data-upd="1.69" onclick="openTab('match')" title="경기 기록 — 경기 결과 · 득점 · 평점 · 전술을 입력하고 수정"><span class="tab-icon">⚽</span><span class="tab-label">경기 기록</span></button>
                     </div>
                 </div>
                 <div class="nav-group" data-group="people" data-label="팀·선수">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🛡️</span><span class="tab-label">팀·선수</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
-                        <button class="tab-btn" data-new="1.80" data-upd="1.83:개선" onclick="openTab('datacenter')" title="팀 데이터센터 — 신규(1.80): 🏆 팀 수상 진열장 · 신규(1.82): 팀 색상 · 로고 배경 · 개선(1.83): 개인 수상 트로피 확대 · UP(1.67): 전술 설정이 필드 위 선수 배치에 더 크게 반영 · 기본 위치 점선 표시 · 1.57: 전술 설정 패널을 섹션 카드로 정리 · 세부 전술 접기 · 1.56: 팀 상세 탭을 7개 영역으로 정리 · 1.54: 팀 목록 검색·정렬 · 팀 개요 요약 · 이전: 📋 전술 탭 › 🪄 과거 경기 전술 자동 채우기 · UP: 🧭 전술 기록 분석"><span class="tab-icon">🗂️</span><span class="tab-label">팀 데이터센터</span></button>
-                        <button class="tab-btn" data-upd="1.72:변경" onclick="openTab('playerdatacenter')" title="선수 데이터센터 — 변경(1.72): 능력치 6대분류 개편(공격·수비·기술·심리·피지컬·멘탈) · 개선(1.70): 이름 열 고정 · 필드/키퍼 분류 · 대분류별 소분류 보기 · 1.55: 선수 선택 비교(최대 4명) · 팀 이름 검색"><span class="tab-icon">🧑‍🤝‍🧑</span><span class="tab-label">선수 데이터센터</span></button>
-                        <button class="tab-btn" data-new="1.84" data-upd="1.84:변경" onclick="openTab('managerdatacenter')" title="감독 데이터센터 — 신규(1.84): 감독 상세 창 🏆 트로피 · 🥈 준우승 메달 진열대 · 변경(1.84): 감독 상세 창 탭 4개(개요 · 상대전적 · 경기별 전적 · 전술별 성적) · UP(1.59): 통합 검색에서 감독 상세 열기"><span class="tab-icon">🧑‍💼</span><span class="tab-label">감독 데이터센터</span></button>
+                        <button class="tab-btn" data-new="1.80" data-upd="1.83:개선" onclick="openTab('datacenter')" title="팀 데이터센터 — 팀별 선수단 · 전적 · 전술 · 수상 기록"><span class="tab-icon">🗂️</span><span class="tab-label">팀 데이터센터</span></button>
+                        <button class="tab-btn" data-upd="1.72:변경" onclick="openTab('playerdatacenter')" title="선수 데이터센터 — 전체 선수의 능력치와 정보를 비교"><span class="tab-icon">🧑‍🤝‍🧑</span><span class="tab-label">선수 데이터센터</span></button>
+                        <button class="tab-btn" data-new="1.84" data-upd="1.84:변경" onclick="openTab('managerdatacenter')" title="감독 데이터센터 — 감독별 전적 · 상대전적 · 전술 성적"><span class="tab-icon">🧑‍💼</span><span class="tab-label">감독 데이터센터</span></button>
                     </div>
                 </div>
                 <div class="nav-group" data-group="records" data-label="기록·랭킹">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">📊</span><span class="tab-label">기록·랭킹</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
-                        <button class="tab-btn" data-new="1.01" data-upd="1.81:개선" onclick="openTab('ranking')" title="랭킹 — 개선(1.81): 팀 이름 글씨 · 팀 로고 크기 조정 · UP(1.58): 팀·선수 이름 검색 · 필터 초기화 · 표 스타일 통일"><span class="tab-icon">🏅</span><span class="tab-label">랭킹</span></button>
-                        <button class="tab-btn" data-new="1.82" data-upd="1.84:개선" onclick="openTab('awards')" title="시즌 기록 — 신규(1.82): 시즌별 기록 보기 · 개선(1.84): 시즌 챔피언 컨테이너 · 특별 수상 카드 크기 · UP(1.58): 표 · 필터 스타일 통일"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
+                        <button class="tab-btn" data-new="1.01" data-upd="1.81:개선" onclick="openTab('ranking')" title="랭킹 — 팀 Elo · 선수 파워랭킹 · 감독 순위"><span class="tab-icon">🏅</span><span class="tab-label">랭킹</span></button>
+                        <button class="tab-btn" data-new="1.82" data-upd="1.84:개선" onclick="openTab('awards')" title="시즌 기록 — 시즌별 챔피언 · 개인 수상 · 리그 기록"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
                     </div>
                 </div>
                 <div class="nav-group" data-group="hall" data-label="역사관">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🏆</span><span class="tab-label">역사관</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
-                        <button class="tab-btn" data-upd="1.84:개선" onclick="openTab('total')" title="역사관 — 개선(1.84): 시즌 아카이브 시즌 챔피언 컨테이너 · 특별 수상 카드 크기 · UP(1.59): 통합 검색의 시즌 · 우승 결과 연결"><span class="tab-icon">🏛️</span><span class="tab-label">역사관</span></button>
-                        <button class="tab-btn" onclick="openTab('transferall')" title="이적기록"><span class="tab-icon">🔁</span><span class="tab-label">이적기록</span></button>
+                        <button class="tab-btn" data-upd="1.84:개선" onclick="openTab('total')" title="역사관 — 시즌 아카이브 · 명예의 전당 · 통산 기록"><span class="tab-icon">🏛️</span><span class="tab-label">역사관</span></button>
+                        <button class="tab-btn" onclick="openTab('transferall')" title="이적기록 — 선수 이적 · 영입 · 하차 내역"><span class="tab-icon">🔁</span><span class="tab-label">이적기록</span></button>
                     </div>
                 </div>
                 <div class="nav-group" data-group="lab" data-label="분석실">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">🧠</span><span class="tab-label">분석실</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
-                        <button class="tab-btn" data-upd="1.60" onclick="openTab('matchlab')" title="전력분석 — UP(1.60): 종합 해석 오류 수정 · 이전: 📑 전략 비교·공략 포인트(강점·약점 시너지 반영)"><span class="tab-icon">🧠</span><span class="tab-label">전력분석</span></button>
+                        <button class="tab-btn" data-upd="1.60" onclick="openTab('matchlab')" title="전력분석 — 팀 전력 비교와 경기 예측"><span class="tab-icon">🧠</span><span class="tab-label">전력분석</span></button>
                     </div>
                 </div>
                 <div class="nav-group nav-group-admin" data-group="admin" data-label="관리실" data-default-closed="1">
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="false"><span class="tab-icon">⚙️</span><span class="tab-label">관리실</span><span class="nt-dot nt-dot-grp" id="gNtDotGrp" hidden></span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
-                        <button class="tab-btn" onclick="openTab('setup')" title="설정"><span class="tab-icon">⚙️</span><span class="tab-label">설정</span></button>
-                        <button class="tab-btn" data-new="1.01" data-upd="1.68" onclick="openTab('patchnote')" title="패치노트 — 개선(1.68): UP 표시가 패치노트 라벨(신규 · 개선 · 수정 · 변경 · 삭제)과 연동 · 1.61: 1.50~1.60 내용 정리"><span class="tab-icon">📝</span><span class="tab-label">패치노트</span></button>
+                        <button class="tab-btn" onclick="openTab('setup')" title="설정 — 팀 · 선수 · 감독 · 시즌 관리와 데이터 백업"><span class="tab-icon">⚙️</span><span class="tab-label">설정</span></button>
+                        <button class="tab-btn" data-new="1.01" data-upd="1.68" onclick="openTab('patchnote')" title="패치노트 — 버전별 업데이트 내용"><span class="tab-icon">📝</span><span class="tab-label">패치노트</span></button>
                         <button class="tab-btn" data-new="1.61" onclick="openTab('notice')" title="공지사항 — 개발자가 남기는 메시지"><span class="tab-icon">📢</span><span class="tab-label">공지사항</span><span class="nt-dot" id="gNtDot" hidden>N</span></button>
                     </div>
                 </div>
@@ -35221,16 +35221,16 @@ window.pmExtRender = function(name){
         const arr = Array.isArray(names) ? names : String(names || '').split(/,\s*/).filter(Boolean);
         if (!arr.length) return '<div class="aw-none">' + E(opt.empty || '미정') + '</div>';
         return '<div class="aw-pls">' + arr.map(n => {
-            const t = (opt.team && opt.team[n]) || teamOfPlayer(n), c = t ? (t.color || 'var(--text-muted)') : 'var(--text-muted)', tn = t ? t.name : '';
+            const t = (opt.team && opt.team[n]) || (opt.arc ? null : teamOfPlayer(n)), c = t ? (t.color || 'var(--text-muted)') : 'var(--text-muted)', tn = t ? t.name : '';
             const v = (opt.vals && opt.vals[n] !== undefined) ? opt.vals[n] : val;
             return '<div class="aw-pl" data-pn="' + E(n) + '" onclick="showPlayerDetail(this.dataset.pn)" style="--pc:' + c + ';"><div class="g-ph" data-gp="' + E(n) + '"></div><div class="aw-name">' + E(n) + '</div>'
                 + (tn ? '<div class="aw-team" style="color:' + c + ';">' + E(tn) + '</div>' : '') + (v ? '<div class="aw-val">' + E(v) + '</div>' : '') + '</div>';
         }).join('') + '</div>';
     };
     const SP = [['rookie', '신인상', '🌱', '#86efac'], ['yashin', '야신상', '🧤', '#93c5fd'], ['ballon', '시즌 골롱도르', '🏅', '#fbbf24']];
-    window.gAwSpecialHtml = function (sa) {
+    window.gAwSpecialHtml = function (sa, teamMap, arc) {
         sa = sa || {};
-        return SP.map(d => '<div class="summary-card aw-card aw-sp" style="--awc:' + d[3] + ';"><h3>' + gAwardImg(d[0], d[2], 'hero') + '<span>' + d[1] + '</span></h3>' + gAwBig(sa[d[0]] ? [sa[d[0]]] : [], '', { empty: '미정' }) + '</div>').join('');
+        return SP.map(d => '<div class="summary-card aw-card aw-sp" style="--awc:' + d[3] + ';"><h3>' + gAwardImg(d[0], d[2], 'hero') + '<span>' + d[1] + '</span></h3>' + gAwBig(sa[d[0]] ? [sa[d[0]]] : [], '', { empty: '미정', team: teamMap, arc: arc }) + '</div>').join('');
     };
 
     /* ----- 📅 시즌 넘겨보기 ----- */
@@ -35247,11 +35247,18 @@ window.pmExtRender = function(name){
     }
     function buildPast(a) {
         const pr = a.playerRank || [], by = {}; pr.forEach(r => { by[r.name] = r; });
+        /* 그 시즌 소속팀 (순위 스냅샷 → 그 시즌 경기 기록 순으로 찾고, 현재 소속팀은 쓰지 않음) */
+        const seasonTeam = n => {
+            const r = by[n]; if (r && r.teamName) return { name: r.teamName, color: r.color };
+            const tid = (typeof dcFindPlayerTeamIdInArchive === 'function') ? dcFindPlayerTeamIdInArchive(a, n) : null;
+            const t = tid != null && ((a.teamRank || []).find(x => String(x.id) === String(tid)) || (state.teams || []).find(x => String(x.id) === String(tid)));
+            return t ? { name: t.name, color: t.color } : null;
+        };
         const defs = [['topScorer', '⚽️', '득점왕', r => (r.goals || 0) + '골'], ['topAssistant', '🎯', '도움왕', r => (r.assists || 0) + '도움'], ['mvp', '👑', 'MVP (MOM)', r => (r.mom || 0) + '회'], ['topRating', '⭐', '최고평균평점', r => (Number(r.avgRating) || 0).toFixed(2) + '점']];
         const grid = defs.map(d => {
             const names = String(a[d[0]] || '').split(/,\s*/).filter(n => n && !/^[-—–]+$/.test(n) && n !== '없음' && n !== '기록 없음');
-            const vals = {}, team = {}; names.forEach(n => { const r = by[n]; if (r) { vals[n] = d[3](r); team[n] = { name: r.teamName, color: r.color }; } });
-            return '<div class="summary-card aw-card"><h3>' + gAwardImg(d[0], d[1], 'hero') + '<span>' + d[2] + '</span></h3>' + gAwBig(names, '', { vals, team, empty: '기록 없음' }) + '</div>';
+            const vals = {}, team = {}; names.forEach(n => { const r = by[n]; if (r) vals[n] = d[3](r); const st = seasonTeam(n); if (st) team[n] = st; });
+            return '<div class="summary-card aw-card"><h3>' + gAwardImg(d[0], d[1], 'hero') + '<span>' + d[2] + '</span></h3>' + gAwBig(names, '', { vals, team, arc: true, empty: '기록 없음' }) + '</div>';
         }).join('');
         const tr = id => (a.teamRank || []).find(t => String(t.id) === String(id)) || ((state.teams || []).find(t => String(t.id) === String(id))) || { name: 'TBD', color: '#fff' };
         const ms = a.matches || [], fin = ms.find(m => m.type === '결승'), lp = ms.find(m => m.type === '꼴찌결정전');
@@ -35262,7 +35269,7 @@ window.pmExtRender = function(name){
         const hc = wr.color || '#fbbf24';
         const hero = '<div class="card"><div class="season-champion-hero" style="background: linear-gradient(135deg, ' + hc + '22, transparent); border: 1px solid ' + hc + '55; --hc:' + hc + ';"><div class="hero-trophy">' + gTrophyOr(a.name, '🏆', 'hero') + '</div><div class="hero-label">시즌 챔피언</div><div class="hero-team-name" data-gs="lg" style="color:' + hc + ';">' + E(wr.name) + '</div>' + (typeof gUpdTag === 'function' ? gUpdTag('1.84:개선') : '') + '</div>'
             + '<div class="season-runner-pills"><div class="runner-pill">🥈 준우승 <b style="color:' + ru.color + ';">' + E(ru.name) + '</b></div><div class="runner-pill">💀 꼴찌 <b style="color:' + lo.color + ';">' + E(lo.name) + '</b></div></div></div>';
-        const sp = '<div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);"><h3 style="color:var(--gold);">🌟 특별 수상' + (typeof gUpdTag === 'function' ? gUpdTag('1.84:개선') : '') + '</h3><div class="summary-grid season-award-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">' + gAwSpecialHtml(a.specialAwards) + '</div></div>';
+        const sp = '<div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);"><h3 style="color:var(--gold);">🌟 특별 수상' + (typeof gUpdTag === 'function' ? gUpdTag('1.84:개선') : '') + '</h3><div class="summary-grid season-award-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">' + gAwSpecialHtml(a.specialAwards, (function () { const m = {}; const sa = a.specialAwards || {}; ['rookie', 'yashin', 'ballon'].forEach(k => { if (sa[k]) { const st = seasonTeam(sa[k]); if (st) m[sa[k]] = st; } }); return m; })(), true) + '</div></div>';
         return hero + '<div class="summary-grid season-award-grid">' + grid + '</div>' + sp
             + '<div style="font-size:.7rem;color:var(--text-muted);text-align:center;margin:-4px 0 14px;">※ 종료된 시즌의 전체 순위 · 개인 기록 표는 🏛️ 역사관 › 시즌 아카이브에서 볼 수 있어요.</div>';
     }

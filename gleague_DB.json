@@ -13907,7 +13907,7 @@
         "8"
       ],
       "specialAwards": {
-        "rookie": "김환희",
+        "rookie": "루나",
         "yashin": "리사",
         "ballon": "마시마유"
       },
@@ -30653,7 +30653,7 @@
     "season": "current",
     "recent": "all"
   },
-  "dbSavedDate": "2026-10-31",
+  "dbSavedDate": "2026-11-01",
   "eloStartAdj": {
     "season": "2026 제3회 GIFA컵",
     "locked": true,
