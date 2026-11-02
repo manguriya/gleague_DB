@@ -1664,6 +1664,11 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 .tc-cab::after { content: ''; position: absolute; inset: 7px; border-radius: 9px; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 28%, rgba(255,255,255,0) 62%, rgba(255,255,255,.04) 100%); }
 .tc-cab-t { position: relative; z-index: 1; font-size: .82rem; font-weight: 900; color: var(--gold); margin: 6px 4px 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .tc-cab-t small { font-weight: 700; color: var(--text-muted); font-size: .66rem; }
+/* v1.89 진열장 제목 위계 — 큰 제목(🏆 우승 트로피 · 🌟 선수 개인 수상 …)은 크고 밑줄로 구역을 나누고, 시즌 제목(2026 제2회 G리그 …)은 작고 밝은 글씨 + 왼쪽 금색 띠 + 개수 알약으로 구분 */
+.tc-cab-t.tc-cab-m { font-size: 1.08rem; letter-spacing: .2px; margin: 8px 4px 2px; padding-bottom: 7px; border-bottom: 1px solid rgba(251,191,36,.3); text-shadow: 0 0 12px rgba(251,191,36,.35); }
+.tc-cab-t.tc-cab-m small { font-size: .7rem; text-shadow: none; }
+.tc-cab-t.tc-cab-s { font-size: .82rem; color: #f1f5f9; margin: 12px 4px 0; padding: 5px 12px 5px 10px; border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; background: linear-gradient(90deg, rgba(251,191,36,.16), rgba(251,191,36,0) 75%); }
+.tc-cab-t.tc-cab-s small { color: var(--gold); background: rgba(251,191,36,.14); border: 1px solid rgba(251,191,36,.3); padding: 1px 8px; border-radius: 999px; font-size: .68rem; font-weight: 800; }
 .tc-shelf { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: flex-end; padding: 8px 4px 0; min-height: 96px; }
 .tc-board { position: relative; z-index: 1; height: 12px; margin: 0 -8px 14px; border-radius: 3px; background: linear-gradient(180deg, #b27a34, #6b4423 55%, #3f2812); box-shadow: 0 7px 12px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.18); }
 .tc-it { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; width: 132px; padding: 8px 6px 8px; border-radius: 10px; }
@@ -35339,8 +35344,9 @@ window.pmExtRender = function(name){
    - 이미지가 없는 팀/선수는 기존 표시 그대로. 설정 > 🆔 ID 목록(CSV) 저장 으로 파일명을 확인한다.
    ================================================================ */
 (function () {
+    const AUTO_TRIM = false;   // v1.89: 투명 여백은 images.zip 제작 단계에서 미리 잘라 두므로 접속할 때는 자르지 않음 (여백이 남은 새 이미지를 쓸 때만 true)
     const ZIP_NAME = 'images.zip', JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-    let IMG = {};
+    let IMG = {}, PRE = [];
     const pad = (n, w) => String(n).padStart(w, '0');
     const MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif' };
 
@@ -35400,7 +35406,7 @@ window.pmExtRender = function(name){
             el.dataset.gimg = 'y';
             const tg = el.tagName;
             if (tg === 'DIV' && el.children.length) return;       // 카드형 큰 블록은 건드리지 않음
-            const im = document.createElement('img'); im.className = 'g-av' + (kind === 'team' ? ' team' : ''); im.src = u; im.alt = ''; im.loading = 'lazy';
+            const im = document.createElement('img'); im.className = 'g-av' + (kind === 'team' ? ' team' : ''); im.src = u; im.alt = '';
             im.onerror = () => im.remove();
             host.insertBefore(im, host.firstChild);
         });
@@ -35446,25 +35452,25 @@ window.pmExtRender = function(name){
         document.querySelectorAll('.gt-ph[data-gp], .dash-hot-ph[data-gp]').forEach(el => {
             if (el.dataset.gav) return; el.dataset.gav = 'n';
             const u = urlOf('player', ident('player', el.dataset.gp)); if (!u) return;
-            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove();
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.onerror = () => im.remove();
             el.appendChild(im); el.dataset.gav = 'y';
         });
         document.querySelectorAll('.g-ph[data-gp]:not(.on)').forEach(el => {          // 선수 카드 상단 사진 (원형 아님 · 이미지 전체 표시)
             if (el.dataset.gav) return; el.dataset.gav = 'n';
             const u = urlOf('player', ident('player', el.dataset.gp)); if (!u) return;
-            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => { im.remove(); el.classList.remove('on'); };
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.onerror = () => { im.remove(); el.classList.remove('on'); };
             el.appendChild(im); el.classList.add('on'); el.dataset.gav = 'y';
         });
         document.querySelectorAll('.g-ph[data-gmg]:not(.on)').forEach(el => {          // v1.87: 감독상 카드 — 감독 사진
             if (el.dataset.gav) return; el.dataset.gav = 'n';
             const u = urlOf('manager', ident('manager', el.dataset.gmg)); if (!u) return;
-            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => { im.remove(); el.classList.remove('on'); };
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.onerror = () => { im.remove(); el.classList.remove('on'); };
             el.appendChild(im); el.classList.add('on'); el.dataset.gav = 'y';
         });
         document.querySelectorAll('.gt-ph[data-gmg]').forEach(el => {                  // v1.87: 명예의 전당 감독상 — 감독 사진
             if (el.dataset.gav) return; el.dataset.gav = 'n';
             const u = urlOf('manager', ident('manager', el.dataset.gmg)); if (!u) return;
-            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove();
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.onerror = () => im.remove();
             el.appendChild(im); el.dataset.gav = 'y';
         });
         const NM = nameMaps();
@@ -35485,7 +35491,7 @@ window.pmExtRender = function(name){
                 if (b && !b.dataset.gtxt) { b.dataset.gtxt = b.textContent; b.classList.add('has-logo'); b.textContent = ''; const im = document.createElement('img'); im.className = 'g-av team'; im.src = u; im.alt = ''; im.onerror = () => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; im.remove(); }; b.appendChild(im); }
                 return;
             }
-            const im = document.createElement('img'); im.className = 'g-av' + (kind === 'team' ? ' team' : '') + ' s-' + sz + (r.block ? ' block' : ''); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove();
+            const im = document.createElement('img'); im.className = 'g-av' + (kind === 'team' ? ' team' : '') + ' s-' + sz + (r.block ? ' block' : ''); im.src = u; im.alt = ''; im.onerror = () => im.remove();
             if (r.block) { el.insertBefore(im, n); }
             else { const rest = k ? n.splitText(k) : n; el.insertBefore(im, rest); }
         }));
@@ -35524,7 +35530,7 @@ window.pmExtRender = function(name){
             w.appendChild(im); w.classList.add('has-img');
         });
     }
-    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); decorate2(); alignTeamCells(); fillTrophies(); fillAwardImgs(); }, 150); };
+    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(() => { decorate(); decorate2(); alignTeamCells(); fillTrophies(); fillAwardImgs(); }, 40); };
     new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('click', later); window.addEventListener('resize', later);
 
@@ -35584,12 +35590,15 @@ window.pmExtRender = function(name){
             const path = f.path;
             const m = path.replace(/\\/g, '/').match(/(?:^|\/)(teams?|players?|managers?|trophies|trophy|awards?)\/0*(\d+)\.(png|jpe?g|webp|gif)$/i); if (!m) return;
             const kind = m[1].toLowerCase().replace(/^trophies$/, 'trophy').replace(/s$/, ''), ext = m[3].toLowerCase();
-            jobs.push(f.buf().then(async b => { let bl = new Blob([b], { type: MIME[ext] }); if (ext !== 'jpg' && ext !== 'jpeg') bl = await trimBlob(bl); next[kind + ':' + parseInt(m[2], 10)] = URL.createObjectURL(bl); }));
+            jobs.push(f.buf().then(async b => { let bl = new Blob([b], { type: MIME[ext] }); if (AUTO_TRIM && ext !== 'jpg' && ext !== 'jpeg') bl = await trimBlob(bl); next[kind + ':' + parseInt(m[2], 10)] = URL.createObjectURL(bl); }));
         });
         await Promise.all(jobs);
         if (!Object.keys(next).length) return 0;
         Object.values(IMG).forEach(u => { try { URL.revokeObjectURL(u); } catch (e) { } });
         IMG = next;
+        // v1.89: 모든 이미지를 접속 시 한 번에 미리 디코딩해 두고(참조 유지) 화면을 열 때마다 다시 불러오지 않게 함
+        PRE = []; const pdone = Object.values(next).map(u => { const pi = new Image(); pi.decoding = 'async'; pi.src = u; PRE.push(pi); return (pi.decode ? pi.decode() : Promise.resolve()).catch(() => { }); });
+        await Promise.race([Promise.all(pdone), new Promise(ok => setTimeout(ok, 3000))]);
         document.querySelectorAll('[data-gimg="n"]').forEach(e => delete e.dataset.gimg);
         document.querySelectorAll('.g-ph.on').forEach(e => { e.classList.remove('on'); e.textContent = ''; }); document.querySelectorAll('[data-gav]').forEach(e => delete e.dataset.gav); document.querySelectorAll('.dc-tcard-badge[data-gtxt]').forEach(b => { b.classList.remove('has-logo'); b.textContent = b.dataset.gtxt; delete b.dataset.gtxt; });
         document.querySelectorAll('td.clickable-team > .g-teamcell').forEach(w => { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); document.querySelectorAll('img.g-av,.g-av-sp').forEach(e => e.remove()); document.querySelectorAll('.g-teamcell').forEach(e => { e.classList.remove('g-teamcell'); e.style.width = ''; });
@@ -35773,7 +35782,7 @@ window.pmExtRender = function(name){
         const bySeason = [];
         H.awards.forEach(a => { let g = bySeason.find(x => x.season === a.season); if (!g) { g = { season: a.season, list: [] }; bySeason.push(g); } g.list.push(a); });
         const awardShelves = bySeason.length ? bySeason.map(g => `
-            <div class="tc-cab-t">${gTrophyOr(g.season, '🗓️', 'xs')}${E(g.season)}<small>${g.list.length}개 수상</small></div>
+            <div class="tc-cab-t tc-cab-s">${gTrophyOr(g.season, '🗓️', 'xs')}${E(g.season)}<small>${g.list.length}개 수상</small></div>
             <div class="tc-shelf" style="min-height:0;padding-top:10px;">${g.list.map(a => `
                 <div class="tc-aw${a.pair ? ' tc-aw-cp' : ''}" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}${a.pair ? ' · ' + E(a.pair.join(' ♥ ')) : ''}">
                     <div class="tc-aw-ic">${window.gAwardImg ? gAwardImg(a.key, a.emoji, 'hero') : a.emoji}</div>
@@ -35792,16 +35801,16 @@ window.pmExtRender = function(name){
                 <span class="tc-chip">👤 수상 선수 <b>${pNames.length}</b>명</span>
             </div>
             <div class="tc-cab">
-                <div class="tc-cab-t">🏆 우승 트로피 <small>${E(team.name)}</small></div>
+                <div class="tc-cab-t tc-cab-m">🏆 우승 트로피 <small>${E(team.name)}</small></div>
                 <div class="tc-shelf">${trophies}</div><div class="tc-board"></div>
-                <div class="tc-cab-t">🥈 준우승 메달</div>
+                <div class="tc-cab-t tc-cab-m">🥈 준우승 메달</div>
                 <div class="tc-shelf" style="min-height:0;">${runners}</div><div class="tc-board"></div>
             </div>
             <div class="tc-cab">
-                <div class="tc-cab-t">🌟 선수 개인 수상 ${typeof gUpdTag === 'function' ? gUpdTag('1.89:개선') : ''}<small>이 팀 소속으로 받은 수상 · 시즌별 · 💞 베스트커플상은 2인 1세트</small></div>
+                <div class="tc-cab-t tc-cab-m">🌟 선수 개인 수상 ${typeof gUpdTag === 'function' ? gUpdTag('1.89:개선') : ''}<small>이 팀 소속으로 받은 수상 · 시즌별 · 💞 베스트커플상은 2인 1세트</small></div>
                 ${awardShelves}
             </div>
-            ${pNames.length ? `<div><div class="tc-cab-t" style="margin:0 0 8px;">👤 선수별 수상 현황</div>${playerChips}</div>` : ''}
+            ${pNames.length ? `<div><div class="tc-cab-t tc-cab-m" style="margin:0 0 8px;">👤 선수별 수상 현황</div>${playerChips}</div>` : ''}
             <div class="tc-note">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다. 진행 중인 시즌(${E(state.seasonName || '현재 시즌')})의 우승·수상은 시즌 종료 후 추가됩니다. 트로피 이미지는 images.zip › trophies 폴더(대회 ID), 개인 수상 트로피는 awards 폴더(수상 ID)로 자동 적용됩니다.</div>
         </div>`;
         if (typeof gApplyNewBadges === 'function') { try { gApplyNewBadges(); } catch (e) { } }
@@ -36478,7 +36487,7 @@ img.g-tr, img.g-awimg { max-width: none !important; min-width: 0; flex: none !im
         const cs = getComputedStyle(im), w = document.createElement('span');
         w.className = 'g-shn ' + classFor(src);
         w.style.setProperty('--shd', (-Math.random() * 4.2).toFixed(2) + 's');
-        if (cs.display === 'block') { w.style.display = 'block'; w.style.width = 'fit-content'; w.style.margin = '0 auto ' + cs.marginBottom; }
+        if (cs.display === 'block' && /\bs-(hero|lg)\b/.test(im.className)) { w.style.display = 'block'; w.style.width = 'fit-content'; w.style.margin = '0 auto ' + cs.marginBottom; }
         else w.style.margin = cs.margin;
         im.style.setProperty('margin', '0', 'important');
         p.insertBefore(w, im); w.appendChild(im);
