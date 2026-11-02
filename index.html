@@ -26765,9 +26765,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (!h || !(h.champs.length || h.runners.length || h.lasts.length)) return '<span style="color:var(--text-muted);">-</span>';
             const esc = x => String(x).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const parts = [];
-            if (h.champs.length) parts.push(`<span title="${esc('🏆 우승: ' + h.champs.join(', '))}" style="cursor:help; border-bottom:1px dashed var(--gold);">${window.gTrophyIcons ? gTrophyIcons(h.champs, '🏆', 'xs') : '🏆'}×${h.champs.length}</span>`);
-            if (h.runners.length) parts.push(`<span title="${esc('🥈 준우승: ' + h.runners.join(', '))}" style="cursor:help; border-bottom:1px dashed var(--gold);">🥈×${h.runners.length}</span>`);
-            if (h.lasts.length) parts.push(`<span title="${esc('💀 꼴찌: ' + h.lasts.join(', '))}" style="cursor:help; border-bottom:1px dashed var(--danger);">💀×${h.lasts.length}</span>`);
+            if (h.champs.length) parts.push(`<span title="${esc('🏆 우승: ' + h.champs.join(', '))}" style="cursor:help;">${window.gTrophyIcons ? gTrophyIcons(h.champs, '🏆', 'xs') : '🏆'}×${h.champs.length}</span>`);
+            if (h.runners.length) parts.push(`<span title="${esc('🥈 준우승: ' + h.runners.join(', '))}" style="cursor:help;">🥈×${h.runners.length}</span>`);
+            if (h.lasts.length) parts.push(`<span title="${esc('💀 꼴찌: ' + h.lasts.join(', '))}" style="cursor:help;">💀×${h.lasts.length}</span>`);
             return parts.join(' &nbsp;');
         }
 
@@ -27295,9 +27295,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const champTitle = (r.champSeasons && r.champSeasons.length) ? `🏆 우승: ${r.champSeasons.join(', ')}` : '';
                 const runnerUpTitle = (r.runnerUpSeasons && r.runnerUpSeasons.length) ? `🥈 준우승: ${r.runnerUpSeasons.join(', ')}` : '';
                 const lastPlaceTitle = (r.lastPlaceSeasons && r.lastPlaceSeasons.length) ? `💀 꼴찌: ${r.lastPlaceSeasons.join(', ')}` : '';
-                const champStr = r.champs > 0 ? `<span title="${escAttr(champTitle)}" style="cursor:help; border-bottom:1px dashed var(--gold);">${window.gTrophyIcons ? gTrophyIcons(r.champSeasons, '🏆', 'xs') : '🏆'}×${r.champs}</span>` : '';
-                const runnerUpStr = r.runnerUps > 0 ? `<span title="${escAttr(runnerUpTitle)}" style="cursor:help; border-bottom:1px dashed var(--gold);">🥈×${r.runnerUps}</span>` : '';
-                const lastPlaceStr = r.lastPlaces > 0 ? `<span title="${escAttr(lastPlaceTitle)}" style="cursor:help; border-bottom:1px dashed var(--danger);">💀×${r.lastPlaces}</span>` : '';
+                const champStr = r.champs > 0 ? `<span title="${escAttr(champTitle)}" style="cursor:help;">${window.gTrophyIcons ? gTrophyIcons(r.champSeasons, '🏆', 'xs') : '🏆'}×${r.champs}</span>` : '';
+                const runnerUpStr = r.runnerUps > 0 ? `<span title="${escAttr(runnerUpTitle)}" style="cursor:help;">🥈×${r.runnerUps}</span>` : '';
+                const lastPlaceStr = r.lastPlaces > 0 ? `<span title="${escAttr(lastPlaceTitle)}" style="cursor:help;">💀×${r.lastPlaces}</span>` : '';
                 const awardStr = [champStr, runnerUpStr, lastPlaceStr].filter(Boolean).join(' &nbsp;') || '<span style="color:var(--text-muted);">-</span>';
                 // 최다연승/최다연패는 어느 경기~어느 경기 구간인지, 현재 진행중인 연승/연패는 어느 경기부터 시작됐는지
                 // 각각 마우스오버로 볼 수 있게 한다.
@@ -36249,6 +36249,15 @@ img.g-tr.s-xs, img.g-tr.s-sm, img.g-awimg.s-xs, img.g-awimg.s-sm, .aw-cell img.g
 .season-champion-hero .g-shn { animation: g184Float 3.2s ease-in-out infinite; }
 .season-champion-hero .g-shn img.g-tr.s-hero { animation: g189Glow 2.8s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .g-shn::after { display: none; } .season-champion-hero .g-shn { animation: none; } }
+/* v1.89 🏅 랭킹 › 수상기록 트로피 (선수 · 📈 전체 팀 · 🧑‍💼 감독 통산) — 칸(행) 높이는 그대로 두고 트로피만 행 높이에 꽉 차게 크게 (실제 높이는 스크립트가 행 높이를 재서 --aw-h로 지정, 레이아웃에는 16px만 차지해 행이 늘어나지 않음). 뒤쪽의 옛 16px 규칙을 이기도록 선택자를 더 구체적으로 지정 */
+.aw-cell img.g-awimg, #playerRankTbody tr img.g-tr, #teamRankTbody tr img.g-tr, #managerRankTbody tr img.g-tr, #managerTotalTbody tr img.g-tr, #playerRankTbody tr img.g-awimg, #teamRankTbody tr img.g-awimg, #managerRankTbody tr img.g-awimg, #managerTotalTbody tr img.g-awimg { height: var(--aw-h, 30px) !important; width: auto; margin-block: calc((16px - var(--aw-h, 30px)) / 2) !important; vertical-align: middle !important; }
+#playerRankTbody tr .g-shn, #teamRankTbody tr .g-shn, #managerRankTbody tr .g-shn, #managerTotalTbody tr .g-shn { margin-block: calc((16px - var(--aw-h, 30px)) / 2) !important; vertical-align: middle; }
+#playerRankTbody tr .g-shn img.g-tr, #teamRankTbody tr .g-shn img.g-tr, #managerRankTbody tr .g-shn img.g-tr, #managerTotalTbody tr .g-shn img.g-tr, #playerRankTbody tr .g-shn img.g-awimg, #teamRankTbody tr .g-shn img.g-awimg, #managerRankTbody tr .g-shn img.g-awimg, #managerTotalTbody tr .g-shn img.g-awimg { height: var(--aw-h, 30px) !important; margin-block: 0 !important; }
+#playerRankTbody tr .aw-cell, #teamRankTbody tr .aw-cell, #managerRankTbody tr .aw-cell, #managerTotalTbody tr .aw-cell { align-items: center; }
+/* v1.89 트로피 이미지는 칸 · 화면 폭이 줄어도(확대 · 창 축소) 찌그러지거나 작아지지 않게 — .tab-content img / #ranking img 의 max-width:100% 와 flex 축소를 무력화 */
+img.g-tr, img.g-awimg { max-width: none !important; min-width: 0; flex: none !important; object-fit: contain; }
+.g-shn { max-width: none; flex: none !important; }
+.aw-cell, .aw-cell > span, .aw-cell .g-awi { flex: none; flex-wrap: nowrap; }
 .gt-row.gt-cp .gt-ph { flex-basis: 44px; width: 44px; min-height: 52px; }
 .gt-row.gt-cp .gt-body { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 3px 6px; }
 .gt-row.gt-cp .gt-body .gt-bd { flex-basis: 100%; }
@@ -36478,6 +36487,34 @@ img.g-tr.s-xs, img.g-tr.s-sm, img.g-awimg.s-xs, img.g-awimg.s-sm, .aw-cell img.g
     const scan = () => { clearTimeout(tm); tm = setTimeout(() => { try { document.querySelectorAll('img.g-tr:not([data-shn]), img.g-awimg:not([data-shn])').forEach(wrap); } catch (e) { console.error('트로피 반짝임 오류', e); } }, 200); };
     new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
     scan();
+})();
+</script>
+<script id="g189RankTrophy">
+/* v1.89 🏅 랭킹 수상기록 트로피 크기 — 각 행의 높이를 재서(행 높이 − 4px) 트로피 높이로 지정. 트로피는 레이아웃에 16px만 차지하므로 행이 늘어나지 않는다.
+   화면 확대 · 축소 · 창 크기 변경 · 사이드바 접기로 행 높이가 바뀌면 ResizeObserver가 즉시(다음 프레임) 다시 맞춘다 */
+(function () {
+    if (window.__g189RankTrophy) return; window.__g189RankTrophy = 1;
+    const SEL = '#playerRankTbody tr, #teamRankTbody tr, #managerRankTbody tr, #managerTotalTbody tr';
+    const seen = new WeakSet(); let raf = 0;
+    const ro = ('ResizeObserver' in window) ? new ResizeObserver(() => schedule()) : null;
+    function size() {
+        raf = 0;
+        try {
+            document.querySelectorAll(SEL).forEach(tr => {
+                if (!seen.has(tr)) { seen.add(tr); if (ro) ro.observe(tr); }
+                if (!tr.querySelector('img.g-tr, img.g-awimg')) return;
+                const h = tr.getBoundingClientRect().height; if (!h) return;
+                const v = Math.max(16, Math.min(60, Math.floor(h - 4))) + 'px';
+                if (tr.style.getPropertyValue('--aw-h') !== v) tr.style.setProperty('--aw-h', v);
+            });
+        } catch (e) { console.error('랭킹 트로피 크기 오류', e); }
+    }
+    function schedule() { if (!raf) raf = requestAnimationFrame(size); }
+    let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(schedule, 120); };
+    new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('resize', schedule);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', schedule);
+    later();
 })();
 </script>
 </body>
