@@ -4690,7 +4690,13 @@
       "specialAwards": {
         "rookie": "박주아",
         "yashin": "시은미",
-        "ballon": "제이"
+        "ballon": "제이",
+        "allstar": "정혜인",
+        "fw": "사오리",
+        "mf": "서기",
+        "df": "박하얀",
+        "couple": "사오리|제이",
+        "coach": "이영표"
       },
       "matches": [
         {
@@ -13909,7 +13915,13 @@
       "specialAwards": {
         "rookie": "루나",
         "yashin": "리사",
-        "ballon": "마시마유"
+        "ballon": "마시마유",
+        "allstar": "김보경",
+        "fw": "이유정",
+        "mf": "정혜인",
+        "df": "민서",
+        "couple": "마시마유|소유미",
+        "coach": "이근호"
       },
       "matches": [
         {
@@ -22942,7 +22954,13 @@
   "specialAwards": {
     "rookie": "",
     "yashin": "",
-    "ballon": ""
+    "ballon": "",
+    "allstar": "",
+    "fw": "",
+    "mf": "",
+    "df": "",
+    "couple": "",
+    "coach": ""
   },
   "totalSort": {
     "team": {
@@ -30653,7 +30671,7 @@
     "season": "current",
     "recent": "all"
   },
-  "dbSavedDate": "2026-11-01",
+  "dbSavedDate": "2026-11-02",
   "eloStartAdj": {
     "season": "2026 제3회 GIFA컵",
     "locked": true,
