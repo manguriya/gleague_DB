@@ -35784,7 +35784,7 @@ window.pmExtRender = function(name){
         return gSpPart(part).map(d => {
             const v = sa[d.key] || '', mgr = d.key === 'coach', top = part === 'top';
             const arr = v ? (mgr ? [v] : gAwNames(v)) : [];
-            return '<div class="summary-card aw-card ' + (top ? 'aw-top' : 'aw-sp') + '" style="--awc:' + d.color + ';"><h3>' + gAwardImg(d.key, d.emoji, 'hero') + '<span>' + d.label + '</span></h3>' + gAwBig(arr, '', { empty: '미정', team: teamMap, arc: arc, mgr: mgr }) + '</div>';
+            return '<div class="summary-card aw-card ' + (top ? 'aw-top' : 'aw-sp') + (d.key === 'couple' ? ' aw-couple' : '') + '" style="--awc:' + d.color + ';"><h3>' + gAwardImg(d.key, d.emoji, 'hero') + '<span>' + d.label + '</span></h3>' + gAwBig(arr, '', { empty: '미정', team: teamMap, arc: arc, mgr: mgr }) + '</div>';
         }).join('');
     };
 
@@ -35967,7 +35967,7 @@ window.pmExtRender = function(name){
         const sa = a.specialAwards || {}, top = part === 'top';
         return gSpPart(top ? 'top' : 'rest').filter(d => top || sa[d.key]).map(d => {
             const mgr = d.key === 'coach', team = gSpArcTeams(a, d.key, sa[d.key]);
-            return '<div class="summary-card aw-card ' + (top ? 'aw-top' : 'aw-sp') + '" style="--awc:' + d.color + ';"><h3>' + gAwardImg(d.key, d.emoji, 'hero') + '<span>' + d.label + '</span></h3>' + gAwBig(mgr ? [sa[d.key]] : gAwNames(sa[d.key]), '', { team, mgr, empty: '미정' }) + '</div>';
+            return '<div class="summary-card aw-card ' + (top ? 'aw-top' : 'aw-sp') + (d.key === 'couple' ? ' aw-couple' : '') + '" style="--awc:' + d.color + ';"><h3>' + gAwardImg(d.key, d.emoji, 'hero') + '<span>' + d.label + '</span></h3>' + gAwBig(mgr ? [sa[d.key]] : gAwNames(sa[d.key]), '', { team, mgr, empty: '미정' }) + '</div>';
         }).join('');
     };
 
@@ -36130,6 +36130,13 @@ window.pmExtRender = function(name){
 .season-award-grid > .aw-card:not(.aw-champ) .aw-pl { flex: 0 1 118px; max-width: 134px; padding: 6px 6px 7px; }
 .season-award-grid > .aw-card:not(.aw-champ) .aw-name { font-size: .8rem; } .season-award-grid > .aw-card:not(.aw-champ) .aw-team { font-size: .58rem; } .season-award-grid > .aw-card:not(.aw-champ) .aw-val { font-size: .8rem; margin-top: 3px; } .season-award-grid > .aw-card:not(.aw-champ) .aw-none { padding: 8px 4px; font-size: .72rem; }
 @media (max-width: 700px) { .season-award-grid > .aw-card:not(.aw-champ) h3 { font-size: 1.05rem; } .season-award-grid > .aw-card:not(.aw-champ) h3 img.g-awimg.s-hero { height: 68px; } .season-award-grid > .aw-card:not(.aw-champ) .aw-pl { flex-basis: 106px; max-width: 120px; } }
+
+/* v1.88 💞 베스트커플상 — 두 선수 카드를 줄여서 위아래가 아닌 나란히 배치 (카드는 2칸 폭) */
+.aw-card.aw-couple { grid-column: span 2; }
+.aw-card.aw-couple .aw-pls { flex-wrap: nowrap; gap: 6px; }
+.summary-grid > .aw-card.aw-couple .aw-pl { flex: 0 1 92px; min-width: 0; max-width: 96px; padding: 4px 4px 5px; }
+.summary-grid > .aw-card.aw-couple .aw-name { font-size: .72rem; word-break: keep-all; } .summary-grid > .aw-card.aw-couple .aw-team { font-size: .54rem; }
+@media (max-width: 420px) { .aw-card.aw-couple { grid-column: auto; } .summary-grid > .aw-card.aw-couple .aw-pl { flex-basis: 80px; max-width: 84px; } }
 
 /* 🧩 선수 모달 › 트로피 진열대: 같은 수상끼리 */
 .tc-cab-t.pc-gt { color: var(--awc, var(--gold)); margin-top: 6px; }
