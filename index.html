@@ -29074,6 +29074,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             return { cur, arc, matches, teamsArr, teamById, players };
         }
 
+        // v1.90: 공격포인트를 '4P(1G3A)' 형태(총 공격P + 골 · 도움)로 표시
+        function gSpPts(p) { return p.points + 'P(' + p.goals + 'G' + p.assists + 'A)'; }
+
         // 공격P · MOM · (표본 보정한) 평균평점을 0~1로 정규화해 가중합 → 높은 순 정렬
         function gSpRank(list, w) {
             if (!list.length) return [];
@@ -29094,7 +29097,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (kind === 'ballon') {
                 const top = gSpRank(P, { pts: 0.45, mom: 0.25, rate: 0.30 }).slice(0, 15);
                 out.title = '🏅 공격포인트 · MOM(경기 MVP) 횟수 · 평균평점을 종합한 상위 15명이 후보예요';
-                if (top.length) out.groups.push({ label: '🏅 골롱도르 후보 TOP 15', color: '', items: top.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + ' · 공격P ' + p.points + ' · MOM ' + p.mom + ' · 평점 ' + fmt(p.avg) })) });
+                if (top.length) out.groups.push({ label: '🏅 골롱도르 후보 TOP 15', color: '', items: top.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + ' · ' + gSpPts(p) + ' · MOM ' + p.mom + ' · 평점 ' + fmt(p.avg) })) });
             } else if (kind === 'allstar') {
                 out.title = '⭐ 각 팀 평균평점 상위 3명이 후보예요';
                 const byTeam = {};
@@ -29102,13 +29105,23 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 Object.keys(byTeam).map(k => ({ k, list: byTeam[k], name: byTeam[k][0].teamName || '소속 불명', color: byTeam[k][0].color }))
                     .sort((a, b) => a.name.localeCompare(b.name, 'ko')).forEach(g => {
                         const top = [...g.list].sort((a, b) => ((b.games >= 2) - (a.games >= 2)) || (b.avg - a.avg) || (b.points - a.points) || (b.mom - a.mom)).slice(0, 3);
-                        out.groups.push({ label: g.name, color: g.color, items: top.map(p => ({ value: p.name, color: p.color, text: p.name + (p.pos ? ' (' + p.pos + ')' : '') + ' · 평점 ' + fmt(p.avg) + ' · ' + p.games + '경기 · 공격P ' + p.points })) });
+                        out.groups.push({ label: g.name, color: g.color, items: top.map(p => ({ value: p.name, color: p.color, text: p.name + (p.pos ? ' (' + p.pos + ')' : '') + ' · 평점 ' + fmt(p.avg) + ' · ' + p.games + '경기 · ' + gSpPts(p) })) });
                     });
             } else if (kind === 'fw' || kind === 'mf' || kind === 'df') {
                 const CFG = { fw: ['FW', '공격수', { pts: 0.50, mom: 0.20, rate: 0.30 }], mf: ['MF', '미드필더', { pts: 0.35, mom: 0.25, rate: 0.40 }], df: ['DF', '수비수', { pts: 0.20, mom: 0.20, rate: 0.60 }] }[kind];
-                const list = gSpRank(P.filter(p => p.pos === CFG[0] || (p.pc && p.pc[CFG[0]] > 0)), CFG[2]);   // 주 포지션이 아니어도 그 포지션으로 한 번이라도 뛰었으면 후보
-                out.title = CFG[1] + '(' + CFG[0] + ')로 한 번이라도 뛴 선수가 모두 후보예요 · 공격P / MOM / 평균평점 종합순';
-                if (list.length) out.groups.push({ label: CFG[1] + ' 후보 (' + list.length + '명)', color: '', items: list.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + (p.pos && p.pos !== CFG[0] ? ' [주 ' + p.pos + ']' : '') + ' · 평점 ' + fmt(p.avg) + ' · 공격P ' + p.points + ' · MOM ' + p.mom })) });
+                let pool = P.filter(p => p.pos === CFG[0] || (p.pc && p.pc[CFG[0]] > 0));   // 주 포지션이 아니어도 그 포지션으로 한 번이라도 뛰었으면 후보
+                if (kind === 'mf') {   // v1.90: 미드필더로 안 뛰었어도 미드필더 관련 기록(도움 · 공격P · 평균평점 · MOM)이 상위권이면 후보에 포함 (GK 제외)
+                    const have = new Set(pool.map(p => p.name)), extra = new Set();
+                    const field = P.filter(p => p.pos !== 'GK' && !(p.pc && p.pc.GK > p.games / 2));
+                    const topBy = (fn, minV, minG) => [...field].filter(p => fn(p) > minV && p.games >= minG).sort((a, b) => (fn(b) - fn(a)) || (b.points - a.points) || (b.avg - a.avg)).slice(0, 10).forEach(p => extra.add(p.name));
+                    topBy(p => p.assists, 0, 1); topBy(p => p.points, 0, 1); topBy(p => p.mom, 0, 1); topBy(p => p.avg, 0, 2);
+                    field.forEach(p => { if (extra.has(p.name) && !have.has(p.name)) { pool.push(p); have.add(p.name); } });
+                }
+                const list = gSpRank(pool, CFG[2]);
+                out.title = kind === 'mf'
+                    ? CFG[1] + '(' + CFG[0] + ')로 뛴 선수 + 도움 · 공격P · 평균평점 · MOM 상위 10위 안에 든 선수가 후보예요 · 종합순'
+                    : CFG[1] + '(' + CFG[0] + ')로 한 번이라도 뛴 선수가 모두 후보예요 · 공격P / MOM / 평균평점 종합순';
+                if (list.length) out.groups.push({ label: CFG[1] + ' 후보 (' + list.length + '명)', color: '', items: list.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + (p.pos && p.pos !== CFG[0] ? ' [주 ' + p.pos + ']' : '') + ' · 평점 ' + fmt(p.avg) + ' · ' + gSpPts(p) + ' · MOM ' + p.mom })) });
             } else if (kind === 'couple') {
                 out.title = '💞 도움 → 득점으로 이어진 합작골 상위 15쌍이 후보예요';
                 let duos = [];
