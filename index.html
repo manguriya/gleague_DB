@@ -3210,6 +3210,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                         <th onclick="sortTotalRanking('teamRank','gd')" style="cursor:pointer;">차 ↕️</th>
                         <th onclick="sortTotalRanking('teamRank','pts')" style="cursor:pointer;">승점 ↕️</th>
                         <th onclick="sortTotalRanking('teamRank','elo')" style="cursor:pointer;" title="Elo 레이팅: 직전 시즌 최종 Elo에서 이어받아 갱신 (강팀을 이길수록 더 많이 오름)">Elo ⚡ ↕️</th>
+                        <th data-new="1.88" title="🏆 우승 · 🥈 준우승 · 💀 꼴찌 횟수 (종료된 시즌 기준 · 시즌 필터를 따라감 · 마우스를 올리면 시즌 표시)">수상기록</th>
                     </tr></thead>
                     <tbody id="teamRankTbody"></tbody>
                 </table>
@@ -13219,6 +13220,11 @@ function fmBestStyle(p, role) {
         ];
         // 수상기록 열 공통 렌더러 — 확정 수상은 이모지 그대로(마우스오버 시 어느 시즌에 받았는지 표시),
         // 미확정(진행중인 현재 시즌 선두 후보)은 이모지를 괄호로 감싸고 흐리게 표시하며 마우스오버 시 "수상유력"을 안내한다.
+        // v1.88: 수상 이미지(awards 폴더)가 있으면 작은 트로피 이미지로, 없으면 이모지로 표시 (3개까지 나란히, 그 이상은 이미지 1개 + ×N)
+        function awardIcons(d, n) {
+            const one = () => (window.gAwardImg ? gAwardImg(d.key, d.emoji, 'xs') : d.emoji);
+            return n <= 3 ? Array.from({ length: n }, one).join('') : one() + '<b style="font-size:.68rem; margin-left:1px;">×' + n + '</b>';
+        }
         function buildAwardsCell(confirmedAwards, pendingAwards) {
             const parts = [];
             leagueAwardTypeDefs.forEach(d => {
@@ -13226,16 +13232,16 @@ function fmBestStyle(p, role) {
                 const confCount = conf?.count || 0;
                 if (confCount > 0) {
                     const seasonsText = (conf.seasons || []).join(', ');
-                    parts.push(`<span title="${d.label} ${confCount}회 (${seasonsText})">${d.emoji.repeat(confCount)}</span>`);
+                    parts.push(`<span title="${d.label} ${confCount}회 (${seasonsText})">${awardIcons(d, confCount)}</span>`);
                 }
                 const pend = pendingAwards?.[d.key];
                 const pendCount = pend?.count || 0;
                 if (pendCount > 0) {
                     const seasonsText = (pend.seasons || []).join(', ');
-                    parts.push(`<span title="${d.label} 수상유력 (${seasonsText} 진행중 · 아직 확정 아님)" style="opacity:0.6;">(${d.emoji.repeat(pendCount)})</span>`);
+                    parts.push(`<span title="${d.label} 수상유력 (${seasonsText} 진행중 · 아직 확정 아님)" style="opacity:0.6;">(${awardIcons(d, pendCount)})</span>`);
                 }
             });
-            return parts.join(' ') || '<span style="color:var(--text-muted);">-</span>';
+            return parts.length ? '<span class="aw-cell">' + parts.join(' ') + '</span>' : '<span style="color:var(--text-muted);">-</span>';
         }
         // 수상기록 열 정렬/우선순위용 총 횟수 — 확정 + 미확정(수상유력) 합산
         function awardsTotalCount(confirmedAwards, pendingAwards) {
@@ -26726,6 +26732,35 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             return catRanks;
         }
 
+        // v1.88: 팀별 🏆 우승 · 🥈 준우승 · 💀 꼴찌 기록 (종료된 시즌 = 아카이브) — 감독 랭킹 수상기록과 같은 방식
+        function calcTeamHonors(archives) {
+            const H = {};
+            const ens = id => H[String(id)] || (H[String(id)] = { champs: [], runners: [], lasts: [] });
+            (archives || []).forEach(a => {
+                if (!a) return;
+                const nm = a.name || '시즌 미상';
+                if (a.winner && a.winner !== 'TBD') {
+                    const t = (a.teamRank || []).find(x => x.name === a.winner) || (state.teams || []).find(x => x.name === a.winner);
+                    if (t) ens(t.id).champs.push(nm);
+                }
+                const beats = m => m.hScore > m.aScore || (m.hScore === m.aScore && (m.hPk || 0) > (m.aPk || 0));
+                const fin = (a.matches || []).find(m => m.type === '결승');
+                if (fin) ens(beats(fin) ? fin.aId : fin.hId).runners.push(nm);
+                const lp = (a.matches || []).find(m => m.type === '꼴찌결정전');
+                if (lp) ens(beats(lp) ? lp.aId : lp.hId).lasts.push(nm);
+            });
+            return H;
+        }
+        function teamHonorsCell(h) {
+            if (!h || !(h.champs.length || h.runners.length || h.lasts.length)) return '<span style="color:var(--text-muted);">-</span>';
+            const esc = x => String(x).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const parts = [];
+            if (h.champs.length) parts.push(`<span title="${esc('🏆 우승: ' + h.champs.join(', '))}" style="cursor:help; border-bottom:1px dashed var(--gold);">${window.gTrophyIcons ? gTrophyIcons(h.champs, '🏆', 'xs') : '🏆'}×${h.champs.length}</span>`);
+            if (h.runners.length) parts.push(`<span title="${esc('🥈 준우승: ' + h.runners.join(', '))}" style="cursor:help; border-bottom:1px dashed var(--gold);">🥈×${h.runners.length}</span>`);
+            if (h.lasts.length) parts.push(`<span title="${esc('💀 꼴찌: ' + h.lasts.join(', '))}" style="cursor:help; border-bottom:1px dashed var(--danger);">💀×${h.lasts.length}</span>`);
+            return parts.join(' &nbsp;');
+        }
+
         function renderTeamRank() {
             const tbody = document.getElementById('teamRankTbody'); tbody.innerHTML = "";
             const sf = getStatsSeasonFilter();
@@ -26891,6 +26926,8 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             // 팀명처럼 순위 개념이 없는 정렬이거나 컬럼별 이력이 없을 땐 종합 기준(badgeInfo) 배지를 사용.
             const catKeyForSort = TEAM_RANK_CATEGORY_DEFS.some(c => c.key === tsk) ? tsk : null;
 
+            // v1.88: 수상기록 열 — 과거 시즌을 고르면 그 시즌의 기록만, '전체'면 모든 종료 시즌 합산, 진행 중 시즌 · 직접 지정 범위는 '-'
+            const teamHonors = archivedSeason ? calcTeamHonors([archivedSeason]) : (isCumulativeSF(sf) ? calcTeamHonors(state.archives) : {});
             displayData.forEach((r, i) => {
                 const tid = String(r.id);
                 const b = badgeInfo[tid] || { changeHtml:'', eloDiff:0, eloColor:'var(--text-muted)', eloArrow:'', eloTitle:'' };
@@ -26907,6 +26944,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     <td class="${r.gd>0?'gd-plus':(r.gd<0?'gd-minus':'')}" style="white-space:nowrap;">${r.gd>0?'+'+r.gd:r.gd}${catChangeBadge('gd', tid)}</td>
                     <td style="white-space:nowrap;"><b>${r.pts}</b>${catChangeBadge('pts', tid)}</td>
                     <td title="${b.eloTitle}" style="color:${b.eloColor}; font-weight:800; cursor:help; white-space:nowrap;">${r.elo}<span style="font-size:0.65rem; margin-left:3px;">${b.eloArrow}(${b.eloDiff>=0?'+':''}${b.eloDiff})</span>${catChangeBadge('elo', tid)}</td>
+                    <td style="font-size:0.78rem; color:var(--gold); font-weight:800; white-space:nowrap;">${teamHonorsCell(teamHonors[tid])}</td>
                 </tr>`;
             });
 
@@ -36131,6 +36169,11 @@ window.pmExtRender = function(name){
 .season-award-grid > .aw-card:not(.aw-champ) .aw-name { font-size: .8rem; } .season-award-grid > .aw-card:not(.aw-champ) .aw-team { font-size: .58rem; } .season-award-grid > .aw-card:not(.aw-champ) .aw-val { font-size: .8rem; margin-top: 3px; } .season-award-grid > .aw-card:not(.aw-champ) .aw-none { padding: 8px 4px; font-size: .72rem; }
 @media (max-width: 700px) { .season-award-grid > .aw-card:not(.aw-champ) h3 { font-size: 1.05rem; } .season-award-grid > .aw-card:not(.aw-champ) h3 img.g-awimg.s-hero { height: 68px; } .season-award-grid > .aw-card:not(.aw-champ) .aw-pl { flex-basis: 106px; max-width: 120px; } }
 
+/* v1.88 수상기록 열 — 수상 이미지를 칸 크기에 맞춰 작게 표시 */
+.aw-cell { display: inline-flex; align-items: center; flex-wrap: nowrap; gap: 3px; white-space: nowrap; vertical-align: middle; }
+.aw-cell .g-awi { margin: 0 1px; }
+.aw-cell img.g-awimg { height: 16px !important; width: auto; animation: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,.45)); }   /* 🧑‍💼 감독 랭킹 수상기록과 같은 높이(16px) */
+
 /* v1.88 💞 베스트커플상 — 두 선수 카드를 줄여서 위아래가 아닌 나란히 배치 (카드는 2칸 폭) */
 .aw-card.aw-couple { grid-column: span 2; }
 .aw-card.aw-couple .aw-pls { flex-wrap: nowrap; gap: 6px; }
@@ -36211,6 +36254,7 @@ window.pmExtRender = function(name){
 /* ===== v1.84 (3차) ===== */
 /* 🏅 감독 랭킹 수상기록 트로피 16px */
 #managerRankTbody img.g-tr, #managerTotalTbody img.g-tr { height: 16px !important; }
+#teamRankTbody img.g-tr { height: 16px !important; width: auto; margin: 0 1px 0 0 !important; vertical-align: -2px; }   /* v1.88 팀 랭킹 수상기록 — 감독 랭킹과 같은 크기 */
 /* 📈 현재 리그 순위: 행 세로 간격 축소 · 글씨 확대 */
 #dashTeamRankTable td, #dashTeamRankTable th { padding: 1px 6px; font-size: .84rem; line-height: 1.15; }
 #dashTeamRankTable td.clickable-team { font-size: .9rem; }
