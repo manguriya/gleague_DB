@@ -1807,6 +1807,9 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
 #playerTrophyCabinet img.g-awimg { height: 67px; }
 #playerTrophyCabinet .tc-nm { font-size: .68rem; }
 #playerTrophyCabinet .tc-sub { font-size: .58rem; }
+#playerTrophyCabinet .tc-sub.pc-ssn { margin-top: 0; line-height: 1.25; color: #e2e8f0; }
+#playerTrophyCabinet .tc-it.pc-aw .tc-ico + .pc-ssn { margin-top: 3px; }
+#playerTrophyCabinet .tc-it.pc-aw .tc-nm { margin-top: 2px; }
 .tc-it.pc-live { opacity: .85; }
 .tc-it.pc-live .tc-ico { filter: drop-shadow(0 6px 10px rgba(0,0,0,.55)) saturate(.8); }
 .tc-it.pc-live .tc-sub { color: var(--gold); }
@@ -3205,6 +3208,7 @@ img.g-tr, img.g-awimg { max-width: none !important; min-width: 0; flex: none !im
                                 <button id="teamRankTrendGroupBtn3" onclick="setTeamRankTrendGroup(3)" title="3경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">3경기씩</button>
                                 <button id="teamRankTrendGroupBtn5" onclick="setTeamRankTrendGroup(5)" title="5경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">5경기씩</button>
                                 <button id="teamRankTrendGroupBtn10" onclick="setTeamRankTrendGroup(10)" title="10경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">10경기씩</button>
+                                <button id="teamRankTrendBtnPlayed" onclick="setTeamRankTrendPlayed()" title="이 팀이 직접 뛴 경기만 표시" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">경기날만</button>
                             </div>
                         </div>
                         <div id="teamRankTrendChart"></div>
@@ -5100,6 +5104,7 @@ img.g-tr, img.g-awimg { max-width: none !important; min-width: 0; flex: none !im
                                     <button id="dcRankTrendGroupBtn3" onclick="setTeamRankTrendGroup(3,'dc')" title="3경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">3경기씩</button>
                                     <button id="dcRankTrendGroupBtn5" onclick="setTeamRankTrendGroup(5,'dc')" title="5경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">5경기씩</button>
                                     <button id="dcRankTrendGroupBtn10" onclick="setTeamRankTrendGroup(10,'dc')" title="10경기 평균으로 압축" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">10경기씩</button>
+                                    <button id="dcRankTrendBtnPlayed" onclick="setTeamRankTrendPlayed('dc')" title="이 팀이 직접 뛴 경기만 표시" style="padding:3px 10px; border:none; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer;">경기날만</button>
                                 </div>
                             </div>
                             <div class="dc-rt-split">
@@ -10284,7 +10289,7 @@ img.g-tr, img.g-awimg { max-width: none !important; min-width: 0; flex: none !im
             dcRenderPlayerFunRecords();
             dcRenderSeasonTable(team);
             dcPopulateH2HSelects(team);
-            teamRankTrendState.dc = { scope: 'all', group: 1 };
+            teamRankTrendState.dc = { scope: 'all', group: 1, playedOnly: false };
             updateTeamH2H('dc');
             renderTeamRankTrend(teamId, 'dc');
             dcRenderGoalTimeCharts(team);
@@ -20549,7 +20554,7 @@ function fmBestStyle(p, role) {
             updateTeamH2H('modal');
             switchTeamModalTab('h2h');
             try { tcRenderModalStrip(team); } catch (e) { console.error('트로피 띠 오류', e); }
-            teamRankTrendState.modal = { scope: 'all', group: 1 };
+            teamRankTrendState.modal = { scope: 'all', group: 1, playedOnly: false };
             renderTeamRankTrend(teamId, 'modal');
             document.getElementById('teamDetailModal').style.display = 'block';
         }
@@ -27402,7 +27407,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
         // 팀 순위/Elo 변동 그래프 상태 (scope/group). 팀 상세 팝업('modal')과 팀 데이터센터('dc')가
         // 각자 독립된 상태를 가지도록 prefix별로 분리해서 관리한다.
-        let teamRankTrendState = { modal: { scope: 'all', group: 1 }, dc: { scope: 'all', group: 1 } };
+        let teamRankTrendState = { modal: { scope: 'all', group: 1, playedOnly: false }, dc: { scope: 'all', group: 1, playedOnly: false } };
         // prefix에 따른 DOM id 접두어 ('modal' → 기존 teamRankTrend..., 'dc' → dcRankTrend...)
         function _trIdBase(prefix) { return prefix === 'dc' ? 'dcRankTrend' : 'teamRankTrend'; }
 
@@ -27459,7 +27464,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const label = playedThisMatch
                     ? `${seasonTag}${roundNum}라운드 (${lastM.type} No.${lastM.num})`
                     : `${seasonTag}${roundNum}라운드 (${lastM.type} No.${lastM.num}, 순위 변동)`;
-                const point = { x: roundNum, rank, maxRank: data.length, label, elo: eloResult.elo[String(teamId)], season: lastM.__season };
+                const point = { x: roundNum, rank, maxRank: data.length, label, elo: eloResult.elo[String(teamId)], season: lastM.__season, played: playedThisMatch };
                 if(points.length === 0) point.prevElo = startElo;
                 points.push(point);
             }
@@ -27760,6 +27765,12 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             renderTeamRankTrend(prefix === 'dc' ? currentDcTeamId : currentModalTeamId, prefix);
         }
 
+        function setTeamRankTrendPlayed(prefix) {
+            prefix = (prefix === 'dc') ? 'dc' : 'modal';
+            teamRankTrendState[prefix].playedOnly = !teamRankTrendState[prefix].playedOnly;
+            renderTeamRankTrend(prefix === 'dc' ? currentDcTeamId : currentModalTeamId, prefix);
+        }
+
         function setTeamRankTrendGroup(group, prefix) {
             prefix = (prefix === 'dc') ? 'dc' : 'modal';
             teamRankTrendState[prefix].group = group;
@@ -27798,7 +27809,10 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 btn.style.color = active ? '#000' : 'var(--text-muted)';
             });
 
-            const rawPoints = calcTeamRankHistory(teamId, scope);
+            { const pb = document.getElementById(idBase + 'BtnPlayed');
+              if(pb) { pb.style.background = trState.playedOnly ? 'var(--accent)' : 'rgba(255,255,255,0.07)'; pb.style.color = trState.playedOnly ? '#000' : 'var(--text-muted)'; } }
+            let rawPoints = calcTeamRankHistory(teamId, scope);
+            if(trState.playedOnly) rawPoints = rawPoints.filter(p => p.played !== false);
             container.innerHTML = renderRankTrendSVG(aggregateTrendPoints(rawPoints, group), color);
             renderTeamEloMatchLog(teamId, scope, color, prefix);
         }
@@ -36395,7 +36409,8 @@ window.pmExtRender = function(name){
             live.filter(a => a.key === key).forEach(a => flat.push(Object.assign({}, a, { live: true })));
         });
         const hasW = flat.some(a => a.partner);   // v1.89: 커플 파트너 줄이 있으면 다른 수상 칸도 같은 높이로 맞춤
-        const awItem = a => `<div class="tc-it pc-aw${a.live ? ' pc-live' : ''}" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}${a.partner ? ' (w.' + E(a.partner) + ')' : ''}${a.live ? ' (진행 중 · 유력)' : ''}"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.label)}</div>${a.partner ? `<div class="tc-sub pc-w">(w.${E(a.partner)})</div>` : (hasW ? '<div class="tc-sub pc-w" style="visibility:hidden;" aria-hidden="true">(w.)</div>' : '')}<div class="tc-sub">${E(a.season)}${a.live ? ' · 유력' : ''}</div></div>`;
+        const awSeasonLines = s => { const m = String(s || '').match(/^(\d{4})\s+(.+)$/); return m ? '<div class="tc-sub pc-ssn">' + E(m[1]) + '</div><div class="tc-sub pc-ssn">' + E(m[2]) + '</div>' : '<div class="tc-sub pc-ssn">' + E(s) + '</div>'; };
+        const awItem = a => `<div class="tc-it pc-aw${a.live ? ' pc-live' : ''}" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}${a.partner ? ' (w.' + E(a.partner) + ')' : ''}${a.live ? ' (진행 중 · 유력)' : ''}"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div>${awSeasonLines(a.season)}<div class="tc-nm">${E(a.label)}${a.live ? '(유력)' : ''}</div>${a.partner ? `<div class="tc-sub pc-w">(w.${E(a.partner)})</div>` : (hasW ? '<div class="tc-sub pc-w" style="visibility:hidden;" aria-hidden="true">(w.)</div>' : '')}</div>`;
         const sec = (cls, label, cnt, items) => items ? `<div class="tc-sec ${cls}">${label} <small>${cnt}</small></div><div class="tc-shelf">${items}</div><div class="tc-board"></div>` : '';
         const body = (nT || nR || flat.length)
             ? sec('gold', '🏆 우승컵', nT + '개', tTitle) + sec('silver', '🥈 준우승 메달', nR + '개', tRun) + sec('aw', '🌟 개인 수상', (nA + nL) + '개', flat.map(awItem).join(''))
