@@ -4492,8 +4492,8 @@ img.g-tr, img.g-awimg { max-width: none !important; min-width: 0; flex: none !im
                                 <th onclick="sortPlayerRank('assists')" style="cursor:pointer;">도움 ↕️</th>
                                 <th class="rank-adv-col" onclick="sortPlayerRank('mom')" style="cursor:pointer;">MOM ↕️</th>
                                 <th onclick="sortPlayerRank('avgRating')" style="cursor:pointer;">평균평점 ↕️</th>
-                                <th class="rank-adv-col" onclick="sortPlayerRank('yc')" style="cursor:pointer;" title="경고 횟수 (경기 기록의 🟨🟥 카드)">🟨 경고 ↕️</th>
-                                <th class="rank-adv-col" onclick="sortPlayerRank('rc')" style="cursor:pointer;" title="퇴장 횟수 (경고 2회 포함)">🟥 퇴장 ↕️</th>
+                                <th class="rank-adv-col" onclick="sortPlayerRank('yc')" style="cursor:pointer;" title="경고 횟수 (경기 기록의 🟨🟥 카드)" aria-label="경고">🟨 ↕️</th>
+                                <th class="rank-adv-col" onclick="sortPlayerRank('rc')" style="cursor:pointer;" title="퇴장 횟수 (경고 2회 포함)" aria-label="퇴장">🟥 ↕️</th>
                                 <th class="rank-gk-col" onclick="sortPlayerRank('ss')" style="cursor:pointer;" title="경기 기록의 GK 행에 입력한 결정적 선방(세이브) 합계">🧤 세이브 ↕️</th>
                                 <th class="rank-gk-col" onclick="sortPlayerRank('ssPerG')" style="cursor:pointer;" title="출전 경기 환산(교체·포지션 변경 반영) 대비 세이브">경기당 ↕️</th>
                                 <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssBest')" style="cursor:pointer;">한 경기 최다 ↕️</th>
@@ -14470,6 +14470,28 @@ function fmBestStyle(p, role) {
                 }
             });
             return parts.length ? '<span class="aw-cell">' + parts.join(' ') + '</span>' : '<span style="color:var(--text-muted);">-</span>';
+        }
+        // v1.89 🎯 개인 기록 랭킹 › 수상기록 — 트로피를 한 개씩 칸(unit)으로 나눠, 5개 이하는 한 줄 · 6개 이상은 작게 줄여 2줄(가로 최대 5개)로 배치.
+        // 한 종류가 4개 이상이면 아이콘 ×N으로 묶고, 그래도 10칸을 넘으면 2개 이상인 종류도 ×N으로 묶어 2줄 안에 맞춤. 수상유력은 흐리게 + 점선 테두리.
+        function buildAwardsCellGrid(confirmedAwards, pendingAwards) {
+            const one = d => (window.gAwardImg ? gAwardImg(d.key, d.emoji, 'xs') : d.emoji);
+            const build = compact => {
+                const units = [];
+                leagueAwardTypeDefs.forEach(d => {
+                    [[confirmedAwards?.[d.key], false], [pendingAwards?.[d.key], true]].forEach(([a, pend]) => {
+                        const n = a?.count || 0; if (!n) return;
+                        const seasonsText = (a.seasons || []).join(', ');
+                        const title = pend ? `${d.label} 수상유력 (${seasonsText} 진행중 · 아직 확정 아님)` : `${d.label} ${n}회 (${seasonsText})`;
+                        const cls = 'aw-u' + (pend ? ' aw-pend' : '');
+                        if (n <= 3 && !(compact && n > 1)) { for (let k = 0; k < n; k++) units.push(`<span class="${cls}" title="${title}">${one(d)}</span>`); }
+                        else units.push(`<span class="${cls}" title="${title}">${one(d)}<b>×${n}</b></span>`);
+                    });
+                });
+                return units;
+            };
+            let units = build(false); if (units.length > 10) units = build(true);
+            if (!units.length) return '<span style="color:var(--text-muted);">-</span>';
+            return `<span class="aw-grid${units.length > 5 ? ' aw-2row' : ''}">${units.join('')}</span>`;
         }
         // 수상기록 열 정렬/우선순위용 총 횟수 — 확정 + 미확정(수상유력) 합산
         function awardsTotalCount(confirmedAwards, pendingAwards) {
@@ -30140,7 +30162,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 }).join('');
                 const gm = ms.filter(m => m.type === type).sort((x, y) => (Number(x.num) || 0) - (Number(y.num) || 0) || (Number(x.id) || 0) - (Number(y.id) || 0));
                 const gmHtml = gm.length ? `<details class="arc-gm"><summary>📋 ${label} 경기 결과 (${gm.length}경기)</summary><div class="arc-gm-list">${gm.map(m => matchCard(m)).join('')}</div></details>` : '';
-                return `<div class="arc-grp"><div class="arc-grp-t">${icon} ${label}</div><div class="scrollable-table"><table class="pattern-table"><thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th></tr></thead><tbody>${body}</tbody></table></div>${gmHtml}</div>`;
+                return `<div class="arc-grp"><div class="arc-grp-t">${icon} ${label}</div><div class="scrollable-table"><table class="pattern-table arc-final-team"><thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th></tr></thead><tbody>${body}</tbody></table></div>${gmHtml}</div>`;
             };
             const matchCard = m => {
                 const h = tm[String(m.hId)] || {}, aw = tm[String(m.aId)] || {};
@@ -30189,7 +30211,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 ${(() => { try { return gRoleRecordsHtml(a.matches || [], { archive: true, uid: 'arc_' + idx }); } catch (e) { console.error(e); return ''; } })()}
                 <div class="card">
                     <h4>📈 최종 팀 랭킹</h4>
-                    <table class="pattern-table"><thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th><th title="해당 시즌 최종 Elo 레이팅">Elo ⚡</th></tr></thead><tbody>
+                    <table class="pattern-table arc-final-team"><thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th><th title="해당 시즌 최종 Elo 레이팅">Elo ⚡</th></tr></thead><tbody>
                     ${a.teamRank.map((r,i)=>{
                         const fElo = (a.finalElo && a.finalElo[String(r.id)] !== undefined) ? a.finalElo[String(r.id)] : (r.elo !== undefined ? r.elo : '—');
                         return `<tr><td>${i+1}</td><td style="color:${r.color}; font-weight:800;">${r.name}</td><td>${r.gms}</td><td>${r.w}</td><td>${r.l||r.gms-r.w}</td><td>${r.gf}</td><td>${r.ga}</td><td>${r.gd}</td><td>${r.pts}</td><td style="color:var(--accent); font-weight:800;">${fElo}</td></tr>`;
@@ -30203,7 +30225,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     <h4>📊 최종 개인 기록 랭킹</h4>
                     <div class="ranking-info">정렬 기준: 공격포인트 &gt; 평균평점 &gt; MOM &gt; 경기수 (🏅 랭킹 탭의 개인 기록 랭킹과 동일한 구성)</div>
                     <div class="scrollable-table">
-                        <table class="pattern-table"><thead><tr>
+                        <table class="pattern-table arc-final-player"><thead><tr>
                             <th>순위</th><th>이름</th><th>팀</th><th>포지션</th>
                             <th title="⭐선발 / 🔄후보 / 🪑미출전">출전정보</th>
                             <th>포인트</th><th>득점</th><th>도움</th><th>MOM</th><th>평균평점</th>
@@ -30627,9 +30649,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const pwrRankNum = curCatRanks.pwr[p.name];
                 const pwrRankTag = sk !== 'pwr' ? `<span style="color:var(--text-muted); font-size:0.65rem; font-weight:700; margin-left:3px;">(${pwrRankNum}위)</span>` : '';
                 const mainBadge = p.pos ? `<span style="background:${posColorMap[p.pos]||'#94a3b8'}; color:${(p.pos==='GK'||p.pos==='MF')?'#000':'#fff'}; padding:1px 6px; border-radius:4px; font-size:0.7rem; font-weight:800;">${p.pos}</span>` : '<span style="color:var(--text-muted);">-</span>';
-                const subBadge = p.subPos ? `<span style="background:${posColorMap[p.subPos]||'#94a3b8'}; opacity:0.55; color:${(p.subPos==='GK'||p.subPos==='MF')?'#000':'#fff'}; padding:0px 5px; border-radius:4px; font-size:0.6rem; font-weight:800; margin-left:3px;" title="부포지션">${p.subPos}</span>` : '';
+                const subBadge = p.subPos ? `<span style="background:${posColorMap[p.subPos]||'#94a3b8'}; opacity:0.55; color:${(p.subPos==='GK'||p.subPos==='MF')?'#000':'#fff'}; padding:0px 3px; border-radius:3px; font-size:0.5rem; line-height:1.3; font-weight:800; margin-left:3px; vertical-align:middle;" title="부포지션">${p.subPos}</span>` : '';
                 const posBadge = mainBadge + subBadge;
-                const awardsCell = buildAwardsCell(p.awardsConfirmed, p.awardsPending);
+                const awardsCell = buildAwardsCellGrid(p.awardsConfirmed, p.awardsPending);
                 tbody.innerHTML += `<tr><td style="white-space:nowrap;">${i+1}${changeHtml}</td><td class="clickable-player" onclick="showPlayerDetail('${p.name}')" style="font-weight:800;">${p.name}</td><td style="color:${p.color}">${p.teamName}</td><td class="rank-adv-col" style="white-space:nowrap;">${posBadge}</td><td class="rank-adv-col" title="⭐선발/🔄후보/🪑미출전" style="white-space:nowrap;">${gamesDisplay}${catChangeBadge('games', p.name)}</td><td class="rank-adv-col" style="color:var(--accent); font-weight:800; white-space:nowrap;">${p.points}${catChangeBadge('points', p.name)}</td><td style="white-space:nowrap;">${p.goals}${catChangeBadge('goals', p.name)}</td><td style="white-space:nowrap;">${p.assists}${catChangeBadge('assists', p.name)}</td><td class="rank-adv-col" style="white-space:nowrap;">${p.mom}${catChangeBadge('mom', p.name)}</td><td style="white-space:nowrap;">${p.avgRating.toFixed(2)}${catChangeBadge('avgRating', p.name)}</td><td class="rank-adv-col" style="white-space:nowrap;">${p.yc ? '<b style="color:#facc15;">' + p.yc + '</b>' : '-'}</td><td class="rank-adv-col" style="white-space:nowrap;">${p.rc ? '<b style="color:#ef4444;">' + p.rc + '</b>' : '-'}</td><td class="rank-gk-col" style="white-space:nowrap;"><b style="color:#38bdf8;">${p.ss}</b></td><td class="rank-gk-col" style="white-space:nowrap;">${p.ssPerG}</td><td class="rank-gk-col rank-adv-col" style="white-space:nowrap;">${p.ssBest}</td><td class="rank-gk-col rank-adv-col" style="white-space:nowrap;">${p.ssGa}</td><td class="rank-gk-col rank-adv-col" style="white-space:nowrap;">${(p.ss + p.ssGa) > 0 ? p.ssRate + '%' : '-'}</td><td style="color:var(--gold); font-weight:800; white-space:nowrap;">${p.pwr.toFixed(1)}${pwrSampleTag(p)}${pwrRankTag}${catChangeBadge('pwr', p.name)}</td><td class="rank-adv-col" style="font-size:0.85rem; white-space:nowrap; letter-spacing:-0.5px;">${awardsCell}</td></tr>`;
             });
 
@@ -35977,7 +35999,22 @@ window.pmExtRender = function(name){
             if (hit) gTintSelectEl(sel);
         });
     }
-    function run() { try { alignRankCells(); } catch (e) { console.error('랭킹 정렬 오류', e); } try { tintSelects(); } catch (e) { console.error('드롭다운 색 오류', e); } }
+    // v1.89: 🏛️ 역사관 › 최종 팀 랭킹(팀명 칸) · 최종 개인 기록 랭킹(이름 · 팀 칸)도 같은 방식으로 로고 자리 맞춤
+    function alignArcCells() {
+        [['table.arc-final-team tbody tr', [[1, true]]], ['table.arc-final-player tbody tr', [[1, false], [2, true]]]].forEach(([sel, cols]) => {
+            document.querySelectorAll(sel).forEach(tr => {
+                cols.forEach(([ci, isTeam]) => {
+                    const td = tr.children[ci]; if (!td) return;
+                    const img = td.querySelector(':scope > img.g-av'), sp = td.querySelector(':scope > .g-av-sp');
+                    if (img && sp) { sp.remove(); return; }
+                    if (img || sp) return;
+                    const e = document.createElement('span'); e.className = 'g-av g-av-sp' + (isTeam ? ' team' : ''); e.setAttribute('aria-hidden', 'true');
+                    td.insertBefore(e, td.firstChild);
+                });
+            });
+        });
+    }
+    function run() { try { alignRankCells(); } catch (e) { console.error('랭킹 정렬 오류', e); } try { alignArcCells(); } catch (e) { console.error('역사관 랭킹 정렬 오류', e); } try { tintSelects(); } catch (e) { console.error('드롭다운 색 오류', e); } }
     let tm = null; const later = () => { clearTimeout(tm); tm = setTimeout(run, 200); };
     new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
     document.addEventListener('change', e => { const t = e.target; if (t && t.tagName === 'SELECT' && t.querySelector('[data-gc]')) gTintSelectEl(t); });
@@ -36531,6 +36568,31 @@ window.pmExtRender = function(name){
     scan();
 })();
 </script>
+<style id="g189bCss">
+/* v1.89 🎯 개인 기록 랭킹 — 긴 팀 이름이 옆 칸과 겹치지 않게 표를 내용 폭 이상으로 유지(좁으면 가로 스크롤) · 🟨 경고 · 🟥 퇴장 칸 폭 축소 · 수상기록 2줄 배치 */
+#playerRankTable, #playerRankTable.rank-gk-mode, #playerRankTable:not(.rank-adv-hidden), #playerRankTable.rank-gk-mode:not(.rank-adv-hidden) { min-width: max-content !important; max-width: none !important; }
+#playerRankTbody td:nth-child(3) { padding-right: 14px; }
+#playerRankTable th:nth-child(11), #playerRankTable th:nth-child(12) { width: 40px; min-width: 0; padding: 6px 2px; font-size: .68rem; white-space: nowrap !important; line-height: 1.25; text-align: center; }
+#playerRankTbody td:nth-child(11), #playerRankTbody td:nth-child(12) { width: 40px; min-width: 0; padding: 6px 2px; text-align: center; }
+#playerRankTbody .aw-grid { display: inline-grid; grid-template-columns: repeat(5, max-content); gap: 2px 3px; align-items: center; justify-items: start; vertical-align: middle; }
+#playerRankTbody .aw-grid:not(.aw-2row) { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 3px; }
+#playerRankTbody .aw-grid .aw-u { display: inline-flex; align-items: center; gap: 1px; flex: none; white-space: nowrap; }
+#playerRankTbody .aw-grid .aw-u > b { font-size: .6rem; margin-left: 1px; }
+#playerRankTbody .aw-grid .aw-u.aw-pend { opacity: .55; outline: 1px dashed rgba(251,191,36,.6); outline-offset: 1px; border-radius: 3px; }
+#playerRankTbody tr .aw-grid.aw-2row .g-shn, #playerRankTbody tr .aw-grid.aw-2row .g-awi { margin-block: 0 !important; display: inline-flex; align-items: center; }
+#playerRankTbody tr .aw-grid.aw-2row img.g-awimg, #playerRankTbody tr .aw-grid.aw-2row .g-shn img.g-awimg, #playerRankTbody tr .aw-grid.aw-2row img.g-tr { height: var(--aw2-h, 16px) !important; margin-block: 0 !important; width: auto; }
+#playerRankTbody tr .aw-grid.aw-2row .g-awi { font-size: calc(var(--aw2-h, 16px) * .8); line-height: 1; }
+</style>
+<style id="g189cCss">
+/* v1.89 🏛️ 역사관 › 시즌 아카이브 › 📈 최종 팀 랭킹 · 📊 최종 개인 기록 랭킹 — 이름 · 팀 칸을 🎯 개인 기록 랭킹처럼 로고(사진) 자리 기준으로 왼쪽 정렬 (로고가 없는 행도 같은 크기의 빈 자리를 둠) */
+.arc-final-team th:nth-child(2), .arc-final-team tbody td:nth-child(2),
+.arc-final-player th:nth-child(2), .arc-final-player th:nth-child(3),
+.arc-final-player tbody td:nth-child(2), .arc-final-player tbody td:nth-child(3) { text-align: left !important; padding-left: 14px; white-space: nowrap; }
+.arc-final-team tbody td:nth-child(2) > .g-av, .arc-final-player tbody td:nth-child(2) > .g-av, .arc-final-player tbody td:nth-child(3) > .g-av { width: 28px; height: 28px; margin-right: 8px; display: inline-block; vertical-align: middle; flex: none; }
+.arc-final-player tbody td:nth-child(2) > .g-av:not(.team) { border-radius: 50%; object-fit: cover; object-position: 50% 15%; }
+.arc-final-team tbody td:nth-child(2) > .g-av, .arc-final-player tbody td:nth-child(3) > .g-av { border-radius: 4px; object-fit: contain; object-position: 50% 50%; background: transparent; }
+.arc-final-team tbody td > .g-av-sp, .arc-final-player tbody td > .g-av-sp { visibility: hidden; background: transparent; }
+</style>
 <script id="g189RankTrophy">
 /* v1.89 🏅 랭킹 수상기록 트로피 크기 — 각 행의 높이를 재서(행 높이 − 4px) 트로피 높이로 지정. 트로피는 레이아웃에 16px만 차지하므로 행이 늘어나지 않는다.
    화면 확대 · 축소 · 창 크기 변경 · 사이드바 접기로 행 높이가 바뀌면 ResizeObserver가 즉시(다음 프레임) 다시 맞춘다 */
@@ -36548,6 +36610,8 @@ window.pmExtRender = function(name){
                 const h = tr.getBoundingClientRect().height; if (!h) return;
                 const v = Math.max(16, Math.min(60, Math.floor(h - 4))) + 'px';
                 if (tr.style.getPropertyValue('--aw-h') !== v) tr.style.setProperty('--aw-h', v);
+                const v2 = Math.max(10, Math.min(28, Math.floor((h - 6) / 2))) + 'px';
+                if (tr.style.getPropertyValue('--aw2-h') !== v2) tr.style.setProperty('--aw2-h', v2);
             });
         } catch (e) { console.error('랭킹 트로피 크기 오류', e); }
     }
