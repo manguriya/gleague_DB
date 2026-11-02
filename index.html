@@ -4305,6 +4305,10 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
     ];
     /* 수상자 문자열 → 이름 배열 (쉼표 · | 로 구분: 공동 수상 · 베스트커플) */
     window.gAwNames = v => String(v == null ? '' : v).split(/\s*[,|]\s*/).map(x => x.trim()).filter(x => x && x !== 'N/A' && x !== '없음' && x !== '기록 없음');
+    /* v1.89 💞 베스트커플상은 항상 2인 1세트 — 수상자 문자열(A|B)을 [[A, B]] 쌍으로 묶고, 선수 모달에서는 상대(파트너)를 (w.이름)으로 표시 */
+    window.gCouplePairs = v => { const n = gAwNames(v), out = []; for (let i = 0; i + 1 < n.length; i += 2) out.push([n[i], n[i + 1]]); if (n.length % 2) out.push([n[n.length - 1]]); return out; };
+    window.gCouplePartner = (v, name) => { const pr = gCouplePairs(v).find(x => x.includes(name)); return pr ? pr.filter(x => x !== name).join(', ') : ''; };
+    window.gPartnerTag = (key, v, name) => { if (key !== 'couple') return ''; const w = gCouplePartner(v, name); return w ? ' (w.' + w + ')' : ''; };
     window.gAwardImg = (key, fb, size) => { const id = AWID[key]; return id ? '<span class="g-awi" data-gai="' + id + '" data-gsz="' + (SZ[size] ? size : 'sm') + '" data-fb="' + esc(fb || '') + '">' + esc(fb || '') + '</span>' : esc(fb || ''); };
     window.gTrophyBracket = function (html, name) {
         return html ? String(html).replace('<div class="tb-champ">🏆', '<div class="tb-champ">' + W(name, 'sm', '🏆')) : html;
@@ -12708,6 +12712,12 @@ function fmBestStyle(p, role) {
                             if (cm && String((a.teamManagers || {})[String(team.id)] || '') === cm) entries.push({ icon: d.emoji, label: `${d.label}: ${cm}` });
                             return;
                         }
+                        if (d.key === 'couple') {   // v1.89: 베스트커플상은 두 선수를 한 줄로
+                            gCouplePairs(a.specialAwards.couple).forEach(pair => {
+                                if (pair.some(n => { const t = dcFindPlayerTeamIdInArchive(a, n); return t !== null && t === String(team.id); })) entries.push({ icon: d.emoji, label: `${d.label}: ${pair.join(' ♥ ')}` });
+                            });
+                            return;
+                        }
                         gAwNames(a.specialAwards[d.key]).forEach(n => checkAward(n, d.label, d.emoji));
                     });
                 }
@@ -19853,7 +19863,7 @@ function fmBestStyle(p, role) {
                 if(curTopScorer    === playerName) curBadges.push({ emoji: '⚽️', label: '득점왕', color: '#fb923c' });
                 if(curTopAssistant === playerName) curBadges.push({ emoji: '🎯', label: '도움왕', color: '#38bdf8' });
                 const curSa = state.specialAwards || {};
-                awardDefs.forEach(def => { if(gAwNames(curSa[def.key]).includes(playerName)) curBadges.push({ emoji: def.emoji, label: def.label, color: def.color }); });
+                awardDefs.forEach(def => { if(gAwNames(curSa[def.key]).includes(playerName)) curBadges.push({ emoji: def.emoji, label: def.label + gPartnerTag(def.key, curSa[def.key], playerName), color: def.color }); });
                 if(curBadges.length > 0) seasonGroups.push({ season: state.seasonName || '현재 시즌', confirmed: false, badges: curBadges });
             }
 
@@ -19863,7 +19873,7 @@ function fmBestStyle(p, role) {
                 if(a.topScorer    === playerName) badges.push({ emoji: '⚽️', label: '득점왕', color: '#fb923c' });
                 if(a.topAssistant === playerName) badges.push({ emoji: '🎯', label: '도움왕', color: '#38bdf8' });
                 const aSa = a.specialAwards || {};
-                awardDefs.forEach(def => { if(gAwNames(aSa[def.key]).includes(playerName)) badges.push({ emoji: def.emoji, label: def.label, color: def.color }); });
+                awardDefs.forEach(def => { if(gAwNames(aSa[def.key]).includes(playerName)) badges.push({ emoji: def.emoji, label: def.label + gPartnerTag(def.key, aSa[def.key], playerName), color: def.color }); });
                 if(badges.length > 0) seasonGroups.push({ season: a.name, confirmed: true, badges });
             });
 
@@ -27478,7 +27488,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 // 🏅골롱도르 · ⭐올스타상 · 🌱신인상 · 🧤야신상 · 🔥🧭🛡️포지션별 수상 · 💞베스트커플상 · 🧑‍💼감독상 — 직접 선정하는 특별 수상이라 수치 없이 시즌 배지만 붙인다.
                 const sa = a.specialAwards || {};
                 G_SP.forEach(d => {
-                    gAwNames(sa[d.key]).forEach(name => {
+                    // v1.89: 💞 베스트커플상은 두 선수를 한 세트(A|B)로 집계
+                    const winners = d.key === 'couple' ? gCouplePairs(sa[d.key]).map(pr => pr.slice().sort((x, y) => x.localeCompare(y)).join('|')) : gAwNames(sa[d.key]);
+                    winners.forEach(name => {
                         const total = ensurePlayerTotal(name);
                         const type = 'sp_' + d.key;
                         if (!total.details[type]) { total[type] = 0; total.details[type] = []; }
@@ -27518,13 +27530,15 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                                     </div>
                                 `).join('');
                                 const _ri = sorted.indexOf(p) + 1;
+                                const _isCp = cat.key === 'sp_couple';
                                 const _nm = String(p.name).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+                                const _one = n => `<span class="gt-nm" onclick="showPlayerDetail('${String(n).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">${n}</span>`;
                                 return `
-                                    <div class="gt-row${_ri === 1 ? ' top1' : ''}">
+                                    <div class="gt-row${_ri === 1 ? ' top1' : ''}${_isCp ? ' gt-cp' : ''}">
                                         <div class="gt-rk">${_ri}</div>
-                                        <div class="gt-ph" ${cat.mgr ? 'data-gmg' : 'data-gp'}="${String(p.name).replace(/"/g,'&quot;')}"></div>
+                                        ${_isCp ? String(p.name).split('|').map(n => `<div class="gt-ph" data-gp="${n.replace(/"/g,'&quot;')}"></div>`).join('') : `<div class="gt-ph" ${cat.mgr ? 'data-gmg' : 'data-gp'}="${String(p.name).replace(/"/g,'&quot;')}"></div>`}
                                         <div class="gt-body">
-                                            <span class="gt-nm" onclick="${cat.mgr ? 'showManagerDetail' : 'showPlayerDetail'}('${_nm}')">${p.name}</span>
+                                            ${_isCp ? String(p.name).split('|').map(_one).join(' <span class="gt-heart">♥</span> ') : `<span class="gt-nm" onclick="${cat.mgr ? 'showManagerDetail' : 'showPlayerDetail'}('${_nm}')">${p.name}</span>`}
                                             <div class="gt-bd">${emojiWithVal}</div>
                                         </div>
                                     </div>
@@ -30983,7 +30997,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.88';
+        const G_HTML_VERSION = '1.89';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -31487,7 +31501,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 if (o.topScorer === name) out.push([sn, '⚽ 득점왕']);
                 if (o.topAssistant === name) out.push([sn, '🅰️ 도움왕']);
                 const sp = o.specialAwards || {};
-                (window.G_SP || []).forEach(d => { if (d.key !== 'coach' && gAwNames(sp[d.key]).includes(name)) out.push([sn, d.emoji + ' ' + d.label]); });
+                (window.G_SP || []).forEach(d => { if (d.key !== 'coach' && gAwNames(sp[d.key]).includes(name)) out.push([sn, d.emoji + ' ' + d.label + gPartnerTag(d.key, sp[d.key], name)]); });
             };
             (state.archives || []).forEach(ar => chk(ar.name, ar));
             chk(state.seasonName || '현재 시즌', { specialAwards: state.specialAwards });
@@ -35699,6 +35713,13 @@ window.pmExtRender = function(name){
                     if (cm && String((a.teamManagers || {})[tid] || '') === cm) H.awards.push({ season: a.name, idx: i, name: cm, label, emoji, color, key, mgr: true });
                     return;
                 }
+                if (key === 'couple') {   // v1.89: 베스트커플상은 두 선수를 한 세트로 (이 팀 소속이 한 명이라도 있으면 진열)
+                    gCouplePairs(sa.couple).forEach(pair => {
+                        const mine = pair.filter(n => String(dcFindPlayerTeamIdInArchive(a, n)) === tid);
+                        if (mine.length) H.awards.push({ season: a.name, idx: i, name: pair.join(' ♥ '), pair, mine, label, emoji, color, key });
+                    });
+                    return;
+                }
                 gAwNames(special ? sa[key] : a[key]).forEach(nm => {
                     if (String(dcFindPlayerTeamIdInArchive(a, nm)) !== tid) return;
                     H.awards.push({ season: a.name, idx: i, name: nm, label, emoji, color, key });
@@ -35734,7 +35755,7 @@ window.pmExtRender = function(name){
         if (!team) { box.innerHTML = ''; return; }
         const H = tcHonors(team);
         const players = {};
-        H.awards.filter(a => !a.mgr).forEach(a => { (players[a.name] = players[a.name] || []).push(a); });
+        H.awards.filter(a => !a.mgr).forEach(a => { (a.pair ? a.mine : [a.name]).forEach(n => { (players[n] = players[n] || []).push(a); }); });
         const pNames = Object.keys(players).sort((x, y) => players[y].length - players[x].length || x.localeCompare(y));
         const pn = n => `<span class="tc-aw-n" data-pn="${E(n)}" onclick="showPlayerDetail(this.dataset.pn)"><span class="g-nm" data-gk="p" data-gs="sm">${E(n)}</span></span>`;
         const mn = n => `<span class="tc-aw-n" data-pn="${E(n)}" onclick="showManagerDetail(this.dataset.pn)"><span class="g-nm" data-gk="a" data-gs="sm">${E(n)}</span></span>`;
@@ -35754,9 +35775,9 @@ window.pmExtRender = function(name){
         const awardShelves = bySeason.length ? bySeason.map(g => `
             <div class="tc-cab-t">${gTrophyOr(g.season, '🗓️', 'xs')}${E(g.season)}<small>${g.list.length}개 수상</small></div>
             <div class="tc-shelf" style="min-height:0;padding-top:10px;">${g.list.map(a => `
-                <div class="tc-aw" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}">
+                <div class="tc-aw${a.pair ? ' tc-aw-cp' : ''}" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}${a.pair ? ' · ' + E(a.pair.join(' ♥ ')) : ''}">
                     <div class="tc-aw-ic">${window.gAwardImg ? gAwardImg(a.key, a.emoji, 'hero') : a.emoji}</div>
-                    <div class="tc-aw-tx"><span class="tc-aw-l">${E(a.label)}</span>${a.mgr ? mn(a.name) : pn(a.name)}</div>
+                    <div class="tc-aw-tx"><span class="tc-aw-l">${E(a.label)}</span>${a.mgr ? mn(a.name) : a.pair ? `<span class="tc-aw-pair">${a.pair.map(pn).join('<i class="tc-aw-h">♥</i>')}</span>` : pn(a.name)}</div>
                 </div>`).join('')}</div>
             <div class="tc-board"></div>`).join('')
             : `<div class="tc-shelf" style="min-height:64px;align-items:center;"><span class="tc-note">아직 이 팀 소속으로 받은 개인 수상이 없습니다.</span></div><div class="tc-board"></div>`;
@@ -35777,7 +35798,7 @@ window.pmExtRender = function(name){
                 <div class="tc-shelf" style="min-height:0;">${runners}</div><div class="tc-board"></div>
             </div>
             <div class="tc-cab">
-                <div class="tc-cab-t">🌟 선수 개인 수상 <small>이 팀 소속으로 받은 수상 · 시즌별</small></div>
+                <div class="tc-cab-t">🌟 선수 개인 수상 ${typeof gUpdTag === 'function' ? gUpdTag('1.89:개선') : ''}<small>이 팀 소속으로 받은 수상 · 시즌별 · 💞 베스트커플상은 2인 1세트</small></div>
                 ${awardShelves}
             </div>
             ${pNames.length ? `<div><div class="tc-cab-t" style="margin:0 0 8px;">👤 선수별 수상 현황</div>${playerChips}</div>` : ''}
@@ -36040,7 +36061,7 @@ window.pmExtRender = function(name){
             }
             const sa = a.specialAwards || {};
             AW.forEach(([key, label, emoji, color, special]) => {
-                if (names(special ? sa[key] : a[key]).includes(name)) H.awards.push({ season: a.name, key, label, emoji, color });
+                if (names(special ? sa[key] : a[key]).includes(name)) H.awards.push({ season: a.name, key, label, emoji, color, partner: key === 'couple' ? gCouplePartner(sa.couple, name) : '' });
             });
         }
         return H;
@@ -36061,7 +36082,7 @@ window.pmExtRender = function(name){
             const sa = state.specialAwards || {};
             AW.forEach(([key, label, emoji, color, special]) => {
                 const hit = special ? gAwNames(sa[key]).includes(name) : (lead[key] && lead[key].name === name);
-                if (hit) out.push({ season: state.seasonName || '현재 시즌', key, label, emoji, color });
+                if (hit) out.push({ season: state.seasonName || '현재 시즌', key, label, emoji, color, partner: key === 'couple' ? gCouplePartner(sa.couple, name) : '' });
             });
         } catch (e) { }
         return out;
@@ -36081,7 +36102,8 @@ window.pmExtRender = function(name){
             H.awards.filter(a => a.key === key).reverse().forEach(a => flat.push(Object.assign({}, a, { live: false })));
             live.filter(a => a.key === key).forEach(a => flat.push(Object.assign({}, a, { live: true })));
         });
-        const awItem = a => `<div class="tc-it pc-aw${a.live ? ' pc-live' : ''}" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}${a.live ? ' (진행 중 · 유력)' : ''}"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.label)}</div><div class="tc-sub">${E(a.season)}${a.live ? ' · 유력' : ''}</div></div>`;
+        const hasW = flat.some(a => a.partner);   // v1.89: 커플 파트너 줄이 있으면 다른 수상 칸도 같은 높이로 맞춤
+        const awItem = a => `<div class="tc-it pc-aw${a.live ? ' pc-live' : ''}" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}${a.partner ? ' (w.' + E(a.partner) + ')' : ''}${a.live ? ' (진행 중 · 유력)' : ''}"><div class="tc-ico">${gAwardImg(a.key, a.emoji, 'hero')}</div><div class="tc-nm">${E(a.label)}</div>${a.partner ? `<div class="tc-sub pc-w">(w.${E(a.partner)})</div>` : (hasW ? '<div class="tc-sub pc-w" style="visibility:hidden;" aria-hidden="true">(w.)</div>' : '')}<div class="tc-sub">${E(a.season)}${a.live ? ' · 유력' : ''}</div></div>`;
         const sec = (cls, label, cnt, items) => items ? `<div class="tc-sec ${cls}">${label} <small>${cnt}</small></div><div class="tc-shelf">${items}</div><div class="tc-board"></div>` : '';
         const body = (nT || nR || flat.length)
             ? sec('gold', '🏆 우승컵', nT + '개', tTitle) + sec('silver', '🥈 준우승 메달', nR + '개', tRun) + sec('aw', '🌟 개인 수상', (nA + nL) + '개', flat.map(awItem).join(''))
@@ -36173,6 +36195,65 @@ window.pmExtRender = function(name){
 .aw-cell { display: inline-flex; align-items: center; flex-wrap: nowrap; gap: 3px; white-space: nowrap; vertical-align: middle; }
 .aw-cell .g-awi { margin: 0 1px; }
 .aw-cell img.g-awimg { height: 16px !important; width: auto; animation: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,.45)); }   /* 🧑‍💼 감독 랭킹 수상기록과 같은 높이(16px) */
+
+/* v1.89 💞 베스트커플상 2인 1세트 — 팀 진열장(두 이름 + ♥) · 선수 모달 (w.파트너) · 역사관 랭킹(두 사진 + ♥) */
+.tc-aw.tc-aw-cp { width: auto; min-width: 114px; max-width: none; flex: 0 0 auto; }   /* 세로(높이)는 다른 트로피와 같게 두고, 가로만 이름 길이에 맞춰 넓어짐 */
+.tc-aw-pair { display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; line-height: 1.25; }
+.tc-aw-pair .tc-aw-n { white-space: nowrap; }
+.tc-aw-pair .tc-aw-h { font-style: normal; font-size: .7rem; color: var(--awc, #f472b6); line-height: 1; margin: 0; }
+.tc-aw-cp .tc-aw-tx, .tc-aw-cp .tc-aw-l { white-space: nowrap; }
+.tc-it.pc-aw .tc-sub.pc-w { color: #f9a8d4; font-weight: 800; }
+/* v1.89 트로피 빛 효과 통일 — 박스 모양 빛(배경 그라데이션)은 없애고, 모든 진열대(팀 · 선수 · 감독)에서 트로피 윤곽선을 따라서만 빛나게 */
+.tc-it::before { display: none !important; }
+.tc-aw { background: rgba(0,0,0,.3) !important; }
+.tc-it .tc-ico, #playerTrophyCabinet .tc-it .tc-ico, #managerTrophyCabinet .tc-it .tc-ico { filter: drop-shadow(0 0 5px rgba(251,191,36,.6)) drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+.tc-it.silver .tc-ico, #playerTrophyCabinet .tc-it.silver .tc-ico, #managerTrophyCabinet .tc-it.silver .tc-ico { filter: drop-shadow(0 0 5px rgba(203,213,225,.55)) drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+.tc-it.pc-aw .tc-ico, #playerTrophyCabinet .tc-it.pc-aw .tc-ico { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--awc, #fbbf24) 70%, transparent)) drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+.tc-it.pc-live .tc-ico, #playerTrophyCabinet .tc-it.pc-live .tc-ico { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--awc, #fbbf24) 55%, transparent)) drop-shadow(0 4px 6px rgba(0,0,0,.5)) saturate(.8); }
+.tc-aw .tc-aw-ic { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--awc, #fbbf24) 70%, transparent)) drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+.tc-it.ghost .tc-ico, #playerTrophyCabinet .tc-it.ghost .tc-ico, #managerTrophyCabinet .tc-it.ghost .tc-ico { filter: grayscale(1) brightness(.7); }
+/* v1.89 트로피 이미지 전체 통일 — 🌟 시즌 기록 · 🏛️ 역사관 · 시즌 아카이브 · 표 · 대진표 등 어디서든 트로피(우승컵 · 수상 트로피) 윤곽선을 따라서만 빛남 (진열대 안은 위의 진열대 규칙이 담당) */
+img.g-tr, img.g-awimg { --gl: 5px; }
+img.g-tr.s-xs, img.g-tr.s-sm, img.g-awimg.s-xs, img.g-awimg.s-sm { --gl: 3px; }
+img.g-tr { filter: drop-shadow(0 0 var(--gl) rgba(251,191,36,.65)) drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
+img.g-tr.s-hero { filter: drop-shadow(0 0 7px rgba(251,191,36,.7)) drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+img.g-awimg { animation: none; filter: drop-shadow(0 0 var(--gl) color-mix(in srgb, var(--awc, #fbbf24) 70%, transparent)) drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
+img.g-awimg.s-hero { --gl: 7px; }
+.aw-cell img.g-awimg { --gl: 3px; animation: none; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--awc, #fbbf24) 70%, transparent)) drop-shadow(0 1px 2px rgba(0,0,0,.45)); }
+.tc-ico img.g-tr, .tc-ico img.g-awimg, .tc-aw-ic img.g-awimg { filter: none; }   /* 진열대: 바깥 컨테이너(.tc-ico)가 이미 윤곽선 빛을 줌 — 이중 적용 방지 */
+.season-champion-hero img.g-tr.s-hero { filter: drop-shadow(0 0 10px rgba(251,191,36,.85)) drop-shadow(0 6px 12px rgba(0,0,0,.55)); }
+.season-champion-hero .hero-trophy::before { display: none; }   /* 챔피언 컨테이너 트로피 뒤의 둥근 · 박스형 후광 제거 → 트로피 윤곽선 빛만 */
+/* v1.89 ✨ 트로피 윤곽선 빛 애니메이션 — 우승 카드처럼 은은하게 숨 쉬듯 반짝 (이미지 윤곽선만 · 트로피마다 타이밍을 달리해 자연스럽게) */
+@keyframes g189Glow {
+    0%, 100% { filter: drop-shadow(0 0 var(--g189lo, 3px) color-mix(in srgb, var(--g189c, #fbbf24) 45%, transparent)) drop-shadow(0 3px 4px rgba(0,0,0,.5)); }
+    50%      { filter: drop-shadow(0 0 var(--g189hi, 9px) color-mix(in srgb, var(--g189c, #fbbf24) 95%, transparent)) drop-shadow(0 3px 4px rgba(0,0,0,.5)); }
+}
+img.g-tr, img.g-awimg, .tc-it .tc-ico, .tc-aw .tc-aw-ic { --g189c: #fbbf24; animation: g189Glow 2.8s ease-in-out infinite; }
+img.g-awimg, .tc-it.pc-aw .tc-ico, .tc-aw .tc-aw-ic { --g189c: var(--awc, #fbbf24); }
+.tc-it.silver .tc-ico { --g189c: #cbd5e1; }
+img.g-tr.s-xs, img.g-tr.s-sm, img.g-awimg.s-xs, img.g-awimg.s-sm, .aw-cell img.g-awimg { --g189lo: 1.5px; --g189hi: 4px; }
+.tc-it:nth-child(2n) .tc-ico, .tc-aw:nth-child(2n) .tc-aw-ic, .aw-card:nth-child(2n) img.g-awimg, .g-awi:nth-of-type(2n) img { animation-delay: -1.4s; }
+.tc-it:nth-child(3n) .tc-ico, .tc-aw:nth-child(3n) .tc-aw-ic, .aw-card:nth-child(3n) img.g-awimg { animation-delay: -0.7s; }
+.tc-ico img.g-tr, .tc-ico img.g-awimg, .tc-aw-ic img.g-awimg { animation: none; }   /* 진열대: 바깥 컨테이너가 반짝임 (이중 적용 방지) */
+.tc-it.ghost .tc-ico { animation: none; }
+.tc-it.pc-live .tc-ico { animation-duration: 3.6s; }
+.season-champion-hero img.g-tr.s-hero { --g189hi: 14px; animation: g184Float 3.2s ease-in-out infinite, g189Glow 2.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { img.g-tr, img.g-awimg, .tc-it .tc-ico, .tc-aw .tc-aw-ic, .season-champion-hero img.g-tr.s-hero { animation: none !important; } }
+/* v1.89 ✨ 트로피 반짝임 띠 — 우승 카드처럼 하얀 빛 띠가 트로피 모양 안에서만 왼쪽 → 오른쪽으로 스윽 지나감 (스크립트가 트로피 이미지를 .g-shn 래퍼로 감싸 적용) */
+@keyframes g189Shine { 0% { background-position: 100% 0; } 38% { background-position: 0% 0; } 100% { background-position: 0% 0; } }
+.g-shn { position: relative; display: inline-block; line-height: 0; flex: none; vertical-align: middle; }
+.g-shn::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.92) 50%, transparent 60%) no-repeat; background-size: 300% 100%; background-position: 100% 0;
+    -webkit-mask: var(--shn) center / contain no-repeat; mask: var(--shn) center / contain no-repeat;
+    animation: g189Shine 4.2s ease-in-out infinite; animation-delay: var(--shd, 0s); }
+.season-champion-hero .g-shn { animation: g184Float 3.2s ease-in-out infinite; }
+.season-champion-hero .g-shn img.g-tr.s-hero { animation: g189Glow 2.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .g-shn::after { display: none; } .season-champion-hero .g-shn { animation: none; } }
+.gt-row.gt-cp .gt-ph { flex-basis: 44px; width: 44px; min-height: 52px; }
+.gt-row.gt-cp .gt-body { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 3px 6px; }
+.gt-row.gt-cp .gt-body .gt-bd { flex-basis: 100%; }
+.gt-heart { color: #f472b6; font-size: .8rem; font-weight: 900; }
+@media (max-width: 560px) { .tc-aw.tc-aw-cp { width: auto; min-width: 100px; } .tc-aw-pair .tc-aw-n { font-size: .76rem; } }
 
 /* v1.88 💞 베스트커플상 — 두 선수 카드를 줄여서 위아래가 아닌 나란히 배치 (카드는 2칸 폭) */
 .aw-card.aw-couple { grid-column: span 2; }
@@ -36370,6 +36451,33 @@ window.pmExtRender = function(name){
         window.addEventListener('resize', schedule);
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+<script id="g189Shine">
+/* v1.89 ✨ 트로피 반짝임 띠 — 트로피 이미지(우승컵 · 수상 트로피)를 래퍼로 감싸 트로피 모양 마스크 위로 하얀 빛 띠가 지나가게 한다 */
+(function () {
+    if (window.__g189Shine) return; window.__g189Shine = 1;
+    const st = document.createElement('style'); st.id = 'g189ShineMap'; document.head.appendChild(st);
+    const cls = new Map(); let n = 0;
+    const classFor = src => { let c = cls.get(src); if (!c) { c = 'g-shn-' + (++n); cls.set(src, c); st.appendChild(document.createTextNode('.' + c + '{--shn:url("' + String(src).replace(/"/g, '%22') + '")}')); } return c; };
+    function wrap(im) {
+        if (im.dataset.shn) return;
+        const p = im.parentElement; if (!p) return;
+        const src = im.currentSrc || im.getAttribute('src'); if (!src) return;
+        im.dataset.shn = '1';
+        if (p.classList.contains('g-shn')) return;
+        const cs = getComputedStyle(im), w = document.createElement('span');
+        w.className = 'g-shn ' + classFor(src);
+        w.style.setProperty('--shd', (-Math.random() * 4.2).toFixed(2) + 's');
+        if (cs.display === 'block') { w.style.display = 'block'; w.style.width = 'fit-content'; w.style.margin = '0 auto ' + cs.marginBottom; }
+        else w.style.margin = cs.margin;
+        im.style.setProperty('margin', '0', 'important');
+        p.insertBefore(w, im); w.appendChild(im);
+    }
+    let tm = null;
+    const scan = () => { clearTimeout(tm); tm = setTimeout(() => { try { document.querySelectorAll('img.g-tr:not([data-shn]), img.g-awimg:not([data-shn])').forEach(wrap); } catch (e) { console.error('트로피 반짝임 오류', e); } }, 200); };
+    new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+    scan();
 })();
 </script>
 </body>
