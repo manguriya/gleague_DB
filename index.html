@@ -2348,11 +2348,11 @@ table th, table td { padding: 6px 8px; }
 /* ===== v1.51: 좌측 메뉴 그룹화 =====
    메뉴를 사용 목적별 6그룹(리그 · 팀·선수 · 기록·랭킹 · 역사관 · 분석실 · 관리실)으로 정리.
    탭 id · 이동 함수는 그대로 → 기존 기능 · 데이터 영향 없음. 접힌 사이드바(아이콘만)에서는 그룹 제목 대신 얇은 구분선 사용 */
-.nav-tabs { gap: 2px; }
-.nav-group { display: flex; flex-direction: column; margin-top: 8px; }
+.nav-tabs { gap: 0; padding-top: 8px; }
+.nav-group { display: flex; flex-direction: column; margin-top: 4px; }
 .nav-group-head {
     display: flex; align-items: center; gap: 9px; width: 100%;
-    padding: 7px 14px; border: none; border-radius: 8px; background: none;
+    padding: 5px 14px; border: none; border-radius: 8px; background: none;
     color: #94a3b8; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.05em;
     cursor: pointer; text-align: left; transition: 0.15s;
 }
@@ -2362,10 +2362,12 @@ table th, table td { padding: 6px 8px; }
 .nav-caret { flex-shrink: 0; font-size: 0.7rem; transition: transform 0.15s; }
 .nav-group.closed .nav-caret { transform: rotate(-90deg); }
 .nav-group.has-active > .nav-group-head { color: var(--accent); }
-.nav-group-body { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 0 16px; padding-left: 6px; border-left: 1px solid rgba(255,255,255,0.08); }
+.nav-group-body { display: flex; flex-direction: column; gap: 0; margin: 0 0 0 16px; padding-left: 6px; border-left: 1px solid rgba(255,255,255,0.08); }
 .nav-group.closed .nav-group-body { display: none; }
-.nav-group-body .tab-btn { padding: 9px 12px; font-size: 0.85rem; }
-.nav-group-admin { margin-top: 18px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+.nav-group-body .tab-btn { padding: 5px 12px; font-size: 0.85rem; }
+.sidebar:not(.collapsed) .nav-group-body .tab-btn { font-size: 0.7rem; }
+.sidebar:not(.collapsed) .nav-group-body .tab-btn .tab-icon { font-size: 0.82rem; }
+.nav-group-admin { margin-top: 12px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.08); }
 .topbar-group { color: var(--text-muted); font-size: 0.78em; font-weight: 700; margin-right: 2px; white-space: nowrap; }
 @media (min-width: 901px) {
     .sidebar.collapsed .nav-group-head { display: none; }
