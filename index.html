@@ -1734,7 +1734,8 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 @media (min-width: 1500px) { .season-award-grid { grid-template-columns: repeat(4, 1fr); } }
 #specialAwardsDisplay { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 .aw-card h3 { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
-.aw-card.aw-sp { border: 1px solid color-mix(in srgb, var(--awc, #fbbf24) 35%, transparent); }
+.aw-card.aw-sp, .aw-card.aw-top { border: 1px solid color-mix(in srgb, var(--awc, #fbbf24) 35%, transparent); }
+.aw-card.aw-top h3 { color: var(--awc, var(--gold)); }
 .aw-card.aw-sp h3 { color: var(--awc, var(--gold)); }
 .aw-pls { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 8px 0 4px; }
 .aw-pl { flex: 1 1 200px; max-width: 360px; cursor: pointer; padding: 10px; border-radius: 14px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc, #64748b) 20%, transparent), transparent 72%); border: 1px solid color-mix(in srgb, var(--pc, #64748b) 42%, transparent); transition: transform .18s ease, box-shadow .18s ease; }
@@ -1746,7 +1747,7 @@ img.g-tr.s-hero { height: 112px; width: auto; display: block; margin: 0 auto 6px
 .aw-none { padding: 18px 6px; font-size: 1rem; color: var(--text-muted); font-weight: 800; }
 /* 🏅 개인 수상 트로피 이미지 (awards 폴더) + 은은한 빛 */
 .g-awi { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }
-img.g-awimg { display: block; height: 30px; width: auto; object-fit: contain; pointer-events: none; animation: gAwGlow 3.4s ease-in-out infinite; }
+img.g-awimg { display: block; height: 30px; width: auto; object-fit: contain; pointer-events: auto; animation: gAwGlow 3.4s ease-in-out infinite; }
 img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awimg.s-md { height: 46px; } img.g-awimg.s-lg { height: 72px; } img.g-awimg.s-hero { height: 96px; }
 @keyframes gAwGlow { 0%, 100% { filter: drop-shadow(0 0 1px rgba(251, 191, 36, .08)); } 50% { filter: drop-shadow(0 0 4px rgba(251, 191, 36, .22)); } }
 .tc-aw-ic .g-awi { min-width: 1em; }
@@ -1817,6 +1818,35 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
 .card:has(> .season-award-grid) { padding: 12px 14px; }
 .pc-empty { display: flex; align-items: center; min-height: 64px; padding: 0 6px; }
 </style>
+<style id="g187Style">
+/* v1.87 특별 수상 — 올스타상 체크박스 후보 목록 */
+.g-sp-multi { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.g-sp-mg { border: 1px solid color-mix(in srgb, var(--c, #64748b) 45%, transparent); border-left: 3px solid var(--c, #64748b); border-radius: 8px; padding: 6px 8px; background: rgba(0,0,0,0.2); }
+.g-sp-mgt { font-size: .7rem; font-weight: 800; color: var(--c, #94a3b8); margin-bottom: 4px; }
+.g-sp-mi { display: flex; gap: 6px; align-items: flex-start; font-size: .75rem; cursor: pointer; padding: 2px 0; line-height: 1.35; }
+.g-sp-mi input { margin-top: 2px; }
+</style>
+<style id="g188Style">
+/* v1.88 포지션별 · 콤비 · 그 외 기록 */
+.g-rr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.g-rr-sec { border: 1px solid color-mix(in srgb, var(--c) 40%, transparent); border-top: 3px solid var(--c); border-radius: 10px; padding: 10px; background: rgba(0,0,0,0.18); display: flex; flex-direction: column; gap: 6px; }
+.g-rr-t { font-size: .82rem; font-weight: 900; color: var(--c, var(--gold)); margin-bottom: 2px; }
+.g-rr { display: flex; flex-direction: column; gap: 2px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 6px 9px; }
+.g-rr-l { font-size: .7rem; font-weight: 800; color: var(--text-muted); }
+.g-rr-v { font-size: .82rem; font-weight: 800; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 6px; }
+.g-rr-v b { color: var(--gold); }
+.g-rr-d { font-size: .68rem; font-weight: 700; color: var(--text-muted); }
+.g-rr-x { color: var(--text-muted); font-weight: 700; }
+.g-rr-none { font-size: .76rem; color: var(--text-muted); padding: 6px 2px; }
+.g-rr-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 6px; }
+.g-rr-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.g-rr-chip { font-size: .74rem; font-weight: 700; border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); border-left: 3px solid var(--c); border-radius: 8px; padding: 4px 8px; background: rgba(0,0,0,0.2); }
+.g-rr-chip i { font-style: normal; color: var(--c); font-weight: 900; margin-right: 4px; }
+/* v1.88 기록 순위 보드(선수·팀) 컨트롤 줄 */
+.g-rec-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.g-rec-lab { font-size: .72rem; font-weight: 800; color: var(--text-muted); min-width: 78px; }
+.g-rec-row .gv-chips { margin: 3px 0; }
+</style>
 </head>
 <body>
     <div class="app-shell">
@@ -1856,7 +1886,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                     <button type="button" class="nav-group-head" onclick="gNavToggleGroup(this)" aria-expanded="true"><span class="tab-icon">📊</span><span class="tab-label">기록·랭킹</span><span class="nav-caret">▾</span></button>
                     <div class="nav-group-body">
                         <button class="tab-btn" data-new="1.01" data-upd="1.81:개선" onclick="openTab('ranking')" title="랭킹 — 팀 Elo · 선수 파워랭킹 · 감독 순위"><span class="tab-icon">🏅</span><span class="tab-label">랭킹</span></button>
-                        <button class="tab-btn" data-new="1.82" data-upd="1.86:수정" onclick="openTab('awards')" title="시즌 기록 — 시즌별 챔피언 · 개인 수상 · 리그 기록"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
+                        <button class="tab-btn" data-new="1.82" data-upd="1.88:개선" onclick="openTab('awards')" title="시즌 기록 — 시즌별 챔피언 · 개인 수상 · 리그 기록"><span class="tab-icon">🌟</span><span class="tab-label">시즌 기록</span></button>
                     </div>
                 </div>
                 <div class="nav-group" data-group="hall" data-label="역사관">
@@ -2856,35 +2886,21 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                 </div>
             </div>
         </div>
-        <!-- 종료된(아카이브) 시즌의 특별 수상(신인상·야신상·시즌 골롱도르)을 수정하는 모달 -->
+        <!-- 종료된(아카이브) 시즌의 특별 수상(골롱도르·올스타상·신인상·야신상·포지션별 수상·베스트커플상·감독상)을 수정하는 모달 -->
         <div id="archiveAwardsModal" class="modal">
-            <div class="modal-content" style="max-width:460px;">
+            <div class="modal-content" style="max-width:660px; max-height:90vh; overflow-y:auto;">
                 <span class="close-modal" onclick="closeArchiveAwardsModal()">&times;</span>
                 <div class="modal-header">
                     <h2 class="modal-title" style="font-size:1.2rem;">🌟 특별 수상 수정</h2>
                 </div>
                 <div style="display:flex; flex-direction:column; gap:14px;">
                     <div style="font-size:0.78rem; color:var(--text-muted);" id="archiveAwardsSeasonLabel"></div>
-                    <div>
-                        <label style="display:block; font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-bottom:4px;">🌱 신인상<span class="g-aw-hint">그 시즌에 처음 출전한 신인만</span></label>
-                        <select id="archiveAwardRookie" class="archive-select" style="margin-bottom:0; width:100%;">
-                            <option value="">— 선택 —</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-bottom:4px;">🧤 야신상<span class="g-aw-hint">키퍼(GK)만</span></label>
-                        <select id="archiveAwardYashin" class="archive-select" style="margin-bottom:0; width:100%;">
-                            <option value="">— 선택 —</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:0.7rem; color:var(--text-muted); font-weight:800; margin-bottom:4px;">🏅 시즌 골롱도르</label>
-                        <select id="archiveAwardBallon" class="archive-select" style="margin-bottom:0; width:100%;">
-                            <option value="">— 선택 —</option>
-                        </select>
-                    </div>
+                    <div id="archiveAwardsForm" style="display:flex; flex-direction:column; gap:14px;"></div>
                     <input type="hidden" id="archiveAwardsIdx" value="">
-                    <button class="btn btn-main" onclick="saveArchiveAwards()">💾 저장</button>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="btn btn-main" onclick="saveArchiveAwards()">💾 저장</button>
+                        <button class="btn btn-auto" onclick="gSpAutoFill('archiveAward', document.getElementById('archiveAwardsIdx').value)" title="비어 있는 골롱도르 · 포지션별 수상 · 베스트커플상 · 감독상을 각 후보 1위로 채웁니다 (저장 전까지는 반영되지 않아요)">🪄 빈 수상 후보 1위로 채우기</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3266,7 +3282,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                                 <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssGa')" style="cursor:pointer;" title="GK로 뛴 동안의 실점">실점 ↕️</th>
                                 <th class="rank-gk-col rank-adv-col" onclick="sortPlayerRank('ssRate')" style="cursor:pointer;" title="세이브 ÷ (세이브 + 실점)">세이브 기여율 ↕️</th>
                                 <th onclick="sortPlayerRank('pwr')" style="cursor:pointer;" title="평균평점(정규화) + 경기영향력(GK/필드 그룹별 정규화) + 팀성과(정규화), 신뢰도 보정 포함 / 100점 만점 상대 지표">파워랭킹 🌟 ↕️</th>
-                                <th class="rank-adv-col" onclick="sortPlayerRank('awardsTotal')" style="cursor:pointer;" title="⚽️득점왕 · 🎯도움왕 · 👑MVP · ⭐평점왕 · 🌱신인상 · 🧤야신상 · 🏅골롱도르 (아카이브된 시즌 기준, 현재 시즌은 진행중 선두 기준)">수상기록 ↕️</th>
+                                <th class="rank-adv-col" onclick="sortPlayerRank('awardsTotal')" style="cursor:pointer;" title="⚽️득점왕 · 🎯도움왕 · 🏅골롱도르 · ⭐올스타상 · 🌱신인상 · 🧤야신상 · 🔥공격수상 · 🧭미드필더상 · 🛡️수비수상 · 💞베스트커플상 (아카이브된 시즌 기준, 현재 시즌은 진행중 기준)">수상기록 ↕️</th>
                             </tr>
                         </thead>
                         <tbody id="playerRankTbody"></tbody>
@@ -3350,30 +3366,14 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
 
             <!-- 특별 수상 섹션 -->
             <div class="card" style="border: 1px solid rgba(251,191,36,0.3); background: rgba(251,191,36,0.04);">
-                <h3 style="color: var(--gold);" data-upd="1.84:개선">🌟 특별 수상</h3>
+                <h3 style="color: var(--gold);" data-upd="1.87:개선">🌟 특별 수상</h3>
                 <div class="summary-grid" id="specialAwardsDisplay"></div>
                 <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 15px;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-bottom: 10px;">✏️ 수상자 선택</div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
-                        <div style="display:flex; flex-direction:column; gap:4px;">
-                            <label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">🌱 신인상<span class="g-aw-hint">이번 시즌 신인만</span></label>
-                            <select id="awardRookie" class="archive-select" style="margin-bottom:0; width:170px; padding:8px 10px; font-size:0.85rem;">
-                                <option value="">— 선택 —</option>
-                            </select>
-                        </div>
-                        <div style="display:flex; flex-direction:column; gap:4px;">
-                            <label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">🧤 야신상<span class="g-aw-hint">키퍼(GK)만</span></label>
-                            <select id="awardYashin" class="archive-select" style="margin-bottom:0; width:170px; padding:8px 10px; font-size:0.85rem;">
-                                <option value="">— 선택 —</option>
-                            </select>
-                        </div>
-                        <div style="display:flex; flex-direction:column; gap:4px;">
-                            <label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">🏅 시즌 골롱도르</label>
-                            <select id="awardBallon" class="archive-select" style="margin-bottom:0; width:170px; padding:8px 10px; font-size:0.85rem;">
-                                <option value="">— 선택 —</option>
-                            </select>
-                        </div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 800; margin-bottom: 10px;">✏️ 수상자 선택 <span class="g-aw-hint">후보 중에서 직접 선택해요 (시즌이 끝나기 전에도 미리 지정할 수 있어요)</span></div>
+                    <div id="specialAwardsForm" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;"></div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
                         <button class="btn btn-main" onclick="saveSpecialAwards()">💾 저장</button>
+                        <button class="btn btn-auto" onclick="gSpAutoFill('award', 'current')" title="비어 있는 골롱도르 · 포지션별 수상 · 베스트커플상 · 감독상을 각 후보 1위로 채웁니다 (저장 전까지는 반영되지 않아요)">🪄 빈 수상 후보 1위로 채우기</button>
                     </div>
                 </div>
             </div>
@@ -3389,30 +3389,31 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
             <!-- 👤 선수기록 -->
             <div id="awardsRecTabContent_player" class="dc-tab-content active">
                 <div class="card">
-                    <h3>🏆 리그 전체 개인 기록</h3>
+                    <h3 data-upd="1.88:개선">🏆 리그 전체 개인 기록 <small style="font-size:0.68rem; color:var(--text-muted); font-weight:700;">(기록 순위 · 1시즌/단일 경기/연속 기록 · 콤비 기록)</small></h3>
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
                         <span style="font-size:0.8rem; color:var(--text-muted); font-weight:800;">시즌 필터:</span>
                         <select id="awardsLeagueSeasonSelect" class="archive-select" style="margin-bottom:0; width:220px;" onchange="renderLeagueIndividualRecords();">
                             <option value="cumulative">🔗 전체 시즌 통합</option>
                         </select>
                     </div>
-                    <div class="ranking-info">선택한 시즌(개별 시즌 / 전체 시즌 통합) 안에서 리그 전체 선수들의 최다득점·최다도움·최다MOM·최고평균평점·최다출전 기록과, 그 범위 리그 전체 선수 중 파워랭킹 순위를 보여줍니다. "전체 시즌 통합" 선택 시에는 득점·도움·공격P·MOM·출전·GK클린시트처럼 골때녀 누적치와 1시즌 최고치가 다를 수 있는 항목에 한해 1시즌 최고 기록도 함께 표시됩니다. 표준 랭킹표에는 없는 G리그만의 세부 개인 기록(가장 빠른 골, 한 경기 최다 기록, 연속 기록 등)도 각 관련 카테고리 안에 함께 표시됩니다.</div>
+                    <div class="ranking-info">선택한 시즌(개별 시즌 / 전체 시즌 통합) 안에서 선수들의 기록을 🧩 기록 순위로 보여줍니다. 선수의 포지션과 관계없이 "기록만으로" 공격 · 미드필더(도움·합작) · 수비 · 키퍼 기록 순위를 매기고, 집계 대상을 전체 선수 또는 공격수/미드필더/수비수/키퍼 중으로 좁혀 TOP 3~20까지 볼 수 있어요. 그 아래 카드에는 순위 보드에 없는 단일 경기 기록(가장 빠른 골 · 한 경기 최다 공격P · 최고 평점) · 연속 기록 · 1시즌 최고 기록(전체 시즌 통합 선택 시)이 모입니다.</div>
                     <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:12px;">※ 필드 플레이어는 최소 3경기, 키퍼(주 포지션 GK)는 최소 2경기 이상 출전한 선수만 이 기록에 등록됩니다. 그중에서도 경기당 공격P·경기당 골·경기당 도움·GK 클린시트·GK 경기당 실점은 최소 3경기(GK는 GK 스틴트 가중치 합 3 이상) 이상인 선수만 대상으로 집계됩니다.</div>
                     <div id="leagueHistoryAwardCards"></div>
                 </div>
+                <div id="leagueRoleRecords"></div>
             </div>
 
             <!-- 🏟️ 팀기록 -->
             <div id="awardsRecTabContent_team" class="dc-tab-content">
                 <div class="card">
-                    <h3>🏆 리그 전체 팀 기록</h3>
+                    <h3 data-upd="1.88:개선">🏆 리그 전체 팀 기록</h3>
                     <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
                         <span style="font-size:0.8rem; color:var(--text-muted); font-weight:800;">시즌 필터:</span>
                         <select id="awardsLeagueTeamSeasonSelect" class="archive-select" style="margin-bottom:0; width:220px;" onchange="renderLeagueTeamRecords(); renderLeagueTeamFunRecords();">
                             <option value="cumulative">🔗 전체 시즌 통합</option>
                         </select>
                     </div>
-                    <div class="ranking-info">선택한 시즌 안에서 팀들이 세운 최고 기록들을 보여줍니다. "전체 시즌 통합"에서는 현재 시즌과 지난 모든 시즌을 통틀어, 한 팀이 "한 시즌 안에서" 세운 최고 기록을 모아 보여줍니다.</div>
+                    <div class="ranking-info">선택한 시즌 안에서 팀들이 세운 기록을 📊 팀 기록 순위로 보여줍니다. 승점 · 공격 · 수비 · 연승연패는 물론 경기 흐름(선제골 · 역전승 · 전후반), 득점 패턴(박스 안 · 도움 연계 · 득점자 수), 평점 · 매너(평균 평점 · 카드)까지 TOP 3~20으로 확인할 수 있어요. "전체 시즌 통합"에서는 한 시즌 기록 / 팀 누적 합계를 바꿔 볼 수 있습니다.</div>
                     <div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:12px;">※ 경기당 득점·경기당 실점은 최소 3경기 이상 치른 팀만 대상으로 집계됩니다.</div>
                     <div id="leagueTeamRecordCards"></div>
                 </div>
@@ -3469,7 +3470,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
             <div id="historyTabContent_hall" class="dc-tab-content">
                 <div class="card">
                     <h3>🕰️ 역대 챔피언 타임라인</h3>
-                    <div class="ranking-info">시즌별 우승팀 · 준우승팀 · 시즌MVP를 최신 시즌부터 순서대로 보여줍니다.</div>
+                    <div class="ranking-info">시즌별 우승팀 · 준우승팀 · 시즌 골롱도르를 최신 시즌부터 순서대로 보여줍니다.</div>
                     <div id="historyChampionsTimeline" style="display:flex; flex-direction:column; gap:8px;"></div>
                 </div>
 
@@ -3687,7 +3688,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                 <div id="dcTabContent_trophy" class="dc-tab-content">
                     <div class="card">
                         <h3 data-new="1.80">🏆 팀 수상 진열장</h3>
-                        <div class="ranking-info">이 팀이 따낸 우승 트로피와 소속 선수들이 이 팀에서 받은 개인 수상(득점왕 · 도움왕 · MVP · 평점왕 · 신인상 · 야신상 · 골롱도르)을 한곳에 모았습니다. 시즌이 종료되어 아카이브에 저장된 기록 기준입니다.</div>
+                        <div class="ranking-info">이 팀이 따낸 우승 트로피와 소속 선수들이 이 팀에서 받은 개인 수상(득점왕 · 도움왕 · 골롱도르 · 올스타상 · 신인상 · 야신상 · 공격수상 · 미드필더상 · 수비수상 · 베스트커플상 · 감독상)을 한곳에 모았습니다. 시즌이 종료되어 아카이브에 저장된 기록 기준입니다.</div>
                         <div id="dcTrophyCase"></div>
                     </div>
                 </div>
@@ -3773,7 +3774,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                                         <th>평균평점</th>
                                         <th title="GK(또는 GK 스틴트)로 뛴 경기 중 무실점 경기 수 — GK 가중치 합 3 이상 대상">GK 클린시트</th>
                                         <th title="해당 범위(시즌/전체 통합) 리그 전체 선수 대상 파워랭킹 순위">파워랭킹 🌟</th>
-                                        <th title="⚽️득점왕 · 🎯도움왕 · 👑MVP · ⭐평점왕 · 🌱신인상 · 🧤야신상 · 🏅골롱도르 (아카이브된 시즌 기준, 현재 시즌은 진행중 선두 기준)">수상기록</th>
+                                        <th title="⚽️득점왕 · 🎯도움왕 · 🏅골롱도르 · ⭐올스타상 · 🌱신인상 · 🧤야신상 · 🔥공격수상 · 🧭미드필더상 · 🛡️수비수상 · 💞베스트커플상 (아카이브된 시즌 기준, 현재 시즌은 진행중 기준)">수상기록</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dcHistoryPlayerTbody"></tbody>
@@ -4286,8 +4287,23 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
     window.gTrophy = (name, size) => W(name, size, '');
     window.gTrophyOr = (name, fallback, size) => W(name, size, fallback);
     window.gTrophyIcons = (names, fallback, size) => W((names || []).join('||'), size || 'xs', fallback);
-    const AWID = { goals: 1, topScorer: 1, assists: 2, topAssistant: 2, mom: 3, mvp: 3, avgRating: 4, topRating: 4, rookie: 5, yashin: 6, ballon: 7 };
-    window.G_AWARDS = [[1, '득점왕'], [2, '도움왕'], [3, 'MVP (MOM)'], [4, '최고평균평점'], [5, '신인상'], [6, '야신상'], [7, '시즌 골롱도르']];
+    const AWID = { goals: 1, topScorer: 1, assists: 2, topAssistant: 2, ballon: 3, allstar: 4, rookie: 5, yashin: 6, fw: 7, mf: 8, df: 9, couple: 10, coach: 11 };
+    /* v1.87 수상 번호(awards/NNN.png): 1 득점왕 · 2 도움왕 · 3 골롱도르 · 4 올스타상 · 5 신인상 · 6 야신상 · 7 공격수상 · 8 미드필더상 · 9 수비수상 · 10 베스트커플상 · 11 감독상 */
+    window.G_AWARDS = [[1, '득점왕'], [2, '도움왕'], [3, '골롱도르'], [4, '올스타상'], [5, '신인상'], [6, '야신상'], [7, '공격수상'], [8, '미드필더상'], [9, '수비수상'], [10, '베스트커플상'], [11, '감독상']];
+    /* v1.87 직접 선정하는 특별 수상 목록 (득점왕·도움왕은 기록으로 자동 결정) */
+    window.G_SP = [
+        { key: 'ballon', label: '골롱도르', emoji: '🏅', color: '#fbbf24', id: 3, hint: '공격P · MOM · 평균평점 종합 상위 15명' },
+        { key: 'allstar', label: '올스타상', emoji: '⭐', color: '#a78bfa', id: 4, hint: '각 팀 평균평점 상위 3명 · 여러 명 선택 가능' },
+        { key: 'rookie', label: '신인상', emoji: '🌱', color: '#86efac', id: 5, hint: '그 시즌에 처음 출전한 신인만' },
+        { key: 'yashin', label: '야신상', emoji: '🧤', color: '#93c5fd', id: 6, hint: '키퍼(GK)만' },
+        { key: 'fw', label: '공격수상', emoji: '🔥', color: '#f97316', id: 7, hint: '공격수(FW)로 한 번이라도 뛴 선수' },
+        { key: 'mf', label: '미드필더상', emoji: '🧭', color: '#84cc16', id: 8, hint: '미드필더(MF)로 한 번이라도 뛴 선수' },
+        { key: 'df', label: '수비수상', emoji: '🛡️', color: '#0ea5e9', id: 9, hint: '수비수(DF)로 한 번이라도 뛴 선수' },
+        { key: 'couple', label: '베스트커플상', emoji: '💞', color: '#f472b6', id: 10, hint: '합작골(도움→득점) 상위 15쌍' },
+        { key: 'coach', label: '감독상', emoji: '🧑‍💼', color: '#34d399', id: 11, hint: '그 시즌 팀을 이끈 감독' }
+    ];
+    /* 수상자 문자열 → 이름 배열 (쉼표 · | 로 구분: 공동 수상 · 베스트커플) */
+    window.gAwNames = v => String(v == null ? '' : v).split(/\s*[,|]\s*/).map(x => x.trim()).filter(x => x && x !== 'N/A' && x !== '없음' && x !== '기록 없음');
     window.gAwardImg = (key, fb, size) => { const id = AWID[key]; return id ? '<span class="g-awi" data-gai="' + id + '" data-gsz="' + (SZ[size] ? size : 'sm') + '" data-fb="' + esc(fb || '') + '">' + esc(fb || '') + '</span>' : esc(fb || ''); };
     window.gTrophyBracket = function (html, name) {
         return html ? String(html).replace('<div class="tb-champ">🏆', '<div class="tb-champ">' + W(name, 'sm', '🏆')) : html;
@@ -8740,7 +8756,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                         }
             },
             "backupFileName": "",
-            "specialAwards": { "rookie": "", "yashin": "", "ballon": "" },
+            "specialAwards": { "rookie": "", "yashin": "", "ballon": "", "allstar": "", "fw": "", "mf": "", "df": "", "couple": "", "coach": "" },
             "rankSnapshot": {},
             "seasonName": "시즌 1",
             "seasonMode": "league",
@@ -8762,7 +8778,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                 leagueRecord: { key: 'pwr', dir: -1 }
             };
             raw.totalSort = Object.assign({}, defaultTotalSort, raw.totalSort || {});
-            raw.specialAwards = Object.assign({ rookie:'', yashin:'', ballon:'' }, raw.specialAwards || {});
+            raw.specialAwards = Object.assign({ rookie:'', yashin:'', ballon:'', allstar:'', fw:'', mf:'', df:'', couple:'', coach:'' }, raw.specialAwards || {});
             if(!raw.rankSnapshot) raw.rankSnapshot = {};
             if(!raw.interMatches) raw.interMatches = [];
             if(!Array.isArray(raw.scheduledMatches)) raw.scheduledMatches = [];
@@ -9137,7 +9153,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
         }
 
         // 🏆 역대 챔피언 타임라인용 공통 데이터 계산 — 최근 시즌부터 순서대로 각 시즌의
-        // 우승팀·준우승팀·시즌MVP 정보를 뽑아 배열로 반환한다. (🏛️ 역사관 탭 + 🏠 대시보드 카드 공용)
+        // 우승팀·준우승팀·시즌 골롱도르 정보를 뽑아 배열로 반환한다. (🏛️ 역사관 탭 + 🏠 대시보드 카드 공용)
         function computeHallTimelineData() {
             const seasons = dcGetSeasonRosterList();
             const list = [];
@@ -9145,7 +9161,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                 const isCurrent = seasons[idx].key === 'current';
                 const arc = isCurrent ? null : state.archives[idx];
                 const winner = arc ? (arc.winner || '') : '';
-                const mvp = arc ? (arc.mvp || '') : '';
+                const mvp = arc ? (((arc.specialAwards || {}).ballon) || '') : '';   // v1.87: 시즌 MVP → 시즌 골롱도르
                 const winnerTeam = winner ? state.teams.find(t => t.name === winner) : null;
                 // 준우승팀은 별도 저장 필드가 없어, 그 시즌 아카이브의 '결승' 매치 결과에서 패자를 찾아 계산한다.
                 let runnerUpTeam = null;
@@ -9162,7 +9178,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
             return list;
         }
 
-        // 🏆 역대 챔피언 타임라인 — 최근 시즌부터 순서대로 우승팀·준우승팀·시즌MVP를 보여준다.
+        // 🏆 역대 챔피언 타임라인 — 최근 시즌부터 순서대로 우승팀·준우승팀·시즌 골롱도르를 보여준다.
         function renderHistoryChampionsTimeline() {
             const container = document.getElementById('historyChampionsTimeline');
             if (!container) return;
@@ -9173,7 +9189,7 @@ img.g-awimg.s-xs { height: 20px; } img.g-awimg.s-sm { height: 30px; } img.g-awim
                     ? `<div>🏆 <span class="clickable-team" onclick="${item.winnerTeam ? `showTeamDetail(${item.winnerTeam.id})` : ''}" style="color:${item.winnerTeam ? item.winnerTeam.color : 'var(--text)'}; font-weight:800; cursor:${item.winnerTeam ? 'pointer' : 'default'};">${item.winner}</span></div>`
                     : `<div style="color:var(--text-muted);">진행 중 (아직 우승 결과 없음)</div>`;
                 const runnerUpHtml = item.runnerUpTeam ? `<div>🥈 <span class="clickable-team" onclick="showTeamDetail(${item.runnerUpTeam.id})" style="color:${item.runnerUpTeam.color}; font-weight:800; cursor:pointer;">${item.runnerUpTeam.name}</span></div>` : '';
-                const mvpHtml = item.mvp ? `<div>👑 <span class="clickable-player" onclick="showPlayerDetail('${item.mvp.replace(/'/g, "\\'")}')" style="cursor:pointer; font-weight:800;">${item.mvp}</span></div>` : '';
+                const mvpHtml = item.mvp ? `<div>🏅 <span class="clickable-player" onclick="showPlayerDetail('${item.mvp.replace(/'/g, "\\'")}')" style="cursor:pointer; font-weight:800;">${item.mvp}</span></div>` : '';
                 html += `<div class="champion-timeline-item${item.isCurrent ? ' is-current' : ''}" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:10px 14px; border:1px solid rgba(255,255,255,0.07); border-radius:8px; ${item.isCurrent ? 'border-color:rgba(56,189,248,0.35); background:rgba(56,189,248,0.05);' : ''}">
                     <div style="min-width:120px; font-weight:900; color:var(--gold); font-size:0.85rem;">${item.label}${item.isCurrent ? ' <span style="font-size:0.62rem; color:var(--accent); border:1px solid rgba(56,189,248,0.4); padding:1px 6px; border-radius:10px; margin-left:2px;">진행중</span>' : ''}</div>
                     <div style="flex:1; display:flex; flex-wrap:wrap; gap:14px; font-size:0.78rem;">${resultHtml}${runnerUpHtml}${mvpHtml}</div>
@@ -12682,14 +12698,17 @@ function fmBestStyle(p, role) {
                     const tid = dcFindPlayerTeamIdInArchive(a, name);
                     if (tid !== null && tid === String(team.id)) entries.push({ icon, label: `${label}: ${name}` });
                 };
-                checkAward(a.mvp, 'MVP', '👑');
                 checkAward(a.topScorer, '득점왕', '⚽');
                 checkAward(a.topAssistant, '도움왕', '🎯');
-                checkAward(a.topRating, '평점왕', '📈');
-                if (a.specialAwards) {
-                    checkAward(a.specialAwards.rookie, '신인왕', '🌱');
-                    checkAward(a.specialAwards.yashin, '야신상', '🧤');
-                    checkAward(a.specialAwards.ballon, '발롱도르', '🥇');
+                if (a.specialAwards) {   // v1.87: 골롱도르 · 올스타상 · 신인상 · 야신상 · 포지션별 수상 · 베스트커플상 · 감독상
+                    G_SP.forEach(d => {
+                        if (d.key === 'coach') {
+                            const cm = a.specialAwards.coach;
+                            if (cm && String((a.teamManagers || {})[String(team.id)] || '') === cm) entries.push({ icon: d.emoji, label: `${d.label}: ${cm}` });
+                            return;
+                        }
+                        gAwNames(a.specialAwards[d.key]).forEach(n => checkAward(n, d.label, d.emoji));
+                    });
                 }
                 // 이 시즌 대회 최종 기록(조별예선 순위 / 토너먼트 성적)을 계산해 배지로 함께 보여준다.
                 const [gaIds, gbIds] = archiveGroupIds(a);
@@ -13115,17 +13134,18 @@ function fmBestStyle(p, role) {
         }
 
         // 🏆 리그 전체 개인 기록 표의 '수상기록' 열용 — 주어진 범위(scope: 'cumulative' / 'current' / 아카이브 인덱스)
-        // 안에서 선수별로 득점왕/도움왕/MVP/평점왕/신인상/야신상/시즌 골롱도르를 각각 몇 번 받았는지, 그리고
+        // 안에서 선수별로 득점왕/도움왕/골롱도르/올스타상/신인상/야신상/공격수상/미드필더상/수비수상/베스트커플상을 각각 몇 번 받았는지, 그리고
         // 어느 시즌(대회)에서 받았는지를 집계한다. scope가 'cumulative'/아카이브 인덱스면 확정된(아카이브된)
-        // 시즌 기록이고, scope가 'current'(진행중인 현재 시즌)면 "지금 이대로 끝난다면"의 선두 후보(미확정)다.
+        // 시즌 기록이고, scope가 'current'(진행중인 현재 시즌)면 "지금 이대로 끝난다면"의 선두 후보 · 지금까지 지정한 수상(미확정)이다.
         // 반환값: { [선수명]: { goals: {count, seasons:[...]}, assists: {...}, ... } }
         function computeLeagueAwardCounts(scope) {
             const map = {};
+            const SPK = ['ballon', 'allstar', 'rookie', 'yashin', 'fw', 'mf', 'df', 'couple'];
             const ensure = (name) => {
-                if (!map[name]) map[name] = {
-                    goals: { count: 0, seasons: [] }, assists: { count: 0, seasons: [] }, mvp: { count: 0, seasons: [] },
-                    rating: { count: 0, seasons: [] }, rookie: { count: 0, seasons: [] }, yashin: { count: 0, seasons: [] }, ballon: { count: 0, seasons: [] }
-                };
+                if (!map[name]) {
+                    map[name] = { goals: { count: 0, seasons: [] }, assists: { count: 0, seasons: [] } };
+                    SPK.forEach(k => { map[name][k] = { count: 0, seasons: [] }; });
+                }
                 return map[name];
             };
             const add = (name, key, seasonLabel) => {
@@ -13134,15 +13154,11 @@ function fmBestStyle(p, role) {
                 m.count++;
                 if (seasonLabel) m.seasons.push(seasonLabel);
             };
+            const addSpecial = (sa, label) => { sa = sa || {}; SPK.forEach(k => gAwNames(sa[k]).forEach(n => add(n, k, label))); };
             const addFromArchive = (a) => {
                 add(a.topScorer, 'goals', a.name);
                 add(a.topAssistant, 'assists', a.name);
-                add(a.mvp, 'mvp', a.name);
-                add(a.topRating, 'rating', a.name);
-                const sa = a.specialAwards || {};
-                add(sa.rookie, 'rookie', a.name);
-                add(sa.yashin, 'yashin', a.name);
-                add(sa.ballon, 'ballon', a.name);
+                addSpecial(a.specialAwards, a.name);
             };
             if (scope && typeof scope === 'object' && Array.isArray(scope.archives)) {
                 scope.archives.forEach(addFromArchive);   // v1.03: 구간·종류로 고른 시즌들만 집계
@@ -13158,11 +13174,8 @@ function fmBestStyle(p, role) {
                     }));
                     const topScorer    = [...curPs].filter(p => p.goals > 0).sort((a, b) => (b.goals - a.goals) || (b.avgRating - a.avgRating) || (b.assists - a.assists))[0]?.name;
                     const topAssistant = [...curPs].filter(p => p.assists > 0).sort((a, b) => (b.assists - a.assists) || (b.avgRating - a.avgRating) || (b.goals - a.goals))[0]?.name;
-                    const mvp           = [...curPs].filter(p => p.mom > 0).sort((a, b) => (b.mom - a.mom) || (b.avgRating - a.avgRating) || ((b.goals + b.assists) - (a.goals + a.assists)))[0]?.name;
-                    const topRating     = [...curPs].filter(p => p.games > 0).sort((a, b) => (b.avgRating - a.avgRating) || ((b.goals + b.assists) - (a.goals + a.assists)) || (b.mom - a.mom))[0]?.name;
-                    add(topScorer, 'goals', curLabel); add(topAssistant, 'assists', curLabel); add(mvp, 'mvp', curLabel); add(topRating, 'rating', curLabel);
-                    const sa = state.specialAwards || {};
-                    add(sa.rookie, 'rookie', curLabel); add(sa.yashin, 'yashin', curLabel); add(sa.ballon, 'ballon', curLabel);
+                    add(topScorer, 'goals', curLabel); add(topAssistant, 'assists', curLabel);
+                    addSpecial(state.specialAwards, curLabel);
                 }
             } else {
                 const arc = state.archives[scope];
@@ -13195,11 +13208,14 @@ function fmBestStyle(p, role) {
         const leagueAwardTypeDefs = [
             { key: 'goals', emoji: '⚽️', label: '득점왕' },
             { key: 'assists', emoji: '🎯', label: '도움왕' },
-            { key: 'mvp', emoji: '👑', label: 'MVP' },
-            { key: 'rating', emoji: '⭐', label: '최고평균평점' },
+            { key: 'ballon', emoji: '🏅', label: '골롱도르' },
+            { key: 'allstar', emoji: '⭐', label: '올스타상' },
             { key: 'rookie', emoji: '🌱', label: '신인상' },
             { key: 'yashin', emoji: '🧤', label: '야신상' },
-            { key: 'ballon', emoji: '🏅', label: '시즌 골롱도르' }
+            { key: 'fw', emoji: '🔥', label: '공격수상' },
+            { key: 'mf', emoji: '🧭', label: '미드필더상' },
+            { key: 'df', emoji: '🛡️', label: '수비수상' },
+            { key: 'couple', emoji: '💞', label: '베스트커플상' }
         ];
         // 수상기록 열 공통 렌더러 — 확정 수상은 이모지 그대로(마우스오버 시 어느 시즌에 받았는지 표시),
         // 미확정(진행중인 현재 시즌 선두 후보)은 이모지를 괄호로 감싸고 흐리게 표시하며 마우스오버 시 "수상유력"을 안내한다.
@@ -13364,6 +13380,49 @@ function fmBestStyle(p, role) {
         // 각 팀이 그 시즌에 기록한 경기수/승패/득실/승점/경기당 득실/연승연패를 한 행씩 만든다.
         // (한 팀이 여러 시즌을 뛰었으면 시즌마다 별도 행이 생기고, 그래야 "한 시즌 최고 승점" 같은
         //  단일 시즌 기준 최고기록을 팀 통산 누적치와 구분해서 뽑아낼 수 있다.)
+        // v1.88: 팀·시즌 기록 한 줄(r)에서 파생되는 값(승률·경기당 득점·선제골 승률 등)을 계산한다. (시즌별 행 / 팀 누적 행 공용)
+        // 표본이 모자라 의미 없는 비율은 NaN으로 두어 순위 보드에서 자동으로 빠지게 한다.
+        function tsFinalize(r) {
+            const g = r.games || 0;
+            r.pts = r.w * 3; r.gd = r.gf - r.ga;
+            r.wr = g ? r.w / g * 100 : 0; r.gfpg = g ? r.gf / g : 0; r.gapg = g ? r.ga / g : 0;
+            r.csRate = g ? r.cs / g * 100 : 0;
+            r.closeWr = r.closeG >= 3 ? r.closeW / r.closeG * 100 : NaN;
+            r.firstWr = r.firstG >= 3 ? r.firstW / r.firstG * 100 : NaN;
+            r.concWr = r.concG >= 3 ? r.comebackW / r.concG * 100 : NaN;
+            r.boxPct = r.located >= 3 ? r.boxG / r.located * 100 : NaN;
+            r.astPct = r.goalsT >= 3 ? r.astG / r.goalsT * 100 : NaN;
+            r.topShare = (r.gf >= 3 && isFinite(r.topScorer) && r.topScorer > 0) ? Math.min(100, r.topScorer / r.gf * 100) : NaN;
+            r.avgRating = r.rcnt >= 3 ? r.rs / r.rcnt : NaN;
+            r.savesPg = g ? r.saves / g : 0;
+            r.cardsPg = g ? (r.yc + r.rc) / g : 0;
+            return r;
+        }
+
+        // v1.88: 여러 시즌 행을 팀별로 합쳐 '팀 누적' 행으로 만든다. (합계는 더하고, 최다 연승/연패 같은 최고치는 가장 큰 값)
+        function tsMerge(rows) {
+            const SUM = ['games', 'w', 'l', 'gf', 'ga', 'cs', 'pkG', 'pkW', 'pkL', 'noScore', 'bigW', 'bigL', 'closeG', 'closeW',
+                'tlG', 'firstG', 'firstW', 'concG', 'comebackW', 'blown', 'gf1', 'gf2', 'ga1', 'ga2', 'rs', 'rcnt', 'hat', 'multi',
+                'yc', 'rc', 'saves', 'goalsT', 'astG', 'boxG', 'midG', 'located'];
+            const by = {};
+            (rows || []).forEach(r => {
+                let a = by[r.teamId];
+                if (!a) {
+                    a = by[r.teamId] = { teamId: r.teamId, teamName: r.teamName, teamColor: r.teamColor, seasonLabel: '', scopeKey: 'merged', seasons: 0, merged: true,
+                        maxWinStreak: 0, maxLoseStreak: 0, maxCs: 0, maxSc: 0, topScorer: NaN, scorerN: NaN,
+                        maxWinStartM: null, maxWinEndM: null, maxLoseStartM: null, maxLoseEndM: null };
+                    SUM.forEach(k => { a[k] = 0; });
+                }
+                a.seasons++;
+                SUM.forEach(k => { a[k] += (r[k] || 0); });
+                if (r.maxWinStreak > a.maxWinStreak) { a.maxWinStreak = r.maxWinStreak; a.maxWinStartM = r.maxWinStartM; a.maxWinEndM = r.maxWinEndM; }
+                if (r.maxLoseStreak > a.maxLoseStreak) { a.maxLoseStreak = r.maxLoseStreak; a.maxLoseStartM = r.maxLoseStartM; a.maxLoseEndM = r.maxLoseEndM; }
+                if ((r.maxCs || 0) > a.maxCs) a.maxCs = r.maxCs;
+                if ((r.maxSc || 0) > a.maxSc) a.maxSc = r.maxSc;
+            });
+            return Object.values(by).map(a => { a.seasonLabel = a.seasons + '시즌 누적'; return tsFinalize(a); });
+        }
+
         function computeTeamSeasonRecordsData() {
             const scopes = [];
             (state.archives || []).forEach((a, i) => scopes.push({ matches: a.matches || [], label: a.name || '시즌 미상', scopeKey: 'archive_' + i }));
@@ -13371,6 +13430,9 @@ function fmBestStyle(p, role) {
 
             const rows = [];
             scopes.forEach(sc => {
+                // v1.88: 득점 위치 · 카드 · 세이브처럼 선수 단위로 쌓이는 팀 기록은 시즌(범위)별로 한 번만 집계한다.
+                let GR = null;
+                try { GR = (window.GA && GA.collect) ? GA.collect(sc.matches) : null; } catch (e) { GR = null; }
                 const teamIds = new Set();
                 sc.matches.forEach(m => { teamIds.add(String(m.hId)); teamIds.add(String(m.aId)); });
                 teamIds.forEach(tid => {
@@ -13382,6 +13444,12 @@ function fmBestStyle(p, role) {
                     let curWin = 0, curLose = 0, maxWin = 0, maxLose = 0;
                     let curWinStartM = null, curLoseStartM = null;
                     let maxWinStartM = null, maxWinEndM = null, maxLoseStartM = null, maxLoseEndM = null;
+                    // v1.88 추가 집계
+                    let pkG = 0, pkW = 0, pkL = 0, noScore = 0, bigW = 0, bigL = 0, closeG = 0, closeW = 0;
+                    let curCs = 0, maxCs = 0, curSc = 0, maxSc = 0;
+                    let tlG = 0, firstG = 0, firstW = 0, concG = 0, comebackW = 0, blown = 0, gf1 = 0, gf2 = 0, ga1 = 0, ga2 = 0;
+                    let rs = 0, rcnt = 0, hat = 0, multi = 0;
+                    const scorers = {};
                     chrono.forEach(m => {
                         const isH = String(m.hId) === tid;
                         const my = isH ? m.hScore : m.aScore;
@@ -13401,16 +13469,58 @@ function fmBestStyle(p, role) {
                             curLose++; curWin = 0; curWinStartM = null;
                             if (curLose > maxLose) { maxLose = curLose; maxLoseStartM = curLoseStartM; maxLoseEndM = m; }
                         }
+                        const d = my - opp;
+                        if (my === opp) { pkG++; if (win) pkW++; else pkL++; }
+                        if (my === 0) noScore++;
+                        if (d >= 3) bigW++; if (d <= -3) bigL++;
+                        if (Math.abs(d) <= 1) { closeG++; if (win) closeW++; }
+                        if (opp === 0) { curCs++; if (curCs > maxCs) maxCs = curCs; } else curCs = 0;
+                        if (my > 0) { curSc++; if (curSc > maxSc) maxSc = curSc; } else curSc = 0;
+                        // 선수 기록 기반(평점·해트트릭·득점자) + 골 타임라인(선제골·전/후반)
+                        const ev = [];
+                        (m.pStats || []).forEach(p => {
+                            if (!p) return;
+                            const mine = String(p.teamId) === tid;
+                            const st = p.status || 'starter', played = st === 'starter' || st === 'substitute';
+                            if (mine && played) {
+                                if (p.r) { rs += p.r; rcnt++; }
+                                const g = p.g || 0;
+                                if (g >= 3) hat++; if (g >= 2) multi++;
+                                if (g > 0) scorers[p.name] = (scorers[p.name] || 0) + g;
+                            }
+                            (p.goalTimes || []).forEach(g => { ev.push({ o: (g.half === '후반' ? 1000 : 0) + (g.min || 0), mine, h2: g.half === '후반' }); });
+                            (p.ogTimes || []).forEach(g => { ev.push({ o: (g.half === '후반' ? 1000 : 0) + (g.min || 0), mine: !mine, h2: g.half === '후반' }); });
+                        });
+                        // 골 시간 기록이 실제 스코어와 맞는 경기만 선제골·전후반 집계에 쓴다 (옛 경기는 기록이 불완전할 수 있음)
+                        if (ev.length && ev.length === (m.hScore || 0) + (m.aScore || 0)) {
+                            tlG++; ev.sort((a, b) => a.o - b.o);
+                            if (ev[0].mine) { firstG++; if (win) firstW++; else blown++; }
+                            else { concG++; if (win) comebackW++; }
+                            ev.forEach(e => { if (e.mine) { e.h2 ? gf2++ : gf1++; } else { e.h2 ? ga2++ : ga1++; } });
+                        }
                     });
-                    rows.push({
+                    let yc = 0, rc = 0, saves = 0, goalsT = 0, astG = 0, boxG = 0, midG = 0, located = 0;
+                    if (GR) {
+                        const tc = GR.teamCards && GR.teamCards[tid]; if (tc) { yc = tc.y || 0; rc = tc.r || 0; }
+                        const gk = GR.gkTeam && GR.gkTeam[tid]; if (gk) saves = gk.ss || 0;
+                        (GR.goals || []).forEach(g => {
+                            if (String(g.teamId) !== tid) return;
+                            goalsT++; if (g.ast) astG++;
+                            if (g.zone) { located++; if (g.zone === 'six' || g.zone === 'box') boxG++; else midG++; }
+                        });
+                    }
+                    const sv = Object.values(scorers);
+                    rows.push(tsFinalize({
                         teamId: tid, teamName: team ? team.name : '알 수 없음', teamColor: team ? team.color : '#94a3b8',
                         seasonLabel: sc.label, scopeKey: sc.scopeKey,
-                        games: gms, w, l, gf, ga, cs, gd: gf - ga, pts: w * 3,
-                        wr: gms ? (w / gms * 100) : 0,
-                        gfpg: gms ? gf / gms : 0, gapg: gms ? ga / gms : 0,
+                        games: gms, w, l, gf, ga, cs,
                         maxWinStreak: maxWin, maxLoseStreak: maxLose,
-                        maxWinStartM, maxWinEndM, maxLoseStartM, maxLoseEndM
-                    });
+                        maxWinStartM, maxWinEndM, maxLoseStartM, maxLoseEndM,
+                        pkG, pkW, pkL, noScore, bigW, bigL, closeG, closeW, maxCs, maxSc,
+                        tlG, firstG, firstW, concG, comebackW, blown, gf1, gf2, ga1, ga2,
+                        rs, rcnt, hat, multi, yc, rc, saves, goalsT, astG, boxG, midG, located,
+                        scorerN: sv.length, topScorer: sv.length ? Math.max(...sv) : 0
+                    }));
                 });
             });
             return rows;
@@ -13424,102 +13534,9 @@ function fmBestStyle(p, role) {
             const sel = document.getElementById('awardsLeagueTeamSeasonSelect');
             const cardsEl = document.getElementById('leagueTeamRecordCards');
             if (!sel || !cardsEl) return;
-            const scopeRaw = sel.value;
-            const isCumulative = scopeRaw === 'cumulative';
-            const allRows = computeTeamSeasonRecordsData();
-            const rows = isCumulative ? allRows : allRows.filter(r => r.scopeKey === scopeRaw);
-
-            if (!rows.length) {
-                cardsEl.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">기록이 없습니다.</div>';
-                return;
-            }
-
-            // 경기당 득점/실점처럼 표본이 적으면 왜곡되는 지표는 최소 3경기 이상 치른 시즌만 후보로 삼는다.
-            const ratePool = rows.filter(r => r.games >= 3);
-            const usePool = ratePool.length ? ratePool : rows;
-
-            const topBy = (key) => bestGroup(rows, r => r[key], 1);
-            const topPts = topBy('pts');
-            const topGf = topBy('gf');
-            const topGd = topBy('gd');
-            const topWr = bestGroup(usePool, r => r.wr, 1);
-            const topGfpg = bestGroup(usePool, r => r.gfpg, 1);
-            const topGapg = bestGroup(usePool, r => r.gapg, -1); // 낮을수록 좋은 지표(최소 실점)
-            const topWinStreak = topBy('maxWinStreak');
-            const topLoseStreak = topBy('maxLoseStreak');
-            // "1시즌" 연승/연패는 시즌이 바뀌면 카운터가 리셋되지만, 실제로는 예를 들어 1시즌 마지막 경기 승 +
-            // 2시즌 첫 경기 승처럼 시즌 경계를 넘어 이어지는 연승/연패도 있을 수 있다.
-            // 전체 시즌 통합(cumulative) 뷰에서만 팀별로 dcCalcCleanSheetsAndStreaks()를 돌려
-            // 시즌 경계를 무시하고 쭉 이어서 계산한 "전체 시즌 통합" 최다연승/연패도 함께 보여준다.
-            let topWinStreakAll = null, topLoseStreakAll = null;
-            if (isCumulative) {
-                const crossData = (state.teams || []).map(t => {
-                    const s = dcCalcCleanSheetsAndStreaks(t.id);
-                    return {
-                        teamId: t.id, teamName: t.name, teamColor: t.color,
-                        maxWinStreak: s.maxWinStreak, winSeasonLabel: s.maxWinStreakSeason || '',
-                        maxLoseStreak: s.maxLoseStreak, loseSeasonLabel: s.maxLoseStreakSeason || '',
-                        maxWinStartM: s.maxWinStartM, maxWinEndM: s.maxWinEndM, maxLoseStartM: s.maxLoseStartM, maxLoseEndM: s.maxLoseEndM
-                    };
-                });
-                const winPool = crossData.filter(r => r.maxWinStreak > 0).map(r => ({ ...r, seasonLabel: r.winSeasonLabel }));
-                const losePool = crossData.filter(r => r.maxLoseStreak > 0).map(r => ({ ...r, seasonLabel: r.loseSeasonLabel }));
-                topWinStreakAll = winPool.length ? bestGroup(winPool, r => r.maxWinStreak, 1) : null;
-                topLoseStreakAll = losePool.length ? bestGroup(losePool, r => r.maxLoseStreak, 1) : null;
-            }
-
-            const c = 'var(--accent)'; // 리그 전체 통합이라 카드 테두리는 팀색 대신 공통 accent 사용
-            const teamTag = (r) => `<span class="clickable-team" onclick="showTeamDetail(${r.teamId})" style="color:${r.teamColor}; font-weight:800;">${r.teamName}</span>`;
-            // 특정 시즌 하나만 보는 중이면 라벨에서 "한 시즌" 접두어와 시즌명 표시를 빼고 그냥 결과만 보여준다.
-            const lbl = (text) => isCumulative ? `한 시즌 ${text}` : text;
-            // 동률(공동 기록) 대응: g.list의 팀들을 모두 같은 컨테이너 안에 이어붙이고, 시즌명도 중복 없이 모아서 함께 표기한다.
-            // titleFn(r): 각 항목(팀 행)에 대해 마우스오버 시 보여줄 상세 텍스트(주로 연승/연패 시작~끝 경기)를 만드는 함수, 선택.
-            const recordRow = (icon, label, g, valueFmt, titleFn) => {
-                if (!g) return '';
-                const teamsHtml = g.list.map(teamTag).join(' · ');
-                const seasonsText = [...new Set(g.list.map(r => r.seasonLabel))].join(' · ');
-                const titleText = titleFn ? [...new Set(g.list.map(titleFn).filter(Boolean))].join(' / ') : '';
-                return `
-                <div style="display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-left:3px solid ${c}; border-radius:8px; padding:9px 12px; flex-wrap:wrap; ${titleText ? 'cursor:help;' : ''}" ${titleText ? `title="${escTitleAttr(titleText)}"` : ''}>
-                    <div style="font-size:0.78rem; font-weight:800; color:var(--text-muted); white-space:nowrap;">${icon} ${label}</div>
-                    <div style="font-size:0.7rem; color:var(--text-muted);">:</div>
-                    <div style="font-size:0.82rem; font-weight:800; white-space:nowrap; display:flex; align-items:baseline; gap:6px; flex-wrap:wrap;">
-                        ${teamsHtml}
-                        <span style="color:var(--gold);">${valueFmt(g.value)}</span>
-                        ${isCumulative ? `<span style="color:var(--text-muted); font-weight:700; font-size:0.76rem;">( ${seasonsText} )</span>` : ''}
-                    </div>
-                </div>`;
-            };
-            const group = (title, rowsHtml) => `
-                <div style="flex:1 1 260px; min-width:230px;">
-                    <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px; margin-bottom:6px;">${title}</div>
-                    <div style="display:flex; flex-direction:column; gap:6px;">${rowsHtml}</div>
-                </div>`;
-            const rowWrap = (groupsHtml) => `<div style="display:flex; flex-wrap:wrap; gap:14px;">${groupsHtml}</div>`;
-
-            const topRow = rowWrap([
-                group('🏆 승점 · 승률', [
-                    recordRow('🏆', lbl('최고 승점'), topPts, v => `${v} 점`),
-                    recordRow('📈', lbl('최고 승률'), topWr, v => `${v.toFixed(1)}%`)
-                ].join('')),
-                group('⚽ 득점 관련', [
-                    recordRow('⚽', lbl('최다득점'), topGf, v => `${v} 득점`),
-                    recordRow('📊', lbl('최고 경기당득점'), topGfpg, v => `${v.toFixed(2)} 골/경기`)
-                ].join('')),
-                group('🧱 실점 · 득실 관련', [
-                    recordRow('🧱', lbl('최소 경기당실점'), topGapg, v => `${v.toFixed(2)} 실점/경기`),
-                    recordRow('📐', lbl('최고 득실차'), topGd, v => `${v > 0 ? '+' : ''}${v}`)
-                ].join(''))
-            ].join(''));
-            const bottomRow = rowWrap([
-                group('🔥 연승 · 연패', [
-                    recordRow('🔥', lbl('최다연승'), topWinStreak, v => `${v} 연승`, r => fmtStreakRangeTitle(r.maxWinStartM, r.maxWinEndM, r.teamId, r.maxWinStreak, '연승')),
-                    recordRow('💧', lbl('최다연패'), topLoseStreak, v => `${v} 연패`, r => fmtStreakRangeTitle(r.maxLoseStartM, r.maxLoseEndM, r.teamId, r.maxLoseStreak, '연패')),
-                    recordRow('🔥', '전체 시즌 통합 최다연승', topWinStreakAll, v => `${v} 연승`, r => fmtStreakRangeTitle(r.maxWinStartM, r.maxWinEndM, r.teamId, r.maxWinStreak, '연승')),
-                    recordRow('💧', '전체 시즌 통합 최다연패', topLoseStreakAll, v => `${v} 연패`, r => fmtStreakRangeTitle(r.maxLoseStartM, r.maxLoseEndM, r.teamId, r.maxLoseStreak, '연패'))
-                ].join(''))
-            ].join(''));
-            cardsEl.innerHTML = `<div style="margin-bottom:14px;">${topRow}</div>${bottomRow}`;
+            // v1.88: 예전 카드형 팀 기록(최고 승점·승률·득점·실점·득실차·연승연패)은 📊 팀 기록 순위 보드와 같은 내용이라
+            // 보드(renderTeam → gTeamRecHtml)로 통합했다. 시즌 경계를 넘는 연승/연패도 보드의 🔥 연승·연패 분야에 들어 있다.
+            cardsEl.innerHTML = '';
         }
 
         // ======= 📊 세부 통계 기록 =======
@@ -13875,6 +13892,378 @@ function fmBestStyle(p, role) {
         // 🌟 시즌 요약 탭의 '리그 전체 개인 기록' 섹션(최다득점/최다도움/최다MOM/최고평균평점/최다출전 카드
         // + 선수별 파워랭킹 표) 렌더링. dcRenderHistoryIndividualRecords()와 형태는 같지만 팀 하나가 아니라
         // 리그 전체 선수를 대상으로 하고, 각 행에 소속팀을 함께 표시한다.
+        // ================= v1.88 · 🧩 기록 순위 보드 (선수 · 팀 공용) =================
+        // 선수의 포지션과 상관없이 "기록만으로" 순위를 매긴다. 공격/미드필더/수비/키퍼 기록 분야를 고르고,
+        // 집계 대상을 전체 선수 또는 그 범위에서 가장 많이 뛴 포지션(공격수·미드필더·수비수·키퍼)으로 좁혀 볼 수 있다.
+        // 표시 인원은 TOP 3 / 5 / 10 / 20 중 선택. 시즌 기록 탭(선수·팀)과 시즌 아카이브가 같은 부품을 쓴다.
+        window.__gRec = window.__gRec || {};
+        window.__gRecT = window.__gRecT || {};
+        const G_REC_CATS = [['atk', '🔥 공격 기록'], ['mid', '🧭 미드필더 기록'], ['def', '🛡️ 수비 기록'], ['gk', '🧤 키퍼 기록'], ['all', '📈 종합·출전'], ['etc', '🎖️ 그 외']];
+        const G_REC_POS = [['all', '👥 전체 선수'], ['FW', '🔥 공격수 중'], ['MF', '🧭 미드필더 중'], ['DF', '🛡️ 수비수 중'], ['GK', '🧤 키퍼 중']];
+        const G_REC_NS = [3, 5, 10, 20];
+        const G_TREC_CATS = [['win', '🏅 승점·승'], ['atk', '⚽ 공격'], ['def', '🛡️ 수비'], ['streak', '🔥 연승·연패'], ['flow', '⏱️ 경기 흐름'], ['pat', '🎯 득점 패턴'], ['misc', '⭐ 평점·매너']];
+        const G_REC_HEX = { gold: '#fbbf24', blue: '#38bdf8', green: '#22c55e', red: '#f87171', deep: '#60a5fa', pur: '#a78bfa', org: '#f97316' };
+        const G_REC_MEDAL = ['🥇', '🥈', '🥉'];
+        const gRecF2 = v => (Math.round(v * 100) / 100).toFixed(2);
+        const gRecU = s => v => v + s;
+        const gRecPct = v => (Math.round(v * 10) / 10) + '%';
+        function gRecTeam(id) { return (state.teams || []).find(t => String(t.id) === String(id)) || null; }
+        function gRecTeamCol(id) { const t = gRecTeam(id); return t ? t.color : '#e2e8f0'; }
+        function gRecTeamName(id) { const t = gRecTeam(id); return t ? t.name : '무소속'; }
+        function gRecPlHtml(p) { return `<a class="rs-link" style="color:${gRecTeamCol(p.teamId)};" onclick="${tcPlayerClick(p.name)}">${gEsc(p.name)}</a>`; }
+        function gRecMatchTxt(m) {
+            if (!m) return '';
+            return `${m.season ? m.season + ' · ' : ''}${gRecTeamName(m.hId)} ${m.hScore}:${m.aScore} ${gRecTeamName(m.aId)}`;
+        }
+
+        // 순위 매기기 (동률은 같은 순위 · 동률끼리는 출전 경기가 많은 쪽을 먼저)
+        function gRecRank(rows, dir) {
+            const l = rows.filter(r => r && isFinite(r.val)).sort((a, b) => dir * (b.val - a.val) || ((b.tie || 0) - (a.tie || 0)));
+            let rk = 0, prev = null;
+            l.forEach((r, i) => { if (prev === null || r.val !== prev) rk = i + 1; prev = r.val; r.rk = rk; });
+            return l;
+        }
+        // 보드 하나(제목 + TOP N 막대 줄). o: { hex, dir(-1이면 낮을수록 상위), fmt }
+        function gRecBoardHtml(title, rows, o, N) {
+            o = o || {};
+            const dir = o.dir === -1 ? -1 : 1, hex = o.hex || G_REC_HEX.blue, fmt = o.fmt || (v => v);
+            const list = gRecRank(rows, dir);
+            const head = `<div class="rs-bt">${title}</div>`;
+            if (!list.length) return `<div class="rs-board" style="--c:${hex};">${head}<div class="rs-empty">기록 없음</div></div>`;
+            const shown = list.slice(0, N), lastRk = shown[shown.length - 1].rk;
+            const extra = list.slice(N).filter(r => r.rk === lastRk).length;   // TOP N 끝 순위와 공동인데 잘려 나간 인원
+            const top = list[0].val;
+            const rowH = r => {
+                const pct = dir === 1 ? (top > 0 ? Math.max(8, r.val / top * 100) : 8) : (r.val > 0 ? Math.max(8, top / r.val * 100) : 100);
+                return `<div class="rs-row"${r.title ? ` title="${gEsc(r.title)}"` : ''} style="background:linear-gradient(90deg, ${dcHexToRgba(hex, r.rk === 1 ? 0.34 : 0.16)} ${pct}%, rgba(255,255,255,0.03) ${pct}%);"><span class="rs-rk">${r.rk <= 3 ? G_REC_MEDAL[r.rk - 1] : r.rk}</span><span class="rs-nm">${r.html}${r.sub ? `<small>${r.sub}</small>` : ''}</span><b class="rs-v${r.rk === 1 ? ' gold' : ''}">${fmt(r.val)}</b></div>`;
+            };
+            return `<div class="rs-board" style="--c:${hex};">${head}${shown.map(rowH).join('')}${extra ? `<div class="rs-note" style="margin-top:2px;">공동 ${lastRk}위 외 ${extra}명 더 있음</div>` : ''}</div>`;
+        }
+        function gRecChips(arr, cur, onclickFn) {
+            return `<div class="gv-chips">${arr.map(([k, l]) => `<button class="gv-chip${String(k) === String(cur) ? ' on' : ''}" onclick="${onclickFn(k)}">${l}</button>`).join('')}</div>`;
+        }
+
+        // ---------- 선수: 경기 목록 → 선수별 기록 집계 ----------
+        function gRecBuild(pool) {
+            const arcIdx = new Map(); (state.archives || []).forEach((a, i) => (a.matches || []).forEach(m => arcIdx.set(m, i)));
+            const P = {}, teamGames = {};
+            (pool || []).forEach(m => {
+                const ai = arcIdx.has(m) ? arcIdx.get(m) : -1;
+                teamGames[m.hId] = (teamGames[m.hId] || 0) + 1; teamGames[m.aId] = (teamGames[m.aId] || 0) + 1;
+                (m.pStats || []).forEach(ps => {
+                    if (!ps || !ps.name) return;
+                    const st = ps.status || 'starter'; if (st !== 'starter' && st !== 'substitute') return;
+                    const a = P[ps.name] || (P[ps.name] = { name: ps.name, teamId: null, games: 0, starter: 0, kgames: 0, goals: 0, assists: 0, mom: 0, rs: 0, rc: 0, hat: 0, multi: 0, bestG: 0, bestA: 0, bestGm: null, bestAm: null, subGA: 0, og: 0, cs: 0, ga: 0, dfCS: 0, dfGames: 0, pos: { FW: 0, MF: 0, DF: 0, GK: 0 } });
+                    let tid = null; try { tid = resolvePlayerMatchTeamId(ps.name, ps, ai); } catch (e) { }
+                    const known = tid !== null && tid !== undefined && (String(m.hId) === String(tid) || String(m.aId) === String(tid));
+                    const isH = String(m.hId) === String(tid), th = isH ? m.aScore : m.hScore;
+                    if (tid !== null && tid !== undefined) a.teamId = tid;
+                    a.games++; if (st === 'starter') a.starter++;
+                    const g = ps.g || 0, as = ps.a || 0;
+                    a.goals += g; a.assists += as;
+                    if (ps.r) { a.rs += ps.r; a.rc++; }
+                    if (m.mom === ps.name) a.mom++;
+                    if (g >= 3) a.hat++; if (g >= 2) a.multi++;
+                    if (g > a.bestG) { a.bestG = g; a.bestGm = m; }
+                    if (as > a.bestA) { a.bestA = as; a.bestAm = m; }
+                    a.og += (ps.og !== undefined ? (ps.og || 0) : (ps.ogTimes || []).length);
+                    new Set([ps.pos, ps.pos2]).forEach(p => { if (a.pos[p] !== undefined) a.pos[p]++; });
+                    if (st === 'substitute') a.subGA += g + as;
+                    if (known) {
+                        a.kgames++; a.ga += (th || 0); if (!th) a.cs++;
+                        if (ps.pos === 'DF') { a.dfGames++; if (!th) a.dfCS++; }
+                    }
+                });
+            });
+            const players = Object.values(P);
+            players.forEach(p => {
+                let b = 0; p.main = '';
+                ['FW', 'MF', 'DF', 'GK'].forEach(k => { if (p.pos[k] > b) { b = p.pos[k]; p.main = k; } });
+                p.avg = p.rc ? p.rs / p.rc : 0;
+            });
+            let R = { gk: {}, players: {}, pairs: {}, cards: {} }, noGA = false;
+            try { if (window.GA && GA.collect) R = GA.collect(pool); else noGA = true; } catch (e) { console.error('기록 집계 오류', e); }
+            let pwr = {};
+            try { const mp = computePlayerRankMaps(pool || []); pwr = (mp && mp.valueMaps && mp.valueMaps.pwr) || {}; } catch (e) { pwr = {}; }
+            // 기록 등록 기준: 필드 3경기 · 키퍼(주 포지션 GK) 2경기 이상. 아무도 못 채우면 전체를 쓴다.
+            let el = players.filter(p => p.games >= (p.main === 'GK' ? 2 : 3));
+            if (!el.length) el = players.slice();
+            return { P, players, el, teamGames, R, pwr, noGA };
+        }
+
+        // ---------- 선수 보드 컴포넌트 ----------
+        function gRecHtml(pool, uid, opt) {
+            opt = opt || {};
+            const prev = window.__gRec[uid];
+            const s = window.__gRec[uid] = Object.assign({ cat: 'atk', pos: 'all', n: 10 }, prev || {}, { pool: pool || [], D: null });
+            return `<div id="gRec_${uid}">${gRecInner(uid)}</div>`;
+        }
+        window.gRecSet = function (uid, k, v) {
+            const s = window.__gRec[uid]; if (!s) return;
+            s[k] = (k === 'n') ? parseInt(v, 10) : v;
+            const el = document.getElementById('gRec_' + uid); if (el) el.innerHTML = gRecInner(uid);
+        };
+        function gRecInner(uid) {
+            const s = window.__gRec[uid]; if (!s) return '';
+            if (!s.D || (s.D.noGA && window.GA)) s.D = gRecBuild(s.pool);   // 첫 로딩 때 GA 모듈보다 먼저 그려졌다면 다시 집계
+            const D = s.D, N = s.n || 10, pos = s.pos || 'all', cat = s.cat || 'atk';
+            const bar = `<div class="g-rec-row"><span class="g-rec-lab">👥 집계 대상</span>${gRecChips(G_REC_POS, pos, k => `gRecSet('${uid}','pos','${k}')`)}</div>`
+                + `<div class="g-rec-row"><span class="g-rec-lab">📂 기록 분야</span>${gRecChips(G_REC_CATS, cat, k => `gRecSet('${uid}','cat','${k}')`)}</div>`
+                + `<div class="g-rec-row"><span class="g-rec-lab">🔢 표시 인원</span>${gRecChips(G_REC_NS.map(n => [n, 'TOP ' + n]), N, k => `gRecSet('${uid}','n','${k}')`)}</div>`;
+            if (!D.players.length) return bar + '<div class="rs-empty">이 범위에 선수 기록이 없습니다.</div>';
+
+            const inPos = p => pos === 'all' || p.main === pos;
+            const el = D.el.filter(inPos), all = D.players.filter(inPos);
+            const rpF = el.filter(p => p.games >= 3), rp = rpF.length ? rpF : el;      // 경기당 기록: 3경기 이상 우선
+            const H = G_REC_HEX;
+            const mk = (arr, fn, subFn, titleFn) => arr.map(p => ({
+                html: gRecPlHtml(p), val: fn(p), tie: p.games,
+                sub: gEsc(subFn ? subFn(p) : (gRecTeamName(p.teamId) + ' · ' + p.games + '경기')),
+                title: titleFn ? titleFn(p) : ''
+            }));
+            const P0 = rows => rows.filter(r => r.val > 0);
+            const zn = (p, ks) => { const z = (D.R.players[p.name] || {}).z; return z ? ks.reduce((a, k) => a + (z[k] || 0), 0) : 0; };
+            const located = p => (D.R.players[p.name] || {}).located || 0;
+            const bd = (title, rows, o) => gRecBoardHtml(title, rows, o, N);
+            const tm = p => gRecTeamName(p.teamId);
+
+            const B = {};
+            B.atk = () => [
+                bd('⚽ 득점', P0(mk(el, p => p.goals)), { hex: H.gold, fmt: gRecU('골') }),
+                bd('📊 경기당 골 (3경기↑)', P0(mk(rp, p => p.goals / p.games, p => `${tm(p)} · ${p.games}경기 ${p.goals}골`)), { hex: H.gold, fmt: gRecF2 }),
+                bd('💥 공격P (골+도움)', P0(mk(el, p => p.goals + p.assists, p => `${tm(p)} · ${p.goals}골 ${p.assists}도움`)), { hex: H.pur, fmt: gRecU('P') }),
+                bd('📊 경기당 공격P (3경기↑)', P0(mk(rp, p => (p.goals + p.assists) / p.games, p => `${tm(p)} · ${p.games}경기 ${p.goals + p.assists}P`)), { hex: H.pur, fmt: gRecF2 }),
+                bd('🔥 한 경기 최다 득점', P0(mk(el, p => p.bestG, p => gRecMatchTxt(p.bestGm) || tm(p), p => gRecMatchTxt(p.bestGm))), { hex: H.org, fmt: gRecU('골') }),
+                bd('🎯 박스 안 득점', P0(mk(el, p => zn(p, ['six', 'box']), p => `${tm(p)} · 위치 기록 ${located(p)}골 중`)), { hex: H.org, fmt: gRecU('골') }),
+                bd('🚀 중거리 이상 득점', P0(mk(el, p => zn(p, ['mid', 'long']), p => `${tm(p)} · 위치 기록 ${located(p)}골 중`)), { hex: H.deep, fmt: gRecU('골') })
+            ].join('');
+            const partnerN = p => { const q = D.R.players[p.name]; return q ? new Set([...Object.keys(q.setupBy || {}), ...Object.keys(q.setupFor || {})]).size : 0; };
+            const bestDuo = p => { try { const d = GA.partnersOf(D.R, p.name).duo[0]; return d || null; } catch (e) { return null; } };
+            B.mid = () => [
+                bd('🎯 도움', P0(mk(el, p => p.assists)), { hex: H.blue, fmt: gRecU('도움') }),
+                bd('📊 경기당 도움 (3경기↑)', P0(mk(rp, p => p.assists / p.games, p => `${tm(p)} · ${p.games}경기 ${p.assists}도움`)), { hex: H.blue, fmt: gRecF2 }),
+                bd('🎩 한 경기 최다 도움', P0(mk(el, p => p.bestA, p => gRecMatchTxt(p.bestAm) || tm(p), p => gRecMatchTxt(p.bestAm))), { hex: H.blue, fmt: gRecU('도움') }),
+                bd('🧩 합작 파트너 수 (득점·도움으로 엮인 선수)', P0(mk(el, partnerN, p => `${tm(p)} · ${p.goals}골 ${p.assists}도움`)), { hex: H.green, fmt: gRecU('명') }),
+                bd('🤝 한 파트너와 합작골 (최다)', P0(mk(el, p => { const d = bestDuo(p); return d ? d.c : 0; }, p => { const d = bestDuo(p); return d ? `${tm(p)} · ${d.n}와(과)` : tm(p); })), { hex: H.pur, fmt: gRecU('골') })
+            ].join('');
+            B.def = () => [
+                bd('🧱 무실점 경기 출전', P0(mk(el, p => p.cs, p => `${tm(p)} · ${p.games}경기 출전`)), { hex: H.deep, fmt: gRecU('경기') }),
+                bd('🛡️ 무실점 비율 (3경기↑)', P0(mk(rp, p => p.kgames ? p.cs / p.kgames * 100 : NaN, p => `${tm(p)} · ${p.cs}/${p.kgames}경기`)), { hex: H.deep, fmt: v => Math.round(v) + '%' }),
+                bd('🥅 출전 경기당 팀 실점 (낮을수록 상위 · 3경기↑)', mk(rp, p => p.kgames ? p.ga / p.kgames : NaN, p => `${tm(p)} · ${p.kgames}경기 ${p.ga}실점`), { hex: H.deep, dir: -1, fmt: gRecF2 }),
+                bd('🧱 DF 자리로 출전한 경기 중 무실점', P0(mk(el, p => p.dfCS, p => `${tm(p)} · DF ${p.dfGames}경기 출전`)), { hex: H.green, fmt: gRecU('경기') })
+            ].join('');
+            B.gk = () => {
+                const GKS = Object.values(D.R.gk || {}).filter(g => g.w > 0 || g.ss > 0).map(g => {
+                    const q = D.P[g.name] || {};
+                    return { name: g.name, teamId: g.teamId != null ? g.teamId : q.teamId, main: q.main || '', games: q.games || 0, ss: g.ss, w: g.w, ga: g.ga, bestSS: g.bestSS, cs: g.cs };
+                }).filter(inPos);
+                const gkEl0 = GKS.filter(g => g.w >= 2), gkEl = gkEl0.length ? gkEl0 : GKS;
+                const gkR0 = GKS.filter(g => g.w >= 3), gkRate = gkR0.length ? gkR0 : gkEl;
+                const w1 = g => Math.round(g.w * 10) / 10;
+                const sub = g => `${tm(g)} · GK ${w1(g)}경기`;
+                return [
+                    bd('🧤 세이브', P0(mk(gkEl, g => g.ss, sub)), { hex: H.gold, fmt: gRecU('회') }),
+                    bd('📊 경기당 세이브 (GK 3경기↑)', P0(mk(gkRate, g => g.w ? g.ss / g.w : NaN, g => `${tm(g)} · GK ${w1(g)}경기 ${g.ss}세이브`)), { hex: H.gold, fmt: gRecF2 }),
+                    bd('🙌 한 경기 최다 세이브', P0(mk(gkEl, g => g.bestSS, sub)), { hex: H.org, fmt: gRecU('회') }),
+                    bd('⚖️ 세이브 기여율 (세이브÷(세이브+실점))', P0(mk(gkRate.filter(g => g.ss + g.ga > 0), g => g.ss / (g.ss + g.ga) * 100, g => `${tm(g)} · ${g.ss}세이브 ${g.ga}실점`)), { hex: H.green, fmt: gRecPct }),
+                    bd('🧼 GK 클린시트', P0(mk(gkEl, g => g.cs, sub)), { hex: H.deep, fmt: gRecU('경기') }),
+                    bd('🥅 GK 경기당 실점 (낮을수록 상위 · 3경기↑)', mk(gkRate, g => g.w ? g.ga / g.w : NaN, g => `${tm(g)} · GK ${w1(g)}경기 ${g.ga}실점`), { hex: H.deep, dir: -1, fmt: gRecF2 })
+                ].join('');
+            };
+            B.all = () => {
+                const r2 = el.filter(p => p.rc >= 2), ratingPool = r2.length ? r2 : el.filter(p => p.rc >= 1);
+                const att = el.filter(p => p.games >= 3 && p.games >= (D.teamGames[p.teamId] || 1e9));
+                return [
+                    bd('📈 평균 평점 (2경기↑)', mk(ratingPool, p => p.avg, p => `${tm(p)} · 평점 ${p.rc}경기`), { hex: H.green, fmt: gRecF2 }),
+                    bd('👑 최다 MOM', P0(mk(el, p => p.mom)), { hex: H.gold, fmt: gRecU('회') }),
+                    bd('🌟 파워랭킹', mk(el.filter(p => D.pwr[p.name] !== undefined && D.pwr[p.name] !== null), p => D.pwr[p.name]), { hex: H.pur, fmt: v => (Math.round(v * 10) / 10).toFixed(1) }),
+                    bd('🏃 출전 경기', P0(mk(el, p => p.games, p => `${tm(p)} · 선발 ${p.starter} · 교체 ${p.games - p.starter}`)), { hex: H.green, fmt: gRecU('경기') }),
+                    bd('🏅 개근 (소속팀 전 경기 출전)', P0(mk(att, p => p.games, p => `${tm(p)} · 팀 전 경기`)), { hex: H.blue, fmt: gRecU('경기') })
+                ].join('');
+            };
+            B.etc = () => {
+                const cd = p => D.R.cards[p.name] || { y: 0, r: 0 };
+                return [
+                    bd('🎩 해트트릭 (한 경기 3골 이상)', P0(mk(all, p => p.hat)), { hex: H.gold, fmt: gRecU('회') }),
+                    bd('✌️ 멀티골 경기 (한 경기 2골 이상)', P0(mk(all, p => p.multi)), { hex: H.gold, fmt: gRecU('회') }),
+                    bd('🔄 슈퍼서브 (교체 출전 골+도움)', P0(mk(all, p => p.subGA)), { hex: H.pur, fmt: gRecU('P') }),
+                    bd('🟨 최다 경고', P0(mk(all, p => cd(p).y)), { hex: H.gold, fmt: gRecU('장') }),
+                    bd('🟥 최다 퇴장', P0(mk(all, p => cd(p).r)), { hex: H.red, fmt: gRecU('회') }),
+                    bd('😅 최다 자책골', P0(mk(all, p => p.og)), { hex: H.red, fmt: gRecU('골') })
+                ].join('');
+            };
+            const note = {
+                atk: '골·공격P처럼 공격 기록만으로 순위를 매겨요. 선수의 포지션과 관계없이 집계됩니다.',
+                mid: '도움·합작처럼 찬스를 만드는 기록만으로 순위를 매겨요. 포지션과 관계없이 집계됩니다.',
+                def: '수비 기록은 "그 선수가 출전한 경기에서 팀이 얼마나 실점했는지"로 측정해요. 포지션과 관계없이 집계되며 팀 성적의 영향을 함께 받습니다.',
+                gk: 'GK로 뛴 기록(세이브·클린시트·실점)만으로 순위를 매겨요.',
+                all: '평점·MOM·파워랭킹·출전처럼 포지션과 무관한 종합 기록입니다.',
+                etc: '해트트릭·카드·슈퍼서브 같은 기타 기록입니다. (출전 경기 수 제한 없이 집계)'
+            }[cat] || '';
+            const body = (B[cat] || B.atk)();
+            const none = !el.length && !all.length;
+            return bar + `<div class="rs-note" style="margin:0 0 8px;">${note} 필드 선수 3경기 · 키퍼 2경기 이상 출전해야 등록되고, 경기당 기록은 3경기 이상 선수를 우선해요. "집계 대상"은 그 범위에서 가장 많이 뛴 포지션 기준입니다.</div>`
+                + (none ? `<div class="rs-empty">선택한 집계 대상에 해당하는 선수가 없습니다.</div>` : `<div class="rs-grid">${body}</div>`);
+        }
+
+        // ---------- 팀 보드 컴포넌트 ----------
+        function gTeamRecHtml(rows, raw, uid) {
+            const prev = window.__gRecT[uid];
+            window.__gRecT[uid] = Object.assign({ cat: 'win', n: 10, unit: 'season' }, prev || {}, { rows: rows || [], raw: raw });
+            return `<div id="gTRec_${uid}">${gTeamRecInner(uid)}</div>`;
+        }
+        window.gTeamRecSet = function (uid, k, v) {
+            const s = window.__gRecT[uid]; if (!s) return;
+            s[k] = (k === 'n') ? parseInt(v, 10) : v;
+            const el = document.getElementById('gTRec_' + uid); if (el) el.innerHTML = gTeamRecInner(uid);
+        };
+        function gTeamRecInner(uid) {
+            const s = window.__gRecT[uid]; if (!s) return '';
+            const raw = s.raw, cum = raw === 'cumulative', N = s.n || 10, cat = s.cat || 'win';
+            const teamUnit = cum && s.unit === 'team';
+            const rs = teamUnit ? tsMerge(s.rows) : s.rows;
+            const bar = (cum ? `<div class="g-rec-row"><span class="g-rec-lab">📐 집계 단위</span>${gRecChips([['season', '📅 한 시즌 기록'], ['team', '🔗 팀 누적 합계']], s.unit, k => `gTeamRecSet('${uid}','unit','${k}')`)}</div>` : '')
+                + `<div class="g-rec-row"><span class="g-rec-lab">📂 기록 분야</span>${gRecChips(G_TREC_CATS, cat, k => `gTeamRecSet('${uid}','cat','${k}')`)}</div>`
+                + `<div class="g-rec-row"><span class="g-rec-lab">🔢 표시 인원</span>${gRecChips(G_REC_NS.map(n => [n, 'TOP ' + n]), N, k => `gTeamRecSet('${uid}','n','${k}')`)}</div>`;
+            if (!rs.length) return bar + '<div class="rs-empty">기록이 없습니다.</div>';
+            const H = G_REC_HEX;
+            const T = (fn, subFn, titleFn) => rs.map(r => ({
+                html: rsTm(r.teamId), val: fn(r), tie: r.games,
+                sub: gEsc((cum ? r.seasonLabel + ' · ' : '') + (subFn ? subFn(r) : r.games + '경기')),
+                title: titleFn ? titleFn(r) : ''
+            }));
+            const rate = (fn, subFn, titleFn) => rs.map(r => ({ html: rsTm(r.teamId), val: r.games >= 3 ? fn(r) : NaN, tie: r.games, sub: gEsc((cum ? r.seasonLabel + ' · ' : '') + (subFn ? subFn(r) : r.games + '경기')), title: titleFn ? titleFn(r) : '' }));
+            const P0 = rows => rows.filter(r => r.val > 0);
+            const bd = (title, rows, o) => gRecBoardHtml(title, rows, o, N);
+            const lbl = t => (cum && !teamUnit ? '한 시즌 ' : '') + t;
+            const B = {};
+            B.win = () => [
+                bd('🏅 ' + lbl('승점'), P0(T(r => r.pts, r => `${r.w}승 ${r.l}패 · ${r.games}경기`)), { hex: H.blue, fmt: gRecU('점') }),
+                bd('✅ ' + lbl('승리'), P0(T(r => r.w, r => `${r.games}경기`)), { hex: H.green, fmt: gRecU('승') }),
+                bd('📈 승률 (3경기↑)', P0(rate(r => r.wr, r => `${r.w}승 ${r.l}패`)), { hex: H.green, fmt: gRecPct }),
+                bd('⚔️ 접전(1골차·PK) 승률 (접전 3경기↑)', P0(T(r => r.closeWr, r => `접전 ${r.closeW}승 / ${r.closeG}경기`)), { hex: H.pur, fmt: gRecPct }),
+                bd('🥅 PK 승부 승리', P0(T(r => r.pkW, r => `PK 승부 ${r.pkG}경기 중`)), { hex: H.org, fmt: gRecU('회') })
+            ].join('');
+            B.atk = () => [
+                bd('⚽ ' + lbl('득점'), P0(T(r => r.gf, r => `${r.games}경기`)), { hex: H.gold, fmt: gRecU('골') }),
+                bd('📊 경기당 득점 (3경기↑)', P0(rate(r => r.gfpg, r => `${r.games}경기 ${r.gf}골`)), { hex: H.gold, fmt: gRecF2 }),
+                bd('📐 득실차', P0(T(r => r.gd, r => `${r.gf}득점 ${r.ga}실점`)), { hex: H.green, fmt: v => '+' + v }),
+                bd('🦾 대승 (3골차 이상 승리)', P0(T(r => r.bigW, r => `${r.games}경기`)), { hex: H.org, fmt: gRecU('회') }),
+                bd('🔁 최다 연속 득점 경기', P0(T(r => r.maxSc, r => `${r.games}경기`)), { hex: H.gold, fmt: gRecU('경기') }),
+                bd('🚫 무득점 경기 (적을수록 상위 · 3경기↑)', rate(r => r.noScore, r => `${r.games}경기`), { hex: H.red, dir: -1, fmt: gRecU('경기') })
+            ].join('');
+            B.def = () => [
+                bd('🧱 경기당 실점 (낮을수록 상위 · 3경기↑)', rate(r => r.gapg, r => `${r.games}경기 ${r.ga}실점`), { hex: H.deep, dir: -1, fmt: gRecF2 }),
+                bd('🛡️ 무실점 경기', P0(T(r => r.cs, r => `${r.games}경기`)), { hex: H.deep, fmt: gRecU('경기') }),
+                bd('🛡️ 무실점 경기 비율 (3경기↑)', P0(rate(r => r.csRate, r => `${r.cs}/${r.games}경기`)), { hex: H.deep, fmt: gRecPct }),
+                bd('🔒 최다 연속 무실점', P0(T(r => r.maxCs, r => `${r.games}경기`)), { hex: H.green, fmt: gRecU('경기') }),
+                bd('🧤 경기당 세이브 (3경기↑)', P0(rate(r => r.savesPg, r => `${r.games}경기 ${r.saves}세이브`)), { hex: H.gold, fmt: gRecF2 }),
+                bd('📉 대패 (3골차 이상 패배 · 적을수록 상위 · 3경기↑)', rate(r => r.bigL, r => `${r.games}경기`), { hex: H.red, dir: -1, fmt: gRecU('회') })
+            ].join('');
+            B.streak = () => {
+                const out = [
+                    bd('🔥 ' + lbl('최다 연승'), P0(T(r => r.maxWinStreak, r => `${r.games}경기`, r => fmtStreakRangeTitle(r.maxWinStartM, r.maxWinEndM, r.teamId, r.maxWinStreak, '연승'))), { hex: H.green, fmt: gRecU('연승') }),
+                    bd('💧 ' + lbl('최다 연패'), P0(T(r => r.maxLoseStreak, r => `${r.games}경기`, r => fmtStreakRangeTitle(r.maxLoseStartM, r.maxLoseEndM, r.teamId, r.maxLoseStreak, '연패'))), { hex: H.red, fmt: gRecU('연패') })
+                ];
+                if (cum) {
+                    // 시즌이 바뀌어도 이어지는 연승/연패(시즌 경계를 넘는 기록)
+                    const cross = (state.teams || []).map(t => { try { return Object.assign({ t }, dcCalcCleanSheetsAndStreaks(t.id)); } catch (e) { return null; } }).filter(Boolean);
+                    const mkX = (key, seasonKey, sKey, eKey, word) => cross.filter(c => c[key] > 0).map(c => ({
+                        html: rsTm(c.t.id), val: c[key], tie: 0, sub: gEsc((c[seasonKey] || '') + ' · 시즌 경계 포함'),
+                        title: fmtStreakRangeTitle(c[sKey], c[eKey], c.t.id, c[key], word)
+                    }));
+                    out.push(bd('🔗 전체 시즌 통합 최다 연승 (시즌 경계 포함)', mkX('maxWinStreak', 'maxWinStreakSeason', 'maxWinStartM', 'maxWinEndM', '연승'), { hex: H.green, fmt: gRecU('연승') }));
+                    out.push(bd('🔗 전체 시즌 통합 최다 연패 (시즌 경계 포함)', mkX('maxLoseStreak', 'maxLoseStreakSeason', 'maxLoseStartM', 'maxLoseEndM', '연패'), { hex: H.red, fmt: gRecU('연패') }));
+                }
+                return out.join('');
+            };
+            const tl = r => `골 시간 기록 ${r.tlG}경기`;
+            B.flow = () => [
+                bd('🥇 선제골 승률 (선제골 3경기↑)', P0(T(r => r.firstWr, r => `선제골 ${r.firstG}경기 중 ${r.firstW}승`)), { hex: H.green, fmt: gRecPct }),
+                bd('⚡ 선제골 경기 수', P0(T(r => r.firstG, tl)), { hex: H.gold, fmt: gRecU('경기') }),
+                bd('🔄 역전승 (선제골 허용 후 승리)', P0(T(r => r.comebackW, r => `선제골 허용 ${r.concG}경기 중`)), { hex: H.org, fmt: gRecU('회') }),
+                bd('💪 선제골 허용 후 승률 (3경기↑)', P0(T(r => r.concWr, r => `${r.concG}경기 중 ${r.comebackW}승`)), { hex: H.pur, fmt: gRecPct }),
+                bd('😱 선제골 넣고 패배 (적을수록 상위 · 선제골 3경기↑)', T(r => r.firstG >= 3 ? r.blown : NaN, r => `선제골 ${r.firstG}경기 중`), { hex: H.red, dir: -1, fmt: gRecU('회') }),
+                bd('🌅 전반 득점', P0(T(r => r.gf1, tl)), { hex: H.gold, fmt: gRecU('골') }),
+                bd('🌇 후반 득점', P0(T(r => r.gf2, tl)), { hex: H.gold, fmt: gRecU('골') }),
+                bd('🧱 전반 실점 (적을수록 상위 · 3경기↑)', T(r => r.tlG >= 3 ? r.ga1 : NaN, tl), { hex: H.deep, dir: -1, fmt: gRecU('실점') }),
+                bd('🧱 후반 실점 (적을수록 상위 · 3경기↑)', T(r => r.tlG >= 3 ? r.ga2 : NaN, tl), { hex: H.deep, dir: -1, fmt: gRecU('실점') })
+            ].join('');
+            B.pat = () => [
+                bd('🎯 박스 안 득점', P0(T(r => r.boxG, r => `위치 기록 ${r.located}골 중`)), { hex: H.org, fmt: gRecU('골') }),
+                bd('🏹 박스 안 득점 비율 (위치 기록 3골↑)', P0(T(r => r.boxPct, r => `${r.boxG}/${r.located}골`)), { hex: H.org, fmt: gRecPct }),
+                bd('🚀 중거리 이상 득점', P0(T(r => r.midG, r => `위치 기록 ${r.located}골 중`)), { hex: H.deep, fmt: gRecU('골') }),
+                bd('🤝 도움 연계 골 비율 (기록된 골 3개↑)', P0(T(r => r.astPct, r => `${r.astG}/${r.goalsT}골`)), { hex: H.green, fmt: gRecPct }),
+                bd('👥 득점한 선수 수', P0(T(r => r.scorerN, r => `${r.gf}골`)), { hex: H.pur, fmt: gRecU('명') }),
+                bd('⚖️ 에이스 의존도 (낮을수록 골고루 · 3골↑)', T(r => r.topShare, r => `최다 득점자 ${r.topScorer}골 / ${r.gf}골`), { hex: H.blue, dir: -1, fmt: gRecPct }),
+                bd('🎩 해트트릭', P0(T(r => r.hat, r => `${r.games}경기`)), { hex: H.gold, fmt: gRecU('회') }),
+                bd('✌️ 멀티골 경기 (한 선수 2골+)', P0(T(r => r.multi, r => `${r.games}경기`)), { hex: H.gold, fmt: gRecU('회') })
+            ].join('');
+            B.misc = () => [
+                bd('⭐ 팀 평균 평점 (평점 3개↑)', P0(T(r => r.avgRating, r => `평점 ${r.rcnt}개`)), { hex: H.green, fmt: gRecF2 }),
+                bd('🟨 경고 최다', P0(T(r => r.yc, r => `${r.games}경기`)), { hex: H.gold, fmt: gRecU('장') }),
+                bd('🟥 퇴장 최다', P0(T(r => r.rc, r => `${r.games}경기`)), { hex: H.red, fmt: gRecU('회') }),
+                bd('😇 페어플레이 (경기당 경고+퇴장 적을수록 상위 · 3경기↑)', rate(r => r.cardsPg, r => `경고 ${r.yc} · 퇴장 ${r.rc} · ${r.games}경기`), { hex: H.green, dir: -1, fmt: gRecF2 }),
+                bd('🧤 세이브', P0(T(r => r.saves, r => `${r.games}경기`)), { hex: H.gold, fmt: gRecU('회') })
+            ].join('');
+            const note = '경기당·비율 기록은 최소 3경기 이상 치른 팀만 대상이고, 선제골·전후반 기록은 골 시간이 기록된 경기만, 득점 위치·도움 기록은 위치/도움이 입력된 골만 집계돼요.' + (teamUnit ? ' (팀 누적: 득점자 수·에이스 의존도는 시즌별 기록에서만 볼 수 있어요)' : '');
+            return bar + `<div class="rs-note" style="margin:0 0 8px;">${note}</div><div class="rs-grid">${(B[cat] || B.win)()}</div>`;
+        }
+
+        // ================= v1.88 · 🤝 콤비 기록 · 🧩 기록 순위(시즌 아카이브용) =================
+        // v1.88: 포지션별 기록(주 포지션 기준 1위만 표시) · 그 외 기록 카드는 🧩 기록 순위 보드로 통합됐다.
+        // 시즌 기록 탭은 보드를 위쪽(gvPlayer)에 따로 그리고, 시즌 아카이브(opt.archive)는 여기서 보드 + 콤비 기록을 함께 만든다.
+        function gRoleRecordsHtml(pool, opt) {
+            opt = opt || {};
+            if (!pool || !pool.length) return '';
+            const D = gRecBuild(pool), P = D.P, teamGames = D.teamGames, R = D.R;
+            if (!D.players.length) return '';
+            const tcol = id => { const t = (state.teams || []).find(t => String(t.id) === String(id)); return t ? t.color : 'var(--text)'; };
+            const esc = s => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            const tag = (name, tid) => `<span class="clickable-player" onclick="showPlayerDetail('${esc(name)}')" style="color:${tcol(tid)};">${gEsc(name)}</span>`;
+            const f2 = v => (Math.round(v * 100) / 100).toFixed(2);
+            // arr 안에서 fn 값이 가장 좋은(dir 1=큰 값, -1=작은 값) 항목을 동률까지 묶어서 반환. fn이 null이면 제외
+            const best = (arr, fn, dir) => {
+                let bv = null;
+                arr.forEach(p => { const v = fn(p); if (v === null || v === undefined || isNaN(v)) return; if (bv === null || (dir === -1 ? v < bv : v > bv)) bv = v; });
+                return bv === null ? null : { list: arr.filter(p => fn(p) === bv), value: bv };
+            };
+            const row = (icon, label, g, fmt, detail, getTag) => {
+                if (!g) return '';
+                const shown = g.list.slice(0, 4).map(p => (getTag ? getTag(p) : tag(p.name, p.teamId))).join(' · ') + (g.list.length > 4 ? ` 외 ${g.list.length - 4}명` : '');
+                const det = detail ? [...new Set(g.list.slice(0, 4).map(detail).filter(Boolean))].join(' · ') : '';
+                return `<div class="g-rr"><div class="g-rr-l">${icon} ${label}</div><div class="g-rr-v">${shown} <b>${fmt(g.value)}</b>${det ? `<span class="g-rr-d">${gEsc(det)}</span>` : ''}</div></div>`;
+            };
+            // 🤝 콤비 기록
+            const duoAll = (() => { try { return GA.duos(R); } catch (e) { return []; } })();
+            const pairTag = (a, b, tid) => `${tag(a, tid)} <span class="g-rr-x">⇄</span> ${tag(b, tid)}`;
+            const duoRows = [];
+            if (duoAll.length) {
+                const top = duoAll.filter(d => d.n === duoAll[0].n).slice(0, 3);
+                duoRows.push(`<div class="g-rr"><div class="g-rr-l">🤝 최고의 콤비</div><div class="g-rr-v">${top.map(d => pairTag(d.a, d.b, d.teamId)).join(' · ')} <b>합작 ${top[0].n}골</b><span class="g-rr-d">${top.map(d => d.a + '→' + d.b + ' ' + d.ab + ' · ' + d.b + '→' + d.a + ' ' + d.ba).join(' / ')}</span></div></div>`);
+                const bal = duoAll.filter(d => d.ab > 0 && d.ba > 0);
+                if (bal.length) { const mx = Math.max(...bal.map(d => Math.min(d.ab, d.ba))); const bt = bal.filter(d => Math.min(d.ab, d.ba) === mx).slice(0, 3); duoRows.push(`<div class="g-rr"><div class="g-rr-l">🔁 서로 주고받은 콤비</div><div class="g-rr-v">${bt.map(d => pairTag(d.a, d.b, d.teamId)).join(' · ')} <b>${d_ab(bt[0])}</b></div></div>`); }
+            }
+            function d_ab(d) { return d.ab + ' : ' + d.ba; }
+            const prs = Object.values(R.pairs || {});
+            if (prs.length) {
+                const mx = Math.max(...prs.map(x => x.n)), bt = prs.filter(x => x.n === mx).slice(0, 3);
+                duoRows.push(`<div class="g-rr"><div class="g-rr-l">🅰️→⚽ 최다 어시스트 연결</div><div class="g-rr-v">${bt.map(x => tag(x.ast, x.teamId) + ' <span class="g-rr-x">→</span> ' + tag(x.scorer, x.teamId)).join(' · ')} <b>${mx}골</b></div></div>`);
+            }
+            const partners = Object.values(R.players || {}).map(p => ({ name: p.name, n: new Set([...Object.keys(p.setupBy || {}), ...Object.keys(p.setupFor || {})]).size, teamId: (P[p.name] || {}).teamId })).filter(x => x.n > 0);
+            const bp = best(partners, p => p.n, 1);
+            if (bp) duoRows.push(row('🧩', '가장 많은 선수와 합작', bp, v => v + '명'));
+            const teamDuos = [];
+            Object.keys(teamGames).forEach(tid => { try { const d = GA.duos(R, tid)[0]; if (d) teamDuos.push({ tid, d }); } catch (e) { } });
+            const teamDuoHtml = teamDuos.length ? `<div class="g-rr-t" style="margin-top:10px;">🏟️ 팀별 베스트 콤비</div><div class="g-rr-chips">${teamDuos.sort((x, y) => y.d.n - x.d.n).map(x => { const t = (state.teams || []).find(t => String(t.id) === String(x.tid)); return `<span class="g-rr-chip" style="--c:${t ? t.color : '#64748b'};"><i>${gEsc(t ? t.name : '?')}</i> ${pairTag(x.d.a, x.d.b, x.tid)} <b>${x.d.n}골</b></span>`; }).join('')}</div>` : '';
+            const boards = opt.archive ? `<div class="card g-rr-card"><h3>🧩 기록 순위 ${gNewTag('1.88')}</h3>
+                <div class="ranking-info">선수의 포지션과 관계없이 기록만으로 순위를 매깁니다. 기록 분야와 집계 대상(전체/공격수/미드필더/수비수/키퍼)을 바꿔 TOP 3~20까지 볼 수 있어요.</div>
+                ${gRecHtml(pool, opt.uid || 'arc')}</div>` : '';
+            return boards + `<div class="card g-rr-card"><h3>🤝 콤비 기록</h3>
+                <div class="ranking-info">도움 → 득점으로 이어진 합작골 기준입니다.</div>
+                <div class="g-rr-list">${duoRows.join('') || '<div class="g-rr-none">도움 기록이 있는 골이 아직 없어요</div>'}</div>${teamDuoHtml}</div>`;
+        }
+
         function renderLeagueIndividualRecords() {
             const sel = document.getElementById('awardsLeagueSeasonSelect');
             const cardsEl = document.getElementById('leagueHistoryAwardCards');
@@ -13892,6 +14281,7 @@ function fmBestStyle(p, role) {
 
             if (!players.length) {
                 cardsEl.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">이 범위에 기록이 없습니다.</div>';
+                { const re0 = document.getElementById('leagueRoleRecords'); if (re0) re0.innerHTML = ''; }
                 return;
             }
 
@@ -14040,53 +14430,37 @@ function fmBestStyle(p, role) {
             };
             // 재밌는 기록에서 넘어온 선수 이름은 player 객체가 아니라 문자열이라, 표에 쓰는 players 배열에서 같은 이름의 player 객체를 찾아 팀 태그 등을 재사용한다.
             const playerByName = (name) => players.find(p => p.name === name) || (name ? { name } : null);
+            // v1.88: 득점·도움·공격P·MOM·평점·출전·GK 누적/경기당 기록(구 카드의 1위)은 🧩 기록 순위 보드와 같은 내용이라 보드로 통합했다.
+            //        여기에는 보드에 없는 기록(1시즌 최고 · 한 경기 · 연속 기록)만 남긴다.
+            const groupIf = (title, html) => html ? group(title, html) : '';
+            const singleHtml = [
+                frDetailList('⚡', '가장 빠른 골', fr.fastest, e => `${e.half ? e.half.charAt(0) : ''}${e.min}'`, e => fr.matchCtxShort(e.m), e => fr.matchCtx(e.m)),
+                frDetailList('🎯', '한 경기 최다 공격P', fr.mostAP, e => `${e.ap}P`, e => `${e.g}골 ${e.a}도움 · ${fr.matchCtxShort(e.m)}`, e => `${e.g}골 ${e.a}도움 · ${fr.matchCtx(e.m)}`),
+                frDetailList('🌟', '한 경기 최고 평점', fr.highestRating, e => `${e.r}점`, e => fr.matchCtxShort(e.m), e => fr.matchCtx(e.m)),
+                frDetailList('🔥', '최다 연속 득점경기', fr.bestGoalStreak, e => `${e.streak}경기 연속`, e => fr.matchCtxShort(e.endM), e => fr.matchCtx(e.endM), 'endM'),
+                frDetailList('🎩', '최다 연속 도움경기', fr.bestAssistStreak, e => `${e.streak}경기 연속`, e => fr.matchCtxShort(e.endM), e => fr.matchCtx(e.endM), 'endM'),
+                frDetailList('👑', '최다 연속 MVP', fr.momStreak, e => `${e.streak}경기 연속`, e => fr.matchCtxShort(e.endM), e => fr.matchCtx(e.endM), 'endM')
+            ].filter(Boolean).join('');
+            const seasonHtml = [
+                sbRow('⚽', '1시즌 최다득점', seasonBest?.goals, '득점'),
+                sbRateRow('📊', '1시즌 최고 경기당골', seasonBest?.gpg, 'goals', '득점'),
+                sbRow('🎯', '1시즌 최다도움', seasonBest?.assists, '도움'),
+                sbRateRow('📊', '1시즌 최고 경기당도움', seasonBest?.agpg, 'assists', '도움'),
+                sbAttackRow('💥', '1시즌 최다 공격P', seasonBest?.attackPoints),
+                sbRateAttackRow('📊', '1시즌 최고 경기당공격P', seasonBest?.apg),
+                sbRow('👑', '1시즌 최다 MOM', seasonBest?.mom, '회'),
+                sbRateRow('📈', '1시즌 최고평균평점', seasonBest?.avgRating, null, ''),
+                sbRow('🏃', '1시즌 최다출전', seasonBest?.games, '경기'),
+                sbRow('🧤', '1시즌 최다 클린시트', seasonBest?.gkCleanSheets, '회'),
+                sbRateRow('🥅', '1시즌 최소 GK경기당실점', seasonBest?.gkConcede, 'gkConceded', '실점')
+            ].filter(Boolean).join('');
             const topRow = rowWrap([
-                group('⚽ 득점 관련', [
-                    awardRowSimple('⚽', cumLabel('최다득점'), topGoals, v => `${v} 득점`),
-                    sbRow('⚽', '1시즌 최다득점', seasonBest?.goals, '득점'),
-                    awardRowDetail('📊', '경기당 골', topGpg, v => v.toFixed(2), p => `${fmtGames(p.games)} 경기 / ${p.goals} 득점`),
-                    sbRateRow('📊', '1시즌 최고 경기당골', seasonBest?.gpg, 'goals', '득점'),
-                    frDetailList('⚡', '가장 빠른 골', fr.fastest, e => `${e.half ? e.half.charAt(0) : ''}${e.min}'`, e => fr.matchCtxShort(e.m), e => fr.matchCtx(e.m)),
-                    frDetailList('🔥', '한 경기 최다 득점', fr.mostGoals, e => `${e.g}골`, e => fr.matchCtxShort(e.m), e => fr.matchCtx(e.m)),
-                    frDetailList('🔥', '최다 연속 득점경기', fr.bestGoalStreak, e => `${e.streak}경기 연속`, e => fr.matchCtxShort(e.endM), e => fr.matchCtx(e.endM), 'endM')
-                ].filter(Boolean).join('')),
-                group('🎯 도움 관련', [
-                    awardRowSimple('🎯', cumLabel('최다도움'), topAssists, v => `${v} 도움`),
-                    sbRow('🎯', '1시즌 최다도움', seasonBest?.assists, '도움'),
-                    awardRowDetail('📊', '경기당 도움', topAgpg, v => v.toFixed(2), p => `${fmtGames(p.games)} 경기 / ${p.assists} 도움`),
-                    sbRateRow('📊', '1시즌 최고 경기당도움', seasonBest?.agpg, 'assists', '도움'),
-                    frDetailList('🎩', '한 경기 최다 도움', fr.mostAssists, e => `${e.a}도움`, e => fr.matchCtxShort(e.m), e => fr.matchCtx(e.m)),
-                    frDetailList('🎩', '최다 연속 도움경기', fr.bestAssistStreak, e => `${e.streak}경기 연속`, e => fr.matchCtxShort(e.endM), e => fr.matchCtx(e.endM), 'endM')
-                ].filter(Boolean).join('')),
-                group('💥 공격포인트 관련', [
-                    awardRowDetail('💥', cumLabel('공격포인트'), topAttackPoints, v => `${v} P`, p => `${p.goals}골 ${p.assists}도움`),
-                    sbAttackRow('💥', '1시즌 최다 공격P', seasonBest?.attackPoints),
-                    awardRowDetail('📊', '경기당 공격P', topApg, v => v.toFixed(2), p => `${fmtGames(p.games)} 경기 / ${p.attackPoints} 공격P (${p.goals}골 ${p.assists}도움)`),
-                    sbRateAttackRow('📊', '1시즌 최고 경기당공격P', seasonBest?.apg),
-                    frDetailList('🎯', '한 경기 최다 공격P', fr.mostAP, e => `${e.ap}P`, e => `${e.g}골 ${e.a}도움 · ${fr.matchCtxShort(e.m)}`, e => `${e.g}골 ${e.a}도움 · ${fr.matchCtx(e.m)}`)
-                ].filter(Boolean).join(''))
+                groupIf('⚡ 단일 경기 · 연속 기록', singleHtml),
+                groupIf('🌟 1시즌 최고 기록 (전체 시즌 통합)', seasonHtml)
             ].join(''));
-            const bottomRow = rowWrap([
-                group('👑 MOM · 평점 관련', [
-                    awardRowSimple('👑', cumLabel('최다 MOM'), topMom, v => `${v} 회`),
-                    sbRow('👑', '1시즌 최다 MOM', seasonBest?.mom, '회'),
-                    awardRowSimple('📈', '최고평균평점', topRating, v => `${v.toFixed(2)} 점`),
-                    sbRateRow('📈', '1시즌 최고평균평점', seasonBest?.avgRating, null, ''),
-                    frDetailList('🌟', '한 경기 최고 평점', fr.highestRating, e => `${e.r}점`, e => fr.matchCtxShort(e.m), e => fr.matchCtx(e.m)),
-                    frDetailList('👑', '최다 연속 MVP', fr.momStreak, e => `${e.streak}경기 연속`, e => fr.matchCtxShort(e.endM), e => fr.matchCtx(e.endM), 'endM')
-                ].filter(Boolean).join('')),
-                group('🧤 키퍼 관련', [
-                    awardRowSimple('🧤', cumLabel('GK 클린시트'), topCleanSheet, v => `${v} 회`, p => `GK ${fmtGames(p.gkWeight)}경기`),
-                    sbRow('🧤', '1시즌 최다 클린시트', seasonBest?.gkCleanSheets, '회'),
-                    awardRowDetail('🥅', 'GK 경기당 실점', topGkConcede, v => v.toFixed(2), p => `${fmtGames(p.gkWeight)} 경기 / ${p.gkConceded} 실점`),
-                    sbRateRow('🥅', '1시즌 최소 GK경기당실점', seasonBest?.gkConcede, 'gkConceded', '실점')
-                ].filter(Boolean).join('')),
-                group('🏃 출전 관련', [
-                    awardRowSimple('🏃', cumLabel('최다출전'), topGames, v => `${v} 경기`, p => `⭐선발${p.starter} 🔄교체${p.substitute} 🪑미출전${p.absent}`),
-                    sbRow('🏃', '1시즌 최다출전', seasonBest?.games, '경기')
-                ].filter(Boolean).join(''))
-            ].join(''));
-            cardsEl.innerHTML = `<div style="margin-bottom:14px;">${topRow}</div>${bottomRow}`;
+            const cumHint = scope === 'cumulative' ? '' : '<div style="font-size:0.68rem; color:var(--text-muted); margin-top:8px;">※ "전체 시즌 통합"을 선택하면 1시즌 최고 기록도 함께 표시됩니다.</div>';
+            cardsEl.innerHTML = (singleHtml || seasonHtml) ? `<div>${topRow}</div>${cumHint}` : '<div style="color:var(--text-muted); font-size:0.85rem;">이 범위에 표시할 단일 경기 · 연속 · 1시즌 기록이 없습니다.</div>';
+            try { const re = document.getElementById('leagueRoleRecords'); if (re) re.innerHTML = gRoleRecordsHtml(getScopeMatchPool(scope), {}); } catch (e) { console.error('콤비 기록 오류', e); }
         }
 
         // dcRenderHistoryIndividualRecords()에서 "이 팀 전체 시즌 통합"을 볼 때, 팀 데이터센터 개인 기록 카드에도
@@ -18439,7 +18813,7 @@ function fmBestStyle(p, role) {
                     ? `<span class="clickable-team" onclick="${item.winnerTeam ? `showTeamDetail(${item.winnerTeam.id})` : ''}" style="color:${item.winnerTeam ? item.winnerTeam.color : 'var(--text)'}; font-weight:800; cursor:${item.winnerTeam ? 'pointer' : 'default'};">${window.gTrophyOr ? gTrophyOr(item.label, '🏆', 'xs') : '🏆'} ${item.winner}</span>`
                     : `<span style="color:var(--text-muted);">진행 중</span>`;
                 const runnerUpHtml = item.runnerUpTeam ? `<span class="clickable-team" onclick="showTeamDetail(${item.runnerUpTeam.id})" style="color:${item.runnerUpTeam.color}; font-weight:800; cursor:pointer;">🥈 ${item.runnerUpTeam.name}</span>` : '';
-                const mvpHtml = item.mvp ? `<span class="clickable-player" onclick="showPlayerDetail('${item.mvp.replace(/'/g, "\\'")}')" style="cursor:pointer; font-weight:800; color:var(--gold);">👑 ${item.mvp}</span>` : '';
+                const mvpHtml = item.mvp ? `<span class="clickable-player" onclick="showPlayerDetail('${item.mvp.replace(/'/g, "\\'")}')" style="cursor:pointer; font-weight:800; color:var(--gold);">🏅 ${item.mvp}</span>` : '';
                 return `
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:7px 10px; border:1px solid rgba(255,255,255,0.06); border-radius:7px; ${item.isCurrent ? 'border-color:rgba(56,189,248,0.35); background:rgba(56,189,248,0.05);' : 'background:rgba(0,0,0,0.15);'}">
                         <div style="min-width:100px; font-weight:800; color:var(--gold); font-size:0.72rem;">${window.gTrophy ? gTrophy(item.label, 'xs') : ''}${item.label}${item.isCurrent ? ' <span style="font-size:0.58rem; color:var(--accent); border:1px solid rgba(56,189,248,0.4); padding:0px 5px; border-radius:8px;">진행중</span>' : ''}</div>
@@ -18463,7 +18837,7 @@ function fmBestStyle(p, role) {
                     </div>
                 </div>
                 <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.07);">
-                    <div style="font-size:0.68rem; color:var(--text-muted); font-weight:800; margin-bottom:6px;">📜 시즌별 우승·준우승·MVP</div>
+                    <div style="font-size:0.68rem; color:var(--text-muted); font-weight:800; margin-bottom:6px;">📜 시즌별 우승·준우승·골롱도르</div>
                     <div style="max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:5px; padding-right:4px;">${rowsHtml || '<div style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:10px;">기록 없음</div>'}</div>
                 </div>
                 <div style="text-align:right; margin-top:8px; font-size:0.66rem; color:var(--text-muted);">눌러서 전체 명예의 전당 보기 →</div>`;
@@ -19453,15 +19827,11 @@ function fmBestStyle(p, role) {
             renderPlayerRankTrend(playerName);
 
             // 수상 배지 렌더링 (현재 시즌 + 아카이브 전체)
-            // - 득점왕/도움왕/MVP/최고평균평점/신인상/야신상/시즌 골롱도르 전부 표시
+            // - 득점왕/도움왕(기록 기준) + 골롱도르/올스타상/신인상/야신상/공격수상/미드필더상/수비수상/베스트커플상(직접 선정) 표시
             // - 시즌별로 묶어서 표시 (최근 시즌이 위로)
             // - 아직 진행 중인(아카이브되지 않은) 시즌의 1위 기록은 "(유력)"로 표시하고,
             //   해당 시즌이 종료되어 아카이브로 넘어가면 확정 기록으로 전환된다
-            const awardDefs = [
-                { key: 'rookie', emoji: '🌱', label: '신인상',        color: '#86efac' },
-                { key: 'yashin', emoji: '🧤', label: '야신상',        color: '#93c5fd' },
-                { key: 'ballon', emoji: '🏅', label: '시즌 골롱도르', color: '#fbbf24' },
-            ];
+            const awardDefs = (window.G_SP || []).filter(d => d.key !== 'coach').map(d => ({ key: d.key, emoji: d.emoji, label: d.label, color: d.color }));
             const seasonGroups = []; // [{ season, confirmed, badges: [{emoji,label,color}] }]
 
             // 현재(진행 중) 시즌 — 아직 시즌이 끝나지 않았으므로 "지금 이대로 끝난다면"의 1위 후보를 (유력)으로 표시
@@ -19474,14 +19844,10 @@ function fmBestStyle(p, role) {
                 const curBadges = [];
                 const curTopScorer    = [...curPs].filter(p => p.goals > 0).sort((a,b) => (b.goals - a.goals) || (b.avgRating - a.avgRating) || (b.assists - a.assists))[0]?.name;
                 const curTopAssistant = [...curPs].filter(p => p.assists > 0).sort((a,b) => (b.assists - a.assists) || (b.avgRating - a.avgRating) || (b.goals - a.goals))[0]?.name;
-                const curMvp          = [...curPs].filter(p => p.mom > 0).sort((a,b) => (b.mom - a.mom) || (b.avgRating - a.avgRating) || ((b.goals+b.assists) - (a.goals+a.assists)))[0]?.name;
-                const curTopRating    = [...curPs].filter(p => p.games > 0).sort((a,b) => (b.avgRating - a.avgRating) || ((b.goals+b.assists) - (a.goals+a.assists)) || (b.mom - a.mom))[0]?.name;
                 if(curTopScorer    === playerName) curBadges.push({ emoji: '⚽️', label: '득점왕', color: '#fb923c' });
                 if(curTopAssistant === playerName) curBadges.push({ emoji: '🎯', label: '도움왕', color: '#38bdf8' });
-                if(curMvp          === playerName) curBadges.push({ emoji: '👑', label: 'MVP (MOM)', color: '#facc15' });
-                if(curTopRating    === playerName) curBadges.push({ emoji: '⭐', label: '최고평균평점', color: '#a78bfa' });
                 const curSa = state.specialAwards || {};
-                awardDefs.forEach(def => { if(curSa[def.key] === playerName) curBadges.push({ emoji: def.emoji, label: def.label, color: def.color }); });
+                awardDefs.forEach(def => { if(gAwNames(curSa[def.key]).includes(playerName)) curBadges.push({ emoji: def.emoji, label: def.label, color: def.color }); });
                 if(curBadges.length > 0) seasonGroups.push({ season: state.seasonName || '현재 시즌', confirmed: false, badges: curBadges });
             }
 
@@ -19490,10 +19856,8 @@ function fmBestStyle(p, role) {
                 const badges = [];
                 if(a.topScorer    === playerName) badges.push({ emoji: '⚽️', label: '득점왕', color: '#fb923c' });
                 if(a.topAssistant === playerName) badges.push({ emoji: '🎯', label: '도움왕', color: '#38bdf8' });
-                if(a.mvp          === playerName) badges.push({ emoji: '👑', label: 'MVP (MOM)', color: '#facc15' });
-                if(a.topRating    === playerName) badges.push({ emoji: '⭐', label: '최고평균평점', color: '#a78bfa' });
                 const aSa = a.specialAwards || {};
-                awardDefs.forEach(def => { if(aSa[def.key] === playerName) badges.push({ emoji: def.emoji, label: def.label, color: def.color }); });
+                awardDefs.forEach(def => { if(gAwNames(aSa[def.key]).includes(playerName)) badges.push({ emoji: def.emoji, label: def.label, color: def.color }); });
                 if(badges.length > 0) seasonGroups.push({ season: a.name, confirmed: true, badges });
             });
 
@@ -23667,12 +24031,11 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             });
             arc.playerStats = newPlayerStats;
 
-            // 2) 수상자(득점왕/도움왕/MVP/평점왕) 재계산 — nextSeason()의 로직과 동일한 정렬 기준
+            // 2) 수상자(득점왕/도움왕) 재계산 — nextSeason()의 로직과 동일한 정렬 기준
             const psList = Object.entries(newPlayerStats).map(([name, s]) => ({ name, ...s, avgRating: s.ratingCount > 0 ? (s.rating / s.ratingCount) : 0, points: s.goals + s.assists }));
             arc.topScorer    = [...psList].sort((a,b) => (b.goals - a.goals) || (b.avgRating - a.avgRating) || (b.assists - a.assists))[0]?.name || 'N/A';
             arc.topAssistant = [...psList].sort((a,b) => (b.assists - a.assists) || (b.avgRating - a.avgRating) || (b.goals - a.goals))[0]?.name || 'N/A';
-            arc.mvp          = [...psList].sort((a,b) => (b.mom - a.mom) || (b.avgRating - a.avgRating) || (b.points - a.points))[0]?.name || 'N/A';
-            arc.topRating    = [...psList].sort((a,b) => (b.avgRating - a.avgRating) || (b.points - a.points) || (b.mom - a.mom))[0]?.name || 'N/A';
+
 
             // 3) 우승팀 재계산 (결승전 결과 기준, 결승 기록이 없으면 기존 값 유지)
             const finalM = matches.find(m => m.type === '결승');
@@ -23721,7 +24084,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
             // 구조적 필드: 아예 없으면 빈 기본값으로 추가 (과거 데이터를 추정할 수 없는 항목)
             if(arc.tournamentTeams === undefined) { arc.tournamentTeams = []; added.push('tournamentTeams'); }
-            if(arc.specialAwards === undefined) { arc.specialAwards = { rookie: '', yashin: '', ballon: '' }; added.push('specialAwards'); }
+            if(arc.specialAwards === undefined) { arc.specialAwards = { rookie: '', yashin: '', ballon: '', allstar: '', fw: '', mf: '', df: '', couple: '', coach: '' }; added.push('specialAwards'); }
             if(arc.interSettings === undefined) { arc.interSettings = []; added.push('interSettings'); }
             if(arc.seasonMode === undefined) { arc.seasonMode = 'league'; added.push('seasonMode'); }
 
@@ -23761,7 +24124,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             // 경기 기록으로부터 다시 계산 가능한 항목(선수 기록/수상자/우승팀/Elo/팀·개인 랭킹/브래킷)은
             // 항상 최신 로직으로 재계산한다 — 새 버전에서 계산 방식이 바뀌었어도 최신 기준으로 맞춰진다.
             recalcArchiveSummary(archiveIdx, false);
-            const recalculated = ['playerStats', 'topScorer', 'topAssistant', 'mvp', 'topRating', 'winner', 'finalElo', 'teamRank', 'playerRank', 'bracketHTML'];
+            const recalculated = ['playerStats', 'topScorer', 'topAssistant', 'winner', 'finalElo', 'teamRank', 'playerRank', 'bracketHTML'];
 
             return { added, recalculated };
         }
@@ -27017,8 +27380,8 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const totals = {};
             const ensurePlayerTotal = (name) => {
                 if (!totals[name]) totals[name] = {
-                    g: 0, a: 0, m: 0, r: 0, rk: 0, ys: 0, bl: 0,
-                    details: { g: [], a: [], m: [], r: [], rk: [], ys: [], bl: [] },
+                    g: 0, a: 0,
+                    details: { g: [], a: [] },
                     lastVal: { g:0, a:0, m:0, r:0 }, lastAvg: 0, lastPoints: 0
                 };
                 return totals[name];
@@ -27028,9 +27391,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const seasonLabel = a.name || `시즌 ${aIdx + 1}`;
                 const categories = [
                     { key: 'topScorer', type: 'g', unit: '골' },
-                    { key: 'topAssistant', type: 'a', unit: '도움' },
-                    { key: 'mvp', type: 'm', unit: '회' },
-                    { key: 'topRating', type: 'r', unit: '점' }
+                    { key: 'topAssistant', type: 'a', unit: '도움' }
                 ];
                 
                 categories.forEach(cat => {
@@ -27076,30 +27437,24 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     }
                 });
 
-                // 🌱신인상·🧤야신상·🏅골롱도르 — 정량 스탯이 아닌 특별 수상이라 시즌 배지에 별도 수치를 붙이지 않는다.
+                // 🏅골롱도르 · ⭐올스타상 · 🌱신인상 · 🧤야신상 · 🔥🧭🛡️포지션별 수상 · 💞베스트커플상 · 🧑‍💼감독상 — 직접 선정하는 특별 수상이라 수치 없이 시즌 배지만 붙인다.
                 const sa = a.specialAwards || {};
-                [
-                    { name: sa.rookie, type: 'rk' },
-                    { name: sa.yashin, type: 'ys' },
-                    { name: sa.ballon, type: 'bl' }
-                ].forEach(({ name, type }) => {
-                    if (!name || name === 'N/A') return;
-                    const total = ensurePlayerTotal(name);
-                    total[type]++;
-                    total.details[type].push({ season: seasonLabel, val: '', unit: '', rawVal: aIdx });
+                G_SP.forEach(d => {
+                    gAwNames(sa[d.key]).forEach(name => {
+                        const total = ensurePlayerTotal(name);
+                        const type = 'sp_' + d.key;
+                        if (!total.details[type]) { total[type] = 0; total.details[type] = []; }
+                        total[type]++;
+                        total.details[type].push({ season: seasonLabel, val: '', unit: '', rawVal: aIdx });
+                    });
                 });
             });
             
             const data = Object.entries(totals).map(([name, s]) => ({ name, ...s }));
             const categories = [
                 { title: '⚽️ 득점왕', key: 'g', emoji: '⚽️', info: '정렬: 수상 횟수 > 최다 기록' },
-                { title: '🎯 도움왕', key: 'a', emoji: '🎯', info: '정렬: 수상 횟수 > 최다 기록' },
-                { title: '👑 MVP (MOM)', key: 'm', emoji: '👑', info: '정렬: 수상 횟수 > 최다 기록' },
-                { title: '⭐ 최고평균평점', key: 'r', emoji: '⭐', info: '정렬: 수상 횟수 > 최고 기록' },
-                { title: '🌱 신인상', key: 'rk', emoji: '🌱', info: '정렬: 수상 횟수 > 최근 수상' },
-                { title: '🧤 야신상', key: 'ys', emoji: '🧤', info: '정렬: 수상 횟수 > 최근 수상' },
-                { title: '🏅 시즌 골롱도르', key: 'bl', emoji: '🏅', info: '정렬: 수상 횟수 > 최근 수상' }
-            ];
+                { title: '🎯 도움왕', key: 'a', emoji: '🎯', info: '정렬: 수상 횟수 > 최다 기록' }
+            ].concat((window.G_SP || []).map(d => ({ title: d.emoji + ' ' + d.label, key: 'sp_' + d.key, emoji: d.emoji, info: '정렬: 수상 횟수 > 최근 수상', mgr: d.key === 'coach' })));
 
             let html = `<div class="total-summary-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">`;
             
@@ -27129,9 +27484,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                                 return `
                                     <div class="gt-row${_ri === 1 ? ' top1' : ''}">
                                         <div class="gt-rk">${_ri}</div>
-                                        <div class="gt-ph" data-gp="${String(p.name).replace(/"/g,'&quot;')}"></div>
+                                        <div class="gt-ph" ${cat.mgr ? 'data-gmg' : 'data-gp'}="${String(p.name).replace(/"/g,'&quot;')}"></div>
                                         <div class="gt-body">
-                                            <span class="gt-nm" onclick="showPlayerDetail('${_nm}')">${p.name}</span>
+                                            <span class="gt-nm" onclick="${cat.mgr ? 'showManagerDetail' : 'showPlayerDetail'}('${_nm}')">${p.name}</span>
                                             <div class="gt-bd">${emojiWithVal}</div>
                                         </div>
                                     </div>
@@ -27362,6 +27717,205 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             sel.classList.toggle('g-teamsel', !!c);
             if (c) sel.style.setProperty('--g-sel-c', c); else sel.style.removeProperty('--g-sel-c');
         }
+        // ================= v1.87 · 🌟 특별 수상 후보 엔진 =================
+        // 🏅골롱도르(종합 TOP10) · ⭐올스타상(팀별 평점 상위 2명) · 🔥🧭🛡️공격수/미드필더/수비수상(포지션별) · 💞베스트커플상(합작골 TOP10) · 🧑‍💼감독상(그 시즌 감독)
+        // 현재 시즌(seasonKey='current')과 종료된 시즌(seasonKey=아카이브 번호)에서 같은 방식으로 후보를 만든다.
+        function gSpOptId(prefix, key) { return prefix + key.charAt(0).toUpperCase() + key.slice(1); }
+        function gSpIsMulti(key) { return key === 'allstar'; }
+        function gSpValidPos(p) { return (p === 'FW' || p === 'MF' || p === 'DF' || p === 'GK') ? p : ''; }
+
+        // 그 시즌의 경기 · 선수(소속팀/포지션/기록) · 팀 정보를 한곳에 모은다
+        function gSpSource(seasonKey) {
+            const cur = seasonKey === 'current';
+            const arc = cur ? null : (state.archives || [])[Number(seasonKey)];
+            const matches = cur ? (state.matches || []) : ((arc && arc.matches) || []);
+            const teamsArr = cur ? (state.teams || []) : ((arc && arc.teamRank && arc.teamRank.length) ? arc.teamRank : (state.teams || []));
+            const teamById = id => (id === null || id === undefined || id === '') ? null
+                : ((teamsArr || []).find(t => String(t.id) === String(id)) || (state.teams || []).find(t => String(t.id) === String(id)) || null);
+            // 포지션별 출전 횟수 (가장 많이 뛴 포지션을 그 시즌 포지션으로 본다)
+            const posCnt = {};
+            matches.forEach(m => (m.pStats || []).forEach(ps => {
+                if (!ps || !ps.name) return;
+                const st = ps.status || 'starter'; if (st !== 'starter' && st !== 'substitute') return;
+                const c = posCnt[ps.name] || (posCnt[ps.name] = { FW: 0, MF: 0, DF: 0, GK: 0 });
+                new Set([ps.pos, ps.pos2]).forEach(p => { if (c[p] !== undefined) c[p]++; });
+            }));
+            const rosterPos = {};
+            (state.teams || []).forEach(t => (t.players || []).forEach(p => { rosterPos[p.name] = p.pos; }));
+            ((arc && arc.playerRank) || []).forEach(r => { if (r && r.name && !rosterPos[r.name]) rosterPos[r.name] = r.pos; });
+            const stats = cur ? (state.playerStats || {}) : ((arc && arc.playerStats) || {});
+            const entries = Array.isArray(stats) ? stats.map(s => [s && s.name, s]) : Object.entries(stats);
+            const players = [];
+            entries.forEach(([name, s]) => {
+                if (!name || !s) return;
+                const games = (s.starter || 0) + (s.substitute || 0);
+                if (games <= 0) return;
+                const goals = s.goals || 0, assists = s.assists || 0;
+                let tid = s.teamId;
+                if (!cur && typeof dcFindPlayerTeamIdInArchive === 'function') {
+                    const f = dcFindPlayerTeamIdInArchive(arc, name);
+                    if (f !== null && f !== undefined) tid = f;
+                }
+                let team = teamById(tid);
+                if (!team && cur) team = (state.teams || []).find(t => (t.players || []).some(p => p.name === name)) || null;
+                const c = posCnt[name]; let pos = '';
+                if (c) { let best = 0; ['FW', 'MF', 'DF', 'GK'].forEach(p => { if (c[p] > best) { best = c[p]; pos = p; } }); }
+                if (!pos) pos = gSpValidPos(rosterPos[name]) || gSpValidPos(s.pos);
+                players.push({
+                    name, teamId: team ? String(team.id) : (tid !== null && tid !== undefined ? String(tid) : ''),
+                    teamName: team ? team.name : '', color: team ? (team.color || '') : '', pos,
+                    goals, assists, points: goals + assists, mom: s.mom || 0, games, pc: c || {},
+                    avg: s.ratingCount > 0 ? s.rating / s.ratingCount : 0
+                });
+            });
+            return { cur, arc, matches, teamsArr, teamById, players };
+        }
+
+        // 공격P · MOM · (표본 보정한) 평균평점을 0~1로 정규화해 가중합 → 높은 순 정렬
+        function gSpRank(list, w) {
+            if (!list.length) return [];
+            const maxP = Math.max(1, ...list.map(p => p.points)), maxM = Math.max(1, ...list.map(p => p.mom));
+            const totG = Math.max(1, list.reduce((s, p) => s + p.games, 0));
+            const lg = list.reduce((s, p) => s + p.avg * p.games, 0) / totG;
+            list.forEach(p => { p._adj = (p.avg * p.games + lg * 2) / (p.games + 2); });
+            const lo = Math.min(...list.map(p => p._adj)), hi = Math.max(...list.map(p => p._adj));
+            list.forEach(p => { p._score = w.pts * (p.points / maxP) + w.mom * (p.mom / maxM) + w.rate * ((p._adj - lo) / ((hi - lo) || 1)); });
+            return [...list].sort((a, b) => (b._score - a._score) || (b.points - a.points) || (b.avg - a.avg) || (b.mom - a.mom));
+        }
+
+        // 수상 종류별 후보 목록 → { groups:[{label,color,items:[{value,text,color}]}], title }
+        function gSpCandidates(kind, src) {
+            const P = src.players, fmt = v => (Math.round(v * 100) / 100).toFixed(2);
+            const tn = p => p.teamName ? ' (' + p.teamName + ')' : '';
+            const out = { groups: [], title: '' };
+            if (kind === 'ballon') {
+                const top = gSpRank(P, { pts: 0.45, mom: 0.25, rate: 0.30 }).slice(0, 15);
+                out.title = '🏅 공격포인트 · MOM(경기 MVP) 횟수 · 평균평점을 종합한 상위 15명이 후보예요';
+                if (top.length) out.groups.push({ label: '🏅 골롱도르 후보 TOP 15', color: '', items: top.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + ' · 공격P ' + p.points + ' · MOM ' + p.mom + ' · 평점 ' + fmt(p.avg) })) });
+            } else if (kind === 'allstar') {
+                out.title = '⭐ 각 팀 평균평점 상위 3명이 후보예요';
+                const byTeam = {};
+                P.forEach(p => { const k = p.teamId || '?'; (byTeam[k] = byTeam[k] || []).push(p); });
+                Object.keys(byTeam).map(k => ({ k, list: byTeam[k], name: byTeam[k][0].teamName || '소속 불명', color: byTeam[k][0].color }))
+                    .sort((a, b) => a.name.localeCompare(b.name, 'ko')).forEach(g => {
+                        const top = [...g.list].sort((a, b) => ((b.games >= 2) - (a.games >= 2)) || (b.avg - a.avg) || (b.points - a.points) || (b.mom - a.mom)).slice(0, 3);
+                        out.groups.push({ label: g.name, color: g.color, items: top.map(p => ({ value: p.name, color: p.color, text: p.name + (p.pos ? ' (' + p.pos + ')' : '') + ' · 평점 ' + fmt(p.avg) + ' · ' + p.games + '경기 · 공격P ' + p.points })) });
+                    });
+            } else if (kind === 'fw' || kind === 'mf' || kind === 'df') {
+                const CFG = { fw: ['FW', '공격수', { pts: 0.50, mom: 0.20, rate: 0.30 }], mf: ['MF', '미드필더', { pts: 0.35, mom: 0.25, rate: 0.40 }], df: ['DF', '수비수', { pts: 0.20, mom: 0.20, rate: 0.60 }] }[kind];
+                const list = gSpRank(P.filter(p => p.pos === CFG[0] || (p.pc && p.pc[CFG[0]] > 0)), CFG[2]);   // 주 포지션이 아니어도 그 포지션으로 한 번이라도 뛰었으면 후보
+                out.title = CFG[1] + '(' + CFG[0] + ')로 한 번이라도 뛴 선수가 모두 후보예요 · 공격P / MOM / 평균평점 종합순';
+                if (list.length) out.groups.push({ label: CFG[1] + ' 후보 (' + list.length + '명)', color: '', items: list.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + (p.pos && p.pos !== CFG[0] ? ' [주 ' + p.pos + ']' : '') + ' · 평점 ' + fmt(p.avg) + ' · 공격P ' + p.points + ' · MOM ' + p.mom })) });
+            } else if (kind === 'couple') {
+                out.title = '💞 도움 → 득점으로 이어진 합작골 상위 15쌍이 후보예요';
+                let duos = [];
+                try { if (window.GA && GA.collect && GA.duos) duos = GA.duos(GA.collect(src.matches)).slice(0, 15); } catch (e) { console.error('커플 후보 계산 오류', e); }
+                if (duos.length) out.groups.push({
+                    label: '💞 베스트커플 후보 TOP 15', color: '',
+                    items: duos.map((d, i) => { const t = src.teamById(d.teamId); return { value: d.a + '|' + d.b, color: t ? t.color : '', text: (i + 1) + '. ' + d.a + ' ♥ ' + d.b + (t ? ' (' + t.name + ')' : '') + ' · 합작 ' + d.n + '골 (' + d.a + '→' + d.b + ' ' + d.ab + ' · ' + d.b + '→' + d.a + ' ' + d.ba + ')' }; })
+                });
+            } else if (kind === 'coach') {
+                out.title = '🧑‍💼 그 시즌 팀을 이끈 감독이에요 · 우승팀 감독 → 승률순';
+                const ids = new Set(); src.matches.forEach(m => { ids.add(String(m.hId)); ids.add(String(m.aId)); });
+                (src.teamsArr || []).forEach(t => ids.add(String(t.id)));
+                let champ = '';
+                if (src.arc) champ = src.arc.winner || '';
+                else { const f = src.matches.find(m => m.type === '결승'); if (f) { const hw = f.hScore > f.aScore || (f.hScore === f.aScore && (f.hPk || 0) > (f.aPk || 0)); const t = src.teamById(hw ? f.hId : f.aId); champ = t ? t.name : ''; } }
+                const list = [];
+                ids.forEach(id => {
+                    const t = src.teamById(id); if (!t) return;
+                    const mg = src.cur ? (t.manager || '') : (((src.arc || {}).teamManagers || {})[id] || '');
+                    if (!mg) return;
+                    let w = 0, d = 0, l = 0;
+                    src.matches.forEach(m => {
+                        const h = String(m.hId) === id, a = String(m.aId) === id; if (!h && !a) return;
+                        const my = h ? m.hScore : m.aScore, op = h ? m.aScore : m.hScore;
+                        if (my > op) w++; else if (my < op) l++; else d++;
+                    });
+                    list.push({ mg, t, w, d, l, g: w + d + l, champ: t.name === champ });
+                });
+                list.sort((a, b) => (b.champ - a.champ) || ((b.g ? b.w / b.g : 0) - (a.g ? a.w / a.g : 0)) || (b.g - a.g));
+                if (list.length) out.groups.push({ label: '🧑‍💼 감독 후보', color: '', items: list.map(x => ({ value: x.mg, color: x.t.color, text: x.mg + ' · ' + x.t.name + ' · ' + x.w + '승 ' + x.d + '무 ' + x.l + '패' + (x.champ ? ' · 🏆우승' : '') })) });
+            }
+            return out;
+        }
+
+        // 한 수상의 입력칸(select 또는 체크박스 목록)을 후보로 채운다
+        function gSpFillControl(el, kind, seasonKey, selected) {
+            if (!el) return;
+            const src = gSpSource(seasonKey), cand = gSpCandidates(kind, src);
+            const multi = gSpIsMulti(kind);
+            const sel = multi ? gAwNames(selected) : (selected ? [String(selected)] : []);
+            const known = new Set(); cand.groups.forEach(g => g.items.forEach(it => known.add(it.value)));
+            const extra = sel.filter(v => !known.has(v));
+            const disp = v => kind === 'couple' ? v.split('|').join(' ♥ ') : v;
+            if (multi) {
+                let h = '';
+                cand.groups.forEach(g => {
+                    h += `<div class="g-sp-mg" style="--c:${gEsc(g.color || '#64748b')};"><div class="g-sp-mgt">${gEsc(g.label)}</div>`
+                        + g.items.map(it => `<label class="g-sp-mi"><input type="checkbox" value="${gEsc(it.value)}"${sel.includes(it.value) ? ' checked' : ''}><span>${gEsc(it.text)}</span></label>`).join('') + '</div>';
+                });
+                if (extra.length) h += `<div class="g-sp-mg" style="--c:#64748b;"><div class="g-sp-mgt">후보 외 (기존 지정)</div>${extra.map(v => `<label class="g-sp-mi"><input type="checkbox" value="${gEsc(v)}" checked><span>${gEsc(disp(v))}</span></label>`).join('')}</div>`;
+                el.innerHTML = h || '<div class="g-aw-hint">후보가 없어요 (그 시즌 경기 기록이 없어요)</div>';
+                el.title = cand.title || '';
+                return;
+            }
+            el.innerHTML = '<option value="">— 선택 —</option>';
+            if (extra.length) {
+                const og = document.createElement('optgroup'); og.label = '후보 외 (기존 지정)';
+                extra.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = disp(v) + ' (후보 외)'; o.selected = true; og.appendChild(o); });
+                el.appendChild(og);
+            }
+            cand.groups.forEach(g => {
+                const og = document.createElement('optgroup'); og.label = g.label; if (g.color) gStyleTeamOpt(og, g.color, true);
+                g.items.forEach(it => {
+                    const o = document.createElement('option'); o.value = it.value; o.textContent = it.text;
+                    if (it.color) gStyleTeamOpt(o, it.color, false);
+                    if (sel.includes(it.value)) o.selected = true;
+                    og.appendChild(o);
+                });
+                el.appendChild(og);
+            });
+            el.title = cand.groups.length ? (cand.title || '') : '후보가 없어요 (그 시즌 경기 기록이 없어요)';
+            gTintSelectEl(el);
+        }
+
+        // 수상 입력 폼(HTML) — prefix: 현재 시즌 'award' / 과거 시즌 'archiveAward' (입력칸 id = prefix + 수상키, 예: awardBallon)
+        function gSpFormHtml(prefix, wide) {
+            return (window.G_SP || []).map(d => {
+                const id = gSpOptId(prefix, d.key), multi = gSpIsMulti(d.key);
+                const ctl = multi ? `<div id="${id}" class="g-sp-multi"></div>`
+                    : `<select id="${id}" class="archive-select" style="margin-bottom:0; width:${wide ? '100%' : '200px'}; padding:8px 10px; font-size:0.85rem;"><option value="">— 선택 —</option></select>`;
+                return `<div class="g-sp-field" style="display:flex; flex-direction:column; gap:4px;${multi ? ' flex:1 1 100%;' : ''}"><label style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">${d.emoji} ${d.label}<span class="g-aw-hint">${d.hint}</span></label>${ctl}</div>`;
+            }).join('');
+        }
+        function gSpFillForm(prefix, seasonKey, sa) {
+            sa = sa || {};
+            const arc = seasonKey === 'current' ? null : (state.archives || [])[Number(seasonKey)];
+            (window.G_SP || []).forEach(d => {
+                const el = document.getElementById(gSpOptId(prefix, d.key)); if (!el) return;
+                const sel = sa[d.key] || '';
+                if (d.key === 'rookie' || d.key === 'yashin') { if (arc) buildArchivePlayerOptions(el, arc, sel, d.key); else buildPlayerOptions(el, sel, d.key); }
+                else gSpFillControl(el, d.key, seasonKey, sel);
+            });
+        }
+        function gSpRead(prefix, key) {
+            const el = document.getElementById(gSpOptId(prefix, key)); if (!el) return null;
+            if (gSpIsMulti(key)) return Array.from(el.querySelectorAll('input[type=checkbox]:checked')).map(i => i.value).join(', ');
+            return el.value || '';
+        }
+        // 🪄 비어 있는 수상(골롱도르 · 포지션별 · 베스트커플 · 감독상)을 각 후보 1위로 채운다 — 저장 버튼을 눌러야 반영
+        function gSpAutoFill(prefix, seasonKey) {
+            let n = 0;
+            ['ballon', 'fw', 'mf', 'df', 'couple', 'coach'].forEach(k => {
+                const el = document.getElementById(gSpOptId(prefix, k)); if (!el || el.value) return;
+                const opt = Array.from(el.options).find(o => o.value && !/후보 외/.test(o.textContent));
+                if (opt) { el.value = opt.value; gTintSelectEl(el); n++; }
+            });
+            if (!n) alert('채울 수 있는 빈 수상이 없어요. (이미 모두 지정했거나 후보가 없어요)');
+        }
+
+
         // 시즌별 후보 계산: seasonKey = 'current'(진행 중 시즌) 또는 아카이브 번호(문자열)
         //  · rookie: 그 시즌에 처음 출전(선발/교체)한 선수 (이전 시즌 경기 기록에 한 번도 없던 선수, 진행 중 시즌은 아직 한 번도 안 뛴 선수 포함)
         //  · gk: 그 시즌 경기에서 GK로 출전한 선수
@@ -27412,44 +27966,37 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
         function saveSpecialAwards() {
             if(!state.specialAwards) state.specialAwards = {};
-            state.specialAwards.rookie  = document.getElementById('awardRookie').value;
-            state.specialAwards.yashin  = document.getElementById('awardYashin').value;
-            state.specialAwards.ballon  = document.getElementById('awardBallon').value;
+            (window.G_SP || []).forEach(d => {
+                const v = gSpRead('award', d.key);
+                if (v !== null) state.specialAwards[d.key] = v;
+            });
             save();
             renderSpecialAwards();
         }
 
+        // v1.88: 상단 수상 줄(득점왕 · 도움왕)에 🏅 골롱도르 · ⭐ 올스타상 카드를 붙인다. (renderSeasonSummary가 줄을 다시 그린 뒤에도 호출)
+        function gRenderTopSpecial() {
+            const grid = document.getElementById('playerAwardsGrid');
+            if (!grid || !window.gAwSpecialHtml) return;
+            grid.querySelectorAll(':scope > .aw-top').forEach(el => el.remove());
+            grid.insertAdjacentHTML('beforeend', gAwSpecialHtml(state.specialAwards || {}, null, false, 'top'));
+            try { if (typeof gApplyNewBadges === 'function') gApplyNewBadges(); } catch (e) { }
+        }
         function renderSpecialAwards() {
             const sa = state.specialAwards || {};
 
-            // 드롭다운 옵션 채우기 (현재 선택값 유지)
-            const rookieEl = document.getElementById('awardRookie');
-            const yashinEl = document.getElementById('awardYashin');
-            const ballonEl = document.getElementById('awardBallon');
-            if(rookieEl)  buildPlayerOptions(rookieEl,  sa.rookie  || '', 'rookie');
-            if(yashinEl)  buildPlayerOptions(yashinEl,  sa.yashin  || '', 'yashin');
-            if(ballonEl)  buildPlayerOptions(ballonEl,  sa.ballon  || '', 'ballon');
+            // 수상자 선택 폼(후보 목록) 다시 만들기 — 저장된 값은 그대로 선택된 상태로 표시
+            const form = document.getElementById('specialAwardsForm');
+            if(form) { form.innerHTML = gSpFormHtml('award', false); gSpFillForm('award', 'current', sa); }
 
             // 수상자 카드 렌더링
             const display = document.getElementById('specialAwardsDisplay');
             if(!display) return;
-            const awardDefs = [
-                { emoji: '🌱', title: '신인상',        key: 'rookie' },
-                { emoji: '🧤', title: '야신상',        key: 'yashin' },
-                { emoji: '🏅', title: '시즌 골롱도르', key: 'ballon' },
-            ];
-            if (window.gAwSpecialHtml) { display.innerHTML = gAwSpecialHtml(sa); return; }
-            display.innerHTML = awardDefs.map(a => {
-                const name = sa[a.key] || '';
-                const team = name ? state.teams.find(t => t.players.some(p => p.name === name)) : null;
-                const color = team ? team.color : 'var(--text-muted)';
-                const teamName = team ? `<div style="font-size:0.72rem; color:${color}; margin-top:4px; opacity:0.85;">${team.name}</div>` : '';
-                return `
-                <div class="summary-card" style="border:1px solid rgba(251,191,36,0.25);">
-                    <h3 style="color:var(--gold);">${a.emoji} ${a.title}</h3>
-                    <div class="summary-val" style="color:${name ? 'var(--text)' : 'var(--text-muted)'}; ${name ? '' : 'font-size:0.95rem;'}">${name ? `<span class="g-nm" data-gk="p" data-gs="md">${name}</span>` : '미정'}</div>
-                    ${teamName}
-                </div>`;
+            gRenderTopSpecial();
+            if (window.gAwSpecialHtml) { display.innerHTML = gAwSpecialHtml(sa, null, false, 'rest'); return; }
+            display.innerHTML = (window.G_SP || []).map(d => {
+                const names = gAwNames(sa[d.key]).join(', ');
+                return `<div class="summary-card" style="border:1px solid rgba(251,191,36,0.25);"><h3 style="color:var(--gold);">${d.emoji} ${d.label}</h3><div class="summary-val" style="${names ? '' : 'font-size:0.95rem; color:var(--text-muted);'}">${names || '미정'}</div></div>`;
             }).join('');
         }
 
@@ -27538,8 +28085,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             playerAwards.innerHTML = "";
             renderAward('⚽️ 득점왕', getTop10('goals'), '골', 'goals', '동률 시: 평균평점 > 도움');
             renderAward('🎯 도움왕', getTop10('assists'), '도움', 'assists', '동률 시: 평균평점 > 득점');
-            renderAward('👑 MVP (MOM)', getTop10('mom'), '회', 'mom', '동률 시: 평균평점 > 공격포인트');
-            renderAward('⭐ 최고평균평점', getTop10('avgRating'), '점', 'avgRating', '동률 시: 공격포인트 > MOM');
+            // v1.87: 👑 MVP · ⭐ 최고평균평점 카드는 🏅 골롱도르 · ⭐ 올스타상(직접 선정)으로 대체되어 제거
+            // v1.88: 🏅 골롱도르 · ⭐ 올스타상은 득점왕 · 도움왕과 같은 줄에 표시
+            gRenderTopSpecial();
             return { teamAwards: teamAwards.innerHTML, playerAwards: playerAwards.innerHTML };
         }
 
@@ -27712,8 +28260,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             });
             const topScorer = [...ps].sort((a,b) => (b.goals - a.goals) || (b.avgRating - a.avgRating) || (b.assists - a.assists))[0]?.name || 'N/A';
             const topAssistant = [...ps].sort((a,b) => (b.assists - a.assists) || (b.avgRating - a.avgRating) || (b.goals - a.goals))[0]?.name || 'N/A';
-            const mvp = [...ps].sort((a,b) => (b.mom - a.mom) || (b.avgRating - a.avgRating) || (b.points - a.points))[0]?.name || 'N/A';
-            const topRating = [...ps].sort((a,b) => (b.avgRating - a.avgRating) || (b.points - a.points) || (b.mom - a.mom))[0]?.name || 'N/A';
+
             
             const tableA = updateTable('tableA', state.groupA, ['A조', '인터리그']);
             const tableB = updateTable('tableB', state.groupB, ['B조', '인터리그']);
@@ -27730,7 +28277,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             });
             
             state.archives.push({ sid: (window.gSeasonSid ? gSeasonSid() : undefined), 
-                name: seasonName, winner, topScorer, topAssistant, mvp, topRating, 
+                name: seasonName, winner, topScorer, topAssistant, 
                 seasonMode: state.seasonMode, tournamentTeams: [...(state.tournamentTeams || [])],
                 specialAwards: { ...(state.specialAwards || {}) },
                 matches: [...state.matches], playerStats: {...state.playerStats},
@@ -27744,7 +28291,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             state.eloStartAdj = null;   // 다음 시즌은 새로 계산
             state.matches = []; state.playerStats = {}; state.interMatches = [];
             state.scheduledMatches = []; // 시즌이 끝나면 남아있던 예정 경기도 함께 정리
-            state.specialAwards = { rookie: '', yashin: '', ballon: '' };
+            state.specialAwards = { rookie: '', yashin: '', ballon: '', allstar: '', fw: '', mf: '', df: '', couple: '', coach: '' };
             // 새 시즌 시작 시 순위 스냅샷 초기화: 시즌별(개별 시즌 이름 키) 스냅샷만 정리하고,
             // '전체(누적 합산)' 기준 스냅샷은 시즌 경계와 무관하게 계속 이어져야 하므로 그대로 유지한다.
             // (이걸 통째로 초기화하면 전체 누적 랭킹의 순위 변동 비교 기준이 매 시즌 사라져서
@@ -27948,11 +28495,9 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const archive = state.archives[idx];
             if (!archive) return;
             document.getElementById('archiveAwardsIdx').value = String(idx);
-            document.getElementById('archiveAwardsSeasonLabel').textContent = `${archive.name || '시즌 미상'} 시즌의 특별 수상을 지정합니다.`;
-            const sa = archive.specialAwards || {};
-            buildArchivePlayerOptions(document.getElementById('archiveAwardRookie'), archive, sa.rookie || '', 'rookie');
-            buildArchivePlayerOptions(document.getElementById('archiveAwardYashin'), archive, sa.yashin || '', 'yashin');
-            buildArchivePlayerOptions(document.getElementById('archiveAwardBallon'), archive, sa.ballon || '', 'ballon');
+            document.getElementById('archiveAwardsSeasonLabel').textContent = `${archive.name || '시즌 미상'} 시즌의 특별 수상을 지정합니다. (후보 목록에서 선택하며, 이미 지정된 수상자가 후보 밖이어도 그대로 유지돼요)`;
+            const form = document.getElementById('archiveAwardsForm');
+            if (form) { form.innerHTML = gSpFormHtml('archiveAward', true); gSpFillForm('archiveAward', String(idx), archive.specialAwards || {}); }
             document.getElementById('archiveAwardsModal').style.display = 'block';
         }
 
@@ -27965,9 +28510,10 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const archive = state.archives[idx];
             if (!archive) { closeArchiveAwardsModal(); return; }
             if (!archive.specialAwards) archive.specialAwards = {};
-            archive.specialAwards.rookie = document.getElementById('archiveAwardRookie').value;
-            archive.specialAwards.yashin = document.getElementById('archiveAwardYashin').value;
-            archive.specialAwards.ballon = document.getElementById('archiveAwardBallon').value;
+            (window.G_SP || []).forEach(d => {
+                const v = gSpRead('archiveAward', d.key);
+                if (v !== null) archive.specialAwards[d.key] = v;
+            });
             save();
             closeArchiveAwardsModal();
             // 아카이브 상세 화면과, 이 데이터를 함께 쓰는 역대 개인 타이틀 랭킹·대시보드 명예의 전당도 함께 갱신
@@ -27976,6 +28522,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (playerTitleEl) renderPlayerTotal();
             const dashHallEl = document.getElementById('dashHallSummary');
             if (dashHallEl) renderDashHallSummary();
+            try { if (typeof renderSeasonSummary === 'function' && document.getElementById('awards') && document.getElementById('awards').classList.contains('active')) renderSeasonSummary(); } catch (e) { }
         }
 
         function toggleTournamentPicker() {
@@ -28345,7 +28892,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const specialBlock = `
                 <div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);">
                     <h4 style="color:var(--gold); display:flex; align-items:center; gap:8px; flex-wrap:wrap;">🌟 특별 수상 <button class="btn btn-auto" style="padding:3px 10px; font-size:0.68rem;" onclick="openArchiveAwardsModal('${idx}')">✏️ 수정</button></h4>
-                    ${(sa.rookie || sa.yashin || sa.ballon) ? `
+                    ${gSpPart('rest').some(d => sa[d.key]) ? `
                     <div class="summary-grid season-award-grid" style="margin-top:6px;">${gArcSpecialCards(a)}</div>` : `<div style="color:var(--text-muted); font-size:0.8rem; padding:6px 0;">아직 지정된 특별 수상이 없습니다. '수정' 버튼을 눌러 지정해주세요.</div>`}
                 </div>`;
             const arcWinTeam = (a.teamRank || []).find(t => t.name === a.winner) || (state.teams || []).find(t => t.name === a.winner);
@@ -28360,6 +28907,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 </div>
                 ${specialBlock}
                 ${gArcStageHtml(a)}
+                ${(() => { try { return gRoleRecordsHtml(a.matches || [], { archive: true, uid: 'arc_' + idx }); } catch (e) { console.error(e); return ''; } })()}
                 <div class="card">
                     <h4>📈 최종 팀 랭킹</h4>
                     <table class="pattern-table"><thead><tr><th>순위</th><th>팀명</th><th>경기</th><th>승</th><th>패</th><th>득</th><th>실</th><th>차</th><th>승점</th><th title="해당 시즌 최종 Elo 레이팅">Elo ⚡</th></tr></thead><tbody>
@@ -29380,7 +29928,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 teams: [], groupA: [], groupB: [], matches: [], archives: [],
                 playerStats: {}, interMatches: [], scheduledMatches: [], sortKey: 'points', sortDir: -1,
                 backupFileName: '', rankSnapshot: {}, freeAgents: [], ovrHistory: {},
-                specialAwards: { rookie: '', yashin: '', ballon: '' },
+                specialAwards: { rookie: '', yashin: '', ballon: '', allstar: '', fw: '', mf: '', df: '', couple: '', coach: '' },
                 totalSort: { team: { key: 'pts', dir: -1 }, teamTitle: { key: 'w', dir: -1 }, title: { key: 'w', dir: -1 }, cum: { key: 'points', dir: -1 }, teamRank: { key: 'pts', dir: -1 } }
             };
             const merged = Object.assign({}, defaults, raw);
@@ -30397,7 +30945,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.86';
+        const G_HTML_VERSION = '1.88';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -30898,14 +31446,10 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         function pgAwards(name) {
             const out = [];
             const chk = (sn, o) => {
-                if (o.mvp === name) out.push([sn, '👑 MVP']);
                 if (o.topScorer === name) out.push([sn, '⚽ 득점왕']);
                 if (o.topAssistant === name) out.push([sn, '🅰️ 도움왕']);
-                if (o.topRating === name) out.push([sn, '⭐ 최고 평점']);
                 const sp = o.specialAwards || {};
-                if (sp.ballon === name) out.push([sn, '🏆 발롱도르']);
-                if (sp.rookie === name) out.push([sn, '🌱 신인상']);
-                if (sp.yashin === name) out.push([sn, '🧤 야신상']);
+                (window.G_SP || []).forEach(d => { if (d.key !== 'coach' && gAwNames(sp[d.key]).includes(name)) out.push([sn, d.emoji + ' ' + d.label]); });
             };
             (state.archives || []).forEach(ar => chk(ar.name, ar));
             chk(state.seasonName || '현재 시즌', { specialAwards: state.specialAwards });
@@ -32399,7 +32943,7 @@ function ensureBefore(id, targetId, wrapLegacy) {
   let h = document.getElementById(id);
   if (!h) {
     h = document.createElement('div'); h.id = id; t.parentNode.insertBefore(h, t);
-    if (wrapLegacy) { const d = document.createElement('details'); d.className = 'gv-legacy'; d.innerHTML = '<summary>📋 카드형 상세 기록 (기존 보기 · 연속 기록/가장 빠른 골 등)</summary>'; t.parentNode.insertBefore(d, t); d.appendChild(t); }
+    if (wrapLegacy) { const d = document.createElement('details'); d.className = 'gv-legacy'; if (typeof wrapLegacy === 'string') d.open = true; d.innerHTML = '<summary>' + (typeof wrapLegacy === 'string' ? wrapLegacy : '📋 카드형 상세 기록 (기존 보기 · 연속 기록/가장 빠른 골 등)') + '</summary>'; t.parentNode.insertBefore(d, t); d.appendChild(t); }
   }
   return h;
 }
@@ -32434,12 +32978,10 @@ const chips = (arr, cur, fn) => `<div class="gv-chips">${arr.map(([k, l]) => `<b
 const PC = [['score', '⚽ 득점·공격'], ['assist', '🎯 도움'], ['rate', '⭐ 평점·MOM'], ['gk', '🧤 GK'], ['eff', '📊 경기당 효율'], ['play', '🏃 출전']];
 window.gvSetP = k => { gv.pc = k; renderPlayer(); };
 function renderPlayer() {
-  const h = ensureBefore('gvPlayer', 'leagueHistoryAwardCards', true); if (!h) return;
+  // v1.88: '📊 그래프로 보기'(득점·도움·평점·GK·효율·출전 막대)와 아래 카드의 1위 기록이 겹쳐서 🧩 기록 순위 하나로 통합했다.
+  const h = ensureBefore('gvPlayer', 'leagueHistoryAwardCards', '🌟 1시즌 최고 · 단일 경기 · 연속 기록'); if (!h) return;
   const sel = document.getElementById('awardsLeagueSeasonSelect'), scope = parseLeagueScopeValue(sel ? sel.value : 'cumulative');
-  const all = dcGetLeaguePlayerSeasonData(scope).players;
-  let ps = all.filter(p => p.games >= ((p.posCounts && p.posCounts[0] && p.posCounts[0][0] === 'GK') ? 2 : 3));
-  if (!ps.length) ps = all.filter(p => p.games >= 1);
-  h.innerHTML = `<div class="rs-sec">📊 그래프로 보기 <small style="font-size:.66rem;color:var(--text-muted);font-weight:700;">위 시즌 필터를 따라갑니다 · 막대 아래 '상세보기'로 전체 순위</small></div>${chips(PC, gv.pc, 'gvSetP')}` + pBoards(ps, gv.pc);
+  h.innerHTML = `<div class="rs-sec">🧩 기록 순위 ${gNewTag('1.88')} <small style="font-size:.66rem;color:var(--text-muted);font-weight:700;">위 시즌 필터를 따라갑니다 · 포지션과 무관하게 기록만으로 순위를 매기고, 집계 대상을 포지션별로 좁혀 볼 수 있어요</small></div>` + gRecHtml(getScopeMatchPool(scope), 'league');
 }
 function pBoards(ps, cat) {
   const R = fn => ps.map(p => ({ html: rsPl(p.name), sub: E(p.teamName || '') + ' · ' + p.games + '경기', val: fn(p), tie: p.games }));
@@ -32471,19 +33013,11 @@ function teamPanel(rows, withForm) {
 }
 window.gvTbl = id => modal('🏟️ 팀별 종합 성적', (gv.store[id] || {}).html || '');
 function renderTeam() {
-  const h = ensureBefore('gvTeam', 'leagueTeamRecordCards', true); if (!h) return;
+  // v1.88: 📊 팀 기록 그래프 + 카드형 팀 기록을 🏟️ 팀 기록 순위 하나로 통합하고 기록 분야를 확장했다. (팀별 종합 성적 표는 그대로)
+  const h = ensureBefore('gvTeam', 'leagueTeamRecordCards', false); if (!h) return;
   const sel = document.getElementById('awardsLeagueTeamSeasonSelect'), raw = sel ? sel.value : 'cumulative';
   const all = computeTeamSeasonRecordsData(), rows = raw === 'cumulative' ? all : all.filter(r => r.scopeKey === raw);
-  const multi = raw === 'cumulative';
-  const T = fn => rows.map(r => ({ html: rsTm(r.teamId), sub: E(r.seasonLabel || '') + ' · ' + r.games + '경기', val: fn(r), tie: r.games }));
-  const rate = fn => T(r => r.games >= 3 ? fn(r) : NaN);
-  const B = {
-    win: () => board('🏅 ' + (multi ? '한 시즌 ' : '') + '승점', pos(T(r => r.pts)), { hex: HEX.blue, fmt: U('점') }) + board('✅ 승리', pos(T(r => r.w)), { hex: HEX.green, fmt: U('승') }) + board('📈 승률 (3경기↑)', pos(rate(r => r.wr)), { hex: HEX.green, fmt: v => v.toFixed(1) + '%' }),
-    atk: () => board('⚽ 득점', pos(T(r => r.gf)), { hex: HEX.gold, fmt: U('골') }) + board('📊 경기당 득점 (3경기↑)', pos(rate(r => r.gfpg)), { hex: HEX.gold, fmt: f2 }) + board('📐 득실차', pos(T(r => r.gd)), { hex: HEX.green, fmt: v => '+' + v }),
-    def: () => board('🧱 경기당 실점 (낮을수록 상위)', rate(r => r.gapg), { hex: HEX.deep, dir: -1, fmt: f2 }) + board('🛡️ 무실점 경기', pos(T(r => r.cs)), { hex: HEX.deep, fmt: U('경기') }),
-    streak: () => board('🔥 최다 연승', pos(T(r => r.maxWinStreak)), { hex: HEX.green, fmt: U('연승') }) + board('💧 최다 연패', pos(T(r => r.maxLoseStreak)), { hex: HEX.red, fmt: U('연패') })
-  };
-  h.innerHTML = teamPanel(rows, raw === 'current') + `<div class="rs-sec">📊 팀 기록 그래프</div>${chips(TC, gv.tc, 'gvSetT')}${grid((B[gv.tc] || B.win)())}`;
+  h.innerHTML = teamPanel(rows, raw === 'current') + `<div class="rs-sec">🏟️ 팀 기록 순위 ${gNewTag('1.88')} <small style="font-size:.66rem;color:var(--text-muted);font-weight:700;">위 시즌 필터를 따라갑니다 · 분야와 TOP 인원을 골라 보세요</small></div>` + gTeamRecHtml(rows, raw, 'league');
 }
 // ---------- 🗂️ 팀 데이터센터 · 기록실 (👤 선수기록 / 🏟️ 팀기록) ----------
 gv.dpc = 'score'; gv.dtc = 'win';
@@ -34869,6 +35403,18 @@ window.pmExtRender = function(name){
             const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => { im.remove(); el.classList.remove('on'); };
             el.appendChild(im); el.classList.add('on'); el.dataset.gav = 'y';
         });
+        document.querySelectorAll('.g-ph[data-gmg]:not(.on)').forEach(el => {          // v1.87: 감독상 카드 — 감독 사진
+            if (el.dataset.gav) return; el.dataset.gav = 'n';
+            const u = urlOf('manager', ident('manager', el.dataset.gmg)); if (!u) return;
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => { im.remove(); el.classList.remove('on'); };
+            el.appendChild(im); el.classList.add('on'); el.dataset.gav = 'y';
+        });
+        document.querySelectorAll('.gt-ph[data-gmg]').forEach(el => {                  // v1.87: 명예의 전당 감독상 — 감독 사진
+            if (el.dataset.gav) return; el.dataset.gav = 'n';
+            const u = urlOf('manager', ident('manager', el.dataset.gmg)); if (!u) return;
+            const im = document.createElement('img'); im.src = u; im.alt = ''; im.loading = 'lazy'; im.onerror = () => im.remove();
+            el.appendChild(im); el.dataset.gav = 'y';
+        });
         const NM = nameMaps();
         GAV.forEach(r => document.querySelectorAll(r.sel).forEach(el => {
             if (el.dataset.gav || el.closest('.modal-header') || el.querySelector(':scope > img.g-av')) return;
@@ -34968,7 +35514,7 @@ window.pmExtRender = function(name){
     let pv = null;
     document.addEventListener('mouseover', e => {
         const t = e.target;
-        if (!(t instanceof HTMLImageElement) || !t.classList.contains('g-av')) { if (pv) { pv.remove(); pv = null; } return; }
+        if (!(t instanceof HTMLImageElement) || !(t.classList.contains('g-av') || t.classList.contains('g-awimg') || t.classList.contains('g-tr'))) { if (pv) { pv.remove(); pv = null; } return; }
         if (!pv) { pv = document.createElement('img'); pv.className = 'g-av-pv'; document.body.appendChild(pv); }
         pv.src = t.src; const r = t.getBoundingClientRect();
         pv.style.left = Math.max(8, Math.min(innerWidth - 222, r.right + 8)) + 'px'; pv.style.top = Math.max(8, Math.min(innerHeight - 222, r.top - 70)) + 'px';
@@ -35091,13 +35637,8 @@ window.pmExtRender = function(name){
     const E = v => (typeof gEsc === 'function') ? gEsc(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const AW = [
         ['topScorer', '득점왕', '⚽️', '#fb923c', false],
-        ['topAssistant', '도움왕', '🎯', '#38bdf8', false],
-        ['mvp', 'MVP (MOM)', '👑', '#facc15', false],
-        ['topRating', '최고평균평점', '⭐', '#a78bfa', false],
-        ['rookie', '신인상', '🌱', '#86efac', true],
-        ['yashin', '야신상', '🧤', '#93c5fd', true],
-        ['ballon', '시즌 골롱도르', '🏅', '#fbbf24', true]
-    ];
+        ['topAssistant', '도움왕', '🎯', '#38bdf8', false]
+    ].concat((window.G_SP || []).map(d => [d.key, d.label, d.emoji, d.color, true]));
     const fmtRec = q => q && q.gms ? `${q.gms}경기 ${q.w}승 ${q.l}패` : '';
 
     window.tcHonors = function (team) {
@@ -35115,10 +35656,15 @@ window.pmExtRender = function(name){
             }
             const sa = a.specialAwards || {};
             AW.forEach(([key, label, emoji, color, special]) => {
-                const nm = special ? sa[key] : a[key];
-                if (!nm) return;
-                if (String(dcFindPlayerTeamIdInArchive(a, nm)) !== tid) return;
-                H.awards.push({ season: a.name, idx: i, name: nm, label, emoji, color, key });
+                if (key === 'coach') {   // 감독상 — 그 시즌 이 팀을 이끈 감독이면 팀 수상으로 표시
+                    const cm = sa.coach;
+                    if (cm && String((a.teamManagers || {})[tid] || '') === cm) H.awards.push({ season: a.name, idx: i, name: cm, label, emoji, color, key, mgr: true });
+                    return;
+                }
+                gAwNames(special ? sa[key] : a[key]).forEach(nm => {
+                    if (String(dcFindPlayerTeamIdInArchive(a, nm)) !== tid) return;
+                    H.awards.push({ season: a.name, idx: i, name: nm, label, emoji, color, key });
+                });
             });
         }
         return H;
@@ -35150,9 +35696,10 @@ window.pmExtRender = function(name){
         if (!team) { box.innerHTML = ''; return; }
         const H = tcHonors(team);
         const players = {};
-        H.awards.forEach(a => { (players[a.name] = players[a.name] || []).push(a); });
+        H.awards.filter(a => !a.mgr).forEach(a => { (players[a.name] = players[a.name] || []).push(a); });
         const pNames = Object.keys(players).sort((x, y) => players[y].length - players[x].length || x.localeCompare(y));
         const pn = n => `<span class="tc-aw-n" data-pn="${E(n)}" onclick="showPlayerDetail(this.dataset.pn)"><span class="g-nm" data-gk="p" data-gs="sm">${E(n)}</span></span>`;
+        const mn = n => `<span class="tc-aw-n" data-pn="${E(n)}" onclick="showManagerDetail(this.dataset.pn)"><span class="g-nm" data-gk="a" data-gs="sm">${E(n)}</span></span>`;
 
         // 🏆 우승 트로피 선반
         const trophies = H.titles.length
@@ -35171,7 +35718,7 @@ window.pmExtRender = function(name){
             <div class="tc-shelf" style="min-height:0;padding-top:10px;">${g.list.map(a => `
                 <div class="tc-aw" style="--awc:${a.color};" title="${E(a.season)} · ${E(a.label)}">
                     <div class="tc-aw-ic">${window.gAwardImg ? gAwardImg(a.key, a.emoji, 'hero') : a.emoji}</div>
-                    <div class="tc-aw-tx"><span class="tc-aw-l">${E(a.label)}</span>${pn(a.name)}</div>
+                    <div class="tc-aw-tx"><span class="tc-aw-l">${E(a.label)}</span>${a.mgr ? mn(a.name) : pn(a.name)}</div>
                 </div>`).join('')}</div>
             <div class="tc-board"></div>`).join('')
             : `<div class="tc-shelf" style="min-height:64px;align-items:center;"><span class="tc-note">아직 이 팀 소속으로 받은 개인 수상이 없습니다.</span></div><div class="tc-board"></div>`;
@@ -35220,17 +35767,25 @@ window.pmExtRender = function(name){
         opt = opt || {};
         const arr = Array.isArray(names) ? names : String(names || '').split(/,\s*/).filter(Boolean);
         if (!arr.length) return '<div class="aw-none">' + E(opt.empty || '미정') + '</div>';
+        const mgrTeam = n => (opt.team && opt.team[n]) || (((typeof state !== 'undefined' && state.teams) || []).find(t => t.manager === n)) || null;
         return '<div class="aw-pls">' + arr.map(n => {
-            const t = (opt.team && opt.team[n]) || (opt.arc ? null : teamOfPlayer(n)), c = t ? (t.color || 'var(--text-muted)') : 'var(--text-muted)', tn = t ? t.name : '';
+            const mg = !!opt.mgr;     // v1.87: 감독상 — 선수 대신 감독 카드(사진 · 감독 상세 창)
+            const t = mg ? mgrTeam(n) : ((opt.team && opt.team[n]) || (opt.arc ? null : teamOfPlayer(n))), c = t ? (t.color || 'var(--text-muted)') : 'var(--text-muted)', tn = t ? t.name : '';
             const v = (opt.vals && opt.vals[n] !== undefined) ? opt.vals[n] : val;
-            return '<div class="aw-pl" data-pn="' + E(n) + '" onclick="showPlayerDetail(this.dataset.pn)" style="--pc:' + c + ';"><div class="g-ph" data-gp="' + E(n) + '"></div><div class="aw-name">' + E(n) + '</div>'
+            return '<div class="aw-pl" data-pn="' + E(n) + '" onclick="' + (mg ? 'showManagerDetail' : 'showPlayerDetail') + '(this.dataset.pn)" style="--pc:' + c + ';"><div class="g-ph" ' + (mg ? 'data-gmg' : 'data-gp') + '="' + E(n) + '"></div><div class="aw-name">' + E(n) + '</div>'
                 + (tn ? '<div class="aw-team" style="color:' + c + ';">' + E(tn) + '</div>' : '') + (v ? '<div class="aw-val">' + E(v) + '</div>' : '') + '</div>';
         }).join('') + '</div>';
     };
-    const SP = [['rookie', '신인상', '🌱', '#86efac'], ['yashin', '야신상', '🧤', '#93c5fd'], ['ballon', '시즌 골롱도르', '🏅', '#fbbf24']];
-    window.gAwSpecialHtml = function (sa, teamMap, arc) {
+    /* v1.88: 🏅 골롱도르 · ⭐ 올스타상 · 🧑‍💼 감독상은 ⚽ 득점왕 · 🎯 도움왕과 같은 수상 줄에 표시 (G_TOP_SP) — part: 'top' = 그 줄에 들어가는 수상 / 'rest' = 🌟 특별 수상 칸에 남는 수상 / 생략 = 전부 */
+    window.G_TOP_SP = ['ballon', 'allstar', 'coach'];
+    window.gSpPart = part => (window.G_SP || []).filter(d => part === 'top' ? G_TOP_SP.includes(d.key) : part === 'rest' ? !G_TOP_SP.includes(d.key) : true);
+    window.gAwSpecialHtml = function (sa, teamMap, arc, part) {
         sa = sa || {};
-        return SP.map(d => '<div class="summary-card aw-card aw-sp" style="--awc:' + d[3] + ';"><h3>' + gAwardImg(d[0], d[2], 'hero') + '<span>' + d[1] + '</span></h3>' + gAwBig(sa[d[0]] ? [sa[d[0]]] : [], '', { empty: '미정', team: teamMap, arc: arc }) + '</div>').join('');
+        return gSpPart(part).map(d => {
+            const v = sa[d.key] || '', mgr = d.key === 'coach', top = part === 'top';
+            const arr = v ? (mgr ? [v] : gAwNames(v)) : [];
+            return '<div class="summary-card aw-card ' + (top ? 'aw-top' : 'aw-sp') + '" style="--awc:' + d.color + ';"><h3>' + gAwardImg(d.key, d.emoji, 'hero') + '<span>' + d.label + '</span></h3>' + gAwBig(arr, '', { empty: '미정', team: teamMap, arc: arc, mgr: mgr }) + '</div>';
+        }).join('');
     };
 
     /* ----- 📅 시즌 넘겨보기 ----- */
@@ -35254,12 +35809,12 @@ window.pmExtRender = function(name){
             const t = tid != null && ((a.teamRank || []).find(x => String(x.id) === String(tid)) || (state.teams || []).find(x => String(x.id) === String(tid)));
             return t ? { name: t.name, color: t.color } : null;
         };
-        const defs = [['topScorer', '⚽️', '득점왕', r => (r.goals || 0) + '골'], ['topAssistant', '🎯', '도움왕', r => (r.assists || 0) + '도움'], ['mvp', '👑', 'MVP (MOM)', r => (r.mom || 0) + '회'], ['topRating', '⭐', '최고평균평점', r => (Number(r.avgRating) || 0).toFixed(2) + '점']];
+        const defs = [['topScorer', '⚽️', '득점왕', r => (r.goals || 0) + '골'], ['topAssistant', '🎯', '도움왕', r => (r.assists || 0) + '도움']];
         const grid = defs.map(d => {
             const names = String(a[d[0]] || '').split(/,\s*/).filter(n => n && !/^[-—–]+$/.test(n) && n !== '없음' && n !== '기록 없음');
             const vals = {}, team = {}; names.forEach(n => { const r = by[n]; if (r) vals[n] = d[3](r); const st = seasonTeam(n); if (st) team[n] = st; });
             return '<div class="summary-card aw-card"><h3>' + gAwardImg(d[0], d[1], 'hero') + '<span>' + d[2] + '</span></h3>' + gAwBig(names, '', { vals, team, arc: true, empty: '기록 없음' }) + '</div>';
-        }).join('');
+        }).join('') + gAwSpecialHtml(a.specialAwards, (function () { const m = {}; const sa = a.specialAwards || {}; gSpPart('top').forEach(d => { if (d.key === 'coach') { Object.assign(m, gSpArcTeams(a, 'coach', sa.coach || '')); return; } gAwNames(sa[d.key]).forEach(n => { const st = seasonTeam(n); if (st) m[n] = st; }); }); return m; })(), true, 'top');
         const tr = id => (a.teamRank || []).find(t => String(t.id) === String(id)) || ((state.teams || []).find(t => String(t.id) === String(id))) || { name: 'TBD', color: '#fff' };
         const ms = a.matches || [], fin = ms.find(m => m.type === '결승'), lp = ms.find(m => m.type === '꼴찌결정전');
         const wr = (a.teamRank || []).find(t => t.name === a.winner) || { name: a.winner || 'TBD', color: '' };
@@ -35269,7 +35824,7 @@ window.pmExtRender = function(name){
         const hc = wr.color || '#fbbf24';
         const hero = '<div class="card"><div class="season-champion-hero" style="background: linear-gradient(135deg, ' + hc + '22, transparent); border: 1px solid ' + hc + '55; --hc:' + hc + ';"><div class="hero-trophy">' + gTrophyOr(a.name, '🏆', 'hero') + '</div><div class="hero-label">시즌 챔피언</div><div class="hero-team-name" data-gs="lg" style="color:' + hc + ';">' + E(wr.name) + '</div>' + (typeof gUpdTag === 'function' ? gUpdTag('1.84:개선') : '') + '</div>'
             + '<div class="season-runner-pills"><div class="runner-pill">🥈 준우승 <b style="color:' + ru.color + ';">' + E(ru.name) + '</b></div><div class="runner-pill">💀 꼴찌 <b style="color:' + lo.color + ';">' + E(lo.name) + '</b></div></div></div>';
-        const sp = '<div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);"><h3 style="color:var(--gold);">🌟 특별 수상' + (typeof gUpdTag === 'function' ? gUpdTag('1.84:개선') : '') + '</h3><div class="summary-grid season-award-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">' + gAwSpecialHtml(a.specialAwards, (function () { const m = {}; const sa = a.specialAwards || {}; ['rookie', 'yashin', 'ballon'].forEach(k => { if (sa[k]) { const st = seasonTeam(sa[k]); if (st) m[sa[k]] = st; } }); return m; })(), true) + '</div></div>';
+        const sp = '<div class="card" style="border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.04);"><h3 style="color:var(--gold);">🌟 특별 수상' + (typeof gUpdTag === 'function' ? gUpdTag('1.84:개선') : '') + '</h3><div class="summary-grid season-award-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">' + gAwSpecialHtml(a.specialAwards, (function () { const m = {}; const sa = a.specialAwards || {}; gSpPart('rest').forEach(d => { if (d.key === 'coach') { Object.assign(m, gSpArcTeams(a, 'coach', sa.coach || '')); return; } gAwNames(sa[d.key]).forEach(n => { const st = seasonTeam(n); if (st) m[n] = st; }); }); return m; })(), true, 'rest') + '</div></div>';
         return hero + '<div class="summary-grid season-award-grid">' + grid + '</div>' + sp
             + '<div style="font-size:.7rem;color:var(--text-muted);text-align:center;margin:-4px 0 14px;">※ 종료된 시즌의 전체 순위 · 개인 기록 표는 🏛️ 역사관 › 시즌 아카이브에서 볼 수 있어요.</div>';
     }
@@ -35389,33 +35944,38 @@ window.pmExtRender = function(name){
     };
     window.gArcAwardCards = function (a) {
         const pr = a.playerRank || [], by = {}; pr.forEach(r => { by[r.name] = r; });
-        const defs = [['topScorer', '⚽️', '득점왕', r => (r.goals || 0) + '골'], ['topAssistant', '🎯', '도움왕', r => (r.assists || 0) + '도움'], ['mvp', '👑', 'MVP (MOM)', r => (r.mom || 0) + '회'], ['topRating', '⭐', '최고평균평점', r => (Number(r.avgRating) || 0).toFixed(2) + '점']];
+        const defs = [['topScorer', '⚽️', '득점왕', r => (r.goals || 0) + '골'], ['topAssistant', '🎯', '도움왕', r => (r.assists || 0) + '도움']];
         return defs.map(d => {
             const ns = String(a[d[0]] || '').split(/,\s*/).filter(n => n && !/^[-—–]+$/.test(n) && n !== '없음' && n !== '기록 없음' && n !== 'N/A');
             const vals = {}, team = {};
             ns.forEach(n => { const r = by[n]; if (r) { vals[n] = d[3](r); team[n] = { name: r.teamName, color: r.color }; } else { const t = arcTeam(a, n); if (t) team[n] = t; } });
             return '<div class="summary-card aw-card"><h3>' + gAwardImg(d[0], d[1], 'hero') + '<span>' + d[2] + '</span></h3>' + gAwBig(ns, '', { vals, team, empty: '기록 없음' }) + '</div>';
-        }).join('');
+        }).join('') + gArcSpecialCards(a, 'top');
     };
-    window.gArcSpecialCards = function (a) {
-        const sa = a.specialAwards || {};
-        const SPD = [['rookie', '신인상', '🌱', '#86efac'], ['yashin', '야신상', '🧤', '#93c5fd'], ['ballon', '시즌 골롱도르', '🏅', '#fbbf24']];
-        return SPD.filter(d => sa[d[0]]).map(d => {
-            const t = arcTeam(a, sa[d[0]]), team = {}; if (t) team[sa[d[0]]] = t;
-            return '<div class="summary-card aw-card aw-sp" style="--awc:' + d[3] + ';"><h3>' + gAwardImg(d[0], d[2], 'hero') + '<span>' + d[1] + '</span></h3>' + gAwBig([sa[d[0]]], '', { team, empty: '미정' }) + '</div>';
+    /* v1.87: 감독상은 그 시즌 팀 → 감독 매핑으로 소속팀을 찾는다 */
+    window.gSpArcTeams = function (a, key, v) {
+        const m = {};
+        if (key === 'coach') {
+            const tm = a.teamManagers || {}, tid = Object.keys(tm).find(k => tm[k] === v);
+            if (tid !== undefined) { const t = (a.teamRank || []).find(x => String(x.id) === String(tid)) || (state.teams || []).find(x => String(x.id) === String(tid)); if (t) m[v] = { name: t.name, color: t.color }; }
+            return m;
+        }
+        gAwNames(v).forEach(n => { const t = arcTeam(a, n); if (t) m[n] = t; });
+        return m;
+    };
+    window.gArcSpecialCards = function (a, part) {   // part: 'top' = 득점왕 · 도움왕 줄에 붙는 골롱도르 · 올스타상 (미정이어도 표시) / 그 외 = 특별 수상 칸의 나머지 수상
+        const sa = a.specialAwards || {}, top = part === 'top';
+        return gSpPart(top ? 'top' : 'rest').filter(d => top || sa[d.key]).map(d => {
+            const mgr = d.key === 'coach', team = gSpArcTeams(a, d.key, sa[d.key]);
+            return '<div class="summary-card aw-card ' + (top ? 'aw-top' : 'aw-sp') + '" style="--awc:' + d.color + ';"><h3>' + gAwardImg(d.key, d.emoji, 'hero') + '<span>' + d.label + '</span></h3>' + gAwBig(mgr ? [sa[d.key]] : gAwNames(sa[d.key]), '', { team, mgr, empty: '미정' }) + '</div>';
         }).join('');
     };
 
     const AW = [
         ['topScorer', '득점왕', '⚽️', '#fb923c', false],
-        ['topAssistant', '도움왕', '🎯', '#38bdf8', false],
-        ['mvp', 'MVP (MOM)', '👑', '#facc15', false],
-        ['topRating', '최고평균평점', '⭐', '#a78bfa', false],
-        ['rookie', '신인상', '🌱', '#86efac', true],
-        ['yashin', '야신상', '🧤', '#93c5fd', true],
-        ['ballon', '시즌 골롱도르', '🏅', '#fbbf24', true]
-    ];
-    const names = v => String(v == null ? '' : v).split(/,\s*/).map(x => x.trim()).filter(Boolean);
+        ['topAssistant', '도움왕', '🎯', '#38bdf8', false]
+    ].concat((window.G_SP || []).filter(d => d.key !== 'coach').map(d => [d.key, d.label, d.emoji, d.color, true]));
+    const names = v => gAwNames(v);
 
     function pcHonors(name) {
         const H = { titles: [], runners: [], awards: [] };
@@ -35458,14 +36018,12 @@ window.pmExtRender = function(name){
             const top = (f, c) => [...ps].filter(f).sort(c)[0];
             const lead = {
                 topScorer: top(p => p.goals > 0, (a, b) => (b.goals - a.goals) || (b.avgRating - a.avgRating) || (b.assists - a.assists)),
-                topAssistant: top(p => p.assists > 0, (a, b) => (b.assists - a.assists) || (b.avgRating - a.avgRating) || (b.goals - a.goals)),
-                mvp: top(p => p.mom > 0, (a, b) => (b.mom - a.mom) || (b.avgRating - a.avgRating) || (pts(b) - pts(a))),
-                topRating: top(p => p.games > 0, (a, b) => (b.avgRating - a.avgRating) || (pts(b) - pts(a)) || (b.mom - a.mom))
+                topAssistant: top(p => p.assists > 0, (a, b) => (b.assists - a.assists) || (b.avgRating - a.avgRating) || (b.goals - a.goals))
             };
             const sa = state.specialAwards || {};
             AW.forEach(([key, label, emoji, color, special]) => {
-                const who = special ? sa[key] : (lead[key] && lead[key].name);
-                if (who === name) out.push({ season: state.seasonName || '현재 시즌', key, label, emoji, color });
+                const hit = special ? gAwNames(sa[key]).includes(name) : (lead[key] && lead[key].name === name);
+                if (hit) out.push({ season: state.seasonName || '현재 시즌', key, label, emoji, color });
             });
         } catch (e) { }
         return out;
@@ -35562,6 +36120,16 @@ window.pmExtRender = function(name){
 .aw-card.aw-sp .aw-pl { flex: 0 1 118px; max-width: 134px; padding: 6px 6px 7px; }
 .aw-card.aw-sp .aw-name { font-size: .8rem; } .aw-card.aw-sp .aw-team { font-size: .58rem; } .aw-card.aw-sp .aw-val { font-size: .8rem; margin-top: 3px; } .aw-card.aw-sp .aw-none { padding: 10px 4px; font-size: .72rem; }
 @media (max-width: 700px) { .aw-card.aw-sp h3 { font-size: 1.05rem; } .aw-card.aw-sp h3 img.g-awimg.s-hero { height: 68px; } .aw-card.aw-sp .aw-pl { flex-basis: 106px; max-width: 120px; } }
+
+/* v1.88 수상 카드 — 트로피 · 선수 사진 크기에 맞춰 세로 길이를 줄임 (득점왕 · 도움왕 · 골롱도르 · 올스타상 · 감독상 줄 + 특별 수상 칸 공통) */
+.summary-grid:has(> .aw-card.aw-top), .summary-grid:has(> .aw-card.aw-sp), #specialAwardsDisplay { grid-template-columns: repeat(auto-fit, minmax(152px, 184px)) !important; gap: 6px !important; justify-content: center; align-items: start; }
+.season-award-grid > .aw-card:not(.aw-champ), .aw-card.aw-top { padding: 6px 6px 8px; }
+.season-award-grid > .aw-card:not(.aw-champ) h3, .aw-card.aw-top h3 { font-size: 1.2rem; gap: 3px; margin-bottom: 4px; }
+.season-award-grid > .aw-card:not(.aw-champ) h3 .g-awi { font-size: 3rem; }
+.season-award-grid > .aw-card:not(.aw-champ) h3 img.g-awimg.s-hero { height: 86px; }
+.season-award-grid > .aw-card:not(.aw-champ) .aw-pl { flex: 0 1 118px; max-width: 134px; padding: 6px 6px 7px; }
+.season-award-grid > .aw-card:not(.aw-champ) .aw-name { font-size: .8rem; } .season-award-grid > .aw-card:not(.aw-champ) .aw-team { font-size: .58rem; } .season-award-grid > .aw-card:not(.aw-champ) .aw-val { font-size: .8rem; margin-top: 3px; } .season-award-grid > .aw-card:not(.aw-champ) .aw-none { padding: 8px 4px; font-size: .72rem; }
+@media (max-width: 700px) { .season-award-grid > .aw-card:not(.aw-champ) h3 { font-size: 1.05rem; } .season-award-grid > .aw-card:not(.aw-champ) h3 img.g-awimg.s-hero { height: 68px; } .season-award-grid > .aw-card:not(.aw-champ) .aw-pl { flex-basis: 106px; max-width: 120px; } }
 
 /* 🧩 선수 모달 › 트로피 진열대: 같은 수상끼리 */
 .tc-cab-t.pc-gt { color: var(--awc, var(--gold)); margin-top: 6px; }
@@ -35691,15 +36259,24 @@ window.pmExtRender = function(name){
     window.gMgrCabinet = function (detail) {
         const box = document.getElementById('managerTrophyCabinet'); if (!box) return;
         const ch = (detail && detail.champSeasons) || [], ru = (detail && detail.runnerUpSeasons) || [], lp = (detail && detail.lastPlaceSeasons) || [];
+        // v1.87: 🧑‍💼 감독상 — 종료된 시즌에서 이 감독이 받은 수상 (그 시즌 맡은 팀 표시)
+        const mgrName = detail && detail.name, co = [];
+        (state.archives || []).forEach(a => {
+            if (!mgrName || ((a.specialAwards || {}).coach) !== mgrName) return;
+            const tm = a.teamManagers || {}, tid = Object.keys(tm).find(k => tm[k] === mgrName);
+            const t = tid === undefined ? null : ((a.teamRank || []).find(x => String(x.id) === String(tid)) || (state.teams || []).find(x => String(x.id) === String(tid)));
+            co.push({ season: a.name, teamName: t ? t.name : '', teamColor: t ? (t.color || '#34d399') : '#34d399' });
+        });
         const trophies = ch.map(s => `<div class="tc-it" title="${E(s.season)} 우승 · ${E(s.teamName)}"><div class="tc-ico">${gTrophyOr(s.season, '🏆', 'hero')}</div><div class="tc-nm">${E(s.season)}</div><div class="tc-sub"><i style="color:${E(s.teamColor || '#fbbf24')};">${E(s.teamName)}</i> 우승</div></div>`).join('');
         const medals = ru.map(s => `<div class="tc-it silver" title="${E(s.season)} 준우승 · ${E(s.teamName)}"><div class="tc-ico">🥈</div><div class="tc-nm">${E(s.season)}</div><div class="tc-sub"><i style="color:${E(s.teamColor || '#cbd5e1')};">${E(s.teamName)}</i> 준우승</div></div>`).join('');
+        const coachIt = co.map(s => `<div class="tc-it" title="${E(s.season)} 감독상${s.teamName ? ' · ' + E(s.teamName) : ''}"><div class="tc-ico">${window.gAwardImg ? gAwardImg('coach', '🧑‍💼', 'hero') : '🧑‍💼'}</div><div class="tc-nm">${E(s.season)}</div><div class="tc-sub">${s.teamName ? `<i style="color:${E(s.teamColor)};">${E(s.teamName)}</i> ` : ''}감독상</div></div>`).join('');
         const sec = (cls, label, cnt, items) => items ? `<div class="tc-sec ${cls}">${label} <small>${cnt}</small></div><div class="tc-shelf">${items}</div><div class="tc-board"></div>` : '';
-        const body = (ch.length || ru.length)
-            ? sec('gold', '🏆 우승 트로피', ch.length + '개', trophies) + sec('silver', '🥈 준우승 메달', ru.length + '개', medals)
-            : '<div class="pc-empty"><span class="tc-note">아직 우승 · 준우승 기록이 없어요.</span></div>';
+        const body = (ch.length || ru.length || co.length)
+            ? sec('gold', '🏆 우승 트로피', ch.length + '개', trophies) + sec('silver', '🥈 준우승 메달', ru.length + '개', medals) + sec('gold', '🧑‍💼 감독상', co.length + '개', coachIt)
+            : '<div class="pc-empty"><span class="tc-note">아직 우승 · 준우승 · 감독상 기록이 없어요.</span></div>';
         box.innerHTML = `<details class="tc-fold" open>
             <summary><span class="tc-sum-t">🏛️ 트로피 진열대 ${typeof gNewTag === 'function' ? gNewTag('1.84') : ''}</span>
-                <span class="tc-chips"><span class="tcc gold${ch.length ? '' : ' mute'}">🏆 우승 ${ch.length}</span><span class="tcc silver${ru.length ? '' : ' mute'}">🥈 준우승 ${ru.length}</span>${lp.length ? `<span class="tcc bad">💀 꼴찌 ${lp.length}</span>` : ''}</span>
+                <span class="tc-chips"><span class="tcc gold${ch.length ? '' : ' mute'}">🏆 우승 ${ch.length}</span><span class="tcc silver${ru.length ? '' : ' mute'}">🥈 준우승 ${ru.length}</span>${co.length ? `<span class="tcc gold">🧑‍💼 감독상 ${co.length}</span>` : ''}${lp.length ? `<span class="tcc bad">💀 꼴찌 ${lp.length}</span>` : ''}</span>
                 <span class="tc-more"><b class="m-o">상세보기</b><b class="m-c">접기</b></span></summary>
             <div class="tc-body"><div class="tc-cab">${body}</div>
             <div class="tc-note" style="margin-top:4px;">※ 시즌이 종료되어 아카이브에 저장된 기록만 진열됩니다 (시즌별로 지정된 감독 기준).</div></div>
