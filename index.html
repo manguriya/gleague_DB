@@ -36592,6 +36592,13 @@ window.pmExtRender = function(name){
 .arc-final-player tbody td:nth-child(2) > .g-av:not(.team) { border-radius: 50%; object-fit: cover; object-position: 50% 15%; }
 .arc-final-team tbody td:nth-child(2) > .g-av, .arc-final-player tbody td:nth-child(3) > .g-av { border-radius: 4px; object-fit: contain; object-position: 50% 50%; background: transparent; }
 .arc-final-team tbody td > .g-av-sp, .arc-final-player tbody td > .g-av-sp { visibility: hidden; background: transparent; }
+/* v1.89 🤝 인터리그 결과 카드(🏛️ 역사관 시즌 아카이브 · 📊 순위표) — 팀 이름 길이와 상관없이 점수가 카드 정중앙에 오도록 3칸(홈팀 | 점수 | 원정팀) 격자로 정렬 */
+.inter-match-card { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); column-gap: 8px; align-items: center; }
+.inter-match-card > :nth-child(1) { text-align: right; word-break: keep-all; }
+.inter-match-card > :nth-child(2) { text-align: center; min-width: 3.4em; font-variant-numeric: tabular-nums; }
+.inter-match-card > :nth-child(3) { text-align: left; word-break: keep-all; }
+.inter-match-card.upcoming-match { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto; }
+.inter-match-card.upcoming-match > :nth-child(4) { margin-left: 0 !important; text-align: right; white-space: nowrap; }
 </style>
 <script id="g189RankTrophy">
 /* v1.89 🏅 랭킹 수상기록 트로피 크기 — 각 행의 높이를 재서(행 높이 − 4px) 트로피 높이로 지정. 트로피는 레이아웃에 16px만 차지하므로 행이 늘어나지 않는다.
