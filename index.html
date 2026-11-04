@@ -1338,6 +1338,15 @@ html.g-boot.g-out::before, html.g-boot.g-out::after { opacity: 0; transition: op
         .mp-pick { cursor:pointer; user-select:none; display:flex; align-items:center; gap:8px; padding:6px 9px; border-radius:7px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); font-size:0.8rem; }
         .mp-pick.on { background:rgba(251,191,36,0.14); border-color:rgba(251,191,36,0.6); }
         .mp-pick.dis { opacity:0.4; cursor:not-allowed; }
+        .mp-slotbox { margin-top:10px; padding:8px 10px; border-radius:8px; border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.05); }
+        .mp-slotboard { position:relative; height:250px; max-width:430px; margin:6px auto 4px; border-radius:10px; border:1px solid rgba(255,255,255,0.14); background:linear-gradient(180deg, rgba(34,197,94,0.20), rgba(22,101,52,0.30)); overflow:hidden; }
+        .mp-slotboard::before { content:''; position:absolute; left:6%; right:6%; top:50%; border-top:1px dashed rgba(255,255,255,0.22); }
+        .mp-slotcell { position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:2px; width:124px; }
+        .mp-slotcode { font-size:0.6rem; font-weight:900; color:#fef3c7; text-shadow:0 1px 2px rgba(0,0,0,0.7); text-align:center; line-height:1.15; }
+        .mp-slotsel { width:100%; font-size:0.7rem; padding:3px 2px; border-radius:6px; background:#0f172a; color:#e2e8f0; border:1px solid rgba(255,255,255,0.25); }
+        .mp-slotsel.pin { border-color:var(--gold); color:var(--gold); font-weight:800; }
+        .mp-slotgk { font-size:0.7rem; font-weight:800; color:#facc15; background:rgba(0,0,0,0.45); border-radius:6px; padding:3px 8px; }
+        .mp-slotchip { font-size:0.6rem; font-weight:800; border-radius:8px; padding:0 6px; border:1px solid rgba(255,255,255,0.18); white-space:nowrap; }
         
         /* 랭킹 포인트 툴팁 */
         td[title] { position: relative; }
@@ -10844,7 +10853,34 @@ html { color-scheme: dark; }
             const tr = fmTraits(p); if (tr.includes('engine')) v += .12; if (tr.includes('press')) v += .04; if (tr.includes('escape')) v += .04;
             return fmClamp(v, 0, 1);
         }
-        function fmAutoSig(p) { return [p.pos, JSON.stringify(p.stats || ''), JSON.stringify(p.ext || ''), (p.traits || []).join(','), p.roleMain || '', p.roleSub || '', p.roleThird || '', p.footR, p.footL].join('|'); }
+        // 📜 v1.92: 과거 경기 기록(match.tac[팀].lu = 포메이션 + 자리별 출전 선수)에서 선수가 실제로 선 자리(포지션 코드) 횟수를 모은다.
+        //   직접 기록한 출전은 1, 🪄추정으로 채운 출전은 0.4 가중 · 저장/불러오기마다 새로 계산 (tacAggReset)
+        var FM_HIST = null, FM_HIST_VER = 0;
+        function fmCodeHist() {
+            if (FM_HIST) return FM_HIST;
+            const H = {};
+            try {
+                tcPool().forEach(m => {
+                    if (!m || !m.tac) return;
+                    ['h', 'a'].forEach(sd => {
+                        const t = m.tac[sd]; if (!t || !t.lu || !t.fm) return;
+                        const F = FM_FORMATIONS[t.fm]; if (!F) return;
+                        const w = t.luEst ? 0.4 : 1;
+                        Object.keys(t.lu).forEach(k => {
+                            if (!/^p[0-3]$/.test(k)) return;
+                            const nm = t.lu[k], sl = F.slots[+k[1]]; if (typeof nm !== 'string' || !nm || !sl) return;
+                            const o = H[nm] = H[nm] || { W: 0, real: 0, c: {}, rc: {} };
+                            o.W += w; o.c[sl.c] = (o.c[sl.c] || 0) + w;
+                            if (!t.luEst) { o.real++; o.rc[sl.c] = (o.rc[sl.c] || 0) + 1; }
+                        });
+                    });
+                });
+            } catch (e) { console.error('출전 자리 기록 집계 오류', e); }
+            FM_HIST = H; return H;
+        }
+        // 서로 가까운 자리 — 한 자리를 뛰어 본 선수는 비슷한 자리도 어느 정도 소화할 수 있다고 본다
+        const FM_CODE_NEAR = { AML: ['AMR', 'ML', 'AMC'], AMR: ['AML', 'MR', 'AMC'], DL: ['DR', 'WBL'], DR: ['DL', 'WBR'], WBL: ['DL', 'ML'], WBR: ['DR', 'MR'], ML: ['AML', 'WBL', 'MC'], MR: ['AMR', 'WBR', 'MC'], DC: ['SW', 'DM'], SW: ['DC', 'DM'], DM: ['MC', 'DC'], MC: ['DM', 'AMC', 'ML', 'MR'], AMC: ['MC', 'ST', 'AML', 'AMR'], ST: ['AMC', 'AML', 'AMR'] };
+        function fmAutoSig(p) { return [FM_HIST_VER, p.name, p.pos, JSON.stringify(p.stats || ''), JSON.stringify(p.ext || ''), (p.traits || []).join(','), p.roleMain || '', p.roleSub || '', p.roleThird || '', p.footR, p.footL].join('|'); }
         const FM_AUTO_CACHE = new WeakMap();
         const FM_AUTO_TH = [['n', 2], ['c', 5], ['p', 8.5], ['a', 13]];
         function fmAutoProf(p) {
@@ -10861,9 +10897,29 @@ html { color-scheme: dark; }
                 tr.forEach(k => { f += (FM_TRAIT_CODE[k] || {})[c] || 0; });
                 F[c] = f;
             });
-            const best = Math.max(...FM_FIELD_CODES.map(c => F[c])), v = fmVersat(p), ovr = (typeof calcPlayerOVR === 'function' && calcPlayerOVR(p)) || 0, o01 = fmClamp((ovr - 62) / 22, 0, 1), k = (.5 + .9 * v) * (1.05 + .13 * o01), lv = {};   // v1.45: 기본 범위 +5% · 전체 능력(OVR)이 높을수록 최대 +18%까지 가능 포지션이 넓어짐
+            // 📜 v1.92: 과거 출전 기록 — 실제로 뛰어 본 자리는 가산(최대 +7), 가까운 자리는 그 일부(×0.35)를 나눠 받음 (기록이 3번 미만이면 비중을 줄여 소표본 과신 방지)
+            const hs = fmCodeHist()[p.name], hb = {};
+            if (hs && hs.W > 0) {
+                const conf = Math.min(1, hs.W / 3);
+                Object.keys(hs.c).forEach(c => {
+                    if (!FM_PCODES[c] || FM_PCODES[c].gk) return;
+                    const b = (3 + 4 * (hs.c[c] / hs.W)) * conf;
+                    hb[c] = Math.max(hb[c] || 0, b);
+                    (FM_CODE_NEAR[c] || []).forEach(n2 => { hb[n2] = Math.max(hb[n2] || 0, b * .35); });
+                });
+                FM_FIELD_CODES.forEach(c => { if (hb[c]) F[c] += hb[c]; });
+            }
+            const best = Math.max(...FM_FIELD_CODES.map(c => F[c])), v = fmVersat(p), ovr = (typeof calcPlayerOVR === 'function' && calcPlayerOVR(p)) || 0, o01 = fmClamp((ovr - 62) / 22, 0, 1), k = (.5 + .9 * v) * (1.05 + .13 * o01) * 1.2, lv = {};   // v1.92: 자동 추천 범위를 전반적으로 +20% 넉넉하게
+               // v1.45: 기본 범위 +5% · 전체 능력(OVR)이 높을수록 최대 +18%까지 가능 포지션이 넓어짐
             FM_FIELD_CODES.forEach(c => { const dd = best - F[c]; let L = 'x'; for (const [key, th] of FM_AUTO_TH) { if (dd <= th * k + 1e-9) { L = key; break; } } lv[c] = L; });
-            const out = { lv, v, k, F };
+            // 📜 실제 출전 기록이 있으면 최소 단계를 보장: 한 번이라도 직접 기록된 자리는 '가능' 이상 · 자주(비중 30%+, 3회+) 뛴 자리는 '능숙' 이상
+            if (hs && hs.W > 0) FM_FIELD_CODES.forEach(c => {
+                const rk = FM_PROF_ORDER.indexOf(lv[c]), rc = hs.rc[c] || 0; let floor = null;
+                if (rc >= 1) floor = 'p';
+                if (rc >= 3 && (hs.c[c] / hs.W) >= .3) floor = 'c';
+                if (floor && rk > FM_PROF_ORDER.indexOf(floor)) lv[c] = floor;
+            });
+            const out = { lv, v, k, F, hist: hs || null };
             FM_AUTO_CACHE.set(p, { sig, v: out });
             return out;
         }
@@ -11288,7 +11344,70 @@ function fmBestStyle(p, role) {
             if (!t) t = { formation: '1-2-1', slots: {}, roleStyle: {}, pos: {}, mv: {}, opt: {}, style: Object.assign({}, FM_DEFAULT_STYLE), set: false };
             fmNorm(team, t);
             if (fresh) fmFreshInit(team, t);
+            if ((Array.isArray(team._lineup) && team._lineup.length) || team._formation) { try { fmApplyPick(team, t, team._lineup || [], team._formation, team._slots || null); } catch (e) { console.error('예상 선발 → 전술판 반영 오류', e); } }   // v1.90: 🔗 예정 경기 예상 선발을 전술판 연계 · 전력 계산에 같은 선발로 반영
             return t;
+        }
+        // 🔗 v1.90: 예정 경기의 '예상 선발'(선수 이름 배열: GK 1 + 필드 최대 4)을 전술판 복사본(t)의 선발 자리에 겹쳐 놓는다.
+        //   이미 선발 자리에 있는 선수는 그대로 두고, 새로 들어오는 선수는 밀려나는 선발 선수의 자리 중 자리 적합도가 가장 좋은 곳에 배치한다.
+        //   밀려난 선수는 교체 명단 맨 앞으로 간다. (원본 team.tactic은 건드리지 않음 — 이 경기 예측 · 전술판 연계 화면에서만 보이는 모습)
+        function fmApplyPick(team, t, names, form, slotsSpec) {
+            let F = FM_FORMATIONS[t.formation]; if (!F) return;
+            const pl = n => fmPlayer(team, n);
+            const pick = (names || []).filter(n => pl(n));
+            const newForm = (form && form !== t.formation && FM_FORMATIONS[form]) ? form : '';
+            if (!pick.length && !newForm) return;
+            const slots = Object.assign({}, t.slots), keys = F.slots.map((s0, i) => 'p' + i), displaced = [];
+            const pgk = pick.find(n => pl(n).pos === 'GK');
+            if (pgk && slots.GK !== pgk) { if (slots.GK) displaced.push(slots.GK); slots.GK = pgk; }
+            const pf = pick.filter(n => n !== pgk && pl(n).pos !== 'GK').slice(0, keys.length);
+            const stay = pf.filter(n => keys.some(k => slots[k] === n));
+            const comers = pf.filter(n => !stay.includes(n));
+            if (comers.length) {
+                const free = keys.filter(k => !pf.includes(slots[k]));   // 지정하지 않은 선수가 서 있는(또는 빈) 자리
+                const fit = (n, k) => { const i = +k.slice(1); try { return fmRoleFit(pl(n), F.slots[i].r, undefined, team, F.slots[i].c) + fmFootSideAdj(pl(n), F.slots[i].c); } catch (e) { return 0; } };
+                let best = -Infinity, bp = null;
+                (function rec(i, used, acc, cur) {
+                    if (i === comers.length) { if (acc > best) { best = acc; bp = cur.slice(); } return; }
+                    for (let j = 0; j < free.length; j++) { if (used & (1 << j)) continue; cur.push(free[j]); rec(i + 1, used | (1 << j), acc + fit(comers[i], free[j]), cur); cur.pop(); }
+                })(0, 0, 0, []);
+                (bp || []).forEach((k, i) => { if (slots[k]) displaced.push(slots[k]); slots[k] = comers[i]; });
+            }
+            const starters = new Set(['GK'].concat(keys).map(k => slots[k]).filter(Boolean));
+            const oldBench = ['s0', 's1', 's2'].map(k => slots[k]).filter(n => n && !starters.has(n));
+            const bench = displaced.filter(n => !starters.has(n)).concat(oldBench).filter((n, i, a) => a.indexOf(n) === i).slice(0, 3);
+            ['s0', 's1', 's2'].forEach((k, i) => { if (bench[i]) slots[k] = bench[i]; else delete slots[k]; });
+            t.slots = slots;
+            if (newForm) {   // 📐 이 경기 한정 포메이션: 선발 필드 선수들을 새 포메이션에서 가장 어울리는 자리로 다시 배치 (전술판의 포메이션 변경과 같은 방식)
+                const F2 = FM_FORMATIONS[newForm], sp = keys.map(k => t.slots[k]).filter(Boolean).map(n => pl(n)).filter(Boolean);
+                keys.forEach(k => { delete t.slots[k]; });
+                const asg = fmBestAssign(sp, F2, team);
+                asg.forEach((k, i) => { if (k >= 0) t.slots['p' + i] = sp[k].name; });
+                t.formation = newForm; t.roleStyle = {}; t.pos = {}; t.mv = {}; t.opt = {};
+            }
+            // 📍 v1.91: 선수를 특정 자리(포지션)에 직접 배정 — 지정한 자리에는 그 선수가 서고, 나머지 선발 선수는 남은 자리 중 가장 어울리는 곳에 배치
+            //   (slotsSpec = { f: 포메이션 키, m: { p0: 선수이름, ... } } — 지정 당시 포메이션과 지금 포메이션이 같을 때만 적용 · 선발이 아닌 선수의 지정은 무시)
+            if (slotsSpec && slotsSpec.m && slotsSpec.f === t.formation) {
+                const F3 = FM_FORMATIONS[t.formation];
+                if (F3) {
+                    const cur = keys.map(k => t.slots[k]).filter(Boolean), forced = {}, used = {};
+                    Object.keys(slotsSpec.m).forEach(k => { const n = slotsSpec.m[k]; if (keys.includes(k) && n && !used[n] && cur.includes(n) && pl(n) && pl(n).pos !== 'GK') { forced[k] = n; used[n] = 1; } });
+                    if (Object.keys(forced).length) {
+                        const rest = cur.filter(n => !used[n]), free = keys.filter(k => !forced[k]);
+                        const fit2 = (n, k) => { const i = +k.slice(1); try { return fmRoleFit(pl(n), F3.slots[i].r, undefined, team, F3.slots[i].c) + fmFootSideAdj(pl(n), F3.slots[i].c); } catch (e) { return 0; } };
+                        const prev = {}; keys.forEach(k => { if (t.slots[k]) prev[t.slots[k]] = k; });
+                        let best = -Infinity, bp = null;
+                        (function rec(i, um, acc, cu) {
+                            if (i === rest.length) { if (acc > best) { best = acc; bp = cu.slice(); } return; }
+                            for (let j = 0; j < free.length; j++) { if (um & (1 << j)) continue; cu.push(free[j]); rec(i + 1, um | (1 << j), acc + fit2(rest[i], free[j]) + (prev[rest[i]] === free[j] ? 0.6 : 0), cu); cu.pop(); }
+                        })(0, 0, 0, []);
+                        keys.forEach(k => { delete t.slots[k]; });
+                        Object.keys(forced).forEach(k => { t.slots[k] = forced[k]; });
+                        (bp || []).forEach((k, i) => { t.slots[k] = rest[i]; });
+                        try { Object.defineProperty(t, '_pinned', { value: Object.keys(forced).map(k => forced[k]), enumerable: false, writable: true, configurable: true }); } catch (e) { }
+                    }
+                }
+            }
+            try { Object.defineProperty(t, '_pick', { value: pick.slice(), enumerable: false, writable: true, configurable: true }); } catch (e) { }
         }
         const fmApplied = team => !!(team && team.tactic && typeof team.tactic === 'object' && team.tactic.set === true && team.tactic.apply !== false);
         function fmPlayer(team, name) { return (team.players || []).find(p => p.name === name) || null; }
@@ -11729,8 +11848,11 @@ function fmBestStyle(p, role) {
         }
         // 전력 계산(tcTeamPowerCore)이 쓰는 계획: 전술판이 '직접 구성됨(set) + 반영 켜짐'일 때만 만든다. team.tactic은 건드리지 않는다.
         function fmPowerPlan(team) {
-            if (!fmApplied(team)) return null;
-            const tac = fmGetRO(team), c = fmContext(team, tac);
+            const applied = fmApplied(team);
+            if (!applied && !(team && team._slots && team._slots.m)) return null;   // v1.91: 전술판을 안 짠 팀도 예정 경기에서 자리를 직접 지정하면 그 자리 배치로 계산
+            const tac = fmGetRO(team);
+            if (!applied && !(tac._pinned && tac._pinned.length)) return null;
+            const c = fmContext(team, tac);
             if (!c.gk && !c.field.length) return null;
             const R = fmRatings(c), E = fmEffects(c, R, tac.style);
             const zm = fmZMap(c), zs = {}; Object.keys(zm).forEach(k => { zs[k] = zm[k].z; });
@@ -11962,8 +12084,8 @@ function fmBestStyle(p, role) {
             const legend = FM_PROF_ORDER.map(k => `<span><i style="background:${FM_PROF[k].col}"></i>${FM_PROF[k].t}</span>`).join('') + '<span><i class="dash"></i>흐림 = 자동</span>';
             const nSet = p.posProf ? Object.keys(p.posProf).length : 0;
             const A = fmAutoProf(p), nPos = FM_FIELD_CODES.filter(c => fmPosLevel(p, c).lv !== 'x').length;
-            return fmFootEditHtml(p) + `<div class="fm-bt" data-new="1.39" data-upd="1.47">📍 가능 포지션 · 숙련도 <span class="mut" style="font-weight:600;font-size:.7rem;">자리를 누르면 5단계(+자동)가 한 번에 떠서 바로 고를 수 있어요 · 점선 · 흐린 칸 = 🤖 자동 추천</span></div><div class="fm-gwrap"><div class="fm-gdir">▲ 상대 골대 방향</div><div class="fm-grow">${fmGutterHtml()}<div class="fm-bgrid">${cells.join('')}</div></div></div><div class="fm-prof-leg">${legend}</div>
-                <div class="fm-ed-d">🤖 자동 추천은 능력치 · 역할 · 특성 · 사용하는 발 · 활동량(다재다능도 <b>${A ? fmVersatLabel(A.v) : '-'}</b>)을 보고 정해요 — 많이 뛰고 고르게 잘할수록 가능 포지션이 늘고, 그렇지 않으면 특정 자리 위주예요. 지금 뛸 수 있는 자리 ${nPos}곳.<br>숙련도는 그 자리에 섰을 때의 감점으로 반영돼요 (자연스러움 0 · 능숙 −4 · 가능 −8 · 어색 −12 · 불가 −22).${nSet ? ` 직접 지정 ${nSet}곳` : ''} ${nSet ? `<a style="cursor:pointer;color:#38bdf8;font-weight:800;" data-n="${gEsc(p.name)}" onclick="fmProfReset(this.dataset.n)">자동으로 되돌리기</a>` : ''}</div>`;
+            return fmFootEditHtml(p) + `<div class="fm-bt" data-new="1.39" data-upd="1.47">📍 가능 포지션 · 숙련도 <span class="mut" style="font-weight:600;font-size:.7rem;">자리를 누르면 5단계(+자동)가 한 번에 떠서 바로 고를 수 있어요 · 점선 · 흐린 칸 = 🤖 자동 추천 (과거 출전 자리 · 능력치 · 특성 기준)</span></div><div class="fm-gwrap"><div class="fm-gdir">▲ 상대 골대 방향</div><div class="fm-grow">${fmGutterHtml()}<div class="fm-bgrid">${cells.join('')}</div></div></div><div class="fm-prof-leg">${legend}</div>
+                <div class="fm-ed-d">🤖 자동 추천은 <b>과거 경기에서 실제로 선 자리${A && A.hist ? `(기록 ${A.hist.real}회${A.hist.W > A.hist.real ? ' + 추정 ' + Math.round((A.hist.W - A.hist.real) / .4) + '회' : ''})` : '(기록 없음)'}</b> · 능력치 · 역할 · 특성 · 사용하는 발 · 활동량(다재다능도 <b>${A ? fmVersatLabel(A.v) : '-'}</b>)을 넉넉한 기준으로 보고 정해요 (뛰어 본 자리는 최소 '가능', 자주 뛴 자리는 '능숙' 이상) — 많이 뛰고 고르게 잘할수록 가능 포지션이 늘고, 그렇지 않으면 특정 자리 위주예요. 지금 뛸 수 있는 자리 ${nPos}곳.<br>숙련도는 그 자리에 섰을 때의 감점으로 반영돼요 (자연스러움 0 · 능숙 −4 · 가능 −8 · 어색 −12 · 불가 −22).${nSet ? ` 직접 지정 ${nSet}곳` : ''} ${nSet ? `<a style="cursor:pointer;color:#38bdf8;font-weight:800;" data-n="${gEsc(p.name)}" onclick="fmProfReset(this.dataset.n)">자동으로 되돌리기</a>` : ''}</div>`;
         }
         function fmProfRef(name) { let r = null; try { const t = fmCurrentTeam(); if (t) r = fmPlayer(t, name); } catch (e) { } if (!r) { try { r = findPlayerRefByName(name); } catch (e) { } } return r; }
         function fmProfAfter(name) {
@@ -13780,7 +13902,8 @@ function fmBestStyle(p, role) {
                     return `<div class="fm-mx-side"><div class="fm-mx-h" style="color:${col};">${gEsc(t.name)}</div><div class="dk-hint" style="margin:4px 0 0;">전술판 미설정 — 능력치 상위 선수 자동 선발·전술 보정 없이 계산됩니다.${t.tactic && t.tactic.apply === false ? ' (반영 꺼짐)' : ''}</div></div>`;
                 }
                 const tac = fmGetRO(t), c = fmContext(t, tac), E = tc;
-                return `<div class="fm-mx-side"><div class="fm-mx-h" style="color:${col};">${gEsc(t.name)} <span style="color:var(--gold);font-size:0.76rem;">${tc.name}</span></div>
+                const pk = Array.isArray(t._lineup) && t._lineup.length ? `<div style="text-align:center;margin:2px 0 4px;"><span style="font-size:0.66rem;font-weight:800;color:var(--success);border:1px solid rgba(34,197,94,0.4);border-radius:10px;padding:1px 8px;" title="이 경기의 📋 예상 선발 지정이 전술판 선발에 겹쳐 반영된 모습입니다. 팀 데이터센터의 전술판 원본은 바뀌지 않습니다.">🔗 예상 선발 ${t._lineup.length}명 지정 반영 중</span></div>` : '';
+                return `<div class="fm-mx-side"><div class="fm-mx-h" style="color:${col};">${gEsc(t.name)} <span style="color:var(--gold);font-size:0.76rem;">${tc.name}</span></div>${pk}
                     <div class="fm-info-pitch" style="max-width:230px;margin:0 auto;">${fmPitchHtml(t, tac, c, { ro: true, sm: true, mode: 'both', mgr: false })}</div>
                     <div style="font-size:0.72rem;text-align:center;margin-top:4px;">${tc.formation} · ${tc.balance}<br>전술 보정 <b style="color:${tc.overall >= 0 ? '#22c55e' : '#f87171'};">${tc.overall >= 0 ? '+' : ''}${tc.overall.toFixed(1)}</b> (종합 전력) · 공격 ${(tc.cats.atk >= 0 ? '+' : '') + tc.cats.atk.toFixed(1)} / 수비 ${(tc.cats.def >= 0 ? '+' : '') + tc.cats.def.toFixed(1)}${tacMxLine(p)}</div></div>`;
             };
@@ -18818,7 +18941,7 @@ function fmBestStyle(p, role) {
             //    (예정 경기의 '예상 선발' 지정이 있으면 그쪽이 우선. 전술판은 team.tactic을 읽기만 한다.)
             let tplan = null;
             try { tplan = fmPowerPlan(team); } catch (e) { tplan = null; }
-            if (tplan && !pick.length) {
+            if (tplan) {   // v1.90: 예상 선발 지정이 있어도 전술판 복사본(fmApplyPick)에 이미 반영돼 있으므로 같은 선발을 사용
                 const nm = n => all.find(p => p.name === n);
                 const tg = tplan.c.gk && tplan.c.gk.pos === 'GK' ? nm(tplan.c.gk.name) : null;
                 if (tg) gk = tg;
@@ -18873,7 +18996,9 @@ function fmBestStyle(p, role) {
             if (matchFx) overall += matchFx.overall;
 
             const mean = arr => arr.length ? arr.reduce((n, x) => n + x, 0) / arr.length : null;
-            const lineup = startersField.concat(gk ? [gk] : []).map(p => ({ name: p.name, pos: p.pos, ovr: calcPlayerOVR(p), avail: avail(p), starter: true, set: pick.includes(p.name) }))
+            const slotOf = {}, pinned = (tplan && tplan.tac && tplan.tac._pinned) || [];   // v1.91: 선발 선수가 선 자리(포지션 코드) — 전술판 복사본 기준
+            if (tplan) tplan.c.field.forEach(x => { if (x.p && x.slot) slotOf[x.p.name] = x.slot.c; });
+            const lineup = startersField.concat(gk ? [gk] : []).map(p => ({ name: p.name, pos: p.pos, ovr: calcPlayerOVR(p), avail: avail(p), starter: true, set: pick.includes(p.name), sc: slotOf[p.name] || '', pin: pinned.includes(p.name) }))
                 .concat(bench.map(p => ({ name: p.name, pos: p.pos, ovr: calcPlayerOVR(p), avail: avail(p), starter: false, set: false })));
             return {
                 cats, overall, matchFx, tacFx,
@@ -19005,8 +19130,8 @@ function fmBestStyle(p, role) {
             const avail = tcAvailMap();
             // 예정 경기에서 지정한 선발(없으면 자동 예상)을 반영한 팀 전력
             const keepN = (t, names) => (names || []).filter(n => (t.players || []).some(p => p.name === n));
-            const tAc = sched ? Object.assign({}, tA, { _lineup: keepN(tA, sched.hLineup) }) : tA;
-            const tBc = sched ? Object.assign({}, tB, { _lineup: keepN(tB, sched.aLineup) }) : tB;
+            const tAc = sched ? Object.assign({}, tA, { _lineup: keepN(tA, mpLineupNow(sched, 'h')), _formation: mpFormNow(sched, 'h'), _slots: mpSlotsNow(sched, 'h') }) : tA;
+            const tBc = sched ? Object.assign({}, tB, { _lineup: keepN(tB, mpLineupNow(sched, 'a')), _formation: mpFormNow(sched, 'a'), _slots: mpSlotsNow(sched, 'a') }) : tB;
             const pA = tcTeamPower(tAc, avail), pB = tcTeamPower(tBc, avail);
             const pool = tcPool();
             const absMap = {};
@@ -19014,7 +19139,7 @@ function fmBestStyle(p, role) {
             const f1 = v => (v === null || v === undefined ? '-' : v.toFixed(1));
             // 🧠 전력분석 · 📊 기록실 · 🗂️ 팀 데이터센터 데이터를 함께 쓰는 통합 예측 모델
             let model = null;
-            try { model = tcMatchupModel(tA, tB, pool, avail, pA, pB); } catch (e) { console.error('통합 예측 모델 오류', e); }
+            try { model = tcMatchupModel(tAc, tBc, pool, avail, pA, pB); } catch (e) { console.error('통합 예측 모델 오류', e); }
 
             // Elo 기반 기대 승률 (현재 시즌 Elo)
             let eloA = null, eloB = null, eloExp = null;
@@ -19083,7 +19208,7 @@ function fmBestStyle(p, role) {
 
             // ---- 예상 선발 라인업 (예정 경기: 직접 지정/자동 예상 · 팀 직접 선택: 자동 예상)
             html += `<div class="tc-grid2">${mpLineupCardHtml('h', tA, pA, sched, cA)}${mpLineupCardHtml('a', tB, pB, sched, cB)}</div>`;
-            try { html += fmMatchupCardHtml(tA, tB, pA, pB, cA, cB); } catch (e) { console.error('전술판 연계 카드 오류', e); }
+            try { html += fmMatchupCardHtml(tAc, tBc, pA, pB, cA, cB); } catch (e) { console.error('전술판 연계 카드 오류', e); }
 
             // ---- 레이더 + 항목별 비교
             const rv = p => { const o = {}; TC_CATS.forEach(c => { o[c.label] = p.cats[c.key] === null ? 50 : Math.round(p.cats[c.key]); }); return o; };
@@ -24071,7 +24196,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //  - 예상 선발: 예정 경기에 hLineup/aLineup(선수 이름 배열)을 지정하면 그 선수들을 주전으로 계산하고,
         //    비어 있거나 모자라면 능력치×출전 가능성이 높은 선수로 자동 보충한다(= 예상 라인업).
         // ======================================================
-        let mpSelectedId = null, mpEditSide = null, mpDraft = [], mpEditRoster = [];
+        let mpSelectedId = null, mpEditSide = null, mpDraft = [], mpEditRoster = [], mpDraftForm = '', mpDraftSlots = {}, mpDraftSlotsF = '';   // v1.91: mpDraftSlots = { p0: 선수이름 } (자리 직접 지정) · mpDraftSlotsF = 그 지정이 만들어진 포메이션 키
         const MP_VERDICT = ['박빙', '근소 우세', '우세', '크게 우세'];
         const MP_POS_ORDER = { GK: 0, DF: 1, MF: 2, FW: 3 };
 
@@ -24081,11 +24206,11 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (!hT || !aT || hT === aT) return null;
             const avail = tcAvailMap();
             const keep = (t, names) => (names || []).filter(n => (t.players || []).some(p => p.name === n));
-            const hC = Object.assign({}, hT, { _lineup: keep(hT, x.hLineup) });
-            const aC = Object.assign({}, aT, { _lineup: keep(aT, x.aLineup) });
+            const hC = Object.assign({}, hT, { _lineup: keep(hT, x.hLineup), _formation: x.hFormation || '', _slots: x.hSlots || null });
+            const aC = Object.assign({}, aT, { _lineup: keep(aT, x.aLineup), _formation: x.aFormation || '', _slots: x.aSlots || null });
             const pH = tcTeamPower(hC, avail), pA = tcTeamPower(aC, avail);
             const pool = tcPool();
-            const mdl = tcMatchupModel(hT, aT, pool, avail, pH, pA);
+            const mdl = tcMatchupModel(hC, aC, pool, avail, pH, pA);
             return { x, hT, aT, pH, pA, mdl, avail, pool };
         }
         // v1.40: 종합 예측(여러 지표의 가중 평균)과 득실 시뮬레이션 단독 승률이 다른 값임을 화면에서 바로 알 수 있게 하는 설명 줄
@@ -24163,16 +24288,29 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         function mpLineupCardHtml(side, team, pw, x, color) {
             const key = side + 'Lineup';
             const setNames = ((x && x[key]) || []).filter(n => (team.players || []).some(p => p.name === n && p.stats));
-            const isSet = setNames.length > 0;
+            const fSet = (x && x[side + 'Formation'] && FM_FORMATIONS[x[side + 'Formation']]) ? x[side + 'Formation'] : '';
+            const isSet = setNames.length > 0 || !!fSet || !!((x && x[side + 'Slots'] && x[side + 'Slots'].m) && Object.keys(x[side + 'Slots'].m).length);
             const editing = mpEditSide === side;
-            const badge = isSet
-                ? `<span style="font-size:0.66rem; font-weight:800; color:var(--success); border:1px solid rgba(34,197,94,0.4); border-radius:10px; padding:1px 8px;">✅ 선발 지정 ${setNames.length}명${setNames.length < TC_FIELD_STARTERS + 1 ? ' + 자동 보충' : ''}</span>`
-                : `<span style="font-size:0.66rem; font-weight:800; color:var(--gold); border:1px solid rgba(251,191,36,0.4); border-radius:10px; padding:1px 8px;">🤖 자동 예상 라인업</span>`;
+            const badge = setNames.length > 0
+                ? `<span style="font-size:0.66rem; font-weight:800; color:var(--success); border:1px solid rgba(34,197,94,0.4); border-radius:10px; padding:1px 8px;">✅ 선발 지정 ${setNames.length}명${setNames.length < TC_FIELD_STARTERS + 1 ? ' + 자동 보충' : ''}</span>${fSet ? `<span style="font-size:0.66rem; font-weight:800; color:#38bdf8; border:1px solid rgba(56,189,248,0.4); border-radius:10px; padding:1px 8px;">📐 ${gEsc(FM_FORMATIONS[fSet].label)}</span>` : ''}`
+                : `<span style="font-size:0.66rem; font-weight:800; color:var(--gold); border:1px solid rgba(251,191,36,0.4); border-radius:10px; padding:1px 8px;">🤖 자동 예상 라인업</span>${fSet ? `<span style="font-size:0.66rem; font-weight:800; color:#38bdf8; border:1px solid rgba(56,189,248,0.4); border-radius:10px; padding:1px 8px;">📐 ${gEsc(FM_FORMATIONS[fSet].label)}</span>` : ''}`;
             const sortLu = arr => arr.slice().sort((a, b) => (MP_POS_ORDER[a.pos] ?? 9) - (MP_POS_ORDER[b.pos] ?? 9) || (b.ovr || 0) - (a.ovr || 0));
-            const row = l => `<div class="mp-lu-row">
+            // 📍 v1.91: 선발 선수가 서는 자리(포지션 코드) + 그 자리에 대한 숙련도 — 직접 지정한 자리는 금색
+            const slotChip = l => {
+                if (!l.sc || !FM_PCODES[l.sc] || l.pos === 'GK') return '';
+                const pp = (team.players || []).find(q => q.name === l.name); let pf = null;
+                try { const lv = pp ? fmPosLevel(pp, l.sc).lv : null; pf = lv ? FM_PROF[lv] : null; } catch (e) { pf = null; }
+                const col = l.pin ? 'var(--gold)' : 'var(--text-muted)';
+                return `<span class="mp-slotchip" style="color:${col}; ${l.pin ? 'border-color:rgba(251,191,36,0.55);' : ''}" title="${l.pin ? '직접 지정한 자리' : '전술판 기준 자동 배치'} — ${gEsc(FM_PCODES[l.sc].n)}${pf ? ' · 이 선수의 숙련도: ' + pf.t : ''}">📍 ${gEsc(FM_PCODES[l.sc].n)}${pf ? ` <span style="color:${pf.col};">${gEsc(pf.t)}</span>` : ''}</span>`;
+            };
+            const pinCnt = pw.lineup.filter(l => l.starter && l.pin).length, slSaved = (x && x[side + 'Slots'] && x[side + 'Slots'].m) ? Object.keys(x[side + 'Slots'].m).length : 0;
+            const pinBadge = pinCnt > 0 ? `<span style="font-size:0.66rem; font-weight:800; color:var(--gold); border:1px solid rgba(251,191,36,0.5); border-radius:10px; padding:1px 8px;">📍 자리 지정 ${pinCnt}명</span>`
+                : (slSaved > 0 && !editing ? `<span style="font-size:0.66rem; font-weight:700; color:#fb923c; border:1px solid rgba(251,146,60,0.45); border-radius:10px; padding:1px 8px;" title="자리를 지정한 뒤 포메이션(전술판)이 바뀌었거나 선발에서 빠진 선수라 이번 계산에는 적용되지 않았습니다. ✏️ 선발 설정에서 다시 지정해 주세요.">⚠️ 자리 지정 미적용</span>` : '');
+            const row = l => `<div class="mp-lu-row" style="flex-wrap:wrap;">
                 <span class="mp-pos ${gEsc(l.pos)}">${gEsc(l.pos)}</span>
                 <span class="clickable-player" style="font-weight:800;" onclick="${tcPlayerClick(l.name)}">${gEsc(l.name)}</span>
                 ${l.set ? '<span style="font-size:0.6rem; color:var(--success); font-weight:900;">지정</span>' : ''}
+                ${slotChip(l)}
                 <span style="margin-left:auto; font-weight:900; color:${ovrColor(l.ovr)};">${l.ovr === null || l.ovr === undefined ? '-' : l.ovr}</span>
                 <span style="font-size:0.66rem; color:var(--text-muted); width:44px; text-align:right;" title="출전 가능성(전 시즌 출전/결장 기록)">출전 ${Math.round((l.avail || 0) * 100)}%</span>
             </div>`;
@@ -24189,7 +24327,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     ${isSet ? `<button class="btn btn-del" style="padding:5px 10px; font-size:0.72rem;" onclick="mpClearLineup('${side}')">↩ 자동 예상으로</button>` : ''}
                 </div>` : `<div style="margin-top:8px; font-size:0.68rem; color:var(--text-muted);">선발을 직접 지정하려면 📅 예정 경기 모드에서 경기를 선택하세요.</div>`}`;
             return `<div class="card dash-card-tight">
-                <div class="tc-sec-title" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><span style="color:${color};">📋 ${gEsc(team.name)} 예상 선발</span>${badge}</div>
+                <div class="tc-sec-title" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><span style="color:${color};">📋 ${gEsc(team.name)} 예상 선발</span>${badge}${pinBadge}</div>
                 ${body}
             </div>`;
         }
@@ -24206,25 +24344,84 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                     <span style="margin-left:auto; font-weight:900; color:${ovrColor(calcPlayerOVR(p))};">${calcPlayerOVR(p) ?? '-'}</span>
                 </div>`;
             }).join('');
-            return `<div style="font-size:0.74rem; color:var(--text-muted); margin-bottom:8px;">선수를 눌러 선발로 지정하세요. 골키퍼 <b>${gkCnt}/1</b> · 필드 <b>${fieldCnt}/${TC_FIELD_STARTERS}</b> — 비워 둔 자리는 능력치·출전 가능성 기준으로 자동 보충됩니다.</div>
-                <div style="display:flex; flex-direction:column; gap:4px; max-height:340px; overflow-y:auto;">${items || '<div class="dash-empty">능력치가 입력된 선수가 없습니다.</div>'}</div>
+            const sx = mpCurrentSched(), st = sx ? schedTeam(mpEditSide === 'h' ? sx.hId : sx.aId) : null;
+            const boardF = st && st.tactic && FM_FORMATIONS[st.tactic.formation] ? FM_FORMATIONS[st.tactic.formation].label : '자동';
+            const fOpts = `<option value="">전술판 기준 (${gEsc(boardF)})</option>` + Object.keys(FM_FORMATIONS).map(k => `<option value="${k}" ${mpDraftForm === k ? 'selected' : ''}>${gEsc(FM_FORMATIONS[k].label)}</option>`).join('');
+            const fmSel = `<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;"><span style="font-size:0.74rem; font-weight:800;">📐 이 경기 포메이션</span><select class="archive-select" style="margin:0; min-width:170px; font-size:0.74rem;" onchange="mpSetDraftForm(this.value)">${fOpts}</select>${st && !fmApplied(st) ? '<span style="font-size:0.66rem; color:var(--text-muted);">전술판을 구성하지 않은 팀은 아래 📍 자리를 직접 지정할 때만 포메이션 배치가 전력 계산에 반영됩니다 (🗂️ 팀 데이터센터에서 전술판을 구성하면 항상 반영)</span>' : '<span style="font-size:0.66rem; color:var(--text-muted);">고르면 선발 선수들이 새 포메이션의 어울리는 자리로 재배치됩니다 (팀 전술판 원본은 그대로)</span>'}</div>`;
+            return fmSel + `<div style="font-size:0.74rem; color:var(--text-muted); margin-bottom:8px;">선수를 눌러 선발로 지정하세요. 골키퍼 <b>${gkCnt}/1</b> · 필드 <b>${fieldCnt}/${TC_FIELD_STARTERS}</b> — 비워 둔 자리는 전술판 선발(없으면 능력치·출전 가능성 기준)로 자동 보충됩니다. <b style="color:var(--success);">고르는 즉시 아래 예측 · 전술판 연계에 같이 반영</b>되고, 💾 저장해야 유지됩니다.</div>
+                <div class="mp-pick-list" style="display:flex; flex-direction:column; gap:4px; max-height:340px; overflow-y:auto;">${items || '<div class="dash-empty">능력치가 입력된 선수가 없습니다.</div>'}</div>
+                ${mpSlotBoardHtml(st)}
                 <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
                     <button class="btn btn-main" style="padding:5px 12px; font-size:0.74rem;" onclick="mpSaveLineup()">💾 선발 저장</button>
-                    <button class="btn btn-auto" style="padding:5px 12px; font-size:0.74rem;" onclick="mpDraft = []; mpRefreshEditor()">비우기</button>
+                    <button class="btn btn-auto" style="padding:5px 12px; font-size:0.74rem;" onclick="mpDraft = []; mpDraftSlots = {}; mpDraftSlotsF = ''; mpLiveRefresh()">비우기</button>
                     <button class="btn btn-del" style="padding:5px 12px; font-size:0.74rem;" onclick="mpCancelEdit()">취소</button>
                 </div>`;
         }
-        function mpRefreshEditor() { const el = document.getElementById('mpEditor'); if (el) el.innerHTML = mpEditorHtml(); }
+        // 📍 v1.91: 선발 선수를 포메이션의 어느 자리에 세울지 직접 정한다 (이 경기 한정 · 지정하지 않은 자리는 선발 선수 중 가장 어울리는 사람이 자동 배치)
+        function mpEditTeam() { const x = mpCurrentSched(); return x && mpEditSide ? schedTeam(mpEditSide === 'h' ? x.hId : x.aId) : null; }
+        function mpEffForm(team, key) {
+            if (key && FM_FORMATIONS[key]) return key;
+            try { const t = fmGetRO(team); return t && FM_FORMATIONS[t.formation] ? t.formation : ''; } catch (e) { return ''; }
+        }
+        function mpSlotsNow(x, side) {
+            if (mpEditSide === side) return Object.keys(mpDraftSlots).length && mpDraftSlotsF ? { f: mpDraftSlotsF, m: mpDraftSlots } : null;
+            return (x && x[side + 'Slots']) || null;
+        }
+        function mpSlotBoardHtml(team) {
+            if (!team) return '';
+            const fk = mpEffForm(team, mpDraftForm), F = fk ? FM_FORMATIONS[fk] : null;
+            if (!F) return '';
+            const fieldNames = mpDraft.filter(n => { const q = mpEditRoster.find(r => r.name === n); return q && q.pos !== 'GK'; });
+            const gkName = mpDraft.find(n => { const q = mpEditRoster.find(r => r.name === n); return q && q.pos === 'GK'; }) || '';
+            const m = mpDraftSlotsF === fk ? mpDraftSlots : {};
+            const cells = F.slots.map((sl, i) => {
+                const k = 'p' + i, cur = fieldNames.includes(m[k]) ? m[k] : '';
+                const opts = '<option value="">🤖 자동</option>' + fieldNames.map(n => {
+                    const q = mpEditRoster.find(r => r.name === n); let lv = '';
+                    try { const L = fmPosLevel(q, sl.c).lv; lv = FM_PROF[L] ? ' · ' + FM_PROF[L].t.slice(0, 2) : ''; } catch (e) { }
+                    return `<option value="${gEsc(n)}" ${cur === n ? 'selected' : ''}>${gEsc(n)}${lv}</option>`;
+                }).join('');
+                const xx = Math.max(19, Math.min(81, sl.x)), yy = Math.max(15, Math.min(66, sl.y * 0.82 - 4));
+                return `<div class="mp-slotcell" style="left:${xx}%; top:${yy}%;"><div class="mp-slotcode">${gEsc((FM_PCODES[sl.c] || {}).n || sl.c)}</div><select class="mp-slotsel ${cur ? 'pin' : ''}" onchange="mpSetSlot('${k}', this.value)">${opts}</select></div>`;
+            }).join('');
+            const gkCell = `<div class="mp-slotcell" style="left:50%; top:88%;"><div class="mp-slotgk">🧤 ${gkName ? gEsc(gkName) : '골키퍼 자동'}</div></div>`;
+            return `<div class="mp-slotbox"><div style="font-size:0.76rem; font-weight:800; margin-bottom:2px;">📍 선수별 출전 자리 <span style="font-size:0.66rem; font-weight:600; color:var(--text-muted);">— ${gEsc(F.label)} · 위쪽이 공격 방향</span></div>
+                <div style="font-size:0.68rem; color:var(--text-muted);">자리마다 어느 선수를 세울지 고르세요. <b>🤖 자동</b>으로 두면 남은 선발 선수 중 가장 어울리는 사람이 들어갑니다. 선수 이름 옆 두 글자는 그 자리에 대한 선수의 숙련도(자연 · 능숙 · 가능 · 어색 · 불가)이며, 고르는 즉시 아래 예측 · 전술판 연계에 반영됩니다.</div>
+                <div class="mp-slotboard">${cells}${gkCell}</div>
+                ${fieldNames.length ? '' : '<div style="font-size:0.68rem; color:var(--text-muted);">위에서 필드 선수를 먼저 선발로 지정하면 자리를 고를 수 있습니다.</div>'}</div>`;
+        }
+        function mpSetSlot(k, name) {
+            const team = mpEditTeam(); if (!team) return;
+            const fk = mpEffForm(team, mpDraftForm); if (!fk) return;
+            if (mpDraftSlotsF !== fk) { mpDraftSlots = {}; mpDraftSlotsF = fk; }
+            Object.keys(mpDraftSlots).forEach(q => { if (mpDraftSlots[q] === name || q === k) delete mpDraftSlots[q]; });   // 한 선수는 한 자리에만
+            if (name) mpDraftSlots[k] = name;
+            mpLiveRefresh();
+        }
+        function mpRefreshEditor() { mpLiveRefresh(); }
+        // 🔗 v1.90: 선발을 고를 때마다 경기 예측 · 팀 전력 비교 · 예상 선발 · 🧠 전술판 연계를 한꺼번에 다시 그림 (💾 저장 전에도 미리보기로 같이 바뀜)
+        function mpLiveRefresh() {
+            const y = window.scrollY, ls = document.querySelector('#mpEditor .mp-pick-list'), st = ls ? ls.scrollTop : 0;
+            mxRender();
+            const l2 = document.querySelector('#mpEditor .mp-pick-list'); if (l2) l2.scrollTop = st;
+            window.scrollTo(window.scrollX, y);
+        }
+        // 현재 화면에 쓸 예상 선발: 편집 중인 쪽은 아직 저장 안 한 초안, 나머지는 저장된 값
+        function mpFormNow(x, side) { return mpEditSide === side ? (mpDraftForm || '') : ((x && x[side + 'Formation']) || ''); }
+        function mpSetDraftForm(v) { mpDraftForm = v || ''; mpDraftSlots = {}; mpDraftSlotsF = ''; mpLiveRefresh(); }   // 포메이션을 바꾸면 이전 자리 지정은 의미가 없어 초기화
+        function mpLineupNow(x, side) { return mpEditSide === side ? mpDraft : ((x && x[side + 'Lineup']) || []); }
         function mpCurrentSched() { return schedSorted().find(v => v.id === mpSelectedId) || null; }
         function mpStartEdit(side) {
             const x = mpCurrentSched();
             if (!x) return;
             const team = schedTeam(side === 'h' ? x.hId : x.aId);
             if (!team) return;
-            mpEditSide = side;
+            mpEditSide = side; mpDraftForm = x[side + 'Formation'] || '';
             mpEditRoster = (team.players || []).filter(p => p.stats).slice()
                 .sort((a, b) => (MP_POS_ORDER[a.pos] ?? 9) - (MP_POS_ORDER[b.pos] ?? 9) || (calcPlayerOVR(b) || 0) - (calcPlayerOVR(a) || 0));
             const cur = (x[side + 'Lineup'] || []).filter(n => mpEditRoster.some(p => p.name === n));
+            { const sl = x[side + 'Slots']; mpDraftSlots = {}; mpDraftSlotsF = '';
+              if (sl && sl.m && sl.f) { Object.keys(sl.m).forEach(k => { if (mpEditRoster.some(p => p.name === sl.m[k])) mpDraftSlots[k] = sl.m[k]; }); mpDraftSlotsF = Object.keys(mpDraftSlots).length ? sl.f : ''; } }
             if (cur.length) mpDraft = cur.slice();
             else { const pr = mpPredict(x); mpDraft = pr ? (side === 'h' ? pr.pH : pr.pA).lineup.filter(l => l.starter).map(l => l.name) : []; }
             mpRender();
@@ -24233,7 +24430,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             const p = mpEditRoster[i];
             if (!p) return;
             const at = mpDraft.indexOf(p.name);
-            if (at !== -1) { mpDraft.splice(at, 1); mpRefreshEditor(); return; }
+            if (at !== -1) { mpDraft.splice(at, 1); Object.keys(mpDraftSlots).forEach(k => { if (mpDraftSlots[k] === p.name) delete mpDraftSlots[k]; }); mpRefreshEditor(); return; }
             const gkCnt = mpDraft.filter(n => (mpEditRoster.find(q => q.name === n) || {}).pos === 'GK').length;
             const fieldCnt = mpDraft.length - gkCnt;
             if (p.pos === 'GK' && gkCnt >= 1) { alert('골키퍼는 1명만 선발로 지정할 수 있습니다.'); return; }
@@ -24246,6 +24443,10 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (!x || !mpEditSide) return;
             const key = mpEditSide + 'Lineup';
             if (mpDraft.length) x[key] = mpDraft.slice(); else delete x[key];
+            const fkey = mpEditSide + 'Formation'; if (mpDraftForm && FM_FORMATIONS[mpDraftForm]) x[fkey] = mpDraftForm; else delete x[fkey];
+            const skey = mpEditSide + 'Slots', sm = {};   // 📍 v1.91: 자리 지정 저장 — 선발에 남아 있는 선수만
+            Object.keys(mpDraftSlots).forEach(k => { if (mpDraft.includes(mpDraftSlots[k])) sm[k] = mpDraftSlots[k]; });
+            if (Object.keys(sm).length && mpDraftSlotsF && FM_FORMATIONS[mpDraftSlotsF]) x[skey] = { f: mpDraftSlotsF, m: sm }; else delete x[skey];
             mpEditSide = null;
             save();
             mpRender();
@@ -24255,7 +24456,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         function mpClearLineup(side) {
             const x = mpCurrentSched();
             if (!x) return;
-            delete x[side + 'Lineup'];
+            delete x[side + 'Lineup']; delete x[side + 'Formation']; delete x[side + 'Slots'];
             save();
             mpRender();
             try { renderDashUpcoming(); } catch (e) { console.error(e); }
@@ -24295,7 +24496,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         var TAC_APPLY_KEY = 'gleague_tac_apply_v119';
         var TAC_AGG = null, TAC_AGG_SIG = '', tacScope = 'team', tacCardTeam = null;
         var TAC_ALL_DIMS = ['fm'].concat(FM_DIMS, ['fgk']);
-        function tacAggReset() { TAC_AGG = null; TAC_AGG_SIG = ''; window.MAU_VER = (window.MAU_VER || 0) + 1; }   // v1.33: 저장/불러오기마다 🔗 자동 연동 캐시도 새로 계산
+        function tacAggReset() { TAC_AGG = null; TAC_AGG_SIG = ''; FM_HIST = null; FM_HIST_VER++; window.MAU_VER = (window.MAU_VER || 0) + 1; }   // v1.33: 저장/불러오기마다 🔗 자동 연동 캐시도 새로 계산
         function tacApplyOn() { try { return localStorage.getItem(TAC_APPLY_KEY) !== '0'; } catch (e) { return true; } }
         function tacQ(s) { return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
         function tacPct(x) { return (x === null || x === undefined) ? '-' : Math.round(x * 100) + '%'; }
@@ -32289,7 +32490,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.90';
+        const G_HTML_VERSION = '1.92';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
