@@ -3102,6 +3102,322 @@ html { color-scheme: dark; }
   filter: drop-shadow(1px 0 0 #3b2503) drop-shadow(-1px 0 0 #3b2503) drop-shadow(0 1px 0 #3b2503) drop-shadow(0 -1px 0 #3b2503) drop-shadow(0 2px 0 #8a5a06) drop-shadow(0 4px 0 #4a2a02) drop-shadow(0 7px 6px rgba(0,0,0,.6));
 }
 </style>
+<style id="gPgCss">
+/* ===== v1.93 선수·감독 상세: 모달 → 페이지 전환 + 허브(메인) ===== */
+html body #playerDetailModal.modal, html body #managerDetailModal.modal { position: static; z-index: auto; width: auto; height: auto; background: none; backdrop-filter: none; overflow: visible; }
+html body #playerDetailModal.modal > .modal-content, html body #managerDetailModal.modal > .modal-content { max-width: none; width: 100%; margin: 0; max-height: none; overflow: visible; border-radius: 14px; box-sizing: border-box; animation: none; }
+html body #playerDetailModal .close-modal, html body #managerDetailModal .close-modal { display: none; }
+html body #playerDetailModal .pm-nav, html body #managerDetailModal .pm-nav, html body #playerDetailModal .pm-pageno, html body #managerDetailModal .pm-pageno { display: none; }
+html body.g-pg-open .container > .tab-content, html body.g-pg-open .container .tab-content.active { display: none !important; }
+html body.g-pg-open .main-content { padding-bottom: 24px; }
+.gpg-bar { position: sticky; top: var(--gpg-top, 56px); z-index: 240; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: -20px -20px 14px; padding: 9px 16px; background: rgba(15,23,42,.96); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(255,255,255,.09); border-radius: 14px 14px 0 0; }
+.gpg-bar button, .gpg-bar select { font-family: inherit; font-size: .84rem; font-weight: 800; color: var(--text); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); border-radius: 9px; padding: 7px 12px; cursor: pointer; }
+.gpg-bar button:hover, .gpg-bar select:hover { border-color: var(--accent); }
+.gpg-bar .gpg-arrow { font-size: 1.15rem; line-height: 1; padding: 5px 13px; }
+.gpg-bar .gpg-sel { flex: 1 1 220px; min-width: 0; max-width: 420px; }
+.gpg-bar .gpg-sel option, .gpg-bar .gpg-sel optgroup, .gpg-bar .gpg-scope option { background: #0f172a; color: #e2e8f0; }
+.gpg-bar .gpg-cnt { font-size: .74rem; font-weight: 800; color: var(--text-muted); min-width: 46px; text-align: center; }
+.gpg-bar .gpg-scope { font-size: .76rem; padding: 6px 8px; }
+.gpg-stack > * + * { margin-top: 12px; }
+#playerRankTrendChart { max-width: 760px; margin-left: auto; margin-right: auto; }
+.gpg-hub { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.gpg-box { position: relative; grid-column: span 12; background: rgba(15,23,42,.58); border: 1px solid rgba(255,255,255,.09); border-radius: 12px; padding: 12px 14px 14px; cursor: pointer; transition: border-color .15s, transform .15s, background .15s; min-width: 0; }
+.gpg-box:hover { border-color: var(--accent); background: rgba(30,41,59,.7); transform: translateY(-1px); }
+.gpg-box.s8 { grid-column: span 8; } .gpg-box.s7 { grid-column: span 7; } .gpg-box.s6 { grid-column: span 6; } .gpg-box.s5 { grid-column: span 5; } .gpg-box.s4 { grid-column: span 4; }
+@media (max-width: 1100px) { .gpg-box.s8, .gpg-box.s7 { grid-column: span 12; } .gpg-box.s5, .gpg-box.s4 { grid-column: span 6; } }
+@media (max-width: 720px) { .gpg-box.s6, .gpg-box.s5, .gpg-box.s4 { grid-column: span 12; } .gpg-bar { margin: -20px -14px 12px; padding: 8px 10px; } }
+.gpg-bh { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; font-weight: 900; font-size: .9rem; }
+.gpg-more { font-size: .68rem; font-weight: 800; color: var(--text-muted); white-space: nowrap; }
+.gpg-box:hover .gpg-more { color: var(--accent); }
+.gpg-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.gpg-tile { background: rgba(0,0,0,.26); border-radius: 9px; padding: 9px 6px; text-align: center; }
+.gpg-tile b { display: block; font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 800; line-height: 1.2; }
+.gpg-tile span { display: block; margin-top: 3px; font-size: .66rem; font-weight: 700; color: var(--text-muted); }
+.gpg-abl { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.gpg-abl > svg { flex: 0 0 auto; width: 170px; max-width: 100%; height: auto; }
+.gpg-grps { flex: 1 1 360px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 12px; }
+.gpg-grp { background: rgba(0,0,0,.2); border-radius: 9px; padding: 7px 9px; }
+.gpg-grp .gh { display: flex; justify-content: space-between; align-items: baseline; font-size: .76rem; font-weight: 900; padding-bottom: 4px; margin-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.gpg-grp .gr { display: flex; justify-content: space-between; font-size: .72rem; padding: 1.5px 0; color: var(--text-muted); font-weight: 700; }
+.gpg-grp .gr b { font-weight: 900; padding: 0 5px; border-radius: 4px; }
+.gpg-ovr { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; font-size: .74rem; color: var(--text-muted); font-weight: 800; }
+.gpg-ovr b { font-family: 'Orbitron', sans-serif; font-size: 1.7rem; }
+.gpg-row { display: flex; align-items: center; gap: 8px; padding: 5px 2px; font-size: .78rem; border-bottom: 1px solid rgba(255,255,255,.05); }
+.gpg-row:last-child { border-bottom: 0; }
+.gpg-row .sp { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; }
+.gpg-row .mu { color: var(--text-muted); font-size: .7rem; font-weight: 700; white-space: nowrap; }
+.gpg-chip { display: inline-block; min-width: 22px; text-align: center; padding: 1px 6px; border-radius: 5px; font-size: .72rem; font-weight: 900; }
+.gpg-chip.w { background: rgba(34,197,94,.22); color: var(--success); } .gpg-chip.l { background: rgba(239,68,68,.22); color: var(--danger); }
+.gpg-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.gpg-dchip { font-size: .7rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.07); }
+.gpg-empty { font-size: .76rem; color: var(--text-muted); padding: 8px 0; }
+.gpg-clip { max-height: 190px; overflow: hidden; pointer-events: none; }
+.gpg-troph { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.gpg-troph .tc-ico { min-height: 0; font-size: 1.9rem; display: flex; align-items: center; }
+.gpg-troph img { height: 52px; width: auto; }
+.gpg-link { display: flex; align-items: center; gap: 10px; }
+.gpg-link .ic { font-size: 1.6rem; }
+.gpg-link .tx { font-size: .74rem; color: var(--text-muted); font-weight: 700; line-height: 1.45; }
+
+/* 상세 탭으로 옮겨진 블록에 기존 개요 탭 스타일 적용 */
+#playerTabContentRecord .gpg-stack > div:not(#playerAbilitySection) { margin-bottom: 8px !important; }
+#playerTabContentRecord #modalPlayerPosCounts { gap: 6px; }
+#playerTabContentTrophy #modalPlayerPosCounts { gap: 6px; }
+#playerTabContentAbility #modalPlayerPosCounts { gap: 6px; }
+#playerTabContentRecord .gpg-stack > div:not(#playerAbilitySection):not(#gkStatsSection):not(#modalPlayerCards) { padding: 8px 10px !important; }
+#playerTabContentRecord #playerAwardBadges > div:first-child, #playerTabContentRecord .gpg-stack > div > div[style*="font-weight:800; color:var(--text-muted); margin-bottom:8px"] { margin-bottom: 5px !important; }
+#playerTabContentRecord #playerAwardBadgeList { gap: 6px !important; }
+#playerTabContentTrophy #playerAwardBadgeList { gap: 6px !important; }
+#playerTabContentAbility #playerAwardBadgeList { gap: 6px !important; }
+#playerTabContentRecord #gkStatsSection { padding: 8px 10px !important; }
+#playerTabContentTrophy #gkStatsSection { padding: 8px 10px !important; }
+#playerTabContentAbility #gkStatsSection { padding: 8px 10px !important; }
+#playerTabContentRecord #gkStatsSection > div:first-child { margin-bottom: 6px !important; }
+#playerTabContentTrophy #gkStatsSection > div:first-child { margin-bottom: 6px !important; }
+#playerTabContentAbility #gkStatsSection > div:first-child { margin-bottom: 6px !important; }
+#playerTabContentRecord #gkStatsSection > div:last-child > div { padding: 6px !important; }
+#playerTabContentTrophy #gkStatsSection > div:last-child > div { padding: 6px !important; }
+#playerTabContentAbility #gkStatsSection > div:last-child > div { padding: 6px !important; }
+#playerTabContentRecord #playerRankTrendChart { display: block !important; flex: none !important; height: auto !important; }
+#playerTabContentTrophy #playerRankTrendChart { display: block !important; flex: none !important; height: auto !important; }
+#playerTabContentAbility #playerRankTrendChart { display: block !important; flex: none !important; height: auto !important; }
+#playerTabContentRecord .pm-statrow { margin-top: 14px; margin-bottom: 12px; }
+#playerTabContentTrophy .pm-statrow { margin-top: 14px; margin-bottom: 12px; }
+#playerTabContentAbility .pm-statrow { margin-top: 14px; margin-bottom: 12px; }
+#playerTabContentRecord .pm-posrow { display: flex !important; align-items: center; gap: 10px; flex-wrap: nowrap; }
+#playerTabContentTrophy .pm-posrow { display: flex !important; align-items: center; gap: 10px; flex-wrap: nowrap; }
+#playerTabContentAbility .pm-posrow { display: flex !important; align-items: center; gap: 10px; flex-wrap: nowrap; }
+#playerTabContentRecord .pm-posrow > div:first-child { margin-bottom: 0 !important; white-space: nowrap; flex: none; }
+#playerTabContentTrophy .pm-posrow > div:first-child { margin-bottom: 0 !important; white-space: nowrap; flex: none; }
+#playerTabContentAbility .pm-posrow > div:first-child { margin-bottom: 0 !important; white-space: nowrap; flex: none; }
+#playerTabContentRecord .pm-posrow #modalPlayerPosCounts { flex-wrap: wrap; min-width: 0; }
+#playerTabContentTrophy .pm-posrow #modalPlayerPosCounts { flex-wrap: wrap; min-width: 0; }
+#playerTabContentAbility .pm-posrow #modalPlayerPosCounts { flex-wrap: wrap; min-width: 0; }
+#playerTabContentRecord #playerTrophyCabinet .tc-cab { width: 100%; box-sizing: border-box; }
+#playerTabContentTrophy #playerTrophyCabinet .tc-cab { width: 100%; box-sizing: border-box; }
+#playerTabContentAbility #playerTrophyCabinet .tc-cab { width: 100%; box-sizing: border-box; }
+</style>
+<style id="gPgHubCss">
+/* ===== v1.93 선수 메인(허브): 컨테이너 폭 기준 자동 배치 · 박스 공간 꽉 채우기 ===== */
+#playerTabContentOverview, #managerTabContentOverview { container-type: inline-size; container-name: gpghub; }
+.gpg-hub { grid-auto-flow: row; gap: 9px; align-items: stretch; }
+.gpg-box { display: flex; flex-direction: column; padding: 9px 11px 10px; border-radius: 11px; }
+.gpg-box > .gpg-bh { flex: none; margin-bottom: 6px; font-size: .86rem; }
+.gpg-bd { flex: 1 1 auto; min-height: 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.gpg-bd.top { justify-content: flex-start; }
+.gpg-bh .gpg-mid { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-start; margin-left: 4px; }
+.gpg-box .gpg-tiles { grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 6px; }
+.gpg-box .gpg-tile { padding: 7px 4px; }
+.gpg-box .gpg-tile b { font-size: 1.12rem; }
+.gpg-box .gpg-row { padding: 4px 2px; }
+
+/* 능력치: 레이더 + 6대분류 카드가 박스 폭에 맞춰 늘어남 */
+.gpg-abl2 { display: flex; gap: 10px 14px; align-items: center; flex-wrap: wrap; }
+.gpg-abl2 .gpg-rd { flex: 0 1 170px; min-width: 130px; margin: 0 auto; text-align: center; }
+.gpg-abl2 .gpg-rd svg { width: 100%; max-width: 180px; height: auto; display: block; margin: 0 auto; }
+.gpg-abl2 .gpg-ovr { justify-content: center; margin: 0 0 2px; }
+.gpg-abl2 .gpg-grps { flex: 1 1 280px; grid-template-columns: repeat(auto-fit, minmax(134px, 1fr)); gap: 6px; align-content: center; }
+.gpg-abl2 .gpg-grp { padding: 5px 8px; }
+.gpg-abl2 .gpg-grp .gr { padding: 1px 0; }
+
+/* 포지션: 필드가 박스 폭만큼 커지고, 안내 문구는 줄임 */
+.gpg-box .pm-posmap { gap: 8px 12px !important; flex-wrap: wrap; align-items: center; justify-content: center; }
+.gpg-box .pm-posmap svg { width: min(100%, 300px) !important; flex: 1 1 220px !important; }
+.gpg-box .pm-posmap > div { flex: 1 1 130px !important; min-width: 120px !important; }
+.gpg-box .pt-t { display: none; }
+.gpg-box .fm-foot { margin: 0 0 5px !important; flex-wrap: wrap; gap: 4px 10px; }
+
+/* 특성 · 역할: 잘림 없이 칩으로 정리 */
+.gpg-box .pm-sec-t { margin-bottom: 3px; }
+.gpg-box .pm-kv { font-size: .78rem; line-height: 1.4; margin: 2px 0; }
+.gpg-box .pm-kv .v { white-space: normal; }
+.gpg-box .pm-trs { flex-direction: row; flex-wrap: wrap; gap: 4px; line-height: 1.3; font-size: .76rem; }
+.gpg-box .pm-trs span { background: rgba(255,255,255,.07); border-radius: 999px; padding: 2px 9px; font-weight: 800; white-space: nowrap; }
+.gpg-box .pm-sec-t[style*="margin-top"] { margin-top: 8px !important; }
+
+/* 성장: 대분류별 막대 */
+.gpg-gr { display: grid; grid-template-columns: 4.7em minmax(0,1fr) 2em 3em; align-items: center; gap: 6px; font-size: .72rem; font-weight: 800; padding: 2px 0; }
+.gpg-gr .n { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gpg-gr .bar { height: 6px; border-radius: 4px; background: rgba(255,255,255,.08); overflow: hidden; }
+.gpg-gr .bar i { display: block; height: 100%; border-radius: 4px; }
+.gpg-gr .v { text-align: right; font-family: 'Orbitron', sans-serif; font-size: .74rem; }
+.gpg-gr .d { text-align: right; font-size: .68rem; white-space: nowrap; }
+.gpg-box .gpg-troph { gap: 8px 10px; }
+.gpg-box .gpg-troph img { height: 46px; }
+
+/* 바로가기(선수 분석·선수 비교) */
+.gpg-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.gpg-links .gpg-lk { flex: 1 1 200px; display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 9px; background: rgba(0,0,0,.24); border: 1px solid rgba(255,255,255,.07); cursor: pointer; }
+.gpg-links .gpg-lk:hover { border-color: var(--accent); }
+.gpg-links .gpg-lk .ic { font-size: 1.3rem; }
+.gpg-links .gpg-lk .tx { font-size: .72rem; color: var(--text-muted); font-weight: 700; line-height: 1.35; }
+.gpg-links .gpg-lk .tx b { display: block; color: var(--text); font-size: .8rem; font-weight: 900; }
+
+/* ---- 자동 배치: 선수 허브(키 클래스) — 컨테이너 폭 기준 ---- */
+.gpg-hub > .k-record, .gpg-hub > .k-links { grid-column: span 12; }
+@container gpghub (min-width: 700px) {
+  .gpg-hub > .k-ability { grid-column: span 7; } .gpg-hub > .k-pos { grid-column: span 5; }
+  .gpg-hub > .k-trait, .gpg-hub > .k-recent, .gpg-hub > .k-growth, .gpg-hub > .k-season, .gpg-hub > .k-trophy, .gpg-hub > .k-power { grid-column: span 6; }
+}
+@container gpghub (min-width: 1040px) {
+  .gpg-hub > .k-trait, .gpg-hub > .k-recent, .gpg-hub > .k-growth { grid-column: span 4; }
+  .gpg-hub > .k-season { grid-column: span 5; } .gpg-hub > .k-trophy { grid-column: span 4; } .gpg-hub > .k-power { grid-column: span 3; }
+}
+@container gpghub (min-width: 1400px) {
+  .gpg-hub > .k-ability { grid-column: span 5; } .gpg-hub > .k-pos { grid-column: span 4; } .gpg-hub > .k-trait { grid-column: span 3; }
+  .gpg-hub > .k-recent, .gpg-hub > .k-growth, .gpg-hub > .k-season { grid-column: span 4; }
+  .gpg-hub > .k-trophy { grid-column: span 6; } .gpg-hub > .k-power { grid-column: span 3; } .gpg-hub > .k-links { grid-column: span 3; }
+  .gpg-links .gpg-lk { flex-basis: 100%; }
+}
+@container gpghub (max-width: 420px) {
+  .gpg-box .gpg-tiles { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .gpg-bh .gpg-mid { display: none; }
+}
+</style>
+
+<style id="gPgTabCss">
+/* ===== v1.93 상단 탭: 가로 잘림 없이 줄바꿈 · 균등 배치 ===== */
+.pm-tabs { flex-wrap: wrap; overflow: visible; gap: 5px; }
+.g-mh .pm-tabbar { flex: 1 1 560px; }
+.pm-tab { flex: 1 1 auto; max-width: 200px; text-align: center; padding: 6px 10px; }
+@media (max-width: 600px) { .pm-tab { padding: 6px 7px; font-size: .74rem; } }
+
+/* ===== v1.93 🧬 능력치 탭: 카드형 자동 배치 ===== */
+#playerTabContentAbility { container-type: inline-size; container-name: gpab; }
+#playerAbilitySection:not([style*="display:none"]):not([style*="display: none"]) { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 9px; align-items: stretch; }
+#playerAbilitySection > * { grid-column: 1 / -1; min-width: 0; order: 20; }
+#playerAbilitySection > div:first-child { order: 0; }
+#playerAbilitySection > .pm-abrow { display: contents; }
+#playerAbilitySection .pm-abradar { order: 1; }
+#playerAbilitySection .pm-abtrait { order: 2; }
+#playerAbilitySection .pm-posview { order: 3; }
+#playerAbilitySection #pmSubBar { order: 4; }
+#playerAbilitySection #playerExtSection { order: 5; }
+#playerAbilitySection #modalPlayerLgCmp { order: 6; }
+#playerAbilitySection #modalPlayerStatDeltas { order: 7; }
+#playerAbilitySection #modalStatTrend { order: 8; }
+#playerAbilitySection #modalAbilityEditArea { order: 9; }
+#playerAbilitySection .pm-abradar, #playerAbilitySection .pm-abtrait, #playerAbilitySection .pm-posview, #playerAbilitySection #modalPlayerLgCmp, #playerAbilitySection #modalPlayerStatDeltas, #playerAbilitySection #modalStatTrend, #playerAbilitySection #playerExtSection { background: rgba(0,0,0,.2); border: 1px solid rgba(255,255,255,.07); border-radius: 10px; padding: 8px 10px; margin: 0; }
+#playerAbilitySection .pm-abradar:empty, #playerAbilitySection .pm-abtrait:empty, #playerAbilitySection #modalPlayerLgCmp:empty, #playerAbilitySection #modalPlayerStatDeltas:empty, #playerAbilitySection #modalStatTrend:empty { display: none; }
+#playerAbilitySection #pmSubBar { margin: 0; padding: 0; }
+#playerAbilitySection #pmSubBar:empty { display: none; }
+#playerAbilitySection .pm-abradar { display: flex; flex-direction: column; justify-content: center; }
+#playerAbilitySection .pm-abradar svg { max-width: 100%; height: auto; }
+#playerAbilitySection .pm-abtrait { zoom: 1; border-left: 1px solid rgba(255,255,255,.07); }
+#playerAbilitySection .pm-trs { flex-direction: row; flex-wrap: wrap; gap: 4px; line-height: 1.3; font-size: .78rem; }
+#playerAbilitySection .pm-trs span { background: rgba(255,255,255,.07); border-radius: 999px; padding: 2px 9px; font-weight: 800; white-space: nowrap; }
+#playerAbilitySection .pm-posview { margin-top: 0; border-top: 1px solid rgba(255,255,255,.07); display: flex; flex-direction: column; justify-content: center; }
+#playerAbilitySection .pm-posview .pm-posmap { justify-content: center; }
+#playerAbilitySection .pm-posview .pm-posmap > svg { width: min(100%, 300px) !important; max-width: 320px; flex: 1 1 220px !important; }
+#playerAbilitySection #modalPlayerLgCmp:has(+ #modalPlayerStatDeltas:empty) { grid-column: 1 / -1; }
+@container gpab (min-width: 640px) {
+  #playerAbilitySection .pm-abradar, #playerAbilitySection .pm-abtrait { grid-column: span 6; }
+  #playerAbilitySection #modalPlayerLgCmp, #playerAbilitySection #modalPlayerStatDeltas { grid-column: span 6; }
+  #playerAbilitySection #modalPlayerLgCmp:has(+ #modalPlayerStatDeltas:empty) { grid-column: 1 / -1; }
+}
+@container gpab (min-width: 980px) {
+  #playerAbilitySection .pm-abradar { grid-column: span 4; order: 1; }
+  #playerAbilitySection .pm-posview { grid-column: span 4; order: 2; }
+  #playerAbilitySection .pm-abtrait { grid-column: span 4; order: 3; }
+}
+
+/* ===== v1.93 📊 기록·경기 탭(통합) ===== */
+#playerTabContentRecord { container-type: inline-size; container-name: gprec; }
+#playerTabContentRecord .gpg-stack { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 9px; align-items: stretch; }
+#playerTabContentRecord .gpg-trendcard { display: flex; flex-direction: column; justify-content: center; }
+#playerTabContentRecord .gpg-stack > * { grid-column: 1 / -1; min-width: 0; }
+#playerTabContentRecord .gpg-stack > * + * { margin-top: 0; }
+#playerTabContentRecord .gpg-stack > div:not(#zz1):not(#zz2) { margin-bottom: 0 !important; }
+#playerTabContentRecord .gpg-matchcard { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 10px; padding: 9px 11px; }
+.gpg-mh4 { margin: 0 0 7px; font-size: .85rem; color: var(--accent); }
+.gpg-matchcard .scrollable-table { max-height: 480px; overflow: auto; }
+.gpg-matchcard th { position: sticky; top: 0; z-index: 1; background: #0f172a; }
+.gpg-matchcard th, .gpg-matchcard td { padding: 5px 6px; font-size: .76rem; }
+@container gprec (min-width: 900px) {
+  #playerTabContentRecord .gpg-trendcard { grid-column: span 6; }
+  #playerTabContentRecord .gpg-matchcard { grid-column: span 6; }
+}
+
+/* ===== v1.93 선수 페이지 공간 활용 개선 (기록·경기 · 시즌별 요약 · 성장 · 분석 · 전력) ===== */
+#playerTabContentRecord .gpg-trendcard { padding: 12px 14px !important; }
+#playerTabContentRecord #playerRankTrendChart { max-width: none; width: 100%; margin: 0; }
+#playerTabContentRecord #playerRankTrendChart > svg { width: 100% !important; height: auto; }
+#playerTabContentRecord .gpg-stack > .pm-posrow { grid-column: 1 / -1; }
+.gpg-matchcard .scrollable-table { max-height: 560px; }
+@container gprec (min-width: 900px) {
+  #playerTabContentRecord .gpg-trendcard { grid-column: 1 / -1 !important; }
+  #playerTabContentRecord .gpg-matchcard { grid-column: 1 / -1 !important; }
+}
+#playerTabContentSeason { container-type: inline-size; container-name: gpsn; }
+.gsn-card { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-left: 3px solid var(--accent); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+.gsn-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.07); }
+.gsn-head .gsn-t { font-weight: 800; font-size: 1rem; }
+.gsn-chip { font-size: .7rem; font-weight: 800; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.07); white-space: nowrap; }
+.gsn-dim { color: var(--text-muted); font-size: .7rem; font-weight: 600; }
+.gsn-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; }
+.gsn-heroes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.gsn-hero { text-align: center; background: rgba(0,0,0,.22); border-radius: 9px; padding: 8px 2px; min-width: 0; }
+.gsn-hero b { display: block; font-family: 'Orbitron'; font-size: 1.35rem; font-weight: 800; line-height: 1.2; }
+.gsn-hero span { font-size: .66rem; color: var(--text-muted); white-space: nowrap; }
+.gsn-wdlbox { margin-top: 10px; }
+.gsn-wdl { display: flex; height: 7px; border-radius: 99px; overflow: hidden; background: rgba(255,255,255,.07); }
+.gsn-wdl i { display: block; height: 100%; }
+.gsn-wdlt { display: flex; gap: 10px; margin-top: 4px; font-size: .72rem; font-weight: 800; color: var(--text-muted); }
+.gsn-wdlt em { margin-left: auto; font-style: normal; }
+.gsn-kvs { margin-top: 8px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+.gsn-kv { display: flex; justify-content: space-between; gap: 8px; padding: 5px 2px; border-bottom: 1px dashed rgba(255,255,255,.08); font-size: .76rem; }
+.gsn-kv span { color: var(--text-muted); } .gsn-kv b { font-weight: 800; white-space: nowrap; }
+.gsn-mh { font-size: .78rem; font-weight: 800; color: var(--text); margin: 0 0 6px 2px; }
+.gsn-mlist { display: flex; flex-direction: column; gap: 3px; max-height: 380px; overflow-y: auto; }
+.gsn-m { border-radius: 7px; background: rgba(255,255,255,.035); border-left: 3px solid transparent; }
+.gsn-m.w { border-left-color: #22c55e; } .gsn-m.l { border-left-color: #ef4444; }
+.gsn-m summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 78px minmax(0, 1fr) 54px 34px 52px 64px 34px; align-items: center; gap: 6px; padding: 6px 8px; font-size: .78rem; }
+.gsn-m summary::-webkit-details-marker { display: none; }
+.gsn-m summary:hover { background: rgba(255,255,255,.04); }
+.gsn-ty { color: var(--text-muted); font-size: .68rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gsn-opp { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gsn-sc { font-family: 'Orbitron'; font-weight: 800; text-align: center; white-space: nowrap; }
+.gsn-res { text-align: center; font-weight: 800; font-size: .72rem; border-radius: 5px; padding: 1px 0; }
+.gsn-res.w { color: #4ade80; background: rgba(34,197,94,.14); } .gsn-res.l { color: #f87171; background: rgba(239,68,68,.14); }
+.gsn-res small { font-size: .5rem; margin-left: 1px; }
+.gsn-pos { text-align: center; white-space: nowrap; } .gsn-st { text-align: center; font-weight: 800; font-size: .74rem; white-space: nowrap; }
+.gsn-rt { text-align: right; font-weight: 800; color: var(--success); font-size: .76rem; }
+.gsn-dt { padding: 4px 10px 8px 12px; font-size: .72rem; color: var(--text-muted); }
+.gsn-fix { margin-top: 5px; background: rgba(255,255,255,.08); border: none; border-radius: 4px; padding: 2px 8px; font-size: .62rem; color: var(--text-muted); cursor: pointer; }
+@container gpsn (min-width: 860px) {
+  .gsn-body { grid-template-columns: minmax(330px, 36%) minmax(0, 1fr); }
+  .gsn-mlist { max-height: 430px; }
+}
+@container gpsn (max-width: 560px) {
+  .gsn-m summary { grid-template-columns: minmax(0, 1fr) 50px 30px 60px 30px; }
+  .gsn-ty, .gsn-pos { display: none; }
+}
+/* v1.93: 팀 데이터센터 › 시즌별 성적 · 팀 모달 › 시즌별 기록 — 선수 페이지 시즌별 요약과 같은 카드 */
+#dcTabContent_season, #teamTabContentSeason { container-type: inline-size; container-name: gpsn; }
+#dcSeasonRecords.dc-grid { display: block; }
+.gsn-kv.full { grid-column: 1 / -1; }
+.gsn-m.tm summary { grid-template-columns: 84px minmax(0, 1fr) 62px 34px 96px; }
+.gsn-mom { color: #c084fc; font-size: .68rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+@container gpsn (max-width: 560px) {
+  .gsn-m.tm summary { grid-template-columns: minmax(0, 1fr) 62px 34px; }
+  .gsn-m.tm .gsn-mom { display: none; }
+}
+/* 성장 · 분석 · 전력 탭 */
+#playerTabContentGrowth, #playerTabContentAnalysis, #playerTabContentPower { container-type: inline-size; container-name: gpx; }
+@container gpx (min-width: 980px) {
+  #playerGrowthBody { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px 12px; align-items: start; }
+  #playerGrowthBody > * { grid-column: 1 / -1; min-width: 0; margin-top: 0 !important; margin-bottom: 0 !important; }
+  #playerGrowthBody > :nth-child(4) { grid-column: 1 / span 5; }
+  #playerGrowthBody > :nth-child(5) { grid-column: 6 / span 7; }
+  #playerAnalysisBody { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px 12px; align-items: start; }
+  #playerAnalysisBody > * { grid-column: 1 / -1; min-width: 0; margin-top: 0 !important; margin-bottom: 0 !important; }
+  #playerAnalysisBody > :nth-child(4) { grid-column: 1 / span 8; }
+  #playerAnalysisBody > :nth-child(5) { grid-column: 9 / span 4; }
+  #playerPowerBody .tl-grid { display: block; column-count: 3; column-gap: 10px; }
+  #playerPowerBody .tl-grid > * { break-inside: avoid; margin-bottom: 10px; }
+}
+@container gpx (min-width: 1500px) { #playerPowerBody .tl-grid { column-count: 4; } }
+</style>
 </head>
 <body>
     <div class="app-shell">
@@ -3290,6 +3606,7 @@ html { color-scheme: dark; }
     <!-- 선수 상세 정보 모달 -->
     <div id="playerDetailModal" class="modal">
         <div class="modal-content" style="background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid rgba(56,189,248,0.4); box-shadow: 0 0 40px rgba(56,189,248,0.15);">
+<div class="gpg-bar" id="playerPageBar"></div>
             <span class="close-modal" onclick="closePlayerModal()">&times;</span>
             <div class="modal-header g-mh" style="border-bottom: 2px solid rgba(56,189,248,0.3);">
                 <div class="g-mh-ph"></div>
@@ -3303,20 +3620,57 @@ html { color-scheme: dark; }
                 <div class="pm-tabbar" id="playerTabBar">
                     <button class="pm-nav" onclick="pmStepTab('player',-1)" title="이전 페이지 (←)">‹</button>
                     <div class="pm-tabs">
-                        <button class="pm-tab on" id="playerTabOverview" data-new="1.83" data-upd="1.84:개선" onclick="switchPlayerModalTab('overview')">📊 개요</button>
-                        <button class="pm-tab" id="playerTabMatch" onclick="switchPlayerModalTab('match')">⚽ 경기 기록</button>
-                        <button class="pm-tab" id="playerTabSeason" onclick="switchPlayerModalTab('season')">📅 시즌별 요약</button>
-                        <button class="pm-tab" id="playerTabAnalysis" data-new="1.35" data-upd="1.81:개선" onclick="switchPlayerModalTab('analysis')">🔬 선수 분석</button>
-                        <button class="pm-tab" id="playerTabCompare" onclick="switchPlayerModalTab('compare')">⚖️ 선수 비교</button>
-                        <button class="pm-tab" id="playerTabPower" onclick="switchPlayerModalTab('power')">🧑‍💼 전력·감독</button>
-                        <button class="pm-tab" id="playerTabGrowth" onclick="switchPlayerModalTab('growth')">📈 성장 분석</button>
+<button class="pm-tab on" id="playerTabOverview" onclick="switchPlayerModalTab('overview')">🏠 메인</button>
+<button class="pm-tab" id="playerTabAbility" onclick="switchPlayerModalTab('ability')">🧬 능력치</button>
+<button class="pm-tab" id="playerTabRecord" onclick="switchPlayerModalTab('record')">📊 기록·경기</button>
+<button class="pm-tab" id="playerTabSeason" onclick="switchPlayerModalTab('season')">📅 시즌별 요약</button>
+<button class="pm-tab" id="playerTabGrowth" onclick="switchPlayerModalTab('growth')">📈 성장 분석</button>
+<button class="pm-tab" id="playerTabAnalysis" onclick="switchPlayerModalTab('analysis')">🔬 선수 분석</button>
+<button class="pm-tab" id="playerTabPower" onclick="switchPlayerModalTab('power')">🧑‍💼 전력·감독</button>
+<button class="pm-tab" id="playerTabCompare" onclick="switchPlayerModalTab('compare')">⚖️ 선수 비교</button>
+<button class="pm-tab" id="playerTabTrophy" onclick="switchPlayerModalTab('trophy')">🏆 수상·트로피</button>
                     </div>
-                    <span class="pm-pageno" id="playerPageNo">1 / 7</span>
+                    <span class="pm-pageno" id="playerPageNo">1 / 10</span>
                     <button class="pm-nav" onclick="pmStepTab('player',1)" title="다음 페이지 (→)">›</button>
                 </div>
             </div>
             <div id="playerModalContent">
-                <div id="playerTabContentOverview" class="pm-page on">
+<div id="playerTabContentOverview" class="pm-page on"><div id="gPgHubP" class="gpg-hub"></div></div>
+<div id="playerTabContentAbility" class="pm-page">
+<!-- 능력치(오버롤) -->
+                <div id="playerAbilitySection" style="display:none; background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.02)); border:1px solid rgba(139,92,246,0.3); border-radius:10px; padding:10px 12px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0;">
+                        <div style="font-weight:800; color:#a78bfa; font-size:0.9rem;">🧬 능력치</div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="font-size:0.9rem;">OVR <b id="modalPlayerOvr" style="font-size:1.25rem;">0</b></div>
+                            <button id="modalAbilityEditBtn" onclick="startPlayerAbilityEdit()" style="padding:3px 10px; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer; background:rgba(139,92,246,0.25); color:#c4b5fd; border:1px solid rgba(139,92,246,0.5);">✏️ 편집</button>
+                        </div>
+                    </div>
+                    <div class="pm-abrow"><div id="modalPlayerRadar" class="pm-abradar"></div><div id="playerTraitView" class="pm-abtrait"></div></div>
+<div id="pmPosView" class="pm-posview"></div>
+                    <div id="pmSubBar" class="pm-subbar"></div>
+                    <div id="playerExtSection" class="pm-subbox" style="display:none;"></div>
+                    <div id="modalPlayerLgCmp"></div>
+                    <div id="modalPlayerStatDeltas"></div>
+                    <div id="modalStatTrend"></div>
+                    <!-- 능력치 인라인 편집 영역 (편집 버튼을 누르면 레이더 대신 표시) -->
+                    <div id="modalAbilityEditArea" style="display:none; margin-top:6px;">
+                        <div class="pam-tabs"><button type="button" id="pamTabStats" class="on" onclick="pamEditTab('stats')">📊 능력치</button><button type="button" id="pamTabTraits" onclick="pamEditTab('traits')">🧬 특성</button><button type="button" id="pamTabRoles" onclick="pamEditTab('roles')">🎯 역할</button><button type="button" id="pamTabPos" onclick="pamEditTab('pos')">📍 포지션</button></div>
+                        <div id="modalAbilityEditGrid" class="pam-grid"></div>
+                        <div id="pmEditTraits" class="pt-sec" style="margin-top:0;"></div>
+                        <div id="pmEditRoles" class="pt-sec" style="margin-top:0; display:none;"></div>
+                        <div id="pmEditPos" class="pt-sec" style="margin-top:0; display:none;"></div>
+                        <div class="pam-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <div id="modalAbilityEditPreview" style="font-size:0.8rem; color:var(--text-muted);"></div>
+                            <div style="display:flex; gap:6px;">
+                                <button class="btn" onclick="cancelPlayerAbilityEdit()" style="padding:5px 14px; font-size:0.78rem; background:rgba(255,255,255,0.08); color:var(--text);">취소</button>
+                                <button class="btn" onclick="savePlayerAbilityEdit()" style="padding:5px 14px; font-size:0.78rem; background:#a78bfa; color:#000;">💾 저장</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+</div>
+<div id="playerTabContentRecord" class="pm-page">
                 <div class="pm-statrow">
                     <div class="pm-sc" style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05)); border-color:rgba(56,189,248,0.3);"><div id="modalPlayerGames" class="pm-sc-n" style="color:var(--accent);">0</div><div class="pm-sc-l">출전 경기</div></div>
                     <div class="pm-sc" style="background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(251,191,36,0.05)); border-color:rgba(251,191,36,0.3);"><div id="modalPlayerPoints" class="pm-sc-n" style="color:var(--gold);">0</div><div id="modalPlayerPointsL" class="pm-sc-l">공격포인트</div></div>
@@ -3325,7 +3679,7 @@ html { color-scheme: dark; }
                     <div class="pm-sc" style="background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(249,115,22,0.03)); border-color:rgba(249,115,22,0.3);"><div id="modalPlayerTotalG" class="pm-sc-n" style="color:#fb923c;">0</div><div id="modalPlayerTotalGL" class="pm-sc-l">⚽️ 통산 득점</div></div>
                     <div class="pm-sc" style="background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(56,189,248,0.03)); border-color:rgba(56,189,248,0.25);"><div id="modalPlayerTotalA" class="pm-sc-n" style="color:var(--accent);">0</div><div id="modalPlayerTotalAL" class="pm-sc-l">🎯 통산 도움</div></div>
                 </div>
-                <div class="pm-cols"><div class="pm-col">
+<div class="gpg-stack">
 <!-- v1.35: 카드 기록 (있을 때만 표시) -->
                 <div id="modalPlayerCards" style="display:none; background:rgba(250,204,21,0.06); border:1px solid rgba(250,204,21,0.2); border-radius:10px; padding:10px 14px; margin-bottom:12px; font-size:0.85rem;"></div>
 
@@ -3359,7 +3713,7 @@ html { color-scheme: dark; }
                 </div>
 
                 <!-- 순위 변동 그래프 -->
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 6px; margin-bottom:12px;">
+                <div class="gpg-trendcard" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:12px 6px; margin-bottom:12px;">
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:8px; padding:0 8px;">
                         <h4 style="margin:0; font-size:0.85rem; color:var(--text-muted);">📈 순위 변동 (<span id="playerRankTrendScopeLabel">전체 누적</span>, <span id="playerRankTrendMetricLabel">공격P 기준</span>)</h4>
                         <div style="display:flex; gap:4px; flex-wrap:wrap;">
@@ -3377,6 +3731,18 @@ html { color-scheme: dark; }
                     <div id="playerRankTrendChart"></div>
                 </div>
 
+                <!-- v1.93: ⚽ 경기 기록을 기록 탭으로 통합 -->
+                <div class="gpg-matchcard">
+                    <h4 class="gpg-mh4">⚽ 득점 및 경기 기록</h4>
+                    <div class="scrollable-table">
+                        <table class="pattern-table">
+                            <thead><tr><th>경기</th><th>상대팀</th><th>결과</th><th>포지션</th><th>득점</th><th>도움</th><th>평점</th><th>MOM</th></tr></thead>
+                            <tbody id="modalPlayerHistory"></tbody>
+                        </table>
+                    </div>
+                </div>
+</div></div>
+<div id="playerTabContentTrophy" class="pm-page">
                 <!-- 특별 수상 배지 -->
                 <div id="playerAwardBadges" style="display:none; background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(251,191,36,0.02)); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:14px; margin-bottom:12px;">
                     <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🌟 수상 기록</div>
@@ -3384,43 +3750,7 @@ html { color-scheme: dark; }
                 </div>
                 <!-- v1.83: 🌟 수상 기록 → 🏆 트로피 진열대로 교체 -->
                 <div id="playerTrophyCabinet"></div>
-                
-                </div><div class="pm-col">
-<!-- 능력치(오버롤) -->
-                <div id="playerAbilitySection" style="display:none; background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.02)); border:1px solid rgba(139,92,246,0.3); border-radius:10px; padding:10px 12px; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0;">
-                        <div style="font-weight:800; color:#a78bfa; font-size:0.9rem;">🧬 능력치</div>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div style="font-size:0.9rem;">OVR <b id="modalPlayerOvr" style="font-size:1.25rem;">0</b></div>
-                            <button id="modalAbilityEditBtn" onclick="startPlayerAbilityEdit()" style="padding:3px 10px; border-radius:5px; font-weight:800; font-size:0.7rem; cursor:pointer; background:rgba(139,92,246,0.25); color:#c4b5fd; border:1px solid rgba(139,92,246,0.5);">✏️ 편집</button>
-                        </div>
-                    </div>
-                    <div class="pm-abrow"><div id="modalPlayerRadar" class="pm-abradar"></div><div id="playerTraitView" class="pm-abtrait"></div></div>
-<div id="pmPosView" class="pm-posview"></div>
-                    <div id="pmSubBar" class="pm-subbar"></div>
-                    <div id="playerExtSection" class="pm-subbox" style="display:none;"></div>
-                    <div id="modalPlayerLgCmp"></div>
-                    <div id="modalPlayerStatDeltas"></div>
-                    <div id="modalStatTrend"></div>
-                    <!-- 능력치 인라인 편집 영역 (편집 버튼을 누르면 레이더 대신 표시) -->
-                    <div id="modalAbilityEditArea" style="display:none; margin-top:6px;">
-                        <div class="pam-tabs"><button type="button" id="pamTabStats" class="on" onclick="pamEditTab('stats')">📊 능력치</button><button type="button" id="pamTabTraits" onclick="pamEditTab('traits')">🧬 특성</button><button type="button" id="pamTabRoles" onclick="pamEditTab('roles')">🎯 역할</button><button type="button" id="pamTabPos" onclick="pamEditTab('pos')">📍 포지션</button></div>
-                        <div id="modalAbilityEditGrid" class="pam-grid"></div>
-                        <div id="pmEditTraits" class="pt-sec" style="margin-top:0;"></div>
-                        <div id="pmEditRoles" class="pt-sec" style="margin-top:0; display:none;"></div>
-                        <div id="pmEditPos" class="pt-sec" style="margin-top:0; display:none;"></div>
-                        <div class="pam-bar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                            <div id="modalAbilityEditPreview" style="font-size:0.8rem; color:var(--text-muted);"></div>
-                            <div style="display:flex; gap:6px;">
-                                <button class="btn" onclick="cancelPlayerAbilityEdit()" style="padding:5px 14px; font-size:0.78rem; background:rgba(255,255,255,0.08); color:var(--text);">취소</button>
-                                <button class="btn" onclick="savePlayerAbilityEdit()" style="padding:5px 14px; font-size:0.78rem; background:#a78bfa; color:#000;">💾 저장</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                </div></div>
-                </div>
+</div>
 
                 <!-- 선수 분석 탭 (v1.35: 득점 위치 · 도움 연결 · 세이브 등 개인 기록 분석) -->
                 <div id="playerTabContentAnalysis" class="pm-page"><div id="playerAnalysisBody"></div></div>
@@ -3430,27 +3760,6 @@ html { color-scheme: dark; }
                 <div id="playerTabContentPower" class="pm-page"><div id="playerPowerBody"></div></div>
 
                 <!-- 경기 기록 탭 -->
-                <div id="playerTabContentMatch" class="pm-page">
-                    <h4 style="color:var(--accent); margin-bottom:8px; border-left:3px solid var(--accent); padding-left:8px;">⚽ 득점 및 경기 기록</h4>
-                    <div class="scrollable-table">
-                        <table class="pattern-table">
-                            <thead>
-                                <tr>
-                                    <th>경기</th>
-                                    <th>상대팀</th>
-                                    <th>결과</th>
-                                    <th>포지션</th>
-                                    <th>득점</th>
-                                    <th>도움</th>
-                                    <th>평점</th>
-                                    <th>MOM</th>
-                                </tr>
-                            </thead>
-                            <tbody id="modalPlayerHistory"></tbody>
-                        </table>
-                    </div>
-                </div>
-
                 <!-- 시즌별 요약 탭 -->
                 <div id="playerTabContentSeason" class="pm-page">
                     <div id="playerSeasonRecords"></div>
@@ -3471,6 +3780,7 @@ html { color-scheme: dark; }
     <!-- 감독 상세 모달 -->
     <div id="managerDetailModal" class="modal">
         <div class="modal-content" style="background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid rgba(251,191,36,0.4); box-shadow: 0 0 40px rgba(251,191,36,0.15);">
+<div class="gpg-bar" id="managerPageBar"></div>
             <span class="close-modal" onclick="closeManagerModal()">&times;</span>
             <div class="modal-header g-mh" style="border-bottom: 2px solid rgba(251,191,36,0.3);">
                 <div class="g-mh-ph"></div>
@@ -3484,18 +3794,21 @@ html { color-scheme: dark; }
                 <div class="pm-tabbar" id="managerTabBar">
                     <button class="pm-nav" onclick="pmStepTab('manager',-1)" title="이전 페이지 (←)">‹</button>
                     <div class="pm-tabs">
-                        <button class="pm-tab on" id="managerTabOverview" data-new="1.84" onclick="switchManagerModalTab('overview')">📊 개요</button>
-                        <button class="pm-tab" id="managerTabH2H" onclick="switchManagerModalTab('h2h')">⚔️ 상대전적</button>
-                        <button class="pm-tab" id="managerTabHistory" onclick="switchManagerModalTab('history')">📜 경기별 전적</button>
-                        <button class="pm-tab" id="managerTabTactic" data-upd="1.84:변경" onclick="switchManagerModalTab('tactic')">🧭 전술별 성적</button>
+<button class="pm-tab on" id="managerTabOverview" onclick="switchManagerModalTab('overview')">🏠 메인</button>
+<button class="pm-tab" id="managerTabAbility" onclick="switchManagerModalTab('ability')">🧬 능력·전술</button>
+<button class="pm-tab" id="managerTabRecord" onclick="switchManagerModalTab('record')">📊 기록·재임</button>
+<button class="pm-tab" id="managerTabH2H" onclick="switchManagerModalTab('h2h')">⚔️ 상대전적</button>
+<button class="pm-tab" id="managerTabHistory" onclick="switchManagerModalTab('history')">📜 경기별 전적</button>
+<button class="pm-tab" id="managerTabTactic" onclick="switchManagerModalTab('tactic')">🧭 전술별 성적</button>
+<button class="pm-tab" id="managerTabTrophy" onclick="switchManagerModalTab('trophy')">🏆 수상·트로피</button>
                     </div>
-                    <span class="pm-pageno" id="managerPageNo">1 / 4</span>
+                    <span class="pm-pageno" id="managerPageNo">1 / 7</span>
                     <button class="pm-nav" onclick="pmStepTab('manager',1)" title="다음 페이지 (→)">›</button>
                 </div>
             </div>
             <div id="managerModalContent">
-                <div id="managerTabContentOverview" class="pm-page on">
-                <div class="pm-cols"><div class="pm-col">
+<div id="managerTabContentOverview" class="pm-page on"><div id="gPgHubM" class="gpg-hub"></div></div>
+<div id="managerTabContentAbility" class="pm-page">
                 <!-- 🧬 감독 능력치 -->
                 <div id="managerAbilitySection" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 12px; margin-bottom:10px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0; gap:8px;">
@@ -3512,7 +3825,8 @@ html { color-scheme: dark; }
                 </div>
                 <!-- 🧠 감독 전술 성향 (선호 포메이션·전술 1~3순위) -->
                 <div id="managerTacticSection" class="mt-sec" style="display:none;"></div>
-                </div><div class="pm-col">
+</div>
+<div id="managerTabContentRecord" class="pm-page"><div class="gpg-stack">
                 <!-- 핵심 스탯 카드 -->
                 <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:12px;">
                     <div style="background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05)); border:1px solid rgba(56,189,248,0.3); border-radius:10px; padding:12px; text-align:center;">
@@ -3550,15 +3864,6 @@ html { color-scheme: dark; }
                         </div>
                     </div>
                 </div>
-
-                <!-- v1.84: 🏆 트로피 · 메달 진열대 -->
-                <div id="managerTrophyCabinet"></div>
-                <!-- 수상 기록 -->
-                <div id="managerAwardBadges" style="display:none; background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(251,191,36,0.02)); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:14px; margin-bottom:12px;">
-                    <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🏆 우승 · 준우승 기록</div>
-                    <div id="managerAwardBadgeList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-                </div>
-
                 <!-- 시즌·팀별 재임 기록 -->
                 <div style="margin-bottom:14px;">
                     <h4 style="margin:0 0 8px; color:var(--accent); display:flex; align-items:center; gap:8px;">📋 시즌별 재임 기록</h4>
@@ -3582,9 +3887,16 @@ html { color-scheme: dark; }
                         </table>
                     </div>
                 </div>
-
-                </div></div>
+</div></div>
+<div id="managerTabContentTrophy" class="pm-page">
+                <!-- v1.84: 🏆 트로피 · 메달 진열대 -->
+                <div id="managerTrophyCabinet"></div>
+                <!-- 수상 기록 -->
+                <div id="managerAwardBadges" style="display:none; background:linear-gradient(135deg,rgba(251,191,36,0.1),rgba(251,191,36,0.02)); border:1px solid rgba(251,191,36,0.3); border-radius:10px; padding:14px; margin-bottom:12px;">
+                    <div style="font-weight:800; color:var(--gold); margin-bottom:10px; font-size:0.9rem;">🏆 우승 · 준우승 기록</div>
+                    <div id="managerAwardBadgeList" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
                 </div>
+</div>
                 <div id="managerTabContentH2H" class="pm-page">
                 <div>
                 <!-- 감독간 상대전적 -->
@@ -4882,7 +5194,7 @@ html { color-scheme: dark; }
                         </div>
                         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                             <div id="dcQuickBadges" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
-                            <button class="btn btn-main" onclick="dcOpenFullDetail()">🔎 경기기록&순위 상세보기</button>
+                            <button class="btn btn-main" onclick="switchDcTab('match')">⚔️ 경기기록&순위</button>
                         </div>
                     </div>
                     <div style="display:none; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06);">
@@ -4892,6 +5204,7 @@ html { color-scheme: dark; }
                 </div>
 
                 <!-- 데이터센터 탭 (v1.56: 7개 영역 + 하위 탭 / 아래 기존 9개 버튼은 id 호환용으로 숨김) -->
+                <div id="dcTrophyStrip" class="tcs-strip" style="display:none;"></div>
                 <div id="dcTabNav" class="dc-nav">
                     <div id="dcNavMain" class="dc-nav-main" role="tablist"></div>
                     <div id="dcNavSub" class="dc-nav-sub"></div>
@@ -10336,6 +10649,7 @@ html { color-scheme: dark; }
             dcPopulateInOutSeasonSelect(team);
             dcRenderInOut();
             switchDcTab('teaminfo');
+            try { tcRenderDcStrip(team); } catch (e) { console.error(e); }
             (document.getElementById('dcTeamListCollapsed') || document.getElementById('dcTeamPanel')).scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
@@ -10381,6 +10695,7 @@ html { color-scheme: dark; }
                 if (btn) btn.classList.toggle('active', t === tab);
             });
             dcLastTab[dcGroupOf(tab).id] = tab;
+            { const st = document.getElementById('dcTrophyStrip'); if (st) st.classList.toggle('tcs-hide', tab === 'trophy'); }
             dcRenderTabNav(tab);
             if (tab === 'trophy') { try { tcRenderCabinet(currentDcTeamId, 'dcTrophyCase'); } catch (e) { console.error('진열장 렌더 오류', e); } }
         }
@@ -20682,7 +20997,17 @@ function fmBestStyle(p, role) {
         });
 
         let currentModalTeamId = null;
+        // v1.93: 팀 상세 팝업을 폐지하고 🗂️ 팀 데이터센터로 통합 — 팀 이름을 누르면 어디서든 데이터센터의 해당 팀이 열림
+        //  (상대전적 · 시즌별 기록 · 능력치 비교 · 수상 진열장 · 순위 변동은 모두 데이터센터 탭에 있음)
         function showTeamDetail(teamId) {
+            const team = state.teams.find(t => String(t.id) === String(teamId));
+            if (!team) return;
+            try { const tm = document.getElementById('teamDetailModal'); if (tm) tm.style.display = 'none'; } catch (e) { }
+            if (typeof closePage === 'function' && document.body.classList.contains('g-pg-open')) { try { window.gPgClose && window.gPgClose(); } catch (e) { } }
+            openTab('datacenter');
+            dcSelectTeam(teamId);
+        }
+        function _legacyTeamModal(teamId) {
             currentModalTeamId = teamId;
             const team = state.teams.find(t => String(t.id) === String(teamId));
             if(!team) return;
@@ -21234,6 +21559,7 @@ function fmBestStyle(p, role) {
                 </tr>`;
             }).join('');
 
+            window._gPgPS = { name: playerName, stats, count, totalG, totalA, totalR, momCount, posCounts, playerPos, currentTeam, teamColor };   // v1.93: 메인(허브) 요약용
             document.getElementById('playerDetailModal').style.display = 'block';
             renderPlayerRankTrend(playerName);
 
@@ -21730,11 +22056,12 @@ function fmBestStyle(p, role) {
 
         // ===== 선수·감독 모달 공용: 상단 탭 + 페이지 넘김 =====
         const PM_TABS = {
-            player:  { tabs: ['overview','match','season','analysis','compare','power','growth'], pre: 'player',  cur: 'overview' },
-            manager: { tabs: ['overview','h2h','history','tactic'], pre: 'manager', cur: 'overview' }
+            player:  { tabs: ['overview','ability','record','season','growth','analysis','power','compare','trophy'], pre: 'player',  cur: 'overview' },
+            manager: { tabs: ['overview','ability','record','h2h','history','tactic','trophy'], pre: 'manager', cur: 'overview' }
         };
         function pmCap(s) { return s === 'h2h' ? 'H2H' : s.charAt(0).toUpperCase() + s.slice(1); }
         function pmShowTab(kind, tab) {
+            if (kind === 'player' && tab === 'match') tab = 'record';   // v1.93: 경기 기록은 기록·경기 탭에 통합
             const cfg = PM_TABS[kind];
             const prevIdx = cfg.tabs.indexOf(cfg.cur), nextIdx = cfg.tabs.indexOf(tab);
             cfg.tabs.forEach(t => {
@@ -21771,7 +22098,7 @@ function fmBestStyle(p, role) {
                 const tg = e.target; if (tg && /^(INPUT|SELECT|TEXTAREA)$/.test(tg.tagName)) return;
                 const em = document.getElementById('playerEditModal'), mem = document.getElementById('managerEditModal');
                 if ((em && em.style.display === 'block') || (mem && mem.style.display === 'block')) return;
-                pmStepTab(k, e.key === 'ArrowRight' ? 1 : -1);
+                if (window.gPgStep) gPgStep(k, e.key === 'ArrowRight' ? 1 : -1); else pmStepTab(k, e.key === 'ArrowRight' ? 1 : -1);
             });
             let sx = 0, sy = 0, st = null;
             document.addEventListener('touchstart', e => { const k = openKind(); if (!k || !e.touches[0]) { st = null; return; } sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = e.target; }, { passive: true });
@@ -21779,11 +22106,12 @@ function fmBestStyle(p, role) {
                 const k = openKind(); if (!k || !st || !e.changedTouches[0]) return;
                 if (st.closest && st.closest('.scrollable-table, .pm-tabs, input, select, textarea, svg, #modalAbilityEditArea')) { st = null; return; }
                 const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; st = null;
-                if (Math.abs(dx) > 70 && Math.abs(dy) < 45) pmStepTab(k, dx < 0 ? 1 : -1);
+                if (Math.abs(dx) > 70 && Math.abs(dy) < 45) { if (window.gPgStep) gPgStep(k, dx < 0 ? 1 : -1); else pmStepTab(k, dx < 0 ? 1 : -1); }
             }, { passive: true });
         })();
 
         function switchPlayerModalTab(tab) {
+            if (tab === 'match') tab = 'record';
             pmShowTab('player', tab);
             if(tab === 'season') renderPlayerSeasonRecords();
             if(tab === 'compare') { populateModalPlayerCompareSelect(); renderPlayerModalCompare(); }
@@ -21904,120 +22232,129 @@ function fmBestStyle(p, role) {
         }
 
         // 시즌별 성적 카드 1개를 렌더링 (조별순위 · 토너먼트순위 배지 포함)
+        // v1.93: 선수 페이지 '시즌별 요약'과 같은 구조 — 왼쪽 '핵심 4칸 → 승/패 막대 → 보조 지표', 오른쪽 '경기당 한 줄' 목록.
+        // (팀 모달 '시즌별 기록' 탭과 팀 데이터센터 '시즌별 성적'이 함께 사용)
         function renderTeamSeasonDetailCard(seasonName, stats, c, isChampion, myTeamName) {
-                const gdColor = stats.gd > 0 ? '#60a5fa' : stats.gd < 0 ? '#f87171' : '#94a3b8';
+                const col = c || 'var(--accent)';
+                const trophy = (isChampion && window.gTrophy) ? gTrophy(seasonName, 'sm') : '';
+                if (!stats.gms) {
+                    return `<div class="gsn-card" style="border-left-color:${col}; padding:8px 14px;"><div class="gsn-head" style="margin:0; padding:0; border:0;">${trophy}<span class="gsn-t" style="color:${col};">${seasonName}</span><span class="gsn-chip">아직 경기 기록이 없어요</span></div></div>`;
+                }
                 // 토너먼트 결과 배지 색상: 우승(금) · 준우승(은) · 4강진출(파랑) · 꼴찌전 승(초록) · 꼴찌전 패(빨강) · 그 외(회색)
                 const tourneyStyle = (fr) => {
-                    if(!fr) return { bg: 'rgba(148,163,184,0.1)', color: 'var(--text-muted)', border: 'rgba(255,255,255,0.1)' };
-                    if(fr.includes('우승') && !fr.includes('준우승')) return { bg: 'rgba(251,191,36,0.2)', color: 'var(--gold)', border: 'rgba(251,191,36,0.4)' };
-                    if(fr.includes('준우승')) return { bg: 'rgba(203,213,225,0.15)', color: '#cbd5e1', border: 'rgba(255,255,255,0.1)' };
-                    if(fr.includes('4강')) return { bg: 'rgba(56,189,248,0.15)', color: 'var(--accent)', border: 'rgba(56,189,248,0.35)' };
-                    if(fr.includes('꼴찌전 승')) return { bg: 'rgba(34,197,94,0.15)', color: 'var(--success)', border: 'rgba(34,197,94,0.35)' };
-                    if(fr.includes('꼴찌전 패') || fr.includes('꼴찌')) return { bg: 'rgba(239,68,68,0.15)', color: '#f87171', border: 'rgba(239,68,68,0.35)' };
-                    return { bg: 'rgba(148,163,184,0.1)', color: 'var(--text-muted)', border: 'rgba(255,255,255,0.1)' };
+                    if(!fr) return { bg: 'rgba(148,163,184,0.1)', color: 'var(--text-muted)' };
+                    if(fr.includes('우승') && !fr.includes('준우승')) return { bg: 'rgba(251,191,36,0.2)', color: 'var(--gold)' };
+                    if(fr.includes('준우승')) return { bg: 'rgba(203,213,225,0.15)', color: '#cbd5e1' };
+                    if(fr.includes('4강')) return { bg: 'rgba(56,189,248,0.15)', color: 'var(--accent)' };
+                    if(fr.includes('꼴찌전 승')) return { bg: 'rgba(34,197,94,0.15)', color: 'var(--success)' };
+                    if(fr.includes('꼴찌')) return { bg: 'rgba(239,68,68,0.15)', color: '#f87171' };
+                    return { bg: 'rgba(148,163,184,0.1)', color: 'var(--text-muted)' };
                 };
                 const ts = tourneyStyle(stats.finalRank);
+                const groupChip = stats.groupRank
+                    ? `<span class="gsn-chip" style="background:rgba(56,189,248,0.15); color:var(--accent);">📊 조별 ${stats.groupLabel ? stats.groupLabel + ' ' : ''}${stats.groupRank}위</span>`
+                    : `<span class="gsn-chip gsn-dim">📊 조별리그 -</span>`;
+                const tourneyChip = stats.finalRank
+                    ? `<span class="gsn-chip" style="background:${ts.bg}; color:${ts.color};">🏆 토너먼트 ${stats.finalRank}</span>`
+                    : `<span class="gsn-chip gsn-dim">🏆 토너먼트 진출 전</span>`;
+
+                const ml = stats.matchList || [];
+                const gp = stats.gms;
+                const per = (v) => gp ? (v / gp).toFixed(2) : '-';
+                let cs = 0, bestWin = 0, maxGF = 0;
+                const scMap = {}, asMap = {};
+                ml.forEach(m => {
+                    if (m.oppScore === 0) cs++;
+                    if (m.myScore - m.oppScore > bestWin) bestWin = m.myScore - m.oppScore;
+                    if (m.myScore > maxGF) maxGF = m.myScore;
+                    (m.scorers || []).forEach(p => { scMap[p.name] = (scMap[p.name] || 0) + (p.count || 1); });
+                    (m.assisters || []).forEach(p => { asMap[p.name] = (asMap[p.name] || 0) + (p.count || 1); });
+                });
+                const topOf = (o, unit) => { let n = '', v = 0; Object.keys(o).forEach(k => { if (o[k] > v) { v = o[k]; n = k; } }); return v ? `${n} ${v}${unit}` : '-'; };
+                const gdColor = stats.gd > 0 ? '#60a5fa' : stats.gd < 0 ? '#f87171' : '#94a3b8';
+                const wr = gp ? Math.round(stats.w / gp * 100) : 0;
+                const hero = (val, label, color) => `<div class="gsn-hero"><b style="color:${color};">${val}</b><span>${label}</span></div>`;
+                const kv = (k, v, color, full) => `<div class="gsn-kv${full ? ' full' : ''}"><span>${k}</span><b${color ? ` style="color:${color};"` : ''}>${v}</b></div>`;
+                const kvs = [
+                    kv('승률', wr + '%', 'var(--success)'),
+                    kv('평균 평점', stats.avgRating ? stats.avgRating.toFixed(2) : '-', 'var(--accent)'),
+                    kv('경기당 득점', per(stats.gf)),
+                    kv('경기당 실점', per(stats.ga)),
+                    kv('무실점 경기', cs, 'var(--success)'),
+                    kv('최다 득점 경기', maxGF || '-'),
+                    kv('최다 점수차 승', bestWin > 0 ? '+' + bestWin : '-'),
+                    stats.elo !== undefined ? kv('⚡ Elo', stats.elo, stats.elo >= ELO_INITIAL ? 'var(--success)' : 'var(--danger)') : '',
+                    kv('⚽ 팀 득점왕', topOf(scMap, '골'), '#fb923c', true),
+                    kv('🎯 팀 도움왕', topOf(asMap, '도움'), 'var(--accent)', true)
+                ].filter(Boolean);
+                const wdl = `<div class="gsn-wdlbox"><div class="gsn-wdl"><i style="width:${gp ? stats.w / gp * 100 : 0}%; background:#22c55e;"></i><i style="width:${gp ? stats.l / gp * 100 : 0}%; background:#ef4444;"></i></div><div class="gsn-wdlt"><span style="color:#4ade80;">${stats.w}승</span><span style="color:#f87171;">${stats.l}패</span><em>승률 ${wr}%</em></div></div>`;
+
                 return `
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px; margin-bottom:12px; border-left:3px solid ${c};">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
-                        <div style="font-weight:800; color:${c}; font-size:0.95rem; display:flex; align-items:center;">${(isChampion && window.gTrophy) ? gTrophy(seasonName, 'sm') : ''}<span>${seasonName}</span></div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-                            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-                                ${stats.groupRank ? `<span style="background:rgba(56,189,248,0.15); color:var(--accent); padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:800;">📊 조별리그 ${stats.groupLabel ? stats.groupLabel + ' ' : ''}${stats.groupRank}위</span>` : '<span style="background:rgba(148,163,184,0.1); color:var(--text-muted); padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:800;">📊 조별리그 -</span>'}
-                                ${stats.finalRank ? `<span style="background:${ts.bg}; color:${ts.color}; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:800; border:1px solid ${ts.border};">🏆 토너먼트 ${stats.finalRank}</span>` : '<span style="background:rgba(148,163,184,0.1); color:var(--text-muted); padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:800;">🏆 토너먼트 진출 전</span>'}
-                            </div>
-                            ${(stats.groupRank && stats.finalRank) ? `<div style="font-size:0.68rem; color:var(--text-muted); text-align:right; opacity:0.8;">조별 ${stats.groupLabel ? stats.groupLabel + ' ' : ''}${stats.groupRank}위 / ${stats.finalRank}</div>` : ''}
+                <div class="gsn-card" style="border-left-color:${col};">
+                    <div class="gsn-head">${trophy}<span class="gsn-t" style="color:${col};">${seasonName}</span>${groupChip}${tourneyChip}</div>
+                    <div class="gsn-body">
+                        <div class="gsn-side">
+                            <div class="gsn-heroes">${hero(stats.gms, '경기', 'var(--accent)')}${hero(stats.gf, '⚽ 득점', '#fb923c')}${hero(stats.ga, '🛡 실점', '#f87171')}${hero((stats.gd > 0 ? '+' : '') + stats.gd, '득실차', gdColor)}</div>
+                            ${wdl}
+                            <div class="gsn-kvs">${kvs.join('')}</div>
                         </div>
+                        <div>${renderSeasonMatchList(ml, myTeamName, col)}</div>
                     </div>
-                    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:8px;">
-                        <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron';">${stats.gms}</div>
-                            <div style="font-size:0.65rem; color:var(--text-muted);">경기</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(34,197,94,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:var(--success);">${stats.w}승 ${stats.l}패</div>
-                            <div style="font-size:0.65rem; color:var(--text-muted);">승/패</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron';">${stats.gf}<span style="color:var(--text-muted); font-size:0.8rem;">득</span> ${stats.ga}<span style="color:var(--text-muted); font-size:0.8rem;">실</span></div>
-                            <div style="font-size:0.65rem; color:var(--text-muted);">득점/실점</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:${gdColor};">${stats.gd > 0 ? '+' : ''}${stats.gd}</div>
-                            <div style="font-size:0.65rem; color:var(--text-muted);">득실차</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <div style="flex:1; text-align:center; background:rgba(0,0,0,0.2); border-radius:6px; padding:6px;">
-                            <span style="color:var(--success); font-weight:800;">${stats.gms ? (stats.w/stats.gms*100).toFixed(1) : 0}%</span>
-                            <span style="font-size:0.65rem; color:var(--text-muted); margin-left:4px;">승률</span>
-                        </div>
-                        <div style="flex:1; text-align:center; background:rgba(0,0,0,0.2); border-radius:6px; padding:6px;">
-                            <span style="color:var(--accent); font-weight:800;">${stats.avgRating.toFixed(2)}</span>
-                            <span style="font-size:0.65rem; color:var(--text-muted); margin-left:4px;">평균 평점</span>
-                        </div>
-                        ${stats.elo !== undefined ? `<div style="flex:1; text-align:center; background:rgba(0,0,0,0.2); border-radius:6px; padding:6px;">
-                            <span style="color:${stats.elo >= ELO_INITIAL ? 'var(--success)' : 'var(--danger)'}; font-weight:800;">${stats.elo}</span>
-                            <span style="font-size:0.65rem; color:var(--text-muted); margin-left:4px;">⚡Elo (시작 1000)</span>
-                        </div>` : ''}
-                    </div>
-                    ${renderSeasonMatchList(stats.matchList, myTeamName, c)}
                 </div>`;
         }
 
-        // 시즌 카드 안에 접이식으로 들어가는 '이 시즌 팀간 경기결과' 목록.
-        // (조별리그/인터리그/토너먼트 등 그 시즌에 이 팀이 치른 모든 경기를 상대팀·점수·결과와 함께 보여준다)
+        // 시즌 카드 오른쪽의 '이 시즌 팀간 경기결과' — 경기당 한 줄(대회 · 상대 · 스코어 · 승패 · MOM), 줄을 누르면 득점 · 도움 상세가 펼쳐진다.
         function renderSeasonMatchList(matchList, myTeamName, myTeamColor) {
             if (!matchList || !matchList.length) return '';
-            // 득점/도움 2회 이상은 "x2" 대신 이모지를 그 횟수만큼(2개, 3개...) 반복해서 표기한다.
             // 득점 시간이 있으면 이름 뒤 괄호 안에 작게 붙인다. (전10', 후25' 형식)
             const fmtTime = (gt) => (gt && gt.half) ? `${gt.half.charAt(0)}${gt.min != null ? gt.min : ''}'` : '';
-            // 이름 뒤에 "N골"/"N도움"을 붙이고, 시간 정보는 이름 뒤 괄호 안에 이모지와 함께 표기한다. (예: 박하얀 2골(⚽'전4' ⚽'후10'))
             const fmtNames = (list, emoji, unit) => (list || []).map(p => {
-                const timeStr = (p.times && p.times.length) ? `<span style="font-size:0.85em; color:var(--text-muted);">(${p.times.map(gt => `${emoji}'${fmtTime(gt)}`).join(' ')})</span>` : '';
+                const timeStr = (p.times && p.times.length) ? `<span style="font-size:0.85em;">(${p.times.map(gt => `${emoji}'${fmtTime(gt)}`).join(' ')})</span>` : '';
                 return `${p.name} ${p.count || 1}${unit}${timeStr}`;
             }).join(', ');
             const myName = myTeamName || '우리팀';
             const myColor = myTeamColor || 'var(--text-muted)';
-            const rows = matchList.map(m => {
+            const rows = [...matchList].reverse().map(m => {   // 선수 페이지처럼 최신 경기가 위
                 const opp = state.teams.find(t => String(t.id) === String(m.oppId));
                 const oppName = opp ? opp.name : '알 수 없음';
                 const oppColor = opp ? opp.color : 'var(--text-muted)';
-                const resColor = m.result === 'W' ? 'var(--success)' : (m.result === 'L' ? '#f87171' : 'var(--text-muted)');
-                const resLabel = m.result === 'W' ? '승' : (m.result === 'L' ? '패' : '무');
-                const pkLabel = (m.myPk || m.oppPk) ? ` <span style="color:var(--text-muted);">(PK ${m.myPk}-${m.oppPk})</span>` : '';
-                // 승리팀 점수는 초록, 패배팀 점수는 빨강으로 구분 표시
+                const isW = m.result === 'W', isL = m.result === 'L';
                 const myScoreColor = m.myScore > m.oppScore ? 'var(--success)' : (m.myScore < m.oppScore ? '#f87171' : 'var(--text-muted)');
                 const oppScoreColor = m.oppScore > m.myScore ? 'var(--success)' : (m.oppScore < m.myScore ? '#f87171' : 'var(--text-muted)');
-                const scoreStr = `<span style="color:${myScoreColor};">${m.myScore}</span><span style="color:var(--text-muted);"> - </span><span style="color:${oppScoreColor};">${m.oppScore}</span>${pkLabel}`;
-                const myScorersStr = (m.scorers && m.scorers.length) ? fmtNames(m.scorers, '⚽', '골') : '';
-                const myAssistersStr = (m.assisters && m.assisters.length) ? fmtNames(m.assisters, '🎯', '도움') : '';
-                const oppScorersStr = (m.oppScorers && m.oppScorers.length) ? fmtNames(m.oppScorers, '⚽', '골') : '';
-                const oppAssistersStr = (m.oppAssisters && m.oppAssisters.length) ? fmtNames(m.oppAssisters, '🎯', '도움') : '';
-                const momStr = (m.mom && m.mom !== '-') ? `👑 ${m.mom}` : '';
-                const myDetail = [myScorersStr, myAssistersStr].filter(Boolean).join(' <span style="opacity:0.4;">·</span> ');
-                const oppDetail = [oppScorersStr, oppAssistersStr].filter(Boolean).join(' <span style="opacity:0.4;">·</span> ');
-                const detailLines = [];
-                if (myDetail) detailLines.push(`<div><span style="color:${myColor}; font-weight:700;">${myName}</span> ${myDetail}</div>`);
-                if (oppDetail) detailLines.push(`<div><span style="color:${oppColor}; font-weight:700;">${oppName}</span> ${oppDetail}</div>`);
-                if (momStr) detailLines.push(`<div>${momStr}</div>`);
-                const detailStr = detailLines.length
-                    ? `<div style="width:100%; margin-top:3px; padding-left:8px; font-size:0.7rem; color:var(--text-muted); display:flex; flex-direction:column; gap:2px;">${detailLines.join('')}</div>`
-                    : '';
-                return `<div style="padding:5px 8px; border-radius:6px; background:rgba(255,255,255,0.02); margin-bottom:4px; font-size:0.76rem;">
-                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                        <span style="width:64px; flex-shrink:0; color:var(--text-muted); font-size:0.68rem;">${m.type || ''}${m.num ? ' ' + m.num + '경기' : ''}</span>
-                        <span style="flex:1; min-width:80px; font-weight:700; color:${oppColor};">vs ${oppName}</span>
-                        <span style="font-family:'Orbitron'; font-weight:800;">${scoreStr}</span>
-                        <span style="width:28px; text-align:center; font-weight:800; color:${resColor};">${resLabel}</span>
-                    </div>
-                    ${detailStr}
-                </div>`;
+                const scoreStr = `<span style="color:${myScoreColor};">${m.myScore}</span><span style="color:var(--text-muted);"> - </span><span style="color:${oppScoreColor};">${m.oppScore}</span>`;
+                const hasPk = !!(m.myPk || m.oppPk);
+                const tag = `<span class="gsn-res ${isW ? 'w' : (isL ? 'l' : '')}">${isW ? '승' : (isL ? '패' : '무')}${hasPk ? '<small>PK</small>' : ''}</span>`;
+                const myDetail = [fmtNames(m.scorers, '⚽', '골'), fmtNames(m.assisters, '🎯', '도움')].filter(Boolean).join(' <span style="opacity:0.4;">·</span> ');
+                const oppDetail = [fmtNames(m.oppScorers, '⚽', '골'), fmtNames(m.oppAssisters, '🎯', '도움')].filter(Boolean).join(' <span style="opacity:0.4;">·</span> ');
+                const lines = [];
+                if (hasPk) lines.push(`<div>승부차기 <b style="color:var(--text);">${m.myPk} - ${m.oppPk}</b></div>`);
+                if (myDetail) lines.push(`<div><span style="color:${myColor}; font-weight:700;">${myName}</span> ${myDetail}</div>`);
+                if (oppDetail) lines.push(`<div><span style="color:${oppColor}; font-weight:700;">${oppName}</span> ${oppDetail}</div>`);
+                const momName = (m.mom && m.mom !== '-') ? m.mom : '';
+                return `<details class="gsn-m tm ${isW ? 'w' : (isL ? 'l' : '')}">
+                    <summary>
+                        <span class="gsn-ty">${m.type || ''}${m.num ? ' ' + m.num + '경기' : ''}</span>
+                        <span class="gsn-opp" style="color:${oppColor};">vs ${oppName}</span>
+                        <span class="gsn-sc">${scoreStr}</span>
+                        ${tag}
+                        <span class="gsn-mom">${momName ? '👑 ' + momName : ''}</span>
+                    </summary>
+                    <div class="gsn-dt">${lines.join('') ? `<div style="display:flex; flex-direction:column; gap:2px;">${lines.join('')}</div>` : '<div class="gsn-dim">득점 · 도움 기록 없음</div>'}</div>
+                </details>`;
             }).join('');
-            return `<details open style="margin-top:10px;">
-                <summary style="cursor:pointer; font-size:0.78rem; color:var(--text-muted); font-weight:800; padding:4px 0;">⚔️ 이 시즌 팀간 경기결과 (${matchList.length}경기) 펼치기</summary>
-                <div style="margin-top:8px;">${rows}</div>
-            </details>`;
+            return `<div class="gsn-mbox">
+                <div class="gsn-mh">⚔️ 이 시즌 팀간 경기결과 <span class="gsn-dim">${matchList.length}경기 · 눌러서 득점·도움 상세 보기</span>
+                    <button class="gsn-fix" style="margin:0 0 0 6px;" onclick="gsnToggleAll(this)">모두 펼치기</button></div>
+                <div class="gsn-mlist">${rows}</div>
+            </div>`;
+        }
+        function gsnToggleAll(btn) {
+            const box = btn.closest('.gsn-mbox');
+            if (!box) return;
+            const open = btn.dataset.o !== '1';
+            box.querySelectorAll('details').forEach(d => { d.open = open; });
+            btn.dataset.o = open ? '1' : '0';
+            btn.textContent = open ? '모두 접기' : '모두 펼치기';
         }
 
         // ======= 팀 시즌별 기록 (팀 모달 '시즌별 기록' 탭) =======
@@ -22163,76 +22500,74 @@ function fmBestStyle(p, role) {
                     const detailStr = detailLines.length
                         ? `<div style="width:100%; margin-top:3px; padding-left:8px; font-size:0.7rem; color:var(--text-muted); display:flex; flex-direction:column; gap:2px;">${detailLines.join('')}</div>`
                         : '';
-                    return `<div style="padding:6px 8px; border-radius:6px; background:${resultBg}; margin-bottom:4px; font-size:0.76rem;">
-                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                            <span style="width:52px; flex-shrink:0; color:var(--text-muted); font-size:0.66rem;">${r.type}</span>
-                            <span style="flex:1; min-width:80px; font-weight:700; color:${r.oppColor || 'inherit'};">vs ${r.opp}</span>
-                            <span style="font-family:'Orbitron'; font-weight:800;">${scoreStr}</span>
-                            <span style="font-weight:800; color:${resultColor}; font-size:0.72rem;">${r.result}</span>
-                            ${posBadge}
-                            ${r.g > 0 ? `<span style="color:#fb923c; font-weight:800; font-size:0.72rem;">⚽${r.g}</span>` : ''}
-                            ${r.a > 0 ? `<span style="color:var(--accent); font-weight:800; font-size:0.72rem;">🎯${r.a}</span>` : ''}
-                            ${r.gkWeight > 0 ? `<span style="color:var(--success); font-weight:800; font-size:0.72rem;">${r.cs ? (r.gkWeight < 1 ? '✓(하프)' : '✓') : '✗'}</span>` : ''}
-                            ${r.r > 0 ? `<span style="color:var(--success); font-size:0.72rem;">${r.r.toFixed(1)}</span>` : ''}
-                            ${r.mom ? '<span style="color:#c084fc; font-size:0.72rem; font-weight:800;">👑</span>' : ''}
-                            <button onclick="togglePlayerMatchTeam('${playerName}', ${r.matchId}, ${r.archiveIdx})" title="이 경기 당시 소속팀이 실제와 다르면 눌러서 바로잡을 수 있어요" style="background:rgba(255,255,255,0.08); border:none; border-radius:4px; padding:0px 4px; font-size:0.55rem; color:var(--text-muted); cursor:pointer;">🔀</button>
+                    const isW = r.result.startsWith('W');
+                    const tag = `<span class="gsn-res ${isW ? 'w' : 'l'}">${isW ? '승' : '패'}${/PK/.test(r.result) ? '<small>PK</small>' : ''}</span>`;
+                    const stat = [
+                        r.g > 0 ? `<span style="color:#fb923c;">⚽${r.g}</span>` : '',
+                        r.a > 0 ? `<span style="color:var(--accent);">🎯${r.a}</span>` : '',
+                        r.gkWeight > 0 ? `<span style="color:var(--success);">${r.cs ? '🧤✓' : '🧤✗'}</span>` : '',
+                        r.mom ? '<span style="color:#c084fc;">👑</span>' : ''
+                    ].filter(Boolean).join(' ') || '<span class="gsn-dim">-</span>';
+                    return `<details class="gsn-m ${isW ? 'w' : 'l'}">
+                        <summary>
+                            <span class="gsn-ty">${r.type}</span>
+                            <span class="gsn-opp" style="color:${r.oppColor || 'inherit'};">vs ${r.opp}</span>
+                            <span class="gsn-sc">${scoreStr}</span>
+                            ${tag}
+                            <span class="gsn-pos">${posBadge}</span>
+                            <span class="gsn-st">${stat}</span>
+                            <span class="gsn-rt">${r.r > 0 ? r.r.toFixed(1) : '-'}</span>
+                        </summary>
+                        <div class="gsn-dt">${detailStr || '<div class="gsn-dim">득점 · 도움 기록 없음</div>'}
+                            <button onclick="togglePlayerMatchTeam('${playerName}', ${r.matchId}, ${r.archiveIdx})" title="이 경기 당시 소속팀이 실제와 다르면 눌러서 바로잡을 수 있어요" class="gsn-fix">🔀 소속 수정</button>
                         </div>
-                        ${detailStr}
-                    </div>`;
+                    </details>`;
                 }).join('');
                 return `
-                <div style="margin-top:10px;">
-                    <div style="font-size:0.75rem; font-weight:800; color:var(--text-muted); margin-bottom:6px; padding-left:2px;">📋 출전 기록</div>
-                    <div style="max-height:260px; overflow-y:auto;">${rows}</div>
+                <div>
+                    <div class="gsn-mh">📋 출전 기록 <span class="gsn-dim">${matchRecords.length}경기 · 눌러서 득점·도움 상세 보기</span></div>
+                    <div class="gsn-mlist">${rows}</div>
                 </div>`;
             };
 
             const renderSeasonCard = (seasonName, stats, teamColor) => {
                 const c2 = teamColor || 'var(--accent)';
                 const hasGK = stats.gkGames > 0;
-                const boxCount = hasGK ? 8 : 5;
+                const recs = stats.matchRecords || [];
+                let w = 0, d = 0, l = 0, best = 0, bestG = 0;
+                recs.forEach(r => {
+                    if (String(r.result).startsWith('W')) w++; else l++;   // 무승부 없음 — 동점은 PK 승/패로 집계
+                    if (r.r > best) best = r.r;
+                    if (r.g > bestG) bestG = r.g;
+                });
+                const tot = w + d + l;
+                const wr = tot ? Math.round(w / tot * 100) : 0;
+                const gp = stats.games || 0;
+                const per = (v) => gp ? (v / gp).toFixed(2) : '-';
+                if (!gp && !recs.length) return `<div class="gsn-card" style="border-left-color:${c2}; padding:8px 14px;"><div class="gsn-head" style="margin:0; padding:0; border:0;"><span class="gsn-t" style="color:${c2};">${seasonName}</span><span class="gsn-chip">아직 출전 기록이 없어요</span></div></div>`;
+                const hero = (val, label, col) => `<div class="gsn-hero"><b style="color:${col};">${val}</b><span>${label}</span></div>`;
+                const kv = (k, v, col) => `<div class="gsn-kv"><span>${k}</span><b${col ? ` style="color:${col};"` : ''}>${v}</b></div>`;
+                const kvs = [
+                    kv('공격포인트', stats.g + stats.a, '#fbbf24'),
+                    kv('경기당 득점', per(stats.g)),
+                    kv('경기당 공격P', per(stats.g + stats.a)),
+                    kv('최고 평점', best ? best.toFixed(1) : '-', 'var(--success)'),
+                    kv('MOM', stats.mom ? '👑 ' + stats.mom : 0, '#c084fc'),
+                    kv('한 경기 최다골', bestG || '-')
+                ];
+                if (hasGK) kvs.push(kv('GK 무실점', stats.cs, 'var(--success)'), kv('GK 실점', `${stats.ga} (경기당 ${stats.gaAvg.toFixed(2)})`, '#f87171'));
+                const wdl = tot ? `<div class="gsn-wdlbox"><div class="gsn-wdl"><i style="width:${w / tot * 100}%; background:#22c55e;"></i><i style="width:${l / tot * 100}%; background:#ef4444;"></i></div><div class="gsn-wdlt"><span style="color:#4ade80;">${w}승</span><span style="color:#f87171;">${l}패</span><em>팀 승률 ${wr}%</em></div></div>` : '';
                 return `
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:14px; margin-bottom:12px; border-left:3px solid ${c2};">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <div style="font-weight:800; color:${c2}; font-size:0.95rem;">${seasonName}</div>
-                        <div style="font-size:0.75rem; font-weight:800; color:${stats.teamColor || 'var(--text-muted)'};">${stats.teamName || ''}</div>
+                <div class="gsn-card" style="border-left-color:${c2};">
+                    <div class="gsn-head"><span class="gsn-t" style="color:${c2};">${seasonName}</span>${stats.teamName ? `<span class="gsn-chip" style="color:${stats.teamColor || 'inherit'};">${stats.teamName}</span>` : ''}</div>
+                    <div class="gsn-body">
+                        <div class="gsn-side">
+                            <div class="gsn-heroes">${hero(stats.games, '출전', 'var(--accent)')}${hero(stats.g, '⚽ 득점', '#fb923c')}${hero(stats.a, '🎯 도움', 'var(--accent)')}${hero(stats.rAvg.toFixed(2), '평균 평점', 'var(--success)')}</div>
+                            ${wdl}
+                            <div class="gsn-kvs">${kvs.join('')}</div>
+                        </div>
+                        <div>${renderMatchTable(recs)}</div>
                     </div>
-                    <div style="display:grid; grid-template-columns:repeat(${boxCount}, 1fr); gap:8px;">
-                        <div style="text-align:center; background:rgba(0,0,0,0.2); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:var(--accent);">${stats.games}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">출전</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(249,115,22,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:#fb923c;">${stats.g}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">⚽ 득점</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(56,189,248,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:var(--accent);">${stats.a}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">🎯 도움</div>
-                        </div>
-                        ${hasGK ? `
-                        <div style="text-align:center; background:rgba(34,197,94,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:var(--success);">${stats.cs}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">무실점(GK)</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(239,68,68,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:#f87171;">${stats.ga}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">GK 실점</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(239,68,68,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:#f87171;">${stats.gaAvg.toFixed(2)}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">GK 경기당실점</div>
-                        </div>` : ''}
-                        <div style="text-align:center; background:rgba(34,197,94,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:var(--success);">${stats.rAvg.toFixed(2)}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">평균평점</div>
-                        </div>
-                        <div style="text-align:center; background:rgba(168,85,247,0.1); border-radius:6px; padding:8px;">
-                            <div style="font-size:1.1rem; font-weight:800; font-family:'Orbitron'; color:#c084fc;">${stats.mom}</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">MOM</div>
-                        </div>
-                    </div>
-                    ${renderMatchTable(stats.matchRecords)}
                 </div>`;
             };
 
@@ -29747,6 +30082,25 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             renderPlayerRankTrend(_playerModalName);
         }
 
+        // v1.93: 기록·경기 탭 순위 변동 그래프 — 칸 폭에 맞춰 그림 자체를 키움(작게 줄어 보이던 문제 해결)
+        function _gpTrendW(el) {
+            let w = 0;
+            try { w = (el && el.clientWidth) || 0; if (!w && el && el.parentElement) w = el.parentElement.clientWidth - 12; } catch (e) { }
+            if (!w || w < 300) w = 960;
+            return Math.max(560, Math.min(1400, Math.round(w)));
+        }
+        (function () {
+            let lastW = 0, tm = null;
+            window.addEventListener('resize', function () {
+                clearTimeout(tm);
+                tm = setTimeout(function () {
+                    const el = document.getElementById('playerRankTrendChart');
+                    if (!el || !el.clientWidth || Math.abs(el.clientWidth - lastW) < 60) return;
+                    lastW = el.clientWidth;
+                    try { if (typeof _playerModalName !== 'undefined' && _playerModalName) renderPlayerRankTrend(_playerModalName); } catch (e) { }
+                }, 250);
+            });
+        })();
         function renderPlayerRankTrend(playerName) {
             const container = document.getElementById('playerRankTrendChart');
             if(!container) return;
@@ -29787,7 +30141,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
             let rawPoints = calcPlayerRankHistory(playerName, metric, scope);
             if(playerRankTrendPlayedOnly) rawPoints = rawPoints.filter(p => p.played !== false);
-            container.innerHTML = renderRankTrendSVG(aggregateTrendPoints(rawPoints, group), color, metric === 'pwr' ? 'PWR' : undefined, true, { baseW: 560, plotH: 165, fs: 1.3, playedOnly: true, noScroll: true, labelScale: 0.72 });
+            container.innerHTML = renderRankTrendSVG(aggregateTrendPoints(rawPoints, group), color, metric === 'pwr' ? 'PWR' : undefined, true, { baseW: _gpTrendW(container), plotH: 235, fs: 1.1, playedOnly: true, noScroll: true, labelScale: 0.85 });
         }
 
         function nextSeason() {
@@ -32269,7 +32623,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if (!team) { el.innerHTML = ''; return; }
             const prev = el.querySelector('details'), wasOpen = !!(prev && prev.open);   // v1.85: 기본은 접힘 (🔬 소분류 토글로 다시 그려도 펼침 유지)
             el.innerHTML = `<details ${wasOpen ? 'open' : ''} style="margin-top:12px;"><summary style="cursor:pointer; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); font-weight:800; font-size:0.85rem;">🔬 상세 비교 보기 <span style="font-weight:600; color:var(--text-muted); font-size:0.74rem;">· 리그 순위 · 소분류 · 팀 능력치 비교</span></summary>` + lgRosterMatrixHtml(team) + `<div class="card" style="margin-top:12px;"><h3>🧬 팀 능력치 비교 <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">(감독 능력치는 🧑‍💼 감독실 탭에서 확인)</span></h3><div id="dcAbilityTeamCmp"></div></div></details>`;
-            try { lgRenderTeamCompare(team.id, 'dcAbilityTeamCmp', { noMgr: true }); } catch (e) { console.error(e); }
+            try { lgRenderTeamCompare(team.id, 'dcAbilityTeamCmp'); } catch (e) { console.error(e); }
         }
         // 데이터센터 표 맨 위 '리그 평균' 행에 쓸 평균 (필드 항목은 필드 선수 평균, GK 전용 항목은 GK 평균)
         function lgPdcAvgRow(allRows, keys, posFilter) {
@@ -32490,7 +32844,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '1.92';
+        const G_HTML_VERSION = '1.93';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -34912,7 +35266,7 @@ window.pmExtRender = function(name){
     var bar = $('pmSubBar'), box = $('playerExtSection'); if(!bar || !box) return;
     var ref = null; try { ref = findPlayerRefByName(name); } catch(e){}
     if(!ref || !ref.stats){ bar.innerHTML=''; box.innerHTML=''; box.style.display='none'; return; }
-    if(window._pmSubsFor !== name){ window._pmSubsFor = name; window._pmSubsOpen = false; }
+    if(window._pmSubsFor !== name){ window._pmSubsFor = name; window._pmSubsOpen = true; }
     bar.innerHTML = '<button class="pm-subbtn" onclick="pmToggleSubs()">🔬 세부능력치 ' + (window._pmSubsOpen ? '접기 ▴' : '보기 ▾') + '</button>';
     box.innerHTML = abBreakdownHtml(abPlayerGroups(ref)) + '<div class="pt-note">대분류 = 소분류 3개 평균 · \'자동\'은 기존 능력치에서 계산된 값 · 값 입력은 ✏️ 편집에서</div>';
     pmApplyViewState();
@@ -34920,7 +35274,7 @@ window.pmExtRender = function(name){
   window.pmToggleSubs = function(){ window._pmSubsOpen = !window._pmSubsOpen; pmExtRender(_playerModalName); };
 
   var _sp = window.showPlayerDetail;
-  window.showPlayerDetail = function(){ window._pmSubsFor = null; window._pmSubsOpen = false; window._pmEditing = false; return _sp.apply(this, arguments); };
+  window.showPlayerDetail = function(){ window._pmSubsFor = null; window._pmSubsOpen = true; window._pmEditing = false; return _sp.apply(this, arguments); };
 
   // ---------- 감독 모달 ----------
   window.abRenderMgrSubs = function(m){
@@ -36336,6 +36690,21 @@ window.pmExtRender = function(name){
         el.style.display = '';
     };
 
+    // v1.93: 팀 상세 팝업의 트로피 요약 띠를 팀 데이터센터로 이전 (누르면 🏆 팀 수상 진열장 탭으로)
+    window.tcRenderDcStrip = function (team) {
+        const el = document.getElementById('dcTrophyStrip'); if (!el || !team) return;
+        const H = tcHonors(team);
+        if (!H.titles.length && !H.runners.length && !H.awards.length) { el.style.display = 'none'; el.innerHTML = ''; return; }
+        const icons = H.titles.length
+            ? H.titles.map(t => `<span title="${E(t.season)} 우승">${gTrophyOr(t.season, '🏆', 'md')}</span>`).join('')
+            : (H.runners.length ? '🥈' : '🌟');
+        el.innerHTML = `<div class="tcs-in" onclick="switchDcTab('trophy')" title="누르면 팀 수상 진열장 탭으로 이동">
+            <div class="tcs-icons">${icons}</div>
+            <div class="tcs-txt"><b>트로피 진열장</b><span>🏆 우승 ${H.titles.length} · 🥈 준우승 ${H.runners.length} · 🌟 개인 수상 ${H.awards.length}</span></div>
+            <span class="tcs-go">진열장 보기 ›</span></div>`;
+        el.style.display = '';
+    };
+
     window.tcRenderCabinet = function (teamId, boxId) {
         const box = document.getElementById(boxId); if (!box) return;
         const team = (state.teams || []).find(t => String(t.id) === String(teamId));
@@ -36872,6 +37241,291 @@ window.pmExtRender = function(name){
     window.addEventListener('resize', schedule);
     if (window.visualViewport) window.visualViewport.addEventListener('resize', schedule);
     later();
+})();
+</script>
+<script id="gPgScript">
+/* v1.93 — 선수·감독 상세를 모달이 아닌 '페이지'로 열고, 메인(허브)에서 박스를 눌러 상세 탭으로 이동 */
+(function () {
+if (window.__gPg) return; window.__gPg = 1;
+const $ = id => document.getElementById(id);
+const esc = v => (typeof gEsc === 'function') ? gEsc(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const noId = h => String(h || '').replace(/\sid="[^"]*"/g, '');
+const MODAL = { player: 'playerDetailModal', manager: 'managerDetailModal' };
+const G = { cur: null, stack: [], origin: null, depth: 0, title: null, scope: { player: 'all', manager: 'all' } };
+window._gPg = G;
+const origP = window.showPlayerDetail, origM = window.showManagerDetail, origOpenTab = window.openTab, origBack = window.globalBack;
+const tabOf = () => { try { return currentTabId; } catch (e) { return null; } };
+const teamModalOpen = () => { const m = $('teamDetailModal'); return !!(m && m.style.display === 'block'); };
+
+/* ---------- 선수 / 감독 목록 (팀 순서 → 로스터 순서) ---------- */
+function listPlayers() {
+  const out = [];
+  (state.teams || []).forEach(t => (t.players || []).forEach(p => out.push({ name: p.name, pos: p.pos, team: t.name, tid: t.id, color: t.color })));
+  (state.freeAgents || []).forEach(p => out.push({ name: p.name, pos: p.pos, team: '자유계약', tid: null, color: '#94a3b8' }));
+  return out;
+}
+function listManagers() {
+  const out = [], seen = new Set();
+  (state.teams || []).forEach(t => { if (t.manager && !seen.has(t.manager)) { seen.add(t.manager); out.push({ name: t.manager, team: t.name, tid: t.id, color: t.color }); } });
+  (state.managers || []).forEach(m => { if (m && m.name && !seen.has(m.name)) { seen.add(m.name); out.push({ name: m.name, team: '무소속', tid: null, color: '#94a3b8' }); } });
+  return out;
+}
+const listOf = k => k === 'player' ? listPlayers() : listManagers();
+function viewList(kind, name) {
+  const all = listOf(kind), me = all.find(x => x.name === name);
+  if (G.scope[kind] === 'team' && me && me.tid != null) return { all, view: all.filter(x => x.tid === me.tid), me };
+  return { all, view: all, me };
+}
+
+/* ---------- 상단 선택바 (뒤로 · ‹ · 드롭다운 · › · 범위) ---------- */
+function renderBar(kind) {
+  const el = $(kind + 'PageBar'); if (!el || !G.cur) return;
+  const name = G.cur.name, { view } = viewList(kind, name);
+  const idx = view.findIndex(x => x.name === name);
+  const groups = []; view.forEach(x => { let g = groups[groups.length - 1]; if (!g || g.t !== x.team) { g = { t: x.team, items: [] }; groups.push(g); } g.items.push(x); });
+  const opt = x => `<option value="${esc(x.name)}"${x.name === name ? ' selected' : ''}>${esc(x.name)}${x.pos ? ' (' + esc(x.pos) + ')' : ''}</option>`;
+  const missing = idx < 0 ? `<option value="${esc(name)}" selected>${esc(name)} (현재)</option>` : '';
+  el.innerHTML = `<button type="button" data-gpg="back" title="뒤로 (Esc)">← 뒤로</button>
+    <button type="button" class="gpg-arrow" data-gpg="prev" title="이전 ${kind === 'player' ? '선수' : '감독'} (←)">‹</button>
+    <select class="gpg-sel" data-gpg-sel="${kind}" aria-label="${kind === 'player' ? '선수' : '감독'} 선택">${missing}${groups.map(g => `<optgroup label="${esc(g.t)}">${g.items.map(opt).join('')}</optgroup>`).join('')}</select>
+    <button type="button" class="gpg-arrow" data-gpg="next" title="다음 ${kind === 'player' ? '선수' : '감독'} (→)">›</button>
+    <span class="gpg-cnt">${idx >= 0 ? (idx + 1) + ' / ' + view.length : '- / ' + view.length}</span>
+    <select class="gpg-scope" data-gpg-scope="${kind}" title="좌우 이동 범위"><option value="all"${G.scope[kind] === 'all' ? ' selected' : ''}>전체</option><option value="team"${G.scope[kind] === 'team' ? ' selected' : ''}>같은 팀만</option></select>`;
+}
+function sizeBar() {
+  const tb = document.querySelector('.content-topbar'); let top = 0;
+  if (tb) { const cs = getComputedStyle(tb); top = (parseFloat(cs.top) || 0) + tb.getBoundingClientRect().height; }
+  document.documentElement.style.setProperty('--gpg-top', Math.round(top) + 'px');
+}
+function toTop(force) {
+  const m = $(G.cur ? MODAL[G.cur.kind] : ''); if (!m) return;
+  const y = m.getBoundingClientRect().top + window.pageYOffset - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gpg-top')) || 0) - 4;
+  if (force || window.pageYOffset > y) window.scrollTo(0, Math.max(0, force ? 0 : y));
+}
+
+/* ---------- 페이지 열기 / 닫기 / 이동 ---------- */
+function hist(mode, kind, name) {
+  try { const st = { gpg: 1, kind, name }, url = '#' + kind + '=' + encodeURIComponent(name);
+    if (mode === 'push') { history.pushState(st, '', url); G.depth++; } else history.replaceState(st, '', url); } catch (e) { }
+}
+function show(kind, name) {
+  const other = $(MODAL[kind === 'player' ? 'manager' : 'player']); if (other) other.style.display = 'none';
+  const tm = $('teamDetailModal'); if (tm && tm.style.display === 'block') tm.style.display = 'none';
+  document.body.classList.add('g-pg-open');
+  const ttl = $('contentTopbarTitle');
+  if (ttl) { if (G.title == null) G.title = ttl.innerHTML; ttl.innerHTML = `<span class="tab-icon">${kind === 'player' ? '⚽' : '🧑‍💼'}</span><span>${kind === 'player' ? '선수 상세' : '감독 상세'}</span>`; }
+  try { if (typeof gDashTopMerge === 'function') gDashTopMerge('gpg'); } catch (e) { }
+  sizeBar();
+  try { (kind === 'player' ? origP : origM).call(window, name); } catch (e) { console.error('상세 페이지 오류', e); }
+  renderBar(kind); renderHub(kind, name);
+  try { if (typeof updateGlobalBackBtn === 'function') updateGlobalBackBtn(); } catch (e) { }
+  setTimeout(() => { if (G.cur && G.cur.kind === kind && G.cur.name === name) renderHub(kind, name); }, 180);
+}
+function open(kind, name, opt) {
+  opt = opt || {};
+  if (name == null || name === '') return;
+  const same = G.cur && G.cur.kind === kind && G.cur.name === name;
+  if (!G.cur) { G.origin = { tab: tabOf(), team: teamModalOpen() ? currentModalTeamId : null }; G.stack = []; G.depth = 0; hist('push', kind, name); }
+  else if (!same) { if (opt.nav) hist('replace', kind, name); else { G.stack.push({ kind: G.cur.kind, name: G.cur.name }); hist('push', kind, name); } }
+  const first = !G.cur;
+  G.cur = { kind, name };
+  show(kind, name);
+  if (!same) toTop(true); else if (first) toTop(true);
+}
+function reset() {
+  G.cur = null; G.stack = [];
+  document.body.classList.remove('g-pg-open');
+  const ttl = $('contentTopbarTitle'); if (ttl && G.title != null) ttl.innerHTML = G.title; G.title = null;
+  try { if (typeof gDashTopMerge === 'function') gDashTopMerge(tabOf() || 'dashboard'); } catch (e) { }
+  Object.values(MODAL).forEach(id => { const m = $(id); if (m) m.style.display = 'none'; });
+  try { if (typeof updateGlobalBackBtn === 'function') updateGlobalBackBtn(); } catch (e) { }
+}
+function closePage() {
+  const o = G.origin; reset(); G.origin = null; G.depth = 0;
+  if (o && o.team != null && typeof showTeamDetail === 'function') { try { showTeamDetail(o.team); } catch (e) { } }
+}
+function back() {
+  if (!G.cur) return;
+  if (G.depth > 0) { try { history.back(); return; } catch (e) { } }
+  if (G.stack.length) { const p = G.stack.pop(); G.cur = p; show(p.kind, p.name); toTop(true); } else closePage();
+}
+function step(kind, dir) {
+  if (!G.cur || G.cur.kind !== kind) return;
+  const { view } = viewList(kind, G.cur.name); if (!view.length) return;
+  let i = view.findIndex(x => x.name === G.cur.name);
+  i = i < 0 ? (dir > 0 ? 0 : view.length - 1) : (i + dir + view.length) % view.length;
+  open(kind, view[i].name, { nav: true });
+}
+window.gPgOpen = open; window.gPgStep = step; window.gPgBack = back; window.gPgClose = closePage;
+
+/* ---------- 기존 함수 교체 ---------- */
+window.showPlayerDetail = function (name) { open('player', name); };
+window.showManagerDetail = function (name) { open('manager', name); };
+window.closePlayerModal = function () { if (G.cur && G.cur.kind === 'player') back(); else { const m = $(MODAL.player); if (m) m.style.display = 'none'; } };
+window.closeManagerModal = function () { if (G.cur && G.cur.kind === 'manager') back(); else { const m = $(MODAL.manager); if (m) m.style.display = 'none'; } };
+if (origOpenTab) window.openTab = function (id, s) { if (G.cur) { reset(); G.origin = null; } return origOpenTab.apply(this, arguments); };
+if (origBack) window.globalBack = function () {
+  const ids = (typeof GLOBAL_MODAL_IDS !== 'undefined' ? GLOBAL_MODAL_IDS : []).filter(id => id !== MODAL.player && id !== MODAL.manager);
+  const opened = ids.map($).filter(el => el && el.style.display === 'block');
+  if (opened.length) { opened.forEach(el => el.style.display = 'none'); try { updateGlobalBackBtn(); } catch (e) { } return; }
+  if (G.cur) { back(); return; }
+  return origBack.apply(this, arguments);
+};
+const origShowTab = window.pmShowTab;
+if (origShowTab) window.pmShowTab = function (kind, tab) { const r = origShowTab.apply(this, arguments); if (G.cur) toTop(false); return r; };
+
+/* ---------- 이벤트 ---------- */
+document.addEventListener('click', e => {
+  const t = e.target; if (!t.closest) return;
+  const b = t.closest('[data-gpg]');
+  if (b) { const a = b.getAttribute('data-gpg'); if (a === 'back') back(); else if (a === 'prev' && G.cur) step(G.cur.kind, -1); else if (a === 'next' && G.cur) step(G.cur.kind, 1); return; }
+  const box = t.closest('[data-gpg-go]');
+  if (box && G.cur) {
+    if (t.closest('a, button, select, input, .clickable-team, .clickable-player, .clickable-manager')) return;
+    const tab = box.getAttribute('data-gpg-go');
+    if (G.cur.kind === 'player') switchPlayerModalTab(tab); else switchManagerModalTab(tab);
+  }
+});
+document.addEventListener('change', e => {
+  const t = e.target; if (!t || !t.getAttribute) return;
+  if (t.hasAttribute('data-gpg-sel') && G.cur) open(t.getAttribute('data-gpg-sel'), t.value, { nav: true });
+  else if (t.hasAttribute('data-gpg-scope') && G.cur) { G.scope[t.getAttribute('data-gpg-scope')] = t.value; renderBar(G.cur.kind); }
+});
+window.addEventListener('popstate', e => {
+  const st = e.state;
+  if (st && st.gpg) {
+    if (!G.cur) { G.origin = G.origin || { tab: tabOf(), team: null }; G.depth = 1; G.cur = { kind: st.kind, name: st.name }; show(st.kind, st.name); toTop(true); }
+    else { G.depth = Math.max(0, G.depth - 1); G.stack.pop(); G.cur = { kind: st.kind, name: st.name }; show(st.kind, st.name); toTop(true); }
+  } else if (G.cur) { G.depth = 0; closePage(); }
+});
+window.addEventListener('resize', () => { if (G.cur) sizeBar(); });
+document.addEventListener('keydown', e => {
+  if (!G.cur) return;
+  const tg = e.target; if (tg && /^(INPUT|TEXTAREA)$/.test(tg.tagName)) return;
+  const edit = ['playerEditModal', 'managerEditModal', 'teamEditModal'].map($).some(m => m && m.style.display === 'block');
+  if (edit || teamModalOpen()) return;
+  if (e.key === 'Escape') { if (tg && tg.tagName === 'SELECT') return; back(); }
+});
+/* 외부 코드가 페이지(모달 요소)를 직접 숨겨도 상태를 정리 */
+function watch() {
+  Object.values(MODAL).forEach(id => { const m = $(id); if (!m) return;
+    try { new MutationObserver(() => { if (G.cur && $(MODAL[G.cur.kind]).style.display !== 'block') { reset(); G.origin = null; } }).observe(m, { attributes: true, attributeFilter: ['style'] }); } catch (e) { } });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+window.addEventListener('load', () => { setTimeout(() => { try { const m = /^#(player|manager)=(.+)$/.exec(location.hash || ''); if (m && !G.cur) { const nm = decodeURIComponent(m[2]); if (listOf(m[1]).some(x => x.name === nm)) open(m[1], nm); } } catch (e) { } }, 600); });
+
+/* ---------- 허브(메인) 공통 조각 ---------- */
+const box = (cls, go, title, body, more, mid, top) => `<div class="gpg-box ${cls}" data-gpg-go="${go}"><div class="gpg-bh"><span>${title}</span>${mid ? `<span class="gpg-mid">${mid}</span>` : ''}<span class="gpg-more">${more || '자세히 ›'}</span></div><div class="gpg-bd${top ? ' top' : ''}">${body}</div></div>`;
+const tile = (v, l, c) => `<div class="gpg-tile"><b${c ? ` style="color:${c}"` : ''}>${v}</b><span>${l}</span></div>`;
+const fmtD = d => d > 0 ? '+' + d : String(d);
+function chip(label, d) { const up = d > 0; return `<span class="gpg-dchip" style="color:${up ? 'var(--success)' : '#f87171'}">${esc(label)} ${up ? '▲' : '▼'}${Math.abs(d)}</span>`; }
+function radar(labels, vals, color) {
+  const S = 180, c = S / 2, R = 60, n = labels.length, f = v => v.toFixed(1);
+  const pt = (i, r) => { const a = -Math.PI / 2 + i * 2 * Math.PI / n; return [c + r * Math.cos(a), c + r * Math.sin(a)]; };
+  const ring = k => labels.map((_, i) => pt(i, R * k).map(f).join(',')).join(' ');
+  const poly = vals.map((v, i) => pt(i, R * Math.max(.06, Math.min(1, (v - 40) / 60))).map(f).join(',')).join(' ');
+  const axes = labels.map((_, i) => { const p = pt(i, R); return `<line x1="${c}" y1="${c}" x2="${f(p[0])}" y2="${f(p[1])}" stroke="rgba(255,255,255,.1)"/>`; }).join('');
+  const lab = labels.map((l, i) => { const p = pt(i, R + 15); return `<text x="${f(p[0])}" y="${f(p[1])}" text-anchor="middle" dominant-baseline="middle" font-size="9.5" font-weight="800" fill="#cbd5e1">${esc(l)}</text>`; }).join('');
+  return `<svg viewBox="0 0 ${S} ${S}" role="img" aria-label="능력치 레이더"><polygon points="${ring(1)}" fill="none" stroke="rgba(255,255,255,.18)"/><polygon points="${ring(.5)}" fill="none" stroke="rgba(255,255,255,.1)"/>${axes}<polygon points="${poly}" fill="${color}44" stroke="${color}" stroke-width="2"/>${lab}</svg>`;
+}
+const teamOfPlayer = name => (state.teams || []).find(t => (t.players || []).some(p => p.name === name)) || null;
+const trophyPreview = (sel, empty) => {
+  const cab = document.querySelector(sel); if (!cab) return `<div class="gpg-empty">${empty}</div>`;
+  const items = Array.from(cab.querySelectorAll('.tc-it'));
+  if (!items.length) return `<div class="gpg-empty">${empty}</div>`;
+  const icos = items.slice(0, 8).map(it => { const i = it.querySelector('.tc-ico'); return i ? `<div class="tc-ico">${noId(i.innerHTML)}</div>` : ''; }).join('');
+  return `<div class="gpg-troph">${icos}<span class="mu" style="font-size:.76rem;font-weight:800;color:var(--text-muted)">🏆 ${items.length}종</span></div>`;
+};
+
+/* ---------- 선수 허브 ---------- */
+function hubPlayer(name) {
+  const root = $('gPgHubP'); if (!root) return;
+  const S = (window._gPgPS && window._gPgPS.name === name) ? window._gPgPS : null;
+  const ref = findPlayerRefByName(name), team = teamOfPlayer(name);
+  const color = (team && team.color) || '#38bdf8';
+  const txt = id => { const e = $(id); return e ? e.innerText : '-'; };
+  const col = id => { const e = $(id); return e ? e.style.color : ''; };
+  const pos = (ref && ref.pos) || (S && S.playerPos) || 'FW';
+  let h = '';
+  // 1) 통산 기록 — 한 줄 띠(포지션별 경기수는 제목 옆 칩)
+  const posChips = S ? ['GK', 'DF', 'MF', 'FW'].filter(p => S.posCounts[p] > 0).map(p => `<span class="gpg-dchip">${p} ${S.posCounts[p]}경기</span>`).join('') : '';
+  h += box('k-record', 'record', '📊 통산 기록',
+    `<div class="gpg-tiles">${tile(txt('modalPlayerGames'), '출전 경기')}${tile(txt('modalPlayerPoints'), txt('modalPlayerPointsL'), col('modalPlayerPoints'))}${tile(txt('modalPlayerAvg'), '평균 평점', '#38bdf8')}${tile(txt('modalPlayerTotalG'), txt('modalPlayerTotalGL'), col('modalPlayerTotalG'))}${tile(txt('modalPlayerTotalA'), txt('modalPlayerTotalAL'), col('modalPlayerTotalA'))}${tile(txt('modalPlayerTotalM'), '👑 MOM', 'var(--gold)')}</div>`, '기록·경기 ›', posChips);
+  // 2) 능력치
+  let growthHtml = '', deltas = {}; try { deltas = getPlayerMainDeltas(name) || {}; } catch (e) { }
+  const oh = state.ovrHistory && state.ovrHistory[name];
+  if (ref && ref.stats) {
+    const ab = { name, pos, stats: ref.stats, ext: ref.ext }, tree = abTree(pos), ovr = calcPlayerOVR(ab);
+    const mains = tree.map(g => Math.round(abMainVal(ab, g)));
+    const grps = tree.map((g, i) => `<div class="gpg-grp"><div class="gh"><span>${g.ic || ''} ${esc(g.k)}</span><span style="color:${ovrColor(mains[i])}">${mains[i]}</span></div>${g.subs.map(s => { const v = Math.round(abSubVal(ab, s)); return `<div class="gr"><span>${esc(s.n || s.k)}</span><b style="color:${ovrColor(v)}">${v}</b></div>`; }).join('')}</div>`).join('');
+    h += box('k-ability', 'ability', '🧬 능력치', `<div class="gpg-abl2"><div class="gpg-rd"><div class="gpg-ovr">OVR <b style="color:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</b></div>${radar(tree.map(g => g.k), mains, color)}</div><div class="gpg-grps">${grps}</div></div>`, '능력치·편집 ›');
+    // 성장 — 대분류별 막대 + 변동
+    const gro = tree.map((g, i) => { const d = deltas[g.k] || 0, v = mains[i], w = Math.max(4, Math.min(100, (v - 40) / 60 * 100));
+      return `<div class="gpg-gr"><span class="n">${g.ic || ''}${esc(g.k)}</span><span class="bar"><i style="width:${w}%;background:${ovrColor(v)}"></i></span><span class="v" style="color:${ovrColor(v)}">${v}</span><span class="d" style="color:${d > 0 ? 'var(--success)' : d < 0 ? '#f87171' : 'var(--text-muted)'}">${d ? (d > 0 ? '▲' : '▼') + Math.abs(d) : '·'}</span></div>`; }).join('');
+    const head = oh ? `<div class="gpg-ovr">OVR <b style="color:${ovrColor(oh.prevOvr)}">${oh.prevOvr}</b> → <b style="color:${ovrColor(oh.ovr)}">${oh.ovr}</b> <span style="color:${oh.delta > 0 ? 'var(--success)' : oh.delta < 0 ? '#f87171' : 'var(--text-muted)'}">${oh.delta ? fmtD(oh.delta) : '변동 없음'}</span></div>` : `<div class="gpg-ovr">OVR <b style="color:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</b> <span>최근 변동 기록 없음</span></div>`;
+    growthHtml = box('k-growth', 'growth', '📈 성장', head + gro, '성장 분석 ›');
+  } else {
+    h += box('k-ability', 'ability', '🧬 능력치', `<div class="gpg-empty">아직 능력치가 설정되지 않았습니다. 눌러서 설정할 수 있어요.</div>`, '설정 ›');
+    growthHtml = box('k-growth', 'growth', '📈 성장', `<div class="gpg-empty">능력치가 설정되면 변동이 표시됩니다.</div>`, '성장 분석 ›');
+  }
+  // 3) 가능 포지션 · 발
+  let posHtml = '';
+  try { posHtml = (ref && pos !== 'GK' && typeof fmProfSummary === 'function') ? fmProfSummary(ref) : ''; } catch (e) { }
+  h += box('k-pos', 'ability', '📍 포지션 · 발', posHtml ? `<div style="pointer-events:none">${noId(posHtml)}</div>` : `<div class="gpg-empty">${pos === 'GK' ? '🧤 골키퍼 — 필드 포지션 정보가 없습니다.' : '포지션 정보가 없습니다.'}</div>`, '능력치 ›');
+  // 4) 특성 · 역할 (잘림 없이 전체 표시)
+  const tv = $('playerTraitView'), tvh = tv ? tv.innerHTML.trim() : '';
+  h += box('k-trait', 'ability', '🧬 특성 · 역할', tvh ? `<div style="pointer-events:none">${noId(tvh)}</div>` : `<div class="gpg-empty">등록된 특성·역할이 없습니다.</div>`, '능력치 ›', '', true);
+  // 5) 최근 경기
+  const rec = S ? S.stats.slice(0, 5) : [];
+  const recRows = rec.map(s => { const my = s.isH ? s.hScore : s.aScore, th = s.isH ? s.aScore : s.hScore, mp = s.isH ? s.hPk : s.aPk, tp = s.isH ? s.aPk : s.hPk, win = my > th || (my === th && mp > tp);
+    return `<div class="gpg-row"><span class="gpg-chip ${win ? 'w' : 'l'}">${win ? '승' : '패'}</span><span class="sp" style="color:${s.oppColor}">vs ${esc(s.oppName)}</span><span class="mu">${my}:${th}</span><span class="mu">${s.g || 0}골 ${s.a || 0}도움</span><span style="font-family:'Orbitron';font-weight:800;font-size:.76rem;color:#38bdf8">${s.r > 0 ? s.r.toFixed(1) : '-'}</span></div>`; }).join('');
+  h += box('k-recent', 'match', '⚽ 최근 경기', recRows || '<div class="gpg-empty">출전 기록이 없습니다.</div>', '경기 기록 ›', '', true);
+  h += growthHtml;
+  // 6) 시즌별
+  const seas = [], idx = {};
+  (S ? S.stats : []).forEach(s => { if (!(s.r > 0 || s.g > 0 || s.a > 0)) return; let o = idx[s.seasonName]; if (!o) { o = idx[s.seasonName] = { n: s.seasonName, gm: 0, g: 0, a: 0, r: 0 }; seas.push(o); } o.gm++; o.g += s.g || 0; o.a += s.a || 0; o.r += s.r || 0; });
+  h += box('k-season', 'season', '📅 시즌별 요약', seas.slice(0, 5).map(o => `<div class="gpg-row"><span class="sp">${esc(o.n)}</span><span class="mu">${o.gm}경기</span><span class="mu">${o.g}골 ${o.a}도움</span><span style="font-family:'Orbitron';font-weight:800;font-size:.76rem;color:#38bdf8">${o.gm ? (o.r / o.gm).toFixed(2) : '-'}</span></div>`).join('') || '<div class="gpg-empty">시즌 기록이 없습니다.</div>', '시즌별 요약 ›', '', true);
+  // 7) 트로피
+  h += box('k-trophy', 'trophy', '🏆 수상 · 트로피', trophyPreview('#playerTrophyCabinet', '아직 수상·트로피 기록이 없습니다.'), '수상·트로피 ›');
+  // 8) 전력·감독
+  let pw = '<div class="gpg-empty">소속팀이 없습니다.</div>';
+  if (team) { const rk = (team.players || []).map(p => ({ n: p.name, o: calcPlayerOVR(p) })).filter(x => x.o !== null).sort((a, b) => b.o - a.o), ri = rk.findIndex(x => x.n === name);
+    pw = `<div class="gpg-row"><span class="sp" style="color:${team.color}">${esc(team.name)}</span></div><div class="gpg-row"><span class="mu">감독</span><span class="sp" style="flex:0 1 auto">${team.manager ? '🧑‍💼 ' + esc(team.manager) : '-'}</span></div><div class="gpg-row"><span class="mu">팀 내 OVR</span><span class="sp" style="flex:0 1 auto">${ri >= 0 ? (ri + 1) + '위 / ' + rk.length + '명' : '-'}</span></div>`; }
+  h += box('k-power', 'power', '🧑‍💼 전력 · 감독', pw, '전력·감독 ›', '', true);
+  // 9) 바로가기 (분석 · 비교)
+  h += box('k-links', 'analysis', '🔗 더 알아보기', `<div class="gpg-links"><div class="gpg-lk" data-gpg-go="analysis"><span class="ic">🔬</span><span class="tx"><b>선수 분석</b>득점 위치 · 도움 연결 · 세이브 분석</span></div><div class="gpg-lk" data-gpg-go="compare"><span class="ic">⚖️</span><span class="tx"><b>선수 비교</b>능력치 · 통산 기록 나란히 비교</span></div></div>`, '');
+  root.innerHTML = h;
+}
+
+/* ---------- 감독 허브 ---------- */
+function hubManager(name) {
+  const root = $('gPgHubM'); if (!root) return;
+  let d = null; try { d = calcManagerDetail(name); } catch (e) { console.error(e); }
+  const m = findManagerRef(name), c = (d && d.lastTeamColor && d.lastTeamColor !== '#94a3b8') ? d.lastTeamColor : '#38bdf8';
+  let h = '';
+  if (d) {
+    const gd = d.gd > 0 ? '+' + d.gd : String(d.gd), st = d.liveStreak > 0 ? (d.liveWin ? `🔥 ${d.liveStreak}연승` : `💧 ${d.liveStreak}연패`) : '-';
+    const rk = $('modalManagerRank') ? $('modalManagerRank').innerText : '-';
+    h += box('s12', 'record', '📊 통산 성적', `<div class="gpg-tiles">${tile(d.games, '통산 경기')}${tile(d.w + '승 ' + d.l + '패', '승 / 패')}${tile(d.wr.toFixed(1) + '%', '승률', 'var(--gold)')}${tile(esc(rk), '🌟 감독순위', '#38bdf8')}${tile(d.gf + ':' + d.ga, '득점 : 실점 (' + gd + ')')}${tile(st, '현재 연승·연패')}</div>`, '기록·재임 ›');
+  }
+  if (m && m.stats) {
+    const ovr = calcManagerOVR(m), keys = MANAGER_ABILITY_STATS, vals = keys.map(k => Math.round(m.stats[k] !== undefined ? m.stats[k] : ABILITY_STAT_DEFAULT));
+    h += box('s7', 'ability', '🧬 감독 능력치', `<div class="gpg-ovr">OVR <b style="color:${ovrColor(ovr)}">${ovr === null ? '-' : ovr}</b></div><div class="gpg-abl">${radar(keys, vals, c)}<div class="gpg-grps">${keys.map((k, i) => `<div class="gpg-grp"><div class="gh"><span>${esc(k)}</span><span style="color:${ovrColor(vals[i])}">${vals[i]}</span></div></div>`).join('')}</div></div>`, '능력·전술 ›');
+  } else h += box('s7', 'ability', '🧬 감독 능력치', `<div class="gpg-empty">아직 능력치가 설정되지 않았습니다. 눌러서 설정할 수 있어요.</div>`, '설정 ›');
+  const tac = $('managerTacticSection'), tach = tac ? tac.innerHTML.trim() : '';
+  h += box('s5', 'ability', '🧠 전술 성향', tach ? `<div class="gpg-clip">${noId(tach).replace(/<details(?![^>]*\bopen)/g, '<details open')}</div>` : `<div class="gpg-empty">등록된 전술 성향이 없습니다.</div>`, '능력·전술 ›');
+  if (d) {
+    h += box('s7', 'record', '📋 최근 재임 기록', (d.seasonBlocks || []).slice(0, 4).map(b => `<div class="gpg-row"><span class="sp">${esc(b.seasonName)} <span style="color:${b.teamColor}">${esc(b.teamName)}</span></span><span class="mu">${b.games}경기 ${b.w}승 ${b.l}패</span><span class="mu">${esc(b.rankLabel || '-')}</span></div>`).join('') || '<div class="gpg-empty">재임 기록이 없습니다.</div>', '기록·재임 ›');
+    const t = `<div class="gpg-chips" style="margin-bottom:8px"><span class="gpg-dchip" style="color:var(--gold)">🏆 우승 ${d.champSeasons.length}</span><span class="gpg-dchip" style="color:#cbd5e1">🥈 준우승 ${d.runnerUpSeasons.length}</span></div>`;
+    h += box('s5', 'trophy', '🏆 수상 · 트로피', t + trophyPreview('#managerTrophyCabinet', '아직 트로피 기록이 없습니다.'), '수상·트로피 ›');
+    h += box('s6', 'history', '📜 최근 경기', (d.matchRows || []).slice(0, 5).map(r => `<div class="gpg-row"><span class="gpg-chip ${r.win ? 'w' : 'l'}">${r.win ? '승' : '패'}</span><span class="sp" style="color:${r.oppColor}">vs ${esc(r.oppName)}</span><span class="mu">${r.isH ? r.hScore : r.aScore}:${r.isH ? r.aScore : r.hScore}</span><span class="mu">${esc(r.seasonName)}</span></div>`).join('') || '<div class="gpg-empty">경기 기록이 없습니다.</div>', '경기별 전적 ›');
+    h += box('s6', 'h2h', '⚔️ 상대전적 (경기 많은 순)', (d.h2hList || []).slice(0, 4).map(x => `<div class="gpg-row"><span class="sp">${x.isMgr ? '🧑‍💼 ' : ''}${esc(x.name)}</span><span class="mu">${x.games}경기 ${x.w}승 ${x.l}패</span><span style="font-family:'Orbitron';font-weight:800;font-size:.76rem;color:var(--gold)">${x.wr.toFixed(0)}%</span></div>`).join('') || '<div class="gpg-empty">상대전적 기록이 없습니다.</div>', '상대전적 ›');
+  }
+  h += box('s12', 'tactic', '🧭 전술별 성적', `<div class="gpg-link"><span class="ic">🧭</span><span class="tx">사용한 전술·포메이션별 경기 수와 승률을 확인합니다.</span></div>`, '전술별 성적 ›');
+  root.innerHTML = h;
+}
+function renderHub(kind, name) { try { kind === 'player' ? hubPlayer(name) : hubManager(name); } catch (e) { console.error('허브 렌더 오류', e); } }
+window.gPgRenderHub = renderHub;
 })();
 </script>
 </body>
