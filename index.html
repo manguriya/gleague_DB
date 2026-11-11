@@ -5163,7 +5163,7 @@ html body.g-pg-open .main-content { padding-bottom: 24px; }
                 <div class="card">
                     <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
                         <h3 style="margin:0;">🔀 시즌 순서 관리</h3>
-                        <div style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn btn-auto" data-upd="2.02:개선" style="padding:8px 14px; font-size:0.8rem;" onclick="openSeasonRosterModal()" title="지난 시즌에 참가한 모든 팀의 선수단 · 감독 · 선수별 포지션을 한 화면에서 수정합니다">✏️ 시즌 로스터 수정</button><button class="btn btn-auto" style="padding:8px 14px; font-size:0.8rem;" onclick="openPastSeasonModal()" title="현재 진행 중인 시즌은 그대로 두고, 이미 끝난 과거 시즌을 아카이브에 새로 만듭니다">➕ 과거 시즌 추가</button><button id="archiveOrderSaveBtn" class="btn btn-auto" style="padding:8px 14px; font-size:0.8rem; opacity:0.4; cursor:default;" disabled onclick="applyArchiveOrderChanges()">💾 순서 저장 · 전체 반영</button></div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn btn-auto" data-upd="2.01:개선" style="padding:8px 14px; font-size:0.8rem;" onclick="openSeasonRosterModal()" title="지난 시즌에 참가한 모든 팀의 선수단 · 감독 · 선수별 포지션을 한 화면에서 수정합니다">✏️ 시즌 로스터 수정</button><button class="btn btn-auto" style="padding:8px 14px; font-size:0.8rem;" onclick="openPastSeasonModal()" title="현재 진행 중인 시즌은 그대로 두고, 이미 끝난 과거 시즌을 아카이브에 새로 만듭니다">➕ 과거 시즌 추가</button><button id="archiveOrderSaveBtn" class="btn btn-auto" style="padding:8px 14px; font-size:0.8rem; opacity:0.4; cursor:default;" disabled onclick="applyArchiveOrderChanges()">💾 순서 저장 · 전체 반영</button></div>
                     </div>
                     <div class="ranking-info">시즌이 실제로 진행된 순서와 다르게 저장돼 있다면(예: 예전 시즌 데이터를 나중에 입력해서 맨 뒤에 붙은 경우) 아래 화살표로 순서를 바로잡은 뒤 <b>"순서 저장 · 전체 반영"</b>을 눌러주세요. 저장을 눌러야 Elo·시즌계수 뿐 아니라 팀/선수 모달의 경기기록·순위변동 그래프 등 앱 전체가 새 순서 기준으로 다시 정렬됩니다.</div>
                     <div id="archiveOrderList" style="display:flex; flex-direction:column; gap:6px; margin-top:10px;"></div>
@@ -5513,10 +5513,10 @@ html body.g-pg-open .main-content { padding-bottom: 24px; }
                     </div>
                     <div class="card" style="position:relative; overflow:hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:2px;">
-                            <h3 style="margin:0;">📈 평균 평점(R) 추이</h3>
+                            <h3 style="margin:0;" data-upd="2.02:개선">📈 평균 평점(R) 추이</h3>
                             <div id="dcRatingTrendSelectedLabel"></div>
                         </div>
-                        <div class="ranking-info">경기별 평균 평점 변화를 보여줍니다 (전체 시즌 누적, 시간순). 점선은 팀이 치른 경기 시점, 굵은 노란 선은 시즌 구분을 나타냅니다. 기본값은 전체 선수를 겹쳐서 보여주며(랭킹이 높을수록 밝은 색), 그래프 끝의 선수 이름 태그를 클릭하면 그 선수만 밝게 하이라이트되고 나머지는 흐리게 표시됩니다.</div>
+                        <div class="ranking-info">선수들의 평점 변화를 두 가지 보기로 보여줍니다. 📅 시즌별 요약은 시즌별 평균 평점만 모아 굵은 곡선과 숫자 원으로 정리하고(2시즌 이상일 때 기본), 📈 경기별 상세는 경기마다의 평점을 시즌 구간 띠와 함께 보여줍니다. 전체 선수를 겹쳐서 보여주며(랭킹이 높을수록 밝은 색), 선수 이름 태그나 원을 클릭하면 그 선수만 하이라이트되고 나머지는 흐리게 표시됩니다. 마우스를 올린 선수도 바로 강조돼요.</div>
                         <div id="dcRatingTrendChart"></div>
                     </div>
                     </div>
@@ -10879,7 +10879,7 @@ html body.g-pg-open .main-content { padding-bottom: 24px; }
             dcRenderPlayerFunRecords();
             dcRenderSeasonTable(team);
             dcPopulateH2HSelects(team);
-            teamRankTrendState.dc = { scope: 'all', group: 1, playedOnly: false };
+            teamRankTrendState.dc = { scope: 'all', group: 1, playedOnly: true };   // v2.01: 경기날만 기본 켜짐
             updateTeamH2H('dc');
             renderTeamRankTrend(teamId, 'dc');
             dcRenderGoalTimeCharts(team);
@@ -14511,7 +14511,7 @@ function fmBestStyle(p, role) {
             if (curSeasonIdx === 0) {
                 newPlayerSet = new Set(entries.map(e => e.name));
             } else if (curSeasonIdx > 0) {
-                const prevSet = dcRosterNamesForTeam(seasonsList[curSeasonIdx - 1].rosterMap, team.id);
+                const prevSet = dcRosterNamesForTeam(dcTransferMaps(seasonsList)[curSeasonIdx - 1], team.id);
                 entries.forEach(e => { if (!prevSet.has(e.name)) newPlayerSet.add(e.name); });
             }
 
@@ -14521,7 +14521,7 @@ function fmBestStyle(p, role) {
             }
 
             // 시즌 내 실제 출전 포지션을 집계해 주포지션을 계산
-            const _rosterPosOv = seasonVal.startsWith('archive_') ? (((state.archives[parseInt(seasonVal.replace('archive_', ''), 10)] || {}).rosterPos) || {}) : {};   // v2.02: 시즌 로스터 수정에서 직접 지정한 포지션
+            const _rosterPosOv = seasonVal.startsWith('archive_') ? (((state.archives[parseInt(seasonVal.replace('archive_', ''), 10)] || {}).rosterPos) || {}) : {};   // v2.01: 시즌 로스터 수정에서 직접 지정한 포지션
             entries = entries.map(e => {
                 const bd = dcCalcPlayerPosBreakdown(seasonMatches, e.name, e.pos), ov = _rosterPosOv[e.name];
                 if (!ov || ov === bd.primary) return { ...e, posBreakdown: bd };
@@ -17004,6 +17004,165 @@ function fmBestStyle(p, role) {
             return `rgba(${m[1].trim()}, ${m[2].trim()}, ${m[3].trim()}, ${alpha})`;
         }
 
+        // v2.02: 📈 평균 평점(R) 추이 — 🧩 전체 팀 순위 변동처럼 두 가지 보기
+        //  📅 시즌별 요약: 시즌별 평균 평점만 모아 굵은 곡선 + 평점 숫자 원으로 정리 (2시즌 이상일 때 기본)
+        //  📈 경기별 상세: 경기마다의 평점 (시즌 구간 띠 · 0.5점 눈금 · 선택/마우스 오버 선수만 강조)
+        let dcRatingTrendMode = 'season';   // 'season' | 'match'
+        function dcSetRatingTrendMode(m) {
+            dcRatingTrendMode = (m === 'match') ? 'match' : 'season';
+            const team = state.teams.find(t => String(t.id) === String(currentDcTeamId));
+            if (team) dcRenderRatingTrendForSelection(team);
+        }
+        // 팀이 치른 경기(시간순)를 시즌 구간으로 묶는다: [{name, x1, x2}] (x = 경기 번호)
+        function dcRatingSeasonSpans(matches) {
+            const spans = [];
+            (matches || []).forEach((m, i) => {
+                const x = i + 1, sn = m.__season;
+                const last = spans[spans.length - 1];
+                if (last && last.name === sn) last.x2 = x; else spans.push({ name: sn, x1: x, x2: x });
+            });
+            return spans;
+        }
+        // rgba() 색 위에 올리는 글자색 (밝은 색이면 어두운 글자)
+        function dcTextOnRgba(c) {
+            const m = String(c).match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/);
+            if (!m) return '#ffffff';
+            return (0.299 * m[1] + 0.587 * m[2] + 0.114 * m[3]) > 150 ? '#0f172a' : '#ffffff';
+        }
+
+        // ───────────── 📅 시즌별 요약 ─────────────
+        function dcRatingSeasonSummarySvg(seriesList, spans, selectedName) {
+            const n = spans.length, w = 780, R = 12, padT = 64, padB = 16, NAME_FS = 10, TAG_H = 18;
+            const escXml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const escTip = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+            const hasSelection = !!selectedName && seriesList.some(s => s.name === selectedName);
+            const tagWOf = (name) => Math.min(150, atrEstW(name, NAME_FS) + 14);
+            const maxTagW = Math.max(...seriesList.map(s => tagWOf(s.name)));
+            const padL = maxTagW + 40, padR = maxTagW + 40, plotW = w - padL - padR;
+            const colX = (i) => padL + i * plotW / (n - 1);
+            const curNames = new Set([state.seasonName || '현재 시즌']);
+            const isLive = (sn) => curNames.has(sn) && !(state.archives || []).some(a => a.name === sn);
+
+            // 선수별 · 시즌별 평균 평점
+            const data = seriesList.map(s => {
+                const P = [];
+                spans.forEach((sp, i) => {
+                    const arr = s.points.filter(p => p.x >= sp.x1 && p.x <= sp.x2);
+                    if (!arr.length) return;
+                    const rs = arr.map(p => p.rating);
+                    P.push({ i, x: colX(i), avg: rs.reduce((a, b) => a + b, 0) / rs.length, cnt: arr.length, max: Math.max(...rs), min: Math.min(...rs), span: sp });
+                });
+                return { s, P };
+            }).filter(d => d.P.length);
+            if (!data.length) return '<div style="text-align:center; color:var(--text-muted); font-size:0.75rem; padding:20px 0;">기록이 없습니다.</div>';
+
+            const avgs = data.flatMap(d => d.P.map(p => p.avg));
+            const STEP = 0.5;
+            let lo = Math.max(5, Math.floor((Math.min(...avgs) - 0.2) / STEP) * STEP);
+            let hi = Math.min(10, Math.ceil((Math.max(...avgs) + 0.2) / STEP) * STEP);
+            if (hi - lo < 1) hi = lo + 1;
+            const PLOT_H = Math.max(240, Math.min(420, (hi - lo) * 130));
+            const yFor = (r) => padT + (1 - (r - lo) / (hi - lo)) * PLOT_H;
+            const bottom = padT + PLOT_H;
+
+            // 같은 시즌(열)에서 평균이 비슷한 선수의 원이 겹치지 않도록 세로 위치만 살짝 벌린다 (원 안의 숫자는 실제 평균 그대로)
+            const MIN_GAP = R * 2 + 1;
+            spans.forEach((sp, i) => {
+                const col = [];
+                data.forEach(d => d.P.forEach(p => { if (p.i === i) { p.y = yFor(p.avg); col.push(p); } }));
+                col.sort((a2, b2) => a2.y - b2.y);
+                for (let it = 0; it < 60; it++) {
+                    let moved = false;
+                    for (let k = 1; k < col.length; k++) {
+                        const gap = col[k].y - col[k - 1].y;
+                        if (gap < MIN_GAP - 0.01) { const d2 = (MIN_GAP - gap) / 2; col[k - 1].y -= d2; col[k].y += d2; moved = true; }
+                    }
+                    if (!moved) break;
+                }
+            });
+            const maxCircleY = Math.max(...data.flatMap(d => d.P.map(p => p.y)));
+
+            // 배경: 0.5점 눈금 + 시즌 세로 안내선 + 머리글
+            let bg = '';
+            for (let t = lo; t <= hi + 1e-9; t += STEP) {
+                bg += `<line x1="${padL - 22}" y1="${yFor(t)}" x2="${padL + plotW + 22}" y2="${yFor(t)}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+                bg += `<text x="2" y="${yFor(t) + 3}" font-size="8.5" fill="var(--text-muted)">${t.toFixed(1)}</text>`;
+            }
+            spans.forEach((sp, i) => {
+                const cx = colX(i), L = atrSeasonLines(sp.name), spacing = plotW / (n - 1);
+                const fs2 = atrEstW(L[L.length - 1], 10) > spacing - 10 ? 8.5 : 10;
+                bg += `<line x1="${cx}" y1="${padT - 22}" x2="${cx}" y2="${bottom + R}" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="2,4"/>`;
+                bg += `<g><title>${escXml(sp.name)} · ${sp.x2 - sp.x1 + 1}경기${isLive(sp.name) ? ' (진행 중)' : ''}</title>`;
+                if (L.length === 2) {
+                    bg += `<text x="${cx}" y="15" font-size="9" fill="var(--text-muted)" text-anchor="middle">${escXml(L[0])}</text>`;
+                    bg += `<text x="${cx}" y="29" font-size="${fs2}" font-weight="800" fill="var(--gold)" text-anchor="middle">${escXml(L[1])}</text>`;
+                } else {
+                    bg += `<text x="${cx}" y="26" font-size="${fs2}" font-weight="800" fill="var(--gold)" text-anchor="middle">${escXml(L[0])}</text>`;
+                }
+                if (isLive(sp.name)) bg += `<text x="${cx}" y="42" font-size="8.5" font-weight="800" fill="#34d399" text-anchor="middle">● 진행 중</text>`;
+                bg += `</g>`;
+            });
+
+            // 이름 태그: 첫 시즌 왼쪽 · 마지막 시즌 오른쪽, 같은 줄에서 겹치면 아래로 밀기
+            const tagList = [];
+            data.forEach(d => {
+                const first = d.P[0], last = d.P[d.P.length - 1];
+                if (first === last) tagList.push({ d, p: last, side: last.i === n - 1 ? 'r' : 'l' });
+                else { tagList.push({ d, p: first, side: 'l' }); tagList.push({ d, p: last, side: 'r' }); }
+            });
+            const tgroups = {};
+            tagList.forEach(t => { t.nat = t.p.y; (tgroups[t.side + t.p.i] = tgroups[t.side + t.p.i] || []).push(t); });
+            Object.values(tgroups).forEach(g => {
+                g.sort((a, b) => a.nat - b.nat);
+                let prev = -Infinity;
+                g.forEach(t => { t.y = Math.max(t.nat, prev + TAG_H + 1); prev = t.y; });
+            });
+            const maxTagY = Math.max(...tagList.map(t => t.y));
+            const h = Math.max(bottom + R, maxCircleY + R, maxTagY + TAG_H / 2) + padB;
+
+            // 선택된 선수가 가장 위에 그려지도록 마지막에 둔다
+            const ordered = data.slice().sort((a, b) => (a.s.name === selectedName ? 1 : 0) - (b.s.name === selectedName ? 1 : 0));
+            const groups = ordered.map(d => {
+                const s = d.s, P = d.P;
+                const isSel = hasSelection && s.name === selectedName, dim = hasSelection && !isSel;
+                const full = dcWithAlpha(s.color, 1);
+                const col = dim ? dcWithAlpha(s.color, 0.22) : full;
+                const lineCol = dim ? dcWithAlpha(s.color, 0.16) : dcWithAlpha(s.color, 0.9);
+                const lw = isSel ? 4.6 : 3.4;
+                let path = '';
+                for (let k = 0; k < P.length; k++) {
+                    const p = P[k], prev = P[k - 1];
+                    if (!prev || p.i - prev.i > 1) path += `M${p.x},${p.y} `;
+                    else { const mx = (prev.x + p.x) / 2; path += `C${mx},${prev.y} ${mx},${p.y} ${p.x},${p.y} `; }
+                }
+                const line = `<path d="${path}" fill="none" stroke="${lineCol}" stroke-width="${lw}" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="${path}" fill="none" stroke="transparent" stroke-width="12" style="pointer-events:stroke;"/>`;
+                let circles = '';
+                P.forEach((p, k) => {
+                    const prevPt = P[k - 1] && P[k - 1].i === p.i - 1 ? P[k - 1] : null;
+                    const dAvg = prevPt ? p.avg - prevPt.avg : null;
+                    const chg = prevPt ? ` (${dAvg > 0.005 ? '▲' + dAvg.toFixed(2) : dAvg < -0.005 ? '▼' + Math.abs(dAvg).toFixed(2) : '='})` : (p.i === 0 ? '' : ' (재참가)');
+                    const tip = escTip(`${s.name} · ${p.span.name}: 평균 ${p.avg.toFixed(2)}점 (${p.cnt}경기 · 최고 ${p.max.toFixed(1)} / 최저 ${p.min.toFixed(1)})${chg}`);
+                    circles += `<g style="cursor:pointer;" onclick="dcSelectRatingTrendPlayer('${escTip(s.name)}')" onmousemove="showChartTooltip(event, '${tip}')" onmouseleave="hideChartTooltip()">
+                        <circle cx="${p.x}" cy="${p.y}" r="${isSel ? R + 1.5 : R}" fill="${col}" stroke="#0f172a" stroke-width="2"/>
+                        <text x="${p.x}" y="${p.y + 3.8}" font-size="${p.avg >= 9.995 ? 8.5 : 10.5}" font-weight="900" fill="${dim ? 'rgba(255,255,255,0.35)' : dcTextOnRgba(full)}" text-anchor="middle" style="pointer-events:none;">${p.avg.toFixed(1)}</text></g>`;
+                    if (isSel && dAvg !== null && Math.abs(dAvg) >= 0.05) circles += `<text x="${p.x}" y="${p.y - R - 4}" font-size="8.5" font-weight="800" fill="${dAvg > 0 ? '#22c55e' : '#ef4444'}" text-anchor="middle" style="pointer-events:none;">${dAvg > 0 ? '▲' + dAvg.toFixed(1) : '▼' + Math.abs(dAvg).toFixed(1)}</text>`;
+                });
+                const tags = tagList.filter(t => t.d === d).map(t => {
+                    const tw = tagWOf(s.name), anchorEnd = t.side === 'l';
+                    const edge = anchorEnd ? t.p.x - R - 8 : t.p.x + R + 8;
+                    const bx = anchorEnd ? edge - tw : edge;
+                    const tc = dim ? dcWithAlpha(s.color, 0.35) : full;
+                    const conn = Math.abs(t.y - t.nat) > 1 ? `<line x1="${anchorEnd ? t.p.x - R : t.p.x + R}" y1="${t.nat}" x2="${edge}" y2="${t.y}" stroke="${tc}" stroke-width="0.8" opacity="0.6"/>` : '';
+                    return `${conn}<g style="cursor:pointer;" onclick="dcSelectRatingTrendPlayer('${escTip(s.name)}')"><rect x="${bx}" y="${t.y - TAG_H / 2}" width="${tw}" height="${TAG_H}" rx="4" fill="rgba(2,6,23,0.88)" stroke="${tc}" stroke-width="${isSel ? 1.8 : 1}"/>
+                        <text x="${bx + tw / 2}" y="${t.y + 3.5}" font-size="${NAME_FS}" font-weight="800" fill="${tc}" text-anchor="middle">${escXml(s.name)}</text></g>`;
+                }).join('');
+                return `<g class="atr-g">${line}${circles}${tags}</g>`;
+            }).join('');
+            const css = '<style>.atr-g{transition:opacity .15s}.atr:has(.atr-g:hover) .atr-g:not(:hover){opacity:.12}</style>';
+            return `<svg class="atr" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="width:100%; max-width:100%; height:auto; display:block;">${css}${bg}${groups}</svg>`;
+        }
+
         // 전체 선수 겹쳐 그리기 + 특정 선수 선택 시 그 선수만 하이라이트하고 나머지는 흐리게 처리
         // seriesList: [{name, points, color}], matches: 이 팀이 치른 경기 배열(시간순, __season 포함), selectedName: 하이라이트할 선수명 또는 null
         function dcRenderRatingTrendChart(elId, seriesList, matches, selectedName) {
@@ -17014,6 +17173,17 @@ function fmBestStyle(p, role) {
                 el.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:16px 0;">기록이 없습니다.</div>';
                 return;
             }
+            const spans = dcRatingSeasonSpans(matches);
+            const curMode = (dcRatingTrendMode === 'season' && spans.length >= 2) ? 'season' : 'match';
+            const modeBar = spans.length >= 2
+                ? `<div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin:0 0 8px;">
+                        <button type="button" class="rs-chipbtn ${curMode === 'season' ? 'on' : ''}" onclick="dcSetRatingTrendMode('season')">📅 시즌별 요약</button>
+                        <button type="button" class="rs-chipbtn ${curMode === 'match' ? 'on' : ''}" onclick="dcSetRatingTrendMode('match')">📈 경기별 상세</button>
+                        <span style="font-size:0.68rem; color:var(--text-muted);">${curMode === 'season' ? '시즌별 평균 평점만 모아 흐름을 정리해 보여줘요' : '경기마다의 평점 변화를 시즌 구간별로 보여줘요'}</span>
+                   </div>` : '';
+            if (curMode === 'season') { el.innerHTML = modeBar + dcRatingSeasonSummarySvg(seriesList, spans, selectedName); return; }
+
+            // ───────────── 📈 경기별 상세 ─────────────
             const ratings = allPts.map(p => p.rating);
             const GRID_BASE = 6, GRID_STEP = 0.5;
             const rawMin = Math.max(5, Math.floor(Math.min(...ratings) - 0.3));
@@ -17023,11 +17193,11 @@ function fmBestStyle(p, role) {
             const range = Math.max(GRID_STEP, padMax - padMin);
             const maxX = Math.max(1, matches.length || Math.max(...allPts.map(p => p.x)));
             const MIN_SPACING = 16;
-            // 이름 태그가 잘리지 않도록 가장 긴 이름 기준으로 오른쪽 여백을 늘린다 (박스 크기를 줄여서 여백도 함께 축소).
+            // 이름 태그가 잘리지 않도록 가장 긴 이름 기준으로 오른쪽 여백을 늘린다.
             const maxNameLen = Math.max(4, ...seriesList.map(s => s.name.length));
             const NAME_FONT_SIZE = 6.6;
-            const padL = 34, padR = Math.max(24, maxNameLen * (NAME_FONT_SIZE + 0.9) + 16), padT = 24, padB = 24;
-            const PLOT_H = 280; // 실제 라인/점이 그려지는 세로 영역은 고정 — 변동폭이 한눈에 더 잘 보이도록 세로 사이즈를 크게 확장
+            const padL = 34, padR = Math.max(24, maxNameLen * (NAME_FONT_SIZE + 0.9) + 16), padT = spans.length >= 2 ? 36 : 14, padB = 24;
+            const PLOT_H = 280;
             const neededW = padL + padR + maxX * MIN_SPACING;
             const w = Math.max(700, neededW);
             const scrollable = w > 700;
@@ -17036,29 +17206,9 @@ function fmBestStyle(p, role) {
             const escTip = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
             const escName = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const hasSelection = !!selectedName;
+            const contentBottom = padT + PLOT_H;
 
-            const linesSvg = seriesList.map(s => {
-                const isSel = selectedName && s.name === selectedName;
-                const dim = hasSelection && !isSel;
-                const strokeColor = dim ? dcWithAlpha(s.color, 0.14) : (isSel ? dcWithAlpha(s.color, 1) : s.color);
-                const strokeWidth = isSel ? 2.4 : (dim ? 1 : 1.7);
-                const pts = [...s.points].sort((a, b) => a.x - b.x);
-                const linePoints = pts.map(p => `${xFor(p.x)},${yFor(p.rating)}`).join(' ');
-                const hoverCircles = pts.map(p => {
-                    const tip = escTip(`${s.name} · ${p.label}: ${p.rating.toFixed(2)}점`);
-                    return `<circle cx="${xFor(p.x)}" cy="${yFor(p.rating)}" r="6" fill="transparent" style="cursor:pointer;" onmousemove="showChartTooltip(event, '${tip}')" onmouseleave="hideChartTooltip()"/>`;
-                }).join('');
-                // 경기별 평점 지점을 항상 점으로 표시해 어느 경기인지 알 수 있게 함
-                const dotColor = dim ? dcWithAlpha(s.color, 0.22) : (isSel ? dcWithAlpha(s.color, 1) : s.color);
-                const dotR = isSel ? 3 : (dim ? 1.4 : 2.1);
-                const dots = pts.map(p => `<circle cx="${xFor(p.x)}" cy="${yFor(p.rating)}" r="${dotR}" fill="${dotColor}" stroke="#0f172a" stroke-width="0.6" style="pointer-events:none;"/>`).join('');
-                // 하이라이트된 선수는 경기별 평점 숫자를 점 위에 직접 표기
-                const ratingLabels = isSel ? pts.map(p => `<text x="${xFor(p.x)}" y="${yFor(p.rating) - 6}" font-size="7" font-weight="800" fill="${s.color}" text-anchor="middle" style="pointer-events:none;">${p.rating.toFixed(1)}</text>`).join('') : '';
-                return `<polyline points="${linePoints}" fill="none" stroke="${strokeColor}" stroke-width="${strokeWidth}"/>${dots}${ratingLabels}${hoverCircles}`;
-            }).join('');
-
-            // 각 선수 그래프 끝(마지막 경기 지점)에 클릭 가능한 이름 태그(작은 박스+이름)를 붙인다 — 누르면 그 선수만 하이라이트
-            // 랭킹 순서(=seriesList 순서, 위에서 이미 랭킹 높은 순으로 정렬됨)를 유지하면서, 세로로 겹치지 않도록 최소 간격을 확보해 아래로 밀어낸다.
+            // 이름 태그 위치: 랭킹 순서를 유지하며 세로로 겹치지 않게 아래로 밀기
             const TAG_H = NAME_FONT_SIZE + 5;
             const tagSlots = seriesList.map((s, idx) => {
                 const pts = [...s.points].sort((a, b) => a.x - b.x);
@@ -17068,46 +17218,77 @@ function fmBestStyle(p, role) {
             }).filter(Boolean);
             tagSlots.sort((a, b) => a.idx - b.idx);
             let prevY = -Infinity;
-            tagSlots.forEach(t => {
-                t.y = Math.max(t.naturalY, prevY + TAG_H);
-                prevY = t.y;
-            });
-            // 이름표가 아래로 밀려나 컨테이너 밖으로 잘리지 않도록, 실제 필요한 높이만큼 SVG 전체 높이를 늘린다.
-            const contentBottom = padT + PLOT_H;
+            tagSlots.forEach(t => { t.y = Math.max(t.naturalY, prevY + TAG_H); prevY = t.y; });
             const maxTagY = tagSlots.length ? Math.max(...tagSlots.map(t => t.y)) : contentBottom;
-            const bottomNeeded = Math.max(contentBottom, maxTagY + TAG_H / 2);
-            const h = bottomNeeded + padB;
+            const h = Math.max(contentBottom, maxTagY + TAG_H / 2) + padB;
+            const slotOf = {}; tagSlots.forEach(t => { slotOf[t.s.name] = t; });
 
-            const nameTags = tagSlots.map(t => {
-                const s = t.s;
+            // 눈금: 0.5점 줄 + 한 줄씩 번갈아 옅은 배경
+            let rows = '';
+            const nRows = Math.round((padMax - padMin) / GRID_STEP);
+            for (let k = 0; k < nRows; k++) {
+                if (k % 2 === 0) rows += `<rect x="${padL}" y="${yFor(padMin + (k + 1) * GRID_STEP)}" width="${w - padL - padR}" height="${yFor(padMin + k * GRID_STEP) - yFor(padMin + (k + 1) * GRID_STEP)}" fill="rgba(255,255,255,0.025)"/>`;
+            }
+            for (let t = padMin; t <= padMax + 1e-9; t += GRID_STEP) {
+                rows += `<text x="${padL - 6}" y="${yFor(t) + 3}" font-size="9" fill="var(--text-muted)" text-anchor="end">${t.toFixed(1)}</text><line x1="${padL}" y1="${yFor(t)}" x2="${w - padR}" y2="${yFor(t)}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+            }
+            // 시즌 구간: 번갈아 색이 다른 띠 + 머리글(맞으면 이름, 아니면 줄임, 그래도 안 맞으면 툴팁만)
+            let seasonBands = '';
+            if (spans.length >= 2) {
+                spans.forEach(sp => {
+                    const x1 = Math.max(padL, xFor(sp.x1) - (xFor(2) - xFor(1)) / 2), x2 = Math.min(w - padR, xFor(sp.x2) + (xFor(2) - xFor(1)) / 2), bw = Math.max(1, x2 - x1);
+                    const isCup = /GIFA|컵/i.test(sp.name);
+                    seasonBands += `<g><title>${escName(sp.name)} · ${sp.x2 - sp.x1 + 1}경기${isCup ? ' (컵대회)' : ''}</title>
+                        <rect x="${x1}" y="${padT - 8}" width="${bw}" height="${PLOT_H + 16}" fill="${isCup ? 'rgba(251,191,36,0.06)' : 'rgba(56,189,248,0.05)'}"/>
+                        <rect x="${x1}" y="4" width="${bw}" height="17" fill="${isCup ? 'rgba(251,191,36,0.16)' : 'rgba(56,189,248,0.16)'}" stroke="rgba(2,6,23,0.9)" stroke-width="1"/>`;
+                    const full = sp.name, L = atrSeasonLines(sp.name);
+                    const short = L.length === 2 ? L[1] : full;
+                    const mm = full.match(/제\s*(\d+)\s*회/);
+                    const abbr = mm ? mm[1] + '회' + (isCup ? '컵' : '') : full.slice(0, 3);
+                    const cand = [full, short, short.replace(/\s+/g, ''), short.replace(/제\s*(\d+)\s*회/, '$1회').replace(/\s+/g, ''), abbr].find(s2 => atrEstW(s2, 9) + 8 <= bw);
+                    if (cand) seasonBands += `<text x="${x1 + bw / 2}" y="16" font-size="9" font-weight="800" fill="var(--gold)" text-anchor="middle" style="pointer-events:none;">${escName(cand)}</text>`;
+                    seasonBands += `</g>`;
+                });
+            }
+
+            // 선택된 선수가 가장 위에 그려지도록 마지막에 둔다
+            const ordered = seriesList.slice().sort((a, b) => (a.name === selectedName ? 1 : 0) - (b.name === selectedName ? 1 : 0));
+            const groups = ordered.map(s => {
                 const isSel = selectedName && s.name === selectedName;
                 const dim = hasSelection && !isSel;
-                const boxColor = dim ? dcWithAlpha(s.color, 0.3) : (isSel ? dcWithAlpha(s.color, 1) : s.color);
-                const tagName = escName(s.name).replace(/'/g, "&#39;");
-                const boxW = s.name.length * (NAME_FONT_SIZE + 0.9) + 7;
-                const boxX = t.x + 4;
-                const boxY = t.y - TAG_H / 2;
-                const strokeW = isSel ? 1.6 : 1;
-                return `<g style="cursor:pointer;" onclick="dcSelectRatingTrendPlayer('${escTip(s.name)}')">
-                    <rect x="${boxX}" y="${boxY}" width="${boxW}" height="${TAG_H}" rx="3" fill="rgba(2,6,23,0.85)" stroke="${boxColor}" stroke-width="${strokeW}"/>
-                    <text x="${boxX + boxW / 2}" y="${t.y + NAME_FONT_SIZE / 3}" font-size="${NAME_FONT_SIZE}" font-weight="800" fill="${boxColor}" text-anchor="middle">${tagName}</text>
-                </g>`;
+                const strokeColor = dim ? dcWithAlpha(s.color, 0.14) : (isSel ? dcWithAlpha(s.color, 1) : s.color);
+                const strokeWidth = isSel ? 3 : (dim ? 1 : 1.9);
+                const pts = [...s.points].sort((a, b) => a.x - b.x);
+                const linePoints = pts.map(p => `${xFor(p.x)},${yFor(p.rating)}`).join(' ');
+                const hoverCircles = pts.map((p, k) => {
+                    const dPrev = k > 0 ? p.rating - pts[k - 1].rating : null;
+                    const chg = dPrev === null ? '' : ` (${dPrev > 0.005 ? '▲' + dPrev.toFixed(1) : dPrev < -0.005 ? '▼' + Math.abs(dPrev).toFixed(1) : '='})`;
+                    const tip = escTip(`${s.name} · ${p.label}: ${p.rating.toFixed(2)}점${chg}`);
+                    return `<circle cx="${xFor(p.x)}" cy="${yFor(p.rating)}" r="6" fill="transparent" style="cursor:pointer;" onmousemove="showChartTooltip(event, '${tip}')" onmouseleave="hideChartTooltip()" onclick="dcSelectRatingTrendPlayer('${escTip(s.name)}')"/>`;
+                }).join('');
+                // 평점이 입력된 경기 지점은 점으로 표시 (선택한 선수는 크게 + 점수 숫자)
+                const dotColor = dim ? dcWithAlpha(s.color, 0.22) : (isSel ? dcWithAlpha(s.color, 1) : s.color);
+                const dotR = isSel ? 3.2 : (dim ? 1.4 : 2.1);
+                const dots = pts.map(p => `<circle cx="${xFor(p.x)}" cy="${yFor(p.rating)}" r="${dotR}" fill="${dotColor}" stroke="#0f172a" stroke-width="0.8" style="pointer-events:none;"/>`).join('');
+                const ratingLabels = isSel ? pts.map(p => `<text x="${xFor(p.x)}" y="${yFor(p.rating) - 7}" font-size="7.5" font-weight="800" fill="${s.color}" text-anchor="middle" style="pointer-events:none;">${p.rating.toFixed(1)}</text>`).join('') : '';
+                const slot = slotOf[s.name];
+                let tag = '';
+                if (slot) {
+                    const boxColor = dim ? dcWithAlpha(s.color, 0.3) : (isSel ? dcWithAlpha(s.color, 1) : s.color);
+                    const boxW = s.name.length * (NAME_FONT_SIZE + 0.9) + 7, boxX = slot.x + 8, boxY = slot.y - TAG_H / 2;
+                    const conn = Math.abs(slot.y - slot.naturalY) > 1 ? `<line x1="${slot.x + 3}" y1="${slot.naturalY}" x2="${boxX}" y2="${slot.y}" stroke="${boxColor}" stroke-width="0.8" opacity="0.6"/>` : '';
+                    tag = `${conn}<g style="cursor:pointer;" onclick="dcSelectRatingTrendPlayer('${escTip(s.name)}')">
+                        <rect x="${boxX}" y="${boxY}" width="${boxW}" height="${TAG_H}" rx="3" fill="rgba(2,6,23,0.88)" stroke="${boxColor}" stroke-width="${isSel ? 1.6 : 1}"/>
+                        <text x="${boxX + boxW / 2}" y="${slot.y + NAME_FONT_SIZE / 3}" font-size="${NAME_FONT_SIZE}" font-weight="800" fill="${boxColor}" text-anchor="middle">${escName(s.name).replace(/'/g, '&#39;')}</text>
+                    </g>`;
+                }
+                return `<g class="atr-g"><polyline points="${linePoints}" fill="none" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linejoin="round" stroke-linecap="round"/>
+                    <polyline points="${linePoints}" fill="none" stroke="transparent" stroke-width="9" style="pointer-events:stroke;"/>${dots}${ratingLabels}${hoverCircles}${tag}</g>`;
             }).join('');
-
-            const yTicks = [];
-            for (let t = padMin; t <= padMax + 1e-9; t += GRID_STEP) yTicks.push(t);
-            const yTickEls = yTicks.map(t => `<text x="${padL - 6}" y="${yFor(t) + 3}" font-size="9" fill="var(--text-muted)" text-anchor="end">${t.toFixed(1)}</text><line x1="${padL}" y1="${yFor(t)}" x2="${w - padR}" y2="${yFor(t)}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`).join('');
-            const matchGrid = dcRatingTrendMatchGridSvg(maxX, xFor, contentBottom, padT, 0);
-            const seasonLines = dcRatingTrendSeasonBoundarySvg(matches, xFor, padT, contentBottom, escName, w, padR, padL);
-            const svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:${scrollable ? w + 'px' : '100%'}; aspect-ratio:${w} / ${h}; height:auto; display:block;">
-                ${yTickEls}
-                ${matchGrid}
-                ${seasonLines}
-                ${linesSvg}
-                ${nameTags}
-            </svg>`;
-            if (!scrollable) { el.innerHTML = svg; return; }
-            el.innerHTML = `<div style="overflow-x:auto; padding-bottom:4px;">${svg}</div>
+            const css = '<style>.atr-g{transition:opacity .15s}.atr:has(.atr-g:hover) .atr-g:not(:hover){opacity:.12}</style>';
+            const svg = `<svg class="atr" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:${scrollable ? w + 'px' : '100%'}; aspect-ratio:${w} / ${h}; height:auto; display:block;">${css}${seasonBands}${rows}${groups}</svg>`;
+            if (!scrollable) { el.innerHTML = modeBar + svg; return; }
+            el.innerHTML = `${modeBar}<div style="overflow-x:auto; padding-bottom:4px;">${svg}</div>
                 <div style="text-align:right; font-size:0.65rem; color:var(--text-muted); margin-top:2px;">↔ 옆으로 스크롤하면 전체 경기를 볼 수 있어요 · 이름을 누르면 그 선수만 하이라이트됩니다</div>`;
         }
 
@@ -18210,6 +18391,24 @@ function fmBestStyle(p, role) {
             return seasons;
         }
 
+        // v2.01: 이적기록용 '유효 로스터' — 어떤 시즌에 팀이 아예 참가하지 않았으면(그 팀 선수 기록이 하나도 없으면)
+        //   그 팀 선수들은 직전 시즌의 소속을 그대로 유지한 것으로 본다. (예전엔 불참 시즌마다 로스터가 비어 있어서,
+        //   불참 후 복귀하거나 불참 시즌과 비교하면 팀원 전원이 '신규 영입' · '하차'로 잘못 표시됐음)
+        function dcTransferMaps(seasons) {
+            const eff = [];
+            (seasons || []).forEach((s, i) => {
+                const raw = s.rosterMap || {};
+                const present = new Set(Object.values(raw).map(e => String(e.teamId)));
+                const m = { ...raw };
+                if (i > 0) Object.entries(eff[i - 1]).forEach(([n, e]) => {
+                    if (m[n]) return;
+                    if (!present.has(String(e.teamId))) m[n] = { ...e };
+                });
+                eff.push(m);
+            });
+            return eff;
+        }
+
         function dcPopulateInOutSeasonSelect(team) {
             const sel = document.getElementById('dcInOutSeasonSelect');
             if (!sel) return;
@@ -18344,15 +18543,16 @@ function fmBestStyle(p, role) {
             if (!team || !container || !sel) return;
             const seasons = dcGetSeasonRosterList();
             const idx = Math.max(0, Math.min(seasons.length - 1, parseInt(sel.value, 10) || 0));
-            const curSet = dcRosterNamesForTeam(seasons[idx].rosterMap, team.id);
+            const tMaps = dcTransferMaps(seasons);
+            const curSet = dcRosterNamesForTeam(tMaps[idx], team.id);
             const mgrNotice = dcRenderManagerChangeNotice(team, seasons, idx);
             if (idx === 0) {
                 const inList = [...curSet].sort((a, b) => a.localeCompare(b, 'ko')).map(n => ({ name: n, info: '🆕 신규 영입' }));
                 container.innerHTML = mgrNotice + `<div style="margin-bottom:10px; font-size:0.85rem; color:var(--text-muted);">팀 창단(최초 기록) 시즌 로스터입니다. 비교할 이전 시즌이 없습니다.</div>` + dcRenderInOutList(inList, []);
                 return;
             }
-            const prevRoster = seasons[idx - 1].rosterMap;
-            const curRoster = seasons[idx].rosterMap;
+            const prevRoster = tMaps[idx - 1];
+            const curRoster = tMaps[idx];
             const prevSet = dcRosterNamesForTeam(prevRoster, team.id);
             const inNames = [...curSet].filter(n => !prevSet.has(n)).sort((a, b) => a.localeCompare(b, 'ko'));
             const outNames = [...prevSet].filter(n => !curSet.has(n)).sort((a, b) => a.localeCompare(b, 'ko'));
@@ -18435,7 +18635,8 @@ function fmBestStyle(p, role) {
         // 한 번에 집계한다 (렌더링과 분리해 all-뷰와 공유). 개별 팀 관점(dcRenderInOut)과 달리
         // 팀-팀 이동을 한 줄로만 보여줘 중복이 없다.
         function computeLeagueTransferPlayerRows(seasons, idx) {
-            const curRoster = seasons[idx].rosterMap || {};
+            const tMaps = dcTransferMaps(seasons);
+            const curRoster = tMaps[idx] || {};
             let rows = [];
             if (idx === 0) {
                 Object.keys(curRoster).forEach(name => {
@@ -18445,7 +18646,7 @@ function fmBestStyle(p, role) {
                     rows.push({ name, toTeam: curTeam, toTeamIdRaw: curTeamId, type: 'new' });
                 });
             } else {
-                const prevRoster = seasons[idx - 1].rosterMap || {};
+                const prevRoster = tMaps[idx - 1] || {};
                 const allNames = new Set([...Object.keys(prevRoster), ...Object.keys(curRoster)]);
                 allNames.forEach(name => {
                     const prevTeamId = dcFindPlayerTeamInRosterMap(prevRoster, name);
@@ -21314,7 +21515,7 @@ function fmBestStyle(p, role) {
             updateTeamH2H('modal');
             switchTeamModalTab('h2h');
             try { tcRenderModalStrip(team); } catch (e) { console.error('트로피 띠 오류', e); }
-            teamRankTrendState.modal = { scope: 'all', group: 1, playedOnly: false };
+            teamRankTrendState.modal = { scope: 'all', group: 1, playedOnly: true };   // v2.01: 경기날만 기본 켜짐
             renderTeamRankTrend(teamId, 'modal');
             document.getElementById('teamDetailModal').style.display = 'block';
         }
@@ -21595,7 +21796,7 @@ function fmBestStyle(p, role) {
             playerRankTrendMetric = 'pwr';
             playerRankTrendScope = 'all';
             playerRankTrendGroup = 1;
-            playerRankTrendPlayedOnly = false;
+            playerRankTrendPlayedOnly = true;   // v2.01: 경기날만 기본 켜짐
             // 열 때는 항상 첫 페이지(개요)로
             switchPlayerModalTab('overview');
             const stats = [];
@@ -26433,7 +26634,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if(arc.rosters) Object.entries(arc.rosters).forEach(([rtid, names]) => (names || []).forEach(n => {
                 if(!newPlayerStats[n]) newPlayerStats[n] = { goals: 0, assists: 0, rating: 0, ratingCount: 0, mom: 0, teamId: String(rtid), pos: rePosOf(n), starter: 0, substitute: 0, absent: 0 };
             }));
-            // v2.02: 시즌 로스터 수정에서 직접 지정한 선수별 포지션은 경기 기록 재계산 후에도 유지
+            // v2.01: 시즌 로스터 수정에서 직접 지정한 선수별 포지션은 경기 기록 재계산 후에도 유지
             if(arc.rosterPos) Object.entries(arc.rosterPos).forEach(([n, p]) => { if(p && newPlayerStats[n]) newPlayerStats[n].pos = p; });
             arc.playerStats = newPlayerStats;
 
@@ -28710,7 +28911,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
         // 팀 순위/Elo 변동 그래프 상태 (scope/group). 팀 상세 팝업('modal')과 팀 데이터센터('dc')가
         // 각자 독립된 상태를 가지도록 prefix별로 분리해서 관리한다.
-        let teamRankTrendState = { modal: { scope: 'all', group: 1, playedOnly: false }, dc: { scope: 'all', group: 1, playedOnly: false } };
+        let teamRankTrendState = { modal: { scope: 'all', group: 1, playedOnly: true }, dc: { scope: 'all', group: 1, playedOnly: true } };   // v2.01: 경기날만 기본 켜짐
         // prefix에 따른 DOM id 접두어 ('modal' → 기존 teamRankTrend..., 'dc' → dcRankTrend...)
         function _trIdBase(prefix) { return prefix === 'dc' ? 'dcRankTrend' : 'teamRankTrend'; }
 
@@ -29195,7 +29396,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
             if(!container) return;
             const team = state.teams.find(t => String(t.id) === String(teamId));
             const color = team ? team.color : 'var(--accent)';
-            const trState = teamRankTrendState[prefix] || (teamRankTrendState[prefix] = { scope: 'current', group: 1 });
+            const trState = teamRankTrendState[prefix] || (teamRankTrendState[prefix] = { scope: 'current', group: 1, playedOnly: true });
             const scope = trState.scope || 'current';
 
             const scopeLabelEl = document.getElementById(idBase + 'ScopeLabel');
@@ -31154,7 +31355,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
 
         // 그래프 점 압축 단위 (1=전체경기, 3/5/10=N경기씩 평균) — 선수 모달을 열 때마다 1로 초기화됨
         let playerRankTrendGroup = 1;
-        let playerRankTrendPlayedOnly = false;   // 경기날만: 그 선수가 실제로 뛴 경기 지점만 표시
+        let playerRankTrendPlayedOnly = true;   // 경기날만: 그 선수가 실제로 뛴 경기 지점만 표시
         function setPlayerRankTrendPlayed() {
             playerRankTrendPlayedOnly = !playerRankTrendPlayedOnly;
             renderPlayerRankTrend(_playerModalName);
@@ -31944,7 +32145,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         // '과거 시즌 추가'처럼 한 시즌에 참가한 모든 팀의 선수단을 한 화면에서 고친다. (v1.97의 팀별 수정과 같은 저장 방식)
         //  - 저장 위치: arc.playerStats[선수].teamId + arc.rosters[팀id] · 경기 기록이 있는 선수는 잠금(소속이 경기 기록에 묶여 있음)
         let sreCtx = null;
-        //  v2.02: 감독(arc.teamManagers[팀id]) · 선수별 시즌 포지션(arc.rosterPos[선수]) 도 같은 화면에서 수정한다.
+        //  v2.01: 감독(arc.teamManagers[팀id]) · 선수별 시즌 포지션(arc.rosterPos[선수]) 도 같은 화면에서 수정한다.
         //   - arc.rosterPos는 경기 기록 재계산(recalcArchiveSummary)에도 유지되며, 팀 데이터센터 선수단 카드의 주포지션 · OVR 기준과 경기 입력 폼 기본 포지션에 쓰인다.
         //   - 포지션 · 감독은 경기 기록과 무관하므로 🔒 고정 선수도 바꿀 수 있다.
         function reEffPos(arc, name) {   // 이 시즌 선수의 실제 적용 포지션: 직접 지정 > 경기에서 가장 많이 뛴 포지션 > 기록된 포지션 > 현재 포지션
