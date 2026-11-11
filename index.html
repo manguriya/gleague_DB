@@ -30814,11 +30814,11 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 const list = P.slice().sort((a, b) => (b[T.st] - a[T.st]) || (b.avg - a.avg) || (b[T.ot] - a[T.ot]));
                 out.title = T.lb + ' 후보 — 출전한 모든 선수가 ' + T.u + ' 순으로 나와요 · 원하는 인원만큼 체크하세요 · 아무도 고르지 않으면 기록 1위가 자동으로 수상해요';
                 const rk = list.map((p, i) => 1 + list.findIndex(q => q[T.st] === p[T.st]));
-                if (list.length) out.groups.push({ label: T.lb + ' 후보 (' + T.u + ' 순 · 전체 ' + list.length + '명)', color: '', items: list.map((p, i) => ({ value: p.name, color: p.color, text: (rk[i] === 1 ? '🥇 ' : '') + rk[i] + '위 ' + p.name + tn(p) + ' · ' + p[T.st] + T.u + ' · 평점 ' + fmt(p.avg) + ' · ' + gSpPts(p) })) });
+                if (list.length) out.groups.push({ label: T.lb + ' 후보 (' + T.u + ' 순 · 전체 ' + list.length + '명)', color: '', items: list.map((p, i) => ({ value: p.name, color: p.color, text: (rk[i] === 1 ? '🥇 ' : '') + rk[i] + '위 ' + p.name + tn(p) + ' · ' + p[T.st] + T.u + ' · ' + p.games + '경기 · 평점 ' + fmt(p.avg) + ' · ' + gSpPts(p) })) });
             } else if (kind === 'ballon') {
                 const top = gSpRank(P, { pts: 0.45, mom: 0.25, rate: 0.30 }).slice(0, 15);
                 out.title = '🏅 공격포인트 · MOM(경기 MVP) 횟수 · 평균평점을 종합한 상위 15명이 후보예요';
-                if (top.length) out.groups.push({ label: '🏅 골롱도르 후보 TOP 15', color: '', items: top.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + ' · ' + gSpPts(p) + ' · MOM ' + p.mom + ' · 평점 ' + fmt(p.avg) })) });
+                if (top.length) out.groups.push({ label: '🏅 골롱도르 후보 TOP 15', color: '', items: top.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + ' · ' + p.games + '경기 · ' + gSpPts(p) + ' · MOM ' + p.mom + ' · 평점 ' + fmt(p.avg) })) });
             } else if (kind === 'allstar') {
                 out.title = '⭐ 각 팀 평균평점 상위 3명이 후보예요';
                 const byTeam = {};
@@ -30842,7 +30842,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
                 out.title = kind === 'mf'
                     ? CFG[1] + '(' + CFG[0] + ')로 뛴 선수 + 도움 · 공격P · 평균평점 · MOM 상위 10위 안에 든 선수가 후보예요 · 종합순'
                     : CFG[1] + '(' + CFG[0] + ')로 한 번이라도 뛴 선수가 모두 후보예요 · 공격P / MOM / 평균평점 종합순';
-                if (list.length) out.groups.push({ label: CFG[1] + ' 후보 (' + list.length + '명)', color: '', items: list.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + (p.pos && p.pos !== CFG[0] ? ' [주 ' + p.pos + ']' : '') + ' · 평점 ' + fmt(p.avg) + ' · ' + gSpPts(p) + ' · MOM ' + p.mom })) });
+                if (list.length) out.groups.push({ label: CFG[1] + ' 후보 (' + list.length + '명)', color: '', items: list.map((p, i) => ({ value: p.name, color: p.color, text: (i + 1) + '. ' + p.name + tn(p) + (p.pos && p.pos !== CFG[0] ? ' [주 ' + p.pos + ']' : '') + ' · 평점 ' + fmt(p.avg) + ' · ' + p.games + '경기 · ' + gSpPts(p) + ' · MOM ' + p.mom })) });
             } else if (kind === 'couple') {
                 out.title = '💞 도움 → 득점으로 이어진 합작골 상위 15쌍이 후보예요';
                 let duos = [];
@@ -34667,7 +34667,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '2.02';
+        const G_HTML_VERSION = '2.03';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
