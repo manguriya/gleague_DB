@@ -5144,10 +5144,12 @@
         "ballon": "제이",
         "allstar": "정혜인",
         "fw": "사오리",
-        "mf": "서기",
+        "mf": "정혜인",
         "df": "박하얀",
         "couple": "사오리|제이",
-        "coach": "이영표"
+        "coach": "이영표",
+        "pickScorer": "",
+        "pickAssist": ""
       },
       "matches": [
         {
@@ -11693,7 +11695,7 @@
         "유빈": {
           "goals": 2,
           "assists": 1,
-          "rating": 29.400000000000002,
+          "rating": 29.4,
           "ratingCount": 4,
           "mom": 1,
           "teamId": "8",
@@ -11813,7 +11815,7 @@
         "리사": {
           "goals": 0,
           "assists": 0,
-          "rating": 35.199999999999996,
+          "rating": 35.2,
           "ratingCount": 5,
           "mom": 0,
           "teamId": "7",
@@ -11825,7 +11827,7 @@
         "김민지": {
           "goals": 4,
           "assists": 0,
-          "rating": 46.199999999999996,
+          "rating": 46.2,
           "ratingCount": 6,
           "mom": 0,
           "teamId": "1",
@@ -11873,7 +11875,7 @@
         "박하얀": {
           "goals": 5,
           "assists": 3,
-          "rating": 51.199999999999996,
+          "rating": 51.2,
           "ratingCount": 6,
           "mom": 3,
           "teamId": "1",
@@ -11969,7 +11971,7 @@
         "소유미": {
           "goals": 0,
           "assists": 4,
-          "rating": 31.200000000000003,
+          "rating": 31.2,
           "ratingCount": 4,
           "mom": 0,
           "teamId": "3",
@@ -12137,7 +12139,7 @@
         "이채영": {
           "goals": 0,
           "assists": 0,
-          "rating": 18.900000000000002,
+          "rating": 18.9,
           "ratingCount": 3,
           "mom": 0,
           "teamId": "6",
@@ -12293,7 +12295,7 @@
         "히밥": {
           "goals": 1,
           "assists": 2,
-          "rating": 22.700000000000003,
+          "rating": 22.7,
           "ratingCount": 3,
           "mom": 0,
           "teamId": "5",
@@ -12826,7 +12828,7 @@
           "assists": 3,
           "points": 8,
           "mom": 3,
-          "rating": 51.199999999999996,
+          "rating": 51.2,
           "avgRating": 8.533333333333333,
           "games": 6,
           "starter": 6,
@@ -13096,7 +13098,7 @@
           "assists": 4,
           "points": 4,
           "mom": 0,
-          "rating": 31.200000000000003,
+          "rating": 31.2,
           "avgRating": 7.800000000000001,
           "games": 4,
           "starter": 4,
@@ -13123,7 +13125,7 @@
           "assists": 0,
           "points": 4,
           "mom": 0,
-          "rating": 46.199999999999996,
+          "rating": 46.2,
           "avgRating": 7.699999999999999,
           "games": 6,
           "starter": 2,
@@ -13231,7 +13233,7 @@
           "assists": 2,
           "points": 3,
           "mom": 0,
-          "rating": 22.700000000000003,
+          "rating": 22.7,
           "avgRating": 7.566666666666667,
           "games": 3,
           "starter": 3,
@@ -13285,7 +13287,7 @@
           "assists": 1,
           "points": 3,
           "mom": 1,
-          "rating": 29.400000000000002,
+          "rating": 29.4,
           "avgRating": 7.3500000000000005,
           "games": 4,
           "starter": 1,
@@ -14068,7 +14070,7 @@
           "assists": 0,
           "points": 0,
           "mom": 0,
-          "rating": 35.199999999999996,
+          "rating": 35.2,
           "avgRating": 7.039999999999999,
           "games": 5,
           "starter": 5,
@@ -14203,7 +14205,7 @@
           "assists": 0,
           "points": 0,
           "mom": 0,
-          "rating": 18.900000000000002,
+          "rating": 18.9,
           "avgRating": 6.300000000000001,
           "games": 3,
           "starter": 0,
@@ -14366,13 +14368,15 @@
       "specialAwards": {
         "rookie": "루나",
         "yashin": "리사",
-        "ballon": "마시마유",
-        "allstar": "김보경",
+        "ballon": "김보경",
+        "allstar": "마시마유",
         "fw": "서기",
         "mf": "소유미",
         "df": "민서",
         "couple": "마시마유|소유미",
-        "coach": "이근호"
+        "coach": "이근호",
+        "pickScorer": "",
+        "pickAssist": ""
       },
       "matches": [
         {
@@ -17235,7 +17239,7 @@
         "깡미": {
           "goals": 0,
           "assists": 0,
-          "rating": 13.600000000000001,
+          "rating": 13.6,
           "ratingCount": 2,
           "mom": 0,
           "teamId": "5",
@@ -17271,7 +17275,7 @@
         "히밥": {
           "goals": 0,
           "assists": 1,
-          "rating": 15.299999999999999,
+          "rating": 15.3,
           "ratingCount": 2,
           "mom": 0,
           "teamId": "5",
@@ -17499,7 +17503,7 @@
         "김보경": {
           "goals": 4,
           "assists": 0,
-          "rating": 25.299999999999997,
+          "rating": 25.3,
           "ratingCount": 3,
           "mom": 2,
           "teamId": "7",
@@ -18067,7 +18071,7 @@
           "assists": 0,
           "points": 4,
           "mom": 2,
-          "rating": 25.299999999999997,
+          "rating": 25.3,
           "avgRating": 8.433333333333332,
           "games": 3,
           "starter": 3,
@@ -18364,7 +18368,7 @@
           "assists": 1,
           "points": 1,
           "mom": 0,
-          "rating": 15.299999999999999,
+          "rating": 15.3,
           "avgRating": 7.6499999999999995,
           "games": 2,
           "starter": 2,
@@ -19039,7 +19043,7 @@
           "assists": 0,
           "points": 0,
           "mom": 0,
-          "rating": 13.600000000000001,
+          "rating": 13.6,
           "avgRating": 6.800000000000001,
           "games": 2,
           "starter": 0,
@@ -31610,7 +31614,7 @@
     "season": "current",
     "recent": "all"
   },
-  "dbSavedDate": "2026-11-05",
+  "dbSavedDate": "2026-11-11",
   "eloStartAdj": {
     "season": "2026 제3회 GIFA 컵",
     "locked": true,
@@ -31856,5 +31860,6 @@
     },
     "curS": 3,
     "nextS": 4
-  }
+  },
+  "leagueFormat": "classic"
 }
