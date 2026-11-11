@@ -3281,8 +3281,8 @@ html body.g-pg-open .main-content { padding-bottom: 24px; }
   .gpg-hub > .k-season { grid-column: span 5; } .gpg-hub > .k-trophy { grid-column: span 4; } .gpg-hub > .k-power { grid-column: span 3; }
 }
 @container gpghub (min-width: 1400px) {
-  .gpg-hub > .k-ability { grid-column: span 5; } .gpg-hub > .k-pos { grid-column: span 4; } .gpg-hub > .k-trait { grid-column: span 3; }
-  .gpg-hub > .k-recent, .gpg-hub > .k-growth, .gpg-hub > .k-season { grid-column: span 4; }
+  .gpg-hub > .k-ability { grid-column: span 5; } .gpg-hub > .k-pos { grid-column: span 4; } .gpg-hub > .k-growth { grid-column: span 3; }
+  .gpg-hub > .k-recent, .gpg-hub > .k-trait, .gpg-hub > .k-season { grid-column: span 4; }
   .gpg-hub > .k-trophy { grid-column: span 6; } .gpg-hub > .k-power { grid-column: span 3; } .gpg-hub > .k-links { grid-column: span 3; }
   .gpg-links .gpg-lk { flex-basis: 100%; }
 }
@@ -34667,7 +34667,7 @@ const uid = 'H' + m.id, halfNo = h => (h === '후반' ? 1 : 0);
         //   예) 1.09 → 1.10 (소소한 10번 = 중규모 1번), 1.90 → 2.00 (중규모 10번 = 버전업)
         //   ※ 업데이트.txt 맨 위(최신) 버전과 같은 값으로 맞추면 패치노트에서 일치 여부를 확인해 줍니다.
         // ----------------------------------------------------------------
-        const G_HTML_VERSION = '2.03';
+        const G_HTML_VERSION = '2.04';
         // 🆕 NEW 표시: 실제로 바뀐 기능 자리에 붙인다. 해당 요소에 data-new="버전"을 달아 두면,
         //   그 버전이 현재 HTML 버전(G_HTML_VERSION)과 '소수점 첫째 자리까지 같은 구간'일 때만 초록색 NEW가 보인다. (v1.70~)
         //   예) data-new="1.75" → 현재 1.70~1.79 동안 계속 표시, 1.80이 되면 자동으로 사라짐 (1.8x → 1.9x도 같은 방식)
@@ -39312,13 +39312,13 @@ function hubPlayer(name) {
   h += box('k-pos', 'ability', '📍 포지션 · 발', posHtml ? `<div style="pointer-events:none">${noId(posHtml)}</div>` : `<div class="gpg-empty">${pos === 'GK' ? '🧤 골키퍼 — 필드 포지션 정보가 없습니다.' : '포지션 정보가 없습니다.'}</div>`, '능력치 ›');
   // 4) 특성 · 역할 (잘림 없이 전체 표시)
   const tv = $('playerTraitView'), tvh = tv ? tv.innerHTML.trim() : '';
-  h += box('k-trait', 'ability', '🧬 특성 · 역할', tvh ? `<div style="pointer-events:none">${noId(tvh)}</div>` : `<div class="gpg-empty">등록된 특성·역할이 없습니다.</div>`, '능력치 ›', '', true);
+  h += growthHtml;   // v2.04: 📈 성장을 특성 · 역할 자리로
   // 5) 최근 경기
   const rec = S ? S.stats.slice(0, 5) : [];
   const recRows = rec.map(s => { const my = s.isH ? s.hScore : s.aScore, th = s.isH ? s.aScore : s.hScore, mp = s.isH ? s.hPk : s.aPk, tp = s.isH ? s.aPk : s.hPk, win = my > th || (my === th && mp > tp);
     return `<div class="gpg-row"><span class="gpg-chip ${win ? 'w' : 'l'}">${win ? '승' : '패'}</span><span class="sp" style="color:${s.oppColor}">vs ${esc(s.oppName)}</span><span class="mu">${my}:${th}</span><span class="mu">${s.g || 0}골 ${s.a || 0}도움</span><span style="font-family:'Orbitron';font-weight:800;font-size:.76rem;color:#38bdf8">${s.r > 0 ? s.r.toFixed(1) : '-'}</span></div>`; }).join('');
   h += box('k-recent', 'match', '⚽ 최근 경기', recRows || '<div class="gpg-empty">출전 기록이 없습니다.</div>', '경기 기록 ›', '', true);
-  h += growthHtml;
+  h += box('k-trait', 'ability', '🧬 특성 · 역할', tvh ? `<div style="pointer-events:none">${noId(tvh)}</div>` : `<div class="gpg-empty">등록된 특성·역할이 없습니다.</div>`, '능력치 ›', '', true);   // v2.04: 🧬 특성 · 역할을 성장 자리로
   // 6) 시즌별
   const seas = [], idx = {};
   (S ? S.stats : []).forEach(s => { if (!(s.r > 0 || s.g > 0 || s.a > 0)) return; let o = idx[s.seasonName]; if (!o) { o = idx[s.seasonName] = { n: s.seasonName, gm: 0, g: 0, a: 0, r: 0 }; seas.push(o); } o.gm++; o.g += s.g || 0; o.a += s.a || 0; o.r += s.r || 0; });
