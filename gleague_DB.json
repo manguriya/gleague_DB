@@ -20885,7 +20885,18 @@
     }
   },
   "interMatches": [],
-  "scheduledMatches": [],
+  "scheduledMatches": [
+    {
+      "id": 1794493114427,
+      "type": "결승",
+      "num": "1",
+      "hId": "6",
+      "aId": "3",
+      "date": "",
+      "time": "",
+      "note": ""
+    }
+  ],
   "sortKey": "pwr",
   "sortDir": -1,
   "backupFileName": "gleague_DB",
