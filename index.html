@@ -37718,93 +37718,6 @@ window.pmExtRender = function(name){
   GA.gkRank = function (R) {
     return Object.keys(R.gk).map(function (k) { return R.gk[k]; }).filter(function (g) { return g.ss > 0; }).sort(function (a, b) { return b.ss - a.ss || a.ga - b.ga; });
   };
-  GA.pickYashin = function (selId, name) {
-    var el = $(selId); if (!el) return;
-    if (el.tagName === 'DIV') {   // 공동 수상(여러 명 선택) 목록
-      if (el._gspAdd && el._gspAdd(name)) { /* 추가됨 */ } else alert('이 선수는 목록에 없어요. (그 시즌에 출전한 선수만 고를 수 있어요)');
-      return;
-    }
-    el.value = name;
-    if (el.value !== name) alert('이 선수는 목록에 없어요. (그 시즌에 출전한 선수만 고를 수 있어요)');
-  };
-  // v2.05: 야신상 후보 기록표 — 그 시즌 GK로 뛴 선수 전원의 GK경기 · 실점 · 경기당 실점 · 세이브 · 경기당 세이브 · 무실점 (열 제목을 누르면 정렬 · 이름을 누르면 선택 칸에 넣음)
-  var YS_ASC = { gaPg: 1, ga: 1 };   // 낮을수록 좋은 열은 낮은 순이 기본
-  GA._ysData = GA._ysData || {}; GA._ysKey = GA._ysKey || {};
-  function yashinRows(R) {
-    return Object.keys(R.gk).map(function (k) {
-      var g = R.gk[k];
-      return { name: g.name, teamId: g.teamId, w: g.w, ga: g.ga, ss: g.ss, cs: g.cs, gaPg: g.w > 0 ? g.ga / g.w : null, ssPg: g.w > 0 ? g.ss / g.w : null };
-    }).filter(function (g) { return g.w > 0 || g.ss > 0; });
-  }
-  function yashinCmp(key) {
-    var asc = YS_ASC[key] ? 1 : -1;
-    return function (a, b) {
-      var x = a[key], y = b[key];
-      if (x == null || y == null) { if (x == null && y == null) return b.w - a.w; return x == null ? 1 : -1; }
-      if (key === 'gaPg' || key === 'ssPg') { var ta = a.w >= 3 ? 0 : 1, tb = b.w >= 3 ? 0 : 1; if (ta !== tb) return ta - tb; if (ta === 1 && a.w !== b.w) return b.w - a.w; }   // 경기당 기록은 GK 3경기 이상 선수를 먼저, 3경기 미만끼리는 GK경기 많은 순 (표본 적은 선수가 맨 위로 오르는 것 방지)
-      return ((x - y) * asc) || (b.w - a.w) || (b.ss - a.ss) || (a.ga - b.ga);
-    };
-  }
-  function yashinHtml(matches, selId) {
-    var R = GA.collect(matches), rows = yashinRows(R); if (!rows.length) return '';
-    GA._ysData[selId] = matches;
-    var key = GA._ysKey[selId] || 'gaPg';
-    rows.sort(yashinCmp(key));
-    var cols = [
-      ['w', 'GK경기', 'GK로 출전한 경기 수 (교체 · 하프타임 포지션 변경은 절반 단위로 환산)'],
-      ['ga', '실점', 'GK로 뛴 동안의 실점 (낮을수록 좋아요)'],
-      ['gaPg', '경기당 실점', '실점 ÷ GK경기 (낮을수록 좋아요)'],
-      ['ss', '세이브', '경기 기록에 입력한 결정적 선방 합계'],
-      ['ssPg', '경기당 세이브', '세이브 ÷ GK경기'],
-      ['cs', '무실점', 'GK로 뛰며 실점 0으로 마친 경기 수']
-    ];
-    var f2 = function (v) { return v == null ? '-' : r2(v).toFixed(2); };
-    var head = cols.map(function (c) {
-      var on = c[0] === key;
-      return '<th style="padding:3px 7px;white-space:nowrap;cursor:pointer;' + (on ? 'color:#38bdf8;' : 'color:var(--text-muted);') + '" title="' + c[2] + ' · 누르면 이 기준으로 정렬" onclick="GA.yashinSort(\'' + selId + '\',\'' + c[0] + '\')">' + c[1] + (on ? (YS_ASC[key] ? ' ▲' : ' ▼') : '') + '</th>';
-    }).join('');
-    var cell = function (k, txt, g, strong) { return '<td style="padding:3px 7px;white-space:nowrap;' + (k === key ? 'background:rgba(56,189,248,.08);' : '') + (strong ? 'font-weight:800;' : '') + '">' + txt + '</td>'; };
-    var body = rows.map(function (g, i) {
-      return '<tr style="border-top:1px solid rgba(255,255,255,.06);' + (g.w < 3 ? 'opacity:.62;' : '') + '">'
-        + '<td style="padding:3px 7px;color:var(--text-muted);">' + (i + 1) + '</td>'
-        + '<td style="padding:3px 7px;text-align:left;white-space:nowrap;"><a style="cursor:pointer;color:var(--accent);font-weight:800;" onclick="GA.pickYashin(\'' + selId + '\',this.getAttribute(\'data-n\'))" data-n="' + esc(g.name) + '" title="누르면 선택 칸에 넣어요">' + esc(g.name) + '</a> <span style="color:' + tcol(g.teamId) + ';font-size:.68rem;">' + esc(tname(g.teamId)) + '</span></td>'
-        + cell('w', gGkFmtW(g.w), g) + cell('ga', g.ga, g) + cell('gaPg', f2(g.gaPg), g, true) + cell('ss', g.ss, g) + cell('ssPg', f2(g.ssPg), g, true) + cell('cs', g.cs, g)
-        + '</tr>';
-    }).join('');
-    return '<div class="ga-yashin" style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.25);font-size:.74rem;">'
-      + '<b style="color:#38bdf8;">🧤 야신상 후보 기록</b> <span style="color:var(--text-muted);">(그 시즌 GK로 뛴 선수 · 열 제목을 누르면 정렬 · 이름을 누르면 선택 칸에 넣어요 · 흐린 줄은 GK 3경기 미만이라 경기당 정렬에서 뒤로 가요)</span>'
-      + '<div style="overflow-x:auto;margin-top:5px;"><table style="width:100%;border-collapse:collapse;text-align:center;"><thead><tr><th style="padding:3px 7px;color:var(--text-muted);">#</th><th style="padding:3px 7px;text-align:left;color:var(--text-muted);">선수</th>' + head + '</tr></thead><tbody>' + body + '</tbody></table></div></div>';
-  }
-  GA.yashinSort = function (selId, key) {
-    GA._ysKey[selId] = key;
-    var box = $(selId === 'awardYashin' ? 'gaYashinCur' : 'gaYashinArc'); if (!box) return;
-    box.innerHTML = yashinHtml(GA._ysData[selId] || [], selId);
-  };
-  GA.renderYashinHint = function () {
-    try {
-      var sel = $('awardYashin'), old = document.querySelector && document.querySelector('#gaYashinCur'); if (old && old.remove) old.remove();
-      if (!sel) return;
-      var box = sel.parentElement && sel.parentElement.parentElement; if (!box || !box.parentNode) return;
-      var html = yashinHtml(state.matches || [], 'awardYashin'); if (!html) return;
-      box.insertAdjacentHTML('afterend', '<div id="gaYashinCur">' + html + '</div>');
-    } catch (e) { console.error('야신상 후보 오류', e); }
-  };
-  if (typeof window.renderSpecialAwards === 'function') {
-    var _rsa = window.renderSpecialAwards;
-    window.renderSpecialAwards = function () { var r = _rsa.apply(this, arguments); GA.renderYashinHint(); return r; };
-  }
-  if (typeof window.openArchiveAwardsModal === 'function') {
-    var _oaa = window.openArchiveAwardsModal;
-    window.openArchiveAwardsModal = function (idx) {
-      var r = _oaa.apply(this, arguments);
-      try {
-        var old = document.querySelector('#gaYashinArc'); if (old && old.remove) old.remove();
-        var a = (state.archives || [])[Number(idx)], sel = $('archiveAwardYashin'), html = a ? yashinHtml(a.matches || [], 'archiveAwardYashin') : '';
-        if (sel && html) sel.parentElement.insertAdjacentHTML('beforeend', '<div id="gaYashinArc">' + html + '</div>');
-      } catch (e) { console.error(e); }
-      return r;
-    };
-  }
   if (typeof window.renderRankingHighlights === 'function') {
     var _rrh = window.renderRankingHighlights;
     window.renderRankingHighlights = function () {
@@ -37821,7 +37734,6 @@ window.pmExtRender = function(name){
       return r;
     };
   }
-  try { GA.renderYashinHint(); } catch (e) { }
 
   try { GA.renderRankPanel(); } catch (e) { console.error(e); }
 })();
